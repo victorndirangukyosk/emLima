@@ -75,7 +75,7 @@ class ControllerCommonMenu extends Controller {
         $data['offer'] = $this->url->link('marketing/offer', 'token=' . $this->session->data['token'], 'SSL');
         $data['currency'] = $this->url->link('localisation/currency', 'token=' . $this->session->data['token'], 'SSL');
         $data['customer'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&filter_sub_customer_show=1&sort=c.date_added&order=DESC', 'SSL');
-        $data['kibanda'] = $this->url->link('sale/customer/kibanda', 'token=' . $this->session->data['token'] . '&filter_sub_customer_show=1&sort=c.date_added&order=DESC', 'SSL');
+        $data['kibanda'] = $this->url->link('sale/kibanda', 'token=' . $this->session->data['token'] . '&filter_sub_customer_show=1&sort=c.date_added&order=DESC', 'SSL');
         // $data['customer_otp'] = $this->url->link('sale/customer/customer_otp', 'token=' . $this->session->data['token'] . '&sort=c.date_added&order=DESC', 'SSL');
         $data['customer_otp'] = $this->url->link('sale/customer_otp', 'token=' . $this->session->data['token'] . '&sort=c.date_added&order=DESC', 'SSL');
         $data['farmer'] = $this->url->link('sale/farmer', 'token=' . $this->session->data['token'] . '&sort=c.created_at&order=DESC', 'SSL');
@@ -159,6 +159,7 @@ class ControllerCommonMenu extends Controller {
         $data['report_sale_payment'] = $this->url->link('report/sale_payment', 'token=' . $this->session->data['token'], 'SSL');
 
         $data['report_sale_transaction'] = $this->url->link('report/sale_transaction', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_sale_daily'] = $this->url->link('report/sale_daily', 'token=' . $this->session->data['token'], 'SSL');
 
         $data['report_sale_return'] = $this->url->link('report/sale_return', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_sale_coupon'] = $this->url->link('report/sale_coupon', 'token=' . $this->session->data['token'], 'SSL');
@@ -351,7 +352,7 @@ class ControllerCommonMenu extends Controller {
         $data['preturn_order_recurring'] = $this->user->hasPermission('access', 'sale/recurring');
         $data['preturn_return'] = $this->user->hasPermission('access', 'sale/return');
         $data['preturn_customer'] = $this->user->hasPermission('access', 'sale/customer');
-        $data['preturn_kibanda'] = $this->user->hasPermission('access', 'sale/customer/kibanda');
+        $data['preturn_kibanda'] = $this->user->hasPermission('access', 'sale/kibanda');
         $data['preturn_kibandas'] = $this->user->hasPermission('access', 'sale/kibanda');
         // $data['preturn_customer_otp'] = $this->user->hasPermission('access', 'sale/customer/customer_otp');
         $data['preturn_farmer'] = $this->user->hasPermission('access', 'sale/farmer');
@@ -361,6 +362,7 @@ class ControllerCommonMenu extends Controller {
         $data['preturn_customer_ban_ip'] = $this->user->hasPermission('access', 'sale/customer_ban_ip');
         $data['preturn_customer_feedback'] = $this->user->hasPermission('access', 'sale/customer_feedback');
         $data['preturn_customer_otp'] = $this->user->hasPermission('access', 'sale/customer_otp');
+        $data['preturn_customer_login'] = $this->user->hasPermission('access', 'sale/customer_login');
         $data['preturn_customer_issue'] = $this->user->hasPermission('access', 'sale/customer_issue');
         $data['preturn_customer_bulk_email'] = $this->user->hasPermission('access', 'email/bulk_email');
         $data['preturn_order_bulk_email'] = $this->user->hasPermission('access', 'email/bulk_email');
@@ -482,6 +484,7 @@ class ControllerCommonMenu extends Controller {
 
         $data['preturn_sale_payment'] = $this->user->hasPermission('access', 'report/sale_payment');
         $data['preturn_sale_transaction'] = $this->user->hasPermission('access', 'report/sale_transaction');
+        $data['preturn_sale_daily'] = $this->user->hasPermission('access', 'report/sale_daily');
 
         $data['preturn_sale_return'] = $this->user->hasPermission('access', 'report/sale_return');
         $data['preturn_sale_coupon'] = $this->user->hasPermission('access', 'report/sale_coupon');
@@ -600,6 +603,7 @@ class ControllerCommonMenu extends Controller {
         $data['report_sale_payment'] = $this->url->link('report/sale_payment', 'token=' . $this->session->data['token'], 'SSL');
 
         $data['report_sale_transaction'] = $this->url->link('report/sale_transaction', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_sale_daily'] = $this->url->link('report/sale_daily', 'token=' . $this->session->data['token'], 'SSL');
 
         $data['report_sale_return'] = $this->url->link('report/sale_return', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_sale_coupon'] = $this->url->link('report/sale_coupon', 'token=' . $this->session->data['token'], 'SSL');
@@ -701,6 +705,7 @@ class ControllerCommonMenu extends Controller {
         $data['preturn_sale_payment'] = $this->user->hasPermission('access', 'report/sale_payment');
 
         $data['preturn_sale_transaction'] = $this->user->hasPermission('access', 'report/sale_transaction');
+        $data['preturn_sale_daily'] = $this->user->hasPermission('access', 'report/sale_daily');
 
         $data['preturn_sale_return'] = $this->user->hasPermission('access', 'report/sale_return');
         $data['preturn_sale_coupon'] = $this->user->hasPermission('access', 'report/sale_coupon');

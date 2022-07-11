@@ -161,6 +161,9 @@
                                 <td>Product Notes</td>
                                 <td class="text-center">Quantity</td>
                                 <td class="text-right">Unit Price</td>
+                                <?php if($order['show_discount'] == TRUE) { ?>
+                                <td class="text-right">Discount</td>
+                                <?php } ?>
                                 <td class="text-right">Total</td>
                             </tr>
                             </thead>
@@ -172,10 +175,27 @@
                                 <td><?= $product['product_note'] ?></td>
                                 <td class="text-center"><?= $product['quantity'] ?> <?= $product['unit'] ?></td>
                                 <td class="text-right"><?= $product['price'] ?></td>
+                                <?php if($order['show_discount'] == TRUE) { ?>
+                                <td class="text-right"><?= $product['discount_amount'] ?></td>
+                                <?php } ?>
                                 <td class="text-right"><?= $product['total'] ?></td>
                             </tr>
                             <?php } ?>
-
+                            
+                            <?php if($order['show_discount'] == TRUE) { ?>
+                            <?php foreach($order['totals'] as $total) { ?>
+                            <tr>
+                             <?php if($total['title'] == 'VAT on Standard Delivery') { ?>
+                                <td colspan="6" class="text-right" >
+                                <span class="bold text-right"><?= $total['title'] ?></span>                                
+                                <span style="font-weight:2px"> (VAT16)</span></td>
+                                <?php } else { ?>
+                                <td colspan="6" class="bold text-right" ><?= $total['title'] ?></td> 
+                                <?php }   ?>
+                                <td class="bold text-right"><?= $total['text'] ?></td>
+                            </tr>
+                            <?php } ?>
+                            <?php }  else { ?>                                                            
                             <?php foreach($order['totals'] as $total) { ?>
                             <tr>
                              <?php if($total['title'] == 'VAT on Standard Delivery') { ?>
@@ -187,6 +207,7 @@
                                 <?php }   ?>
                                 <td class="bold text-right"><?= $total['text'] ?></td>
                             </tr>
+                            <?php } ?>
                             <?php } ?>
                             </tbody>
                         </table>

@@ -143,6 +143,23 @@ final class Tax {
         return $tax_rate_data;
     }
 
+    public function getDiscounts($price, $discount_percentage, $product_store_id) {
+
+        $discount_data = [];
+        $amount = 0;
+
+        if ($discount_percentage > 0) {
+            $amount = $price * ($discount_percentage / 100);
+
+            $discount_data[$product_store_id] = [
+                'name' => 'discount',
+                'product_store_id' => $product_store_id,
+                'amount' => $amount,
+            ];
+        }
+        return $discount_data;
+    }
+
     public function has($tax_class_id) {
         return isset($this->taxes[$tax_class_id]);
     }

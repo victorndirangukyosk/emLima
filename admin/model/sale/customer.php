@@ -195,6 +195,10 @@ class ModelSaleCustomer extends Model {
         if (isset($data['filter_approved']) && !is_null($data['filter_approved'])) {
             $implode[] = "c.approved = '" . (int) $data['filter_approved'] . "'";
         }
+        
+        if ($this->user->isAccountManager()) {//in gettotalcustomers it is available
+            $implode[] = "account_manager_id = '" . (int) $this->user->getId() . "'";
+        }
 
         // if (!empty($data['filter_date_added'])) {
         //     $implode[] = "DATE(c.date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
@@ -2695,6 +2699,11 @@ class ModelSaleCustomer extends Model {
         $log = new Log('error.log');
         $log->write($query);
         $res = $this->db->query($query);
+
+        $query2 = 'UPDATE ' . DB_PREFIX . "customer SET customer_category = NULL WHERE customer_id ='" . (int) $customer_id . "'";
+        $log->write($query2);
+        $res2 = $this->db->query($query2);
+
         if ($res == 1) {
             $this->updateSubCustomerDiscountCategory($price_category, $customer_id);
         }
@@ -2714,6 +2723,11 @@ class ModelSaleCustomer extends Model {
         $log = new Log('error.log');
         $log->write($query);
         $res = $this->db->query($query);
+
+        $query2 = 'UPDATE ' . DB_PREFIX . "customer SET customer_category = NULL WHERE parent ='" . (int) $customer_id . "'";
+        $log->write($query2);
+        $res2 = $this->db->query($query2);
+
         return $res;
     }
 

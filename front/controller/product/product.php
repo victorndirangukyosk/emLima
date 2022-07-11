@@ -858,6 +858,19 @@ class ControllerProductProduct extends Controller {
                     }
                 }
                 //FOR CATEGORY PRICING
+                //FOR CATEGORY DISCOUNT
+                $category_discount_response = NULL;
+                $product_info['discount_price'] = 0;
+                $product_info['discount_percentage'] = 0;
+                if ($this->customer->getCustomerCategory() == NULL && $this->customer->getCustomerDiscountCategory() != NULL) {
+                    $category_discount_response = $this->load->controller('common/customercategorydiscount', $product_info);
+                    if (isset($category_discount_response) && is_array($category_discount_response)) {
+
+                        $product_info['discount_price'] = $category_discount_response['discount_price'];
+                        $product_info['discount_percentage'] = $category_discount_response['discount_percentage'];
+                    }
+                }
+                //FOR CATEGORY DISCOUNT
                 //get price html
                 if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
                     $product_info['price'] = $this->currency->format($this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax')));
@@ -896,6 +909,21 @@ class ControllerProductProduct extends Controller {
                     $product_info['special_price'] = $this->currency->format($s_price);
                     $product_info['price'] = $this->currency->format($o_price);
                 }
+
+                //FOR CATEGORY DISCOUNT
+                $category_discount_response = NULL;
+                $product_info['discount_price'] = 0;
+                $product_info['discount_percentage'] = 0;
+                if ($this->customer->getCustomerCategory() == NULL && $this->customer->getCustomerDiscountCategory() != NULL) {
+                    
+                    $category_discount_response = $this->load->controller('common/customercategorydiscount', $product_info);
+                    if (isset($category_discount_response) && is_array($category_discount_response)) {
+
+                        $product_info['discount_price'] = $category_discount_response['discount_price'];
+                        $product_info['discount_percentage'] = $category_discount_response['discount_percentage'];
+                    }
+                }
+                //FOR CATEGORY DISCOUNT
             }
 
             if (isset($product_info['pd_name'])) {

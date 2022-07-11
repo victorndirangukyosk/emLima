@@ -3,7 +3,7 @@
     <li id="dashboard"><a href="<?php echo $dashboard; ?>"><i class="fa fa-dashboard fa-fw"></i> <span><?php echo $text_dashboard; ?></span></a></li>
     <?php } ?>
     <?php
-    if($preturn_cat_packages != false || $preturn_general_products != false || $preturn_category != false || $preturn_product != false || $preturn_review != false || $preturn_information != false ) {
+    if($preturn_vendor_product !=false|| $preturn_cat_packages != false || $preturn_general_products != false || $preturn_category != false || $preturn_product != false || $preturn_review != false || $preturn_information != false ) {
     ?>
     <li id="catalog"><a class="parent"><i class="fa fa-tags fa-fw"></i> <span><?php echo $text_catalog; ?></span></a>
         <ul class="collapse">
@@ -223,7 +223,7 @@
     <?php } ?>
     
     <?php
-    if( $preturn_customer != false || $preturn_kibandas != false || $preturn_customer_group != false || $preturn_customer_ban_ip != false) {
+    if( (!$this->user->isAccountManager() )  &&($preturn_customer != false || $preturn_kibandas != false || $preturn_customer_group != false || $preturn_customer_ban_ip != false)) {
     ?>
     <li><a class="parent"><i class="fa fa-user fa-fw"></i> <span><?php echo $text_customer; ?></span></a>
         <ul class="collapse">
@@ -245,7 +245,7 @@
             <li><a href="<?php echo $customer_feedback; ?>"><?php echo $text_customer_feedback; ?></a></li>
             <?php } ?>
             
-            <?php if($preturn_customer) { ?>
+            <?php if($preturn_customer_otp) { ?>
             <li><a href="<?php echo $customer_otp; ?>">Customer OTP</a></li>
             <?php } ?>
 
@@ -334,6 +334,11 @@
             <?php if($preturn_customer_otp) { ?>
             <li><a href="<?php echo $customer_otp; ?>">Customer OTP</a></li>
              <?php } ?>
+
+               <?php if($preturn_kibandas) { ?>
+            <li><a href="<?php echo $kibanda; ?>"><?php echo $text_kibanda; ?></a></li>
+            <?php } ?>
+            
         </ul>
     </li>
     <?php } ?>
@@ -775,7 +780,7 @@
             <?php }?>
 
 
-               <?php if( ($preturn_report_finance != false) || ($preturn_report_receivables_summary || $preturn_report_receivables_ageing  || $preturn_report_missing_products_revenue || $preturn_report_order_product_missing_products)) { ?>
+               <?php if( ($preturn_report_finance != false) ||$preturn_sale_daily != false|| ($preturn_report_receivables_summary || $preturn_report_receivables_ageing  || $preturn_report_missing_products_revenue || $preturn_report_order_product_missing_products)) { ?>
             <li><a class="parent">Finance</a>
                 <ul>
                    
@@ -797,6 +802,9 @@
             <li><a href="<?php echo $report_missing_products_revenue; ?>">Missing Products Revenue Lost</a></li>
             <?php } ?>
 
+             <?php if($preturn_sale_daily) { ?>
+                    <li><a href="<?php echo $report_sale_daily; ?>">Daily Sales</a></li>
+                    <?php }?>
             
                 </ul>
             </li>

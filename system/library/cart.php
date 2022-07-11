@@ -152,6 +152,25 @@ class Cart {
                         $price = $special_price;
                     }
 
+                    //FOR CATEGORY DISCOUNT
+                    $result['product_store_id'] = $product_query->row['product_store_id'];
+                    $result['special_price'] = $price;
+                    $result['price'] = $price;
+                    $result['store_id'] = $product['store_id'];
+
+                    $category_discount_response = NULL;
+                    $product_query->row['discount_price'] = 0;
+                    $product_query->row['discount_percentage'] = 0;
+                    if ($this->customer->getCustomerCategory() == NULL && $this->customer->getCustomerDiscountCategory() != NULL) {
+                        $category_discount_response = $this->load->controller('common/customercategorydiscount', $result);
+                        if (isset($category_discount_response) && is_array($category_discount_response)) {
+
+                            $product_query->row['discount_price'] = $category_discount_response['discount_price'];
+                            $product_query->row['discount_percentage'] = $category_discount_response['discount_percentage'];
+                        }
+                    }
+                    //FOR CATEGORY DISCOUNT
+
                     $this->data[$keys] = [
                         'key' => $keys,
                         'product_store_id' => $product_query->row['product_store_id'],
@@ -182,6 +201,8 @@ class Cart {
                         'length_class_id' => 0,
                         'recurring' => false,
                         'produce_type' => $produce_type,
+                        'discount_price' => $product_query->row['discount_price'],
+                        'discount_percentage' => $product_query->row['discount_percentage'],
                     ];
                 } else {
                     $this->remove($keys);
@@ -318,6 +339,25 @@ class Cart {
                         $price = $orignal_price;
                     }
 
+                    //FOR CATEGORY DISCOUNT
+                    $result['product_store_id'] = $product_query->row['product_store_id'];
+                    $result['special_price'] = $orignal_price;
+                    $result['price'] = $orignal_price;
+                    $result['store_id'] = $product['store_id'];
+
+                    $category_discount_response = NULL;
+                    $product_query->row['discount_price'] = 0;
+                    $product_query->row['discount_percentage'] = 0;
+                    if ($this->customer->getCustomerCategory() == NULL && $this->customer->getCustomerDiscountCategory() != NULL) {
+                        $category_discount_response = $this->load->controller('common/customercategorydiscount', $result);
+                        if (isset($category_discount_response) && is_array($category_discount_response)) {
+
+                            $product_query->row['discount_price'] = $category_discount_response['discount_price'];
+                            $product_query->row['discount_percentage'] = $category_discount_response['discount_percentage'];
+                        }
+                    }
+                    //FOR CATEGORY DISCOUNT
+
                     $this->data[$keys] = [
                         'key' => $keys,
                         'product_store_id' => $product_query->row['product_store_id'],
@@ -352,6 +392,8 @@ class Cart {
                         'height' => 0,
                         'length_class_id' => 0,
                         'recurring' => false,
+                        'discount_price' => $product_query->row['discount_price'],
+                        'discount_percentage' => $product_query->row['discount_percentage'],
                     ];
                 } else {
                     $this->remove($keys);
@@ -810,6 +852,44 @@ class Cart {
         return $tax_data;
     }
 
+    public function getDiscounts() {
+        $discount_data = [];
+
+        foreach ($this->getProducts() as $product) {
+            if ($product['discount_percentage']) {
+                $discount_amount_data = $this->tax->getDiscounts($product['price'] * $product['quantity'], $product['discount_percentage'], $product['product_store_id']);
+
+                foreach ($discount_amount_data as $discount_amount) {
+
+                    if (isset($discount_amount['amount']) && $discount_amount['amount'] > 0) {
+                        $discount_data['discount'][] = $discount_amount;
+                    }
+                }
+            }
+        }
+
+        return $discount_data;
+    }
+
+    public function getDiscountsByStore($store_id) {
+        $discount_data = [];
+
+        foreach ($this->getProducts() as $product) {
+            if ($product['discount_percentage'] && $product['store_id'] == $store_id) {
+                $discount_amount_data = $this->tax->getDiscounts($product['price'] * $product['quantity'], $product['discount_percentage'], $product['product_store_id']);
+
+                foreach ($discount_amount_data as $discount_amount) {
+
+                    if (isset($discount_amount['amount']) && $discount_amount['amount'] > 0) {
+                        $discount_data['discount'][] = $discount_amount;
+                    }
+                }
+            }
+        }
+
+        return $discount_data;
+    }
+
     public function getTaxesByStore($store_id) {
         $tax_data = [];
 
@@ -1057,6 +1137,25 @@ class Cart {
                         $price = $orignal_price;
                     }
 
+                    //FOR CATEGORY DISCOUNT
+                    $result['product_store_id'] = $product_query->row['product_store_id'];
+                    $result['special_price'] = $orignal_price;
+                    $result['price'] = $orignal_price;
+                    $result['store_id'] = $product['store_id'];
+
+                    $category_discount_response = NULL;
+                    $product_query->row['discount_price'] = 0;
+                    $product_query->row['discount_percentage'] = 0;
+                    if ($this->customer->getCustomerCategory() == NULL && $this->customer->getCustomerDiscountCategory() != NULL) {
+                        $category_discount_response = $this->load->controller('common/customercategorydiscount', $result);
+                        if (isset($category_discount_response) && is_array($category_discount_response)) {
+
+                            $product_query->row['discount_price'] = $category_discount_response['discount_price'];
+                            $product_query->row['discount_percentage'] = $category_discount_response['discount_percentage'];
+                        }
+                    }
+                    //FOR CATEGORY DISCOUNT
+
                     if ($product['store_id'] == $store_id) {
                         $this->data[$keys] = [
                             'key' => $keys,
@@ -1092,6 +1191,8 @@ class Cart {
                             'height' => 0,
                             'length_class_id' => 0,
                             'recurring' => false,
+                            'discount_price' => $product_query->row['discount_price'],
+                            'discount_percentage' => $product_query->row['discount_percentage'],
                         ];
                     }
                 } else {

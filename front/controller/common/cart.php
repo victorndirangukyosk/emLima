@@ -1,9 +1,8 @@
 <?php
 
-class ControllerCommonCart extends Controller
-{
-    public function index()
-    {
+class ControllerCommonCart extends Controller {
+
+    public function index() {
         $this->load->language('common/cart');
 
         // Totals
@@ -14,6 +13,7 @@ class ControllerCommonCart extends Controller
         $total_data = [];
         $total = 0;
         $taxes = $this->cart->getTaxes();
+        $custom_discounts = $this->cart->getDiscounts();
 
         // Display prices
         if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
@@ -22,16 +22,20 @@ class ControllerCommonCart extends Controller
             $results = $this->model_extension_extension->getExtensions('total');
 
             foreach ($results as $key => $value) {
-                $sort_order[$key] = $this->config->get($value['code'].'_sort_order');
+                $sort_order[$key] = $this->config->get($value['code'] . '_sort_order');
             }
 
             array_multisort($sort_order, SORT_ASC, $results);
 
             foreach ($results as $result) {
-                if ($this->config->get($result['code'].'_status')) {
-                    $this->load->model('total/'.$result['code']);
-
-                    $this->{'model_total_'.$result['code']}->getTotal($total_data, $total, $taxes);
+                if ($this->config->get($result['code'] . '_status')) {
+                    $this->load->model('total/' . $result['code']);
+                    if ($result['code'] != 'discount') {
+                        $this->{'model_total_' . $result['code']}->getTotal($total_data, $total, $taxes);
+                    }
+                    if ($result['code'] == 'discount') {
+                        $this->{'model_total_' . $result['code']}->getTotal($total_data, $total, $taxes, NULL, $custom_discounts);
+                    }
                 }
             }
 
@@ -88,7 +92,7 @@ class ControllerCommonCart extends Controller
         $this->load->model('tool/upload');
 
         $data['products'] = [];
-        
+
         if (is_array($products)) {
             foreach ($products as $product) {
                 if ($product['image']) {
@@ -179,15 +183,14 @@ class ControllerCommonCart extends Controller
 
         $data['notices'] = [];
         //echo "<pre>";print_r($data['notices']);die;
-        if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/common/cart.tpl')) {
-            return $this->load->view($this->config->get('config_template').'/template/common/cart.tpl', $data);
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/cart.tpl')) {
+            return $this->load->view($this->config->get('config_template') . '/template/common/cart.tpl', $data);
         } else {
             return $this->load->view('default/template/common/cart.tpl', $data);
         }
     }
 
-    public function newIndex()
-    {
+    public function newIndex() {
         $this->load->language('common/cart');
 
         // Totals
@@ -217,6 +220,7 @@ class ControllerCommonCart extends Controller
         $total_data = [];
         $total = 0;
         $taxes = $this->cart->getTaxes();
+        $custom_discounts = $this->cart->getDiscounts();
 
         // Display prices
         if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
@@ -225,16 +229,20 @@ class ControllerCommonCart extends Controller
             $results = $this->model_extension_extension->getExtensions('total');
 
             foreach ($results as $key => $value) {
-                $sort_order[$key] = $this->config->get($value['code'].'_sort_order');
+                $sort_order[$key] = $this->config->get($value['code'] . '_sort_order');
             }
 
             array_multisort($sort_order, SORT_ASC, $results);
 
             foreach ($results as $result) {
-                if ($this->config->get($result['code'].'_status')) {
-                    $this->load->model('total/'.$result['code']);
-
-                    $this->{'model_total_'.$result['code']}->getTotal($total_data, $total, $taxes);
+                if ($this->config->get($result['code'] . '_status')) {
+                    $this->load->model('total/' . $result['code']);
+                    if ($result['code'] != 'discount') {
+                        $this->{'model_total_' . $result['code']}->getTotal($total_data, $total, $taxes);
+                    }
+                    if ($result['code'] == 'discount') {
+                        $this->{'model_total_' . $result['code']}->getTotal($total_data, $total, $taxes, NULL, $custom_discounts);
+                    }
                 }
             }
 
@@ -293,10 +301,10 @@ class ControllerCommonCart extends Controller
             if ($p_detail) {
                 $max_qty = $p_detail['quantity'];
             }
-            
-            if ($product['image'] != NULL && file_exists(DIR_IMAGE.$product['image'])) {
+
+            if ($product['image'] != NULL && file_exists(DIR_IMAGE . $product['image'])) {
                 $image = $this->model_tool_image->resize($product['image'], $this->config->get('config_image_cart_width'), $this->config->get('config_image_cart_height'));
-            } else if($product['image'] == NULL || !file_exists(DIR_IMAGE.$product['image'])) {
+            } else if ($product['image'] == NULL || !file_exists(DIR_IMAGE . $product['image'])) {
                 //$image = '';
 
                 $image = $this->model_tool_image->resize('placeholder.png', $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
@@ -319,7 +327,7 @@ class ControllerCommonCart extends Controller
 
                 $option_data[] = [
                     'name' => $option['name'],
-                    'value' => (utf8_strlen($value) > 20 ? utf8_substr($value, 0, 20).'..' : $value),
+                    'value' => (utf8_strlen($value) > 20 ? utf8_substr($value, 0, 20) . '..' : $value),
                     'type' => $option['type'],
                 ];
             }
@@ -362,7 +370,7 @@ class ControllerCommonCart extends Controller
                 'store_id' => $product['store_id'],
                 'produce_type' => $product['produce_type'],
                 //'store_name'     => $this->model_account_address->getStoreNameById($product['store_id']),
-                'href' => $this->url->link('product/product', 'product_store_id='.$product['product_store_id']),
+                'href' => $this->url->link('product/product', 'product_store_id=' . $product['product_store_id']),
             ];
         }
 
@@ -385,27 +393,24 @@ class ControllerCommonCart extends Controller
             //echo "<pre>";print_r($tmp);die;
             $data['arr'] = $tmp;
 
-        // if(isset($this->session->data['config_store_id'])) {
-      //       	$store_info = $this->model_account_address->getStoreData($this->session->data['config_store_id']);
-      //       	if (isset($store_info) && $store_info['logo']) {
-         //            $data['image'] = $this->model_tool_image->resize($store_info['logo'], 155,155);
-         //        } else {
-         //            $data['image']= $this->model_tool_image->resize('placeholder.png', 155,155);
-         //        }
-
-      //       }
-
+            // if(isset($this->session->data['config_store_id'])) {
+            //       	$store_info = $this->model_account_address->getStoreData($this->session->data['config_store_id']);
+            //       	if (isset($store_info) && $store_info['logo']) {
+            //            $data['image'] = $this->model_tool_image->resize($store_info['logo'], 155,155);
+            //        } else {
+            //            $data['image']= $this->model_tool_image->resize('placeholder.png', 155,155);
+            //        }
+            //       }
             //echo "<pre>";print_r($data['arr']);die;
         } else {
             $data['arr'] = $data['arrs'];
         }
 
-        if ($this->config->get('config_logo') && is_file(DIR_IMAGE.$this->config->get('config_logo'))) {
+        if ($this->config->get('config_logo') && is_file(DIR_IMAGE . $this->config->get('config_logo'))) {
             $data['image'] = $this->model_tool_image->resize($this->config->get('config_logo'), 155, 155);
         }
 
         //echo "<pre>";print_r($data['products']);die;
-
         // Gift Voucher
         $data['vouchers'] = [];
 
@@ -432,20 +437,19 @@ class ControllerCommonCart extends Controller
 
         $data['notices'] = [];
         //echo "<pre>";print_r($data);die;
-        if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/common/cart.tpl')) {
-            return $this->load->view($this->config->get('config_template').'/template/common/cart.tpl', $data);
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/cart.tpl')) {
+            return $this->load->view($this->config->get('config_template') . '/template/common/cart.tpl', $data);
         } else {
             return $this->load->view('default/template/common/cart.tpl', $data);
         }
     }
 
-    public function info()
-    {
+    public function info() {
         $this->response->setOutput($this->index());
     }
 
-    public function newInfo()
-    {
+    public function newInfo() {
         $this->response->setOutput($this->newIndex());
     }
+
 }

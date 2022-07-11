@@ -125,12 +125,11 @@ class ModelAccountCustomer extends Model {
             $parent_info = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . (int) $data['parent'] . "'");
             $customer_category = $parent_info->row['customer_category'];
         }
-        if(($customer_category == null || empty($customer_category) ) && $customer_group_id==$this->config->get('config_kibandas_customer_group_id') )
-        {
-            $customer_category ='KIBANDA_PRICE_CATEGORY';
+        if (($customer_category == null || empty($customer_category) ) && $customer_group_id == $this->config->get('config_kibandas_customer_group_id')) {
+            $customer_category = 'KIBANDA_PRICE_CATEGORY';
         }
 
-        
+
         if (!isset($data['dob'])) {
             //$this->db->query("INSERT INTO " . DB_PREFIX . "customer SET customer_group_id = '" . (int) $customer_group_id . "', store_id = '" . (int) $this->config->get('config_store_id') . "', firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', company_name = '" . $this->db->escape($data['company_name']) . "', company_address = '" . $this->db->escape($data['company_address']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', gender = '" . $this->db->escape($data['gender']). "', fax = '" . $this->db->escape($data['fax']) . "', custom_field = '" . $this->db->escape(isset($data['custom_field']['account']) ? serialize($data['custom_field']['account']) : '') . "', salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', newsletter = '" . (isset($data['newsletter']) ? (int) $data['newsletter'] : 0) . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "', status = '1', approved = '" . (int) !$customer_group_info['approval'] . "', date_added = NOW()");
             $this->db->query('INSERT INTO ' . DB_PREFIX . "customer SET customer_group_id = '" . (int) $customer_group_id . "', store_id = '" . (int) $this->config->get('config_store_id') . "', firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', company_name = '" . $this->db->escape($data['company_name']) . "', company_address = '" . $this->db->escape($data['company_address']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', gender = '" . $this->db->escape($data['gender']) . "', trade_name = '" . $this->db->escape($data['trade_name']) . "', watsapp_no = '" . $this->db->escape($data['watsapp_no']) . "', fax = '" . $this->db->escape($data['fax']) . "', custom_field = '" . $this->db->escape(isset($data['custom_field']['account']) ? serialize($data['custom_field']['account']) : '') . "', salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', newsletter = '" . (isset($data['newsletter']) ? (int) $data['newsletter'] : 0) . "',parent = '" . (isset($data['parent']) ? (int) $data['parent'] : null) . "',customer_category = '" . (null != $customer_category ? $customer_category : null) . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "', status = '" . (int) $status . "', approved = '" . (int) $customer_group_info['approval'] . "', source = '" . $source . "', latitude = '" . $login_latitude . "', longitude = '" . $login_longitude . "', sub_customer_order_approval = '" . $sub_customer_order_approval . "', account_manager_id = '" . $customer_accountmanager_id . "', date_added = NOW()");
@@ -142,12 +141,9 @@ class ModelAccountCustomer extends Model {
         $customer_id = $this->db->getLastId();
         $this->savepassword($customer_id, $data['password']);
 
-        
-
-        if(empty($data['email']) &&  $customer_group_id==$this->config->get('config_kibandas_customer_group_id'))
-        {
-        $temp_email="KB".$customer_id."@yopmail.com";
-        $this->db->query('UPDATE ' . DB_PREFIX . "customer SET email = '" . $temp_email . "' WHERE customer_id = '" . (int) $customer_id . "'");
+        if (empty($data['email'])) {//&&  $customer_group_id==$this->config->get('config_kibandas_customer_group_id')
+            $temp_email = "KB" . $customer_id . "@yopmail.com";
+            $this->db->query('UPDATE ' . DB_PREFIX . "customer SET email = '" . $temp_email . "' WHERE customer_id = '" . (int) $customer_id . "'");
         }
 
         if (!empty($data['country_id'])) {
@@ -189,19 +185,18 @@ class ModelAccountCustomer extends Model {
             if (!$customer_group_info['approval']) {
                 try {
                     //Customer Registration Register
-                    if(isset($data['email']) && !empty($data['email']))
-                    {
-                    $subject = $this->emailtemplate->getSubject('Customer', 'customer_1', $data);
-                    $message = $this->emailtemplate->getMessage('Customer', 'customer_1', $data);
-                    $sms_message = $this->emailtemplate->getSmsMessage('Customer', 'customer_1', $data);
+                    if (isset($data['email']) && !empty($data['email'])) {
+                        $subject = $this->emailtemplate->getSubject('Customer', 'customer_1', $data);
+                        $message = $this->emailtemplate->getMessage('Customer', 'customer_1', $data);
+                        $sms_message = $this->emailtemplate->getSmsMessage('Customer', 'customer_1', $data);
 
-                    $mail = new Mail($this->config->get('config_mail'));
-                    $mail->setTo($data['email']);
-                    $mail->setFrom($this->config->get('config_from_email'));
-                    $mail->setSender($this->config->get('config_name'));
-                    $mail->setSubject($subject);
-                    $mail->setHTML($message);
-                    $mail->send();
+                        $mail = new Mail($this->config->get('config_mail'));
+                        $mail->setTo($data['email']);
+                        $mail->setFrom($this->config->get('config_from_email'));
+                        $mail->setSender($this->config->get('config_name'));
+                        $mail->setSubject($subject);
+                        $mail->setHTML($message);
+                        $mail->send();
                     }
                 } catch (Exception $e) {
                     
@@ -320,20 +315,19 @@ class ModelAccountCustomer extends Model {
         }
     }
 
-
     public function resetPasswordWithMobile($phone, $password) {
         //echo "<pre>";print_r($password);die;, ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "'
-        
-                if ($password && 'default' != $password) {
-        // echo "<pre>";print_r($this->db->escape($this->request->server['REMOTE_ADDR']));die;
-        
-                    $this->trigger->fire('pre.customer.edit.password');
-        
-                    $this->db->query('UPDATE ' . DB_PREFIX . "customer SET temporary_password = '" . $password . "',  temppassword = '" . $this->db->escape(1) . "',   salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($password)))) . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "' WHERE telephone = '" . $this->db->escape(($phone)) . "'");
-        
-                    $this->trigger->fire('post.customer.edit.password');
-                }
-            }
+
+        if ($password && 'default' != $password) {
+            // echo "<pre>";print_r($this->db->escape($this->request->server['REMOTE_ADDR']));die;
+
+            $this->trigger->fire('pre.customer.edit.password');
+
+            $this->db->query('UPDATE ' . DB_PREFIX . "customer SET temporary_password = '" . $password . "',  temppassword = '" . $this->db->escape(1) . "',   salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($password)))) . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "' WHERE telephone = '" . $this->db->escape(($phone)) . "'");
+
+            $this->trigger->fire('post.customer.edit.password');
+        }
+    }
 
     public function editPassword($email, $password) {
 //  echo "<pre>";print_r($password);die;
@@ -553,15 +547,13 @@ class ModelAccountCustomer extends Model {
         }
     }
 
-
-
     public function resetPasswordMailWithMobile($phone, $password) {
         $customer = $this->getCustomerByPhone($phone);
 
         $data = [
             'firstname' => $customer['firstname'],
             'lastname' => $customer['lastname'],
-            'email' => $customer['telephone'],//this is substituted as username in mail template
+            'email' => $customer['telephone'], //this is substituted as username in mail template
             'email_to' => $customer['email'],
             'telephone' => $customer['telephone'],
             'password' => $password,
@@ -572,15 +564,14 @@ class ModelAccountCustomer extends Model {
         //Reset Password id = 3
         $subject = $this->emailtemplate->getSubject('Customer', 'customer_3', $data);
         $message = $this->emailtemplate->getMessage('Customer', 'customer_3', $data);
-        if(!empty($data['email_to']))
-        {
-        $mail = new Mail($this->config->get('config_mail'));
-        $mail->setTo($data['email_to']);
-        $mail->setFrom($this->config->get('config_from_email'));
-        $mail->setSender($this->config->get('config_name'));
-        $mail->setSubject($subject);
-        $mail->setHTML($message);
-        $mail->send();
+        if (!empty($data['email_to'])) {
+            $mail = new Mail($this->config->get('config_mail'));
+            $mail->setTo($data['email_to']);
+            $mail->setFrom($this->config->get('config_from_email'));
+            $mail->setSender($this->config->get('config_name'));
+            $mail->setSubject($subject);
+            $mail->setHTML($message);
+            $mail->send();
         }
     }
 
@@ -594,7 +585,7 @@ class ModelAccountCustomer extends Model {
         $data = [
             'firstname' => $customer['firstname'],
             'lastname' => $customer['lastname'],
-            'email' => $customer['telephone'],//this is substituted as username in mail template
+            'email' => $customer['telephone'], //this is substituted as username in mail template
             'email_to' => $customer['email'],
             'telephone' => $customer['telephone'],
             'password' => $password,
@@ -764,6 +755,20 @@ class ModelAccountCustomer extends Model {
             }
         }
         $this->cache->set('category_price_data', $cache_price_data);
+    }
+
+    public function cacheProductDiscounts($store_id) {
+        $this->cache->delete('category_discount_data');
+        $cache_price_data = [];
+        $sql = 'SELECT * FROM `' . DB_PREFIX . "customer_discount` where `store_id` > 0";
+        $resultsdata = $this->db->query($sql);
+        if (count($resultsdata->rows) > 0) {
+            foreach ($resultsdata->rows as $result) {
+                $cache_price_data[$result['product_store_id'] . '_' . $result['price_category'] . '_' . $result['store_id']] = $result['discount'];
+                $cache_price_data[$result['product_store_id'] . '_' . $result['price_category'] . '_' . $result['store_id'] . '_' . 'STATUS'] = $result['status'];
+            }
+        }
+        $this->cache->set('category_discount_data', $cache_price_data);
     }
 
     public function CheckHeIsParent() {

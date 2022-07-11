@@ -835,6 +835,9 @@ class ControllerCheckoutConfirm extends Controller {
 
                 $total = 0;
                 $taxes = $this->cart->getTaxes();
+                $custom_discounts = $this->cart->getDiscounts();
+                $custom_discounts_by_store = $this->cart->getDiscountsByStore($store_id);
+
                 $taxes_by_store = $this->cart->getTaxesByStore($store_id);
                 $log->write('taxes_by_store');
                 $log->write($taxes_by_store);
@@ -865,7 +868,14 @@ class ControllerCheckoutConfirm extends Controller {
                             }
                             $shipping_added = 1; //shipping charge added to one of the stores
                         } else {
-                            $this->{'model_total_' . $result['code']}->getTotal($order_data[$store_id]['totals'], $total, $taxes_by_store, $store_id);
+
+                            if ($result['code'] != 'discount') {
+                                $this->{'model_total_' . $result['code']}->getTotal($order_data[$store_id]['totals'], $total, $taxes_by_store, $store_id);
+                            }
+
+                            if ($result['code'] == 'discount') {
+                                $this->{'model_total_' . $result['code']}->getTotal($order_data[$store_id]['totals'], $total, $taxes, $store_id, $custom_discounts_by_store);
+                            }
                         }
                     }
                 }
@@ -1069,6 +1079,9 @@ class ControllerCheckoutConfirm extends Controller {
                             'total' => $product['total'],
                             'tax' => $this->tax->getTax($product['price'], $product['tax_class_id']),
                             'reward' => $product['reward'],
+                            'discount_percentage' => $product['discount_percentage'],
+                            'discount_percentage_amount' => $product['price'] - ($product['price'] * ($product['discount_percentage'] / 100)),
+                            'discount_price' => $product['discount_price'],
                         ];
                     }
                 }

@@ -9,6 +9,7 @@ class ControllerCheckoutPaymentMethod extends Controller {
         $total_data = [];
         $total = 0;
         $taxes = $this->cart->getTaxes();
+        $custom_discounts = $this->cart->getDiscounts();
 
         $this->load->model('extension/extension');
 
@@ -26,7 +27,13 @@ class ControllerCheckoutPaymentMethod extends Controller {
             if ($this->config->get($result['code'] . '_status')) {
                 $this->load->model('total/' . $result['code']);
 
-                $this->{'model_total_' . $result['code']}->getTotal($total_data, $total, $taxes);
+                if ($result['code'] != 'discount') {
+                    $this->{'model_total_' . $result['code']}->getTotal($total_data, $total, $taxes);
+                }
+
+                if ($result['code'] == 'discount') {
+                    $this->{'model_total_' . $result['code']}->getTotal($total_data, $total, $taxes, NULL, $custom_discounts);
+                }
             }
         }
 

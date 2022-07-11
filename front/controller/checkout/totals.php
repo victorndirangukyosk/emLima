@@ -15,6 +15,7 @@ class ControllerCheckoutTotals extends Controller {
         $total_data = [];
         $total = 0;
         $taxes = $this->cart->getTaxes();
+        $custom_discounts = $this->cart->getDiscounts();
 
         if (isset($this->request->get['add_delivery_charges']) && $this->request->get['add_delivery_charges'] != NULL) {
             $this->session->data['add_delivery_charges'] = $this->request->get['add_delivery_charges'];
@@ -36,7 +37,13 @@ class ControllerCheckoutTotals extends Controller {
                 if ($this->config->get($result['code'] . '_status')) {
                     $this->load->model('total/' . $result['code']);
 
-                    $this->{'model_total_' . $result['code']}->getTotal($total_data, $total, $taxes);
+                    if ($result['code'] != 'discount') {
+                        $this->{'model_total_' . $result['code']}->getTotal($total_data, $total, $taxes);
+                    }
+
+                    if ($result['code'] == 'discount') {
+                        $this->{'model_total_' . $result['code']}->getTotal($total_data, $total, $taxes, NULL, $custom_discounts);
+                    }
                 }
             }
             // echo "<pre>";print_r($results);die;

@@ -452,10 +452,27 @@
               <div class="_25ygu">
                 <?=$product['name']?>
                 <br/>
+                
+                <?php if($product['variations'][0]['discount_percentage'] > 0) { ?>
+                <div>
+                  <del><?= $product['variations'][0]['special'];?></del>(<?= $product['variations'][0]['discount_percentage'];?>% OFF)
+                </div>
+                <?php } ?>
+                
+                <?php if($product['variations'][0]['discount_percentage'] > 0) { ?>
+                <div style="color:#6dbd46">
+                  <?= $product['variations'][0]['discount_price'];?>
+                  <?php  echo '/ Per ' . $product['variations'][0]['unit']; ?>
+                </div>
+                <?php } ?>
+                
+                <?php if($product['variations'][0]['discount_percentage'] <= 0) { ?>
                 <div style="color:#6dbd46">
                   <?= $product['variations'][0]['special'];?>
                   <?php  echo '/ Per ' . $product['variations'][0]['unit']; ?>
                 </div>
+                <?php } ?>
+                
                 <span id="flag-qty-id-<?= $product['product_store_id'] ?>-<?= $product['store_product_variation_id'] ?>"
                   style="padding:5px;display: <?= $product['qty_in_cart'] ? 'block' : 'none'; ?>">
                   <?php echo $product['qty_in_cart']?>
