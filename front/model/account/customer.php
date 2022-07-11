@@ -765,6 +765,7 @@ class ModelAccountCustomer extends Model {
         if (count($resultsdata->rows) > 0) {
             foreach ($resultsdata->rows as $result) {
                 $cache_price_data[$result['product_store_id'] . '_' . $result['price_category'] . '_' . $result['store_id']] = $result['discount'];
+                $cache_price_data[$result['product_store_id'] . '_' . $result['price_category'] . '_' . $result['store_id'] . '_' . 'STATUS'] = $result['status'];
             }
         }
         $this->cache->set('category_discount_data', $cache_price_data);
