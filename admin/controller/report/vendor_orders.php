@@ -69,7 +69,7 @@ class ControllerReportVendorOrders extends Controller {
         $this->model_report_excel->download_report_vendor_orders_excel($data);
     }
 
-    public function downloadorders() {
+    public function downloadorders() { 
         if (isset($this->request->get['filter_city'])) {
             $filter_city = $this->request->get['filter_city'];
         } else {
@@ -155,6 +155,13 @@ class ControllerReportVendorOrders extends Controller {
             $filter_order_status = null;
         }
 
+
+        if (isset($this->request->get['filter_customer_group'])) {
+            $filter_customer_group = $this->request->get['filter_customer_group'];
+        } else {
+            $filter_customer_group = null;
+        }
+
         if (isset($this->request->get['filter_order_type'])) {
             $filter_order_type = $this->request->get['filter_order_type'];
         } else {
@@ -224,6 +231,7 @@ class ControllerReportVendorOrders extends Controller {
             'filter_payment' => $filter_payment,
             'filter_paid' => $filter_paid,
             'filter_order_status' => $filter_order_status,
+            'filter_customer_group' => $filter_customer_group,
             'filter_order_type' => $filter_order_type,
             'filter_total' => $filter_total,
             'filter_date_added' => $filter_date_added,
@@ -421,7 +429,7 @@ class ControllerReportVendorOrders extends Controller {
         $this->model_report_excel->download_pezesha_orders_receivables_excel($filter_data);
     }
 
-    public function downloadordersstickers() {
+    public function downloadordersstickers() { 
         if (isset($this->request->get['filter_city'])) {
             $filter_city = $this->request->get['filter_city'];
         } else {
@@ -507,6 +515,13 @@ class ControllerReportVendorOrders extends Controller {
             $filter_order_status = null;
         }
 
+
+        if (isset($this->request->get['filter_customer_group'])) {
+            $filter_customer_group = $this->request->get['filter_customer_group'];
+        } else {
+            $filter_customer_group = null;
+        }
+
         if (isset($this->request->get['filter_order_type'])) {
             $filter_order_type = $this->request->get['filter_order_type'];
         } else {
@@ -576,6 +591,7 @@ class ControllerReportVendorOrders extends Controller {
             'filter_payment' => $filter_payment,
             'filter_paid' => $filter_paid,
             'filter_order_status' => $filter_order_status,
+            'filter_customer_group' => $filter_customer_group,
             'filter_order_type' => $filter_order_type,
             'filter_total' => $filter_total,
             'filter_date_added' => $filter_date_added,
@@ -1075,6 +1091,13 @@ class ControllerReportVendorOrders extends Controller {
             $order_status = null;
         }
 
+
+        if (isset($this->request->get['filter_customer_group'])) {
+            $customer_group = $this->request->get['filter_customer_group'];
+        } else {
+            $customer_group = null;
+        }
+
         if (isset($this->request->get['filter_company'])) {
             $company = $this->request->get['filter_company'];
         } else {
@@ -1155,6 +1178,7 @@ class ControllerReportVendorOrders extends Controller {
         $filter_data = [
             'filter_delivery_date' => $deliveryDate,
             'filter_order_status' => $order_status,
+            'filter_customer_group' => $customer_group,
             'filter_company' => $company,
             'filter_customer' => $customer,
             'filter_total' => $total,

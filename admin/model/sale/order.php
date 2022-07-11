@@ -1368,6 +1368,12 @@ class ModelSaleOrder extends Model {
             $sql .= " WHERE o.order_status_id > '0'";
         }
 
+
+        if (!empty($data['filter_customer_group'])) {
+            $sql .= ' AND cust.customer_group_id="' . $data['filter_customer_group'] . '"';
+            
+        }  
+
         //   echo "<pre>";print_r($data['filter_order_type']);die; 
 
         if (isset($data['filter_order_placed_from'])) {
@@ -2346,12 +2352,13 @@ class ModelSaleOrder extends Model {
     }
 
     public function getOrderswithProcessing($data = []) {
-        $sql = "SELECT c.name as city, o.firstname,o.lastname,o.comment, o.delivery_id, (SELECT cust.company_name FROM hf7_customer cust WHERE o.customer_id = cust.customer_id ) AS company_name,(SELECT cust.SAP_customer_no FROM hf7_customer cust WHERE o.customer_id = cust.customer_id ) AS SAP_customer_no,o.order_id, o.delivery_date, o.delivery_timeslot, o.shipping_method, o.shipping_address, o.payment_method,o.commission, CONCAT(o.firstname, ' ', o.lastname) AS customer, (SELECT os.name FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS status, o.shipping_code, o.order_status_id,o.store_name,o.store_id , o.total, o.currency_code, o.currency_value, o.date_added, o.date_modified,o.po_number,o.SAP_doc_no FROM `" . DB_PREFIX . 'order` o ';
+        $sql = "SELECT c.name as city, o.firstname,o.lastname,o.comment, o.delivery_id, cust.company_name AS company_name,cust.SAP_customer_no  AS SAP_customer_no,o.order_id, o.delivery_date, o.delivery_timeslot, o.shipping_method, o.shipping_address, o.payment_method,o.commission, CONCAT(o.firstname, ' ', o.lastname) AS customer, (SELECT os.name FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS status, o.shipping_code, o.order_status_id,o.store_name,o.store_id , o.total, o.currency_code, o.currency_value, o.date_added, o.date_modified,o.po_number,o.SAP_doc_no FROM `" . DB_PREFIX . 'order` o ';
         //$sql = "SELECT c.name as city, o.firstname,o.lastname,o.comment, (SELECT cust.company_name FROM hf7_customer cust WHERE o.customer_id = cust.customer_id ) AS company_name,o.order_id, o.delivery_date, o.delivery_timeslot, o.shipping_method, o.shipping_address, o.payment_method, CONCAT(o.firstname, ' ', o.lastname) AS customer, (SELECT os.name FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS status,(SELECT os.color FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS color, o.shipping_code, o.order_status_id,o.store_name,  o.total, o.currency_code, o.currency_value, o.date_added, o.date_modified,o.po_number FROM `" . DB_PREFIX . "order` o ";
         // $sql = "SELECT c.name as city, o.firstname,o.lastname,o.comment, o.delivery_id,    cust.company_name AS company_name,o.order_id, o.delivery_date, o.delivery_timeslot, o.shipping_method, o.shipping_address, o.payment_method, o.commission, CONCAT(o.firstname, ' ', o.lastname) AS customer, (SELECT os.name FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS status,(SELECT os.color FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS color, o.shipping_code, o.order_status_id,o.store_name,o.store_id,  o.total, o.currency_code, o.currency_value, o.date_added, o.date_modified,o.po_number,o.SAP_customer_no,o.SAP_doc_no FROM `" . DB_PREFIX . 'order` o ';
 
         $sql .= 'left join `' . DB_PREFIX . 'city` c on c.city_id = o.shipping_city_id';
         $sql .= ' LEFT JOIN ' . DB_PREFIX . 'store on(' . DB_PREFIX . 'store.store_id = o.store_id) ';
+        $sql .= 'left join `' . DB_PREFIX . 'customer` cust on cust.customer_id = o.customer_id';
 
         if (isset($data['filter_order_status'])) {
             // $sql .= " WHERE o.order_status_id = '1' ";
@@ -2374,6 +2381,10 @@ class ModelSaleOrder extends Model {
             $sql .= " WHERE o.order_status_id not in (0,2,5,6,4,16,13,10,3)"; //8?
         }
 
+
+        if (isset($data['filter_customer_group'])) {
+            $sql .= ' AND cust.customer_group_id="' . $data['filter_customer_group'] . '"';
+        }
 
 
         if (isset($data['filter_orders'])) {
@@ -3029,6 +3040,11 @@ class ModelSaleOrder extends Model {
         } else {
             $sql .= " WHERE o.order_status_id > '0'";
         }
+
+        if (!empty($data['filter_customer_group'])) {
+            $sql .= ' AND cust.customer_group_id="' . $data['filter_customer_group'] . '"';
+            
+        }  
 
         if (isset($data['filter_order_type'])) {
             $sql .= ' AND isadmin_login="' . $data['filter_order_type'] . '"';
@@ -6419,12 +6435,13 @@ class ModelSaleOrder extends Model {
         return $query->rows;
     }
     public function getOrdersWithFilters($data = []) {
-        $sql = "SELECT c.name as city, o.firstname,o.lastname,o.comment, o.delivery_id, (SELECT cust.company_name FROM hf7_customer cust WHERE o.customer_id = cust.customer_id ) AS company_name,(SELECT cust.SAP_customer_no FROM hf7_customer cust WHERE o.customer_id = cust.customer_id ) AS SAP_customer_no,o.order_id, o.delivery_date, o.delivery_timeslot, o.shipping_method, o.shipping_address, o.payment_method,o.commission, CONCAT(o.firstname, ' ', o.lastname) AS customer, (SELECT os.name FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS status,(SELECT os.color FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS color, o.shipping_code, o.order_status_id,o.store_name,o.store_id , o.total, o.currency_code, o.currency_value, o.date_added, o.date_modified,o.po_number,o.SAP_doc_no FROM `" . DB_PREFIX . 'order` o ';
+        $sql = "SELECT c.name as city, o.firstname,o.lastname,o.comment, o.delivery_id, cust.company_name  AS company_name,cust.SAP_customer_no AS SAP_customer_no,o.order_id, o.delivery_date, o.delivery_timeslot, o.shipping_method, o.shipping_address, o.payment_method,o.commission, CONCAT(o.firstname, ' ', o.lastname) AS customer, (SELECT os.name FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS status,(SELECT os.color FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS color, o.shipping_code, o.order_status_id,o.store_name,o.store_id , o.total, o.currency_code, o.currency_value, o.date_added, o.date_modified,o.po_number,o.SAP_doc_no FROM `" . DB_PREFIX . 'order` o ';
         //$sql = "SELECT c.name as city, o.firstname,o.lastname,o.comment, (SELECT cust.company_name FROM hf7_customer cust WHERE o.customer_id = cust.customer_id ) AS company_name,o.order_id, o.delivery_date, o.delivery_timeslot, o.shipping_method, o.shipping_address, o.payment_method, CONCAT(o.firstname, ' ', o.lastname) AS customer, (SELECT os.name FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS status,(SELECT os.color FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS color, o.shipping_code, o.order_status_id,o.store_name,  o.total, o.currency_code, o.currency_value, o.date_added, o.date_modified,o.po_number FROM `" . DB_PREFIX . "order` o ";
         // $sql = "SELECT c.name as city, o.firstname,o.lastname,o.comment, o.delivery_id,    cust.company_name AS company_name,o.order_id, o.delivery_date, o.delivery_timeslot, o.shipping_method, o.shipping_address, o.payment_method, o.commission, CONCAT(o.firstname, ' ', o.lastname) AS customer, (SELECT os.name FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS status,(SELECT os.color FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS color, o.shipping_code, o.order_status_id,o.store_name,o.store_id,  o.total, o.currency_code, o.currency_value, o.date_added, o.date_modified,o.po_number,o.SAP_customer_no,o.SAP_doc_no FROM `" . DB_PREFIX . 'order` o ';
 
         $sql .= 'left join `' . DB_PREFIX . 'city` c on c.city_id = o.shipping_city_id';
         $sql .= ' LEFT JOIN ' . DB_PREFIX . 'store on(' . DB_PREFIX . 'store.store_id = o.store_id) ';
+        $sql .= 'left join `' . DB_PREFIX . 'customer` cust on cust.customer_id = o.customer_id';
 
         // if (isset($data['filter_order_status'])) {
         $sql .= " WHERE o.order_status_id not in (6,8,9,16)  And o.order_status_id > '0'";
@@ -6433,6 +6450,11 @@ class ModelSaleOrder extends Model {
         // $sql .= " WHERE o.order_status_id > '0'";
         // }
 
+
+        if (isset($data['filter_customer_group']) && !empty($data['filter_customer_group'])) {
+            $sql .= ' AND cust.customer_group_id="' . $data['filter_customer_group'] . '"';
+            
+        } 
 
         if (isset($data['filter_orders'])) {
 

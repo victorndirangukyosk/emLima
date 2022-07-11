@@ -1046,6 +1046,11 @@ class ControllerSaleOrder extends Controller {
                 $url .= '&filter_order_status=' . $this->request->get['filter_order_status'];
             }
 
+
+            if (isset($this->request->get['filter_customer_group'])) {
+                $url .= '&filter_customer_group=' . $this->request->get['filter_customer_group'];
+            }
+
             if (isset($this->request->get['filter_order_type'])) {
                 $filter_order_type = $this->request->get['filter_order_type'];
             } else {
@@ -1177,6 +1182,12 @@ class ControllerSaleOrder extends Controller {
             $filter_order_status = null;
         }
 
+        if (isset($this->request->get['filter_customer_group'])) {
+            $filter_customer_group = $this->request->get['filter_customer_group'];
+        } else {
+            $filter_customer_group = null;
+        }
+
         if (isset($this->request->get['filter_order_type'])) {
             $filter_order_type = $this->request->get['filter_order_type'];
         } else {
@@ -1292,6 +1303,11 @@ class ControllerSaleOrder extends Controller {
             $url .= '&filter_order_status=' . $this->request->get['filter_order_status'];
         }
 
+
+        if (isset($this->request->get['filter_customer_group'])) {
+            $url .= '&filter_customer_group=' . $this->request->get['filter_customer_group'];
+        }
+
         if (isset($this->request->get['filter_order_type'])) {
             $url .= '&filter_order_type=' . $this->request->get['filter_order_type'];
         }
@@ -1369,6 +1385,7 @@ class ControllerSaleOrder extends Controller {
             'filter_delivery_time_slot' => $filter_delivery_time_slot,
             'filter_payment' => $filter_payment,
             'filter_order_status' => $filter_order_status,
+            'filter_customer_group' => $filter_customer_group,            
             'filter_order_type' => $filter_order_type,
             'filter_order_placed_from' => $filter_order_placed_from,
             'filter_paid' => $filter_paid,
@@ -1584,6 +1601,10 @@ class ControllerSaleOrder extends Controller {
             $url .= '&filter_order_status=' . $this->request->get['filter_order_status'];
         }
 
+        if (isset($this->request->get['filter_customer_group'])) {
+            $url .= '&filter_customer_group=' . $this->request->get['filter_customer_group'];
+        }
+
         if (isset($this->request->get['filter_order_type'])) {
             $url .= '&filter_order_type=' . $this->request->get['filter_order_type'];
         }
@@ -1686,6 +1707,10 @@ class ControllerSaleOrder extends Controller {
             $url .= '&filter_order_status=' . $this->request->get['filter_order_status'];
         }
 
+        if (isset($this->request->get['filter_customer_group'])) {
+            $url .= '&filter_customer_group=' . $this->request->get['filter_customer_group'];
+        }
+        
         if (isset($this->request->get['filter_order_type'])) {
             $url .= '&filter_order_type=' . $this->request->get['filter_order_type'];
         }
@@ -1746,6 +1771,8 @@ class ControllerSaleOrder extends Controller {
         $data['filter_payment'] = $filter_payment;
 
         $data['filter_order_status'] = $filter_order_status;
+        $data['filter_customer_group'] = $filter_customer_group;
+        
         $data['filter_order_type'] = $filter_order_type;
         $data['filter_order_placed_from'] = $filter_order_placed_from;
         $data['filter_paid'] = $filter_paid;
@@ -1757,6 +1784,7 @@ class ControllerSaleOrder extends Controller {
         $this->load->model('localisation/order_status');
 
         $data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
+        $data['customer_groups'] = $this->model_localisation_order_status->getCustomerGroups();
 
         $data['sort'] = $sort;
         $data['order'] = $order;
@@ -1963,6 +1991,10 @@ class ControllerSaleOrder extends Controller {
 
         if (isset($this->request->get['filter_order_status'])) {
             $url .= '&filter_order_status=' . $this->request->get['filter_order_status'];
+        }
+
+        if (isset($this->request->get['filter_customer_group'])) {
+            $url .= '&filter_customer_group=' . $this->request->get['filter_customer_group'];
         }
 
         if (isset($this->request->get['filter_paid'])) {
@@ -2572,6 +2604,10 @@ class ControllerSaleOrder extends Controller {
 
             if (isset($this->request->get['filter_order_status'])) {
                 $url .= '&filter_order_status=' . $this->request->get['filter_order_status'];
+            }
+
+            if (isset($this->request->get['filter_customer_group'])) {
+                $url .= '&filter_customer_group=' . $this->request->get['filter_customer_group'];
             }
 
             if (isset($this->request->get['filter_paid'])) {
@@ -10382,7 +10418,7 @@ class ControllerSaleOrder extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
-    public function consolidatedCalculationSheetWithFilters() {
+    public function consolidatedCalculationSheetWithFilters() { 
         if (isset($this->request->get['filter_delivery_date'])) {
             $deliveryDate = $this->request->get['filter_delivery_date'];
         } else {//consolidated orders data should not be more , so get delivery date
@@ -10394,6 +10430,12 @@ class ControllerSaleOrder extends Controller {
             $order_status = $this->request->get['filter_order_status'];
         } else {
             $order_status = null;
+        }
+
+        if (isset($this->request->get['filter_customer_group'])) {
+            $customer_group = $this->request->get['filter_customer_group'];
+        } else {
+            $customer_group = null;
         }
 
         if (isset($this->request->get['filter_company'])) {
@@ -10476,6 +10518,7 @@ class ControllerSaleOrder extends Controller {
         $filter_data = [
             'filter_delivery_date' => $deliveryDate,
             'filter_order_status' => $order_status,
+            'filter_customer_group' => $customer_group,
             'filter_company' => $company,
             'filter_customer' => $customer,
             'filter_total' => $total,
