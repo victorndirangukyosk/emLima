@@ -317,8 +317,6 @@ class ControllerSaleCreditnote extends Controller {
         $log->write('products');
         //  echo "<pre>";print_r($datas);die;
 
-        $this->model_sale_order->updatePO($this->request->get['order_id'], $datas['po_number']);
-
         foreach ($datas['products'] as $p_id_key => $updateProduct) {
             if (!is_numeric($updateProduct['product_id'])) {
                 $json['status'] = false;
@@ -370,7 +368,7 @@ class ControllerSaleCreditnote extends Controller {
                 //insert the old totals , in to history table.
                 //only the orders editted for the first time, so the ordered products totals will be in history and editted totals goes on updating in order_total
                 // if (!$this->model_sale_order->hasRealOrderProducts($order_id)) {
-                $this->model_sale_order->insertOrderTotal_History($order_id, $totals);
+                $this->model_sale_order->insertCreditNoteTotal_History($order_id, $totals);
                 // }
                 //echo "<pre>";print_r($totals);die;
                 foreach ($totals as $total) {
@@ -385,33 +383,12 @@ class ControllerSaleCreditnote extends Controller {
                 }
 
                 //echo "<pre>";print_r($old_sub_total);die;
-
-                $allProductIds = $this->model_sale_order->getOrderProductsIds($order_id);
                 $product_numbers = array_keys($datas['products']);
                 $product_numbers_string = implode(',', $product_numbers);
 
-                $not_in_invoice_products = $this->model_sale_order->getinvoiceproducts($product_numbers_string, $order_id);
                 $log->write('product_numbers_string');
                 $log->write($product_numbers_string);
-                $log->write($not_in_invoice_products);
-                if (count($not_in_invoice_products) > 0) {
-                    foreach ($not_in_invoice_products as $not_in_invoice_product) {
-                        $order_missing_product_info = $this->model_sale_order->deleteOrderProductToMissingProductsFromInvoice($not_in_invoice_product['product_store_id'], $order_id);
-                    }
-                }
                 $log->write('product_numbers_string');
-
-                foreach ($allProductIds as $deletePro) {
-                    if (!isset($datas['products'][$deletePro['product_id']])) {
-                        $log->write('DELETE PRODUCT');
-                        $log->write($deletePro['product_id']);
-                        $log->write('DELETE PRODUCT');
-                        $products = $this->model_sale_order->deleteOrderProduct($order_id, $deletePro['product_id']);
-                        $order_missing_product_info = $this->model_sale_order->deleteOrderProductToMissingProductsFromInvoice($deletePro['product_id'], $order_id);
-                    } else {
-                        //$log->write("set");
-                    }
-                }
 
                 $sumTotal = 0;
 
