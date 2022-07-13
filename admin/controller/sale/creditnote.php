@@ -426,35 +426,17 @@ class ControllerSaleCreditnote extends Controller {
                         $updateProduct_tax_total = NULL;
                         //echo "<pre>";print_r($datas['products']);die;
                         $updateProduct_tax_total = $this->model_tool_image->getTaxTotalCustom($updateProduct, $store_id, $pricing_category, $custom_price);
-                        $products = $this->model_sale_order->updateOrderProduct($order_id, $p_id_key, $updateProduct, $updateProduct_tax_total);
+                        $products = $this->model_sale_order->updateCreditNoteProduct($order_id, $p_id_key, $updateProduct, $updateProduct_tax_total);
                     } else {
                         $updateProduct_tax_total = NULL;
                         //echo "<pre>";print_r($updateProduct);die;
                         $updateProduct_tax_total = $this->model_tool_image->getTaxTotalCustom($updateProduct, $store_id, $pricing_category, $custom_price);
-                        $products = $this->model_sale_order->updateOrderNewProduct($order_id, $updateProduct['product_id'], $updateProduct, $updateProduct_tax_total);
+                        $products = $this->model_sale_order->updateCreditNoteNewProduct($order_id, $updateProduct['product_id'], $updateProduct, $updateProduct_tax_total);
                     }
 
                     $sumTotal += ($updateProduct['price'] * $updateProduct['quantity']);
 
                     array_push($tempProds['products'], $updateProduct);
-
-                    if ($updateProduct['quantity_missed'] != NULL && $updateProduct['quantity_missed'] > 0) {
-                        $ordered_products = $this->model_sale_order->getRealOrderProductStoreId($order_id, $updateProduct['product_id']);
-                        if ($ordered_products == NULL) {
-                            $ordered_products = $this->model_sale_order->getOrderProductStoreId($order_id, $updateProduct['product_id']);
-                        }
-
-                        $order_missing_product_info = $this->model_sale_order->addOrderProductToMissingProducts($ordered_products['order_product_id'], $updateProduct['quantity_missed'], $ordered_products['name'], $ordered_products['unit'], $ordered_products['product_note'], $ordered_products['model'], $order_id, 1);
-                    }
-
-                    if ($updateProduct['quantity_missed'] != NULL && $updateProduct['quantity_missed'] <= 0) {
-                        $ordered_products = $this->model_sale_order->getRealOrderProductStoreId($order_id, $updateProduct['product_id']);
-                        if ($ordered_products == NULL) {
-                            $ordered_products = $this->model_sale_order->getOrderProductStoreId($order_id, $updateProduct['product_id']);
-                        }
-
-                        $order_missing_product_info = $this->model_sale_order->deleteOrderProductToMissingProducts($ordered_products['order_product_id'], $updateProduct['quantity_missed'], $ordered_products['name'], $ordered_products['unit'], $ordered_products['product_note'], $ordered_products['model'], $order_id);
-                    }
                 }
 
                 $subTotal = $sumTotal;
@@ -490,7 +472,7 @@ class ControllerSaleCreditnote extends Controller {
                 //die;
                 //saving order total below
 
-                $this->model_sale_order->deleteOrderTotal($order_id);
+                $this->model_sale_order->deleteCreditNoteOrderTotal($order_id);
 
                 foreach ($datas['totals'] as $p_id_code => $tot) {
                     $sumTotal += $tot['value'];
@@ -615,79 +597,6 @@ class ControllerSaleCreditnote extends Controller {
 
                 //$this->sendNewInvoice($order_id);
                 // echo "<pre>";print_r($this->request->get['settle']);die;
-
-
-                if ($this->request->get['settle']) {
-                    //settle and  update
-                    $log->write('if settle');
-                    $customer_id = $this->request->get['customer_id'];
-                    $final_amount = $orderTotal;
-
-                    $log->write($final_amount);
-                    $log->write($old_total);
-
-                    if ($final_amount != $old_total) {
-
-                        //update Payment Paid status and pending amount
-                        $this->model_sale_order->updatePaymentStatus($order_id, $customer_id, $old_total, $final_amount);
-
-                        //$iuguData = $this->refundAndChargeNewTotalStripe($order_id,$customer_id,$final_amount);
-                    } else {
-                        $log->write('same amount settle');
-                    }
-
-                    /* $iuguData = $this->model_sale_order->getOrderIuguAndTotal($order_id);
-
-                      if($iuguData) {
-
-                      $log->write("if iugu");
-
-                      $description = 'On Order #'.$order_id;
-
-
-                      if($this->request->get['charge']) {
-
-                      //new invoice is charged
-
-                      $userCharged = $this->chargeCustomer($customer_id,$description,$final_amount,$order_id);
-
-                      if(isset($order_id) && isset($final_amount) && $userCharged) {
-
-                      $this->model_sale_order->settle_payment($order_id, $final_amount);
-                      }
-
-                      } else {
-
-                      //refund is done
-                      $userCharged = $this->refundCustomer($customer_id,$description,$final_amount,$order_id);
-                      }
-
-                      $json['success'] = $this->language->get('text_settlement');
-
-                      } else {
-                      $log->write("else iugu");
-
-                      } */
-                } else {
-                    //not settle only update so reset column settlement_amount
-                    $this->model_sale_order->settle_payment($order_id, $orderTotal);
-                }
-                $filter['filter_order_id'] = $order_id;
-                $products = $this->model_sale_order->getOrderedMissingProducts($filter);
-                $log->write('MISSING PRODUCTS COUNT');
-                $log->write(count($products));
-                $log->write($order_info['delivery_timeslot']);
-                $log->write('MISSING PRODUCTS COUNT');
-                if (is_array($products) && count($products) > 0 /* && ($order_info['delivery_timeslot'] == '06:00am - 08:00am' || $order_info['delivery_timeslot'] == '08:00am - 10:00am' || $order_info['delivery_timeslot'] == '10:00am - 12:00am') */) {
-                    try {
-                        $this->load->controller('sale/order_product_missing/sendmailwithmissingproducts', $order_id);
-                    } catch (exception $ex) {
-                        $log = new Log('error.log');
-                        $log->write('EDIT INVOICE EXCEPTION');
-                        $log->write($ex);
-                        $log->write('EDIT INVOICE EXCEPTION');
-                    }
-                }
             } else {
                 $json['status'] = false;
             }
@@ -742,7 +651,7 @@ class ControllerSaleCreditnote extends Controller {
 
         return !$this->error;
 
-        //        return true;
+//        return true;
     }
 
     protected function validateform($products) {
@@ -840,7 +749,7 @@ class ControllerSaleCreditnote extends Controller {
 
         $deliveryAlreadyCreated = $this->model_account_order->getOrderDSDeliveryId($order_id);
 
-        //$deliveryAlreadyCreated = true;
+//$deliveryAlreadyCreated = true;
 
         if ($order_info && $products && $deliveryAlreadyCreated) {
             $log->write('if');

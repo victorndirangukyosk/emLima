@@ -2807,6 +2807,12 @@ class ModelSaleOrder extends Model {
         $query = $this->db->query($sql);
     }
 
+    public function deleteCreditNoteOrderTotal($order_id) {
+        $sql = 'DELETE FROM ' . DB_PREFIX . "credit_note_total WHERE order_id = '" . (int) $order_id . "'";
+
+        $query = $this->db->query($sql);
+    }
+
     public function deleteOrderTotalWithOutShipping($order_id) {
         $sql = 'DELETE FROM ' . DB_PREFIX . "order_total WHERE order_id = '" . (int) $order_id . "' and code !='shipping' and code !='delivery_vat'";
 
@@ -2914,6 +2920,54 @@ class ModelSaleOrder extends Model {
         }
     }
 
+    public function updateCreditNoteNewProduct($order_id, $product_id, $data, $tax = NULL) {
+        $log = new Log('error.log');
+        $log->write('updateCreditNoteNewProduct');
+
+        $log->write($data);
+        $tax_value = 0;
+        if (is_array($tax) && count($tax) > 0 && array_key_exists('code', $tax[0]) && array_key_exists('title', $tax[0]) && array_key_exists('value', $tax[0]) && array_key_exists('sort_order', $tax[0]) && $tax[0]['code'] == 'tax' && $tax[0]['value'] > 0) {
+            $tax_value = $tax[0]['value'];
+            //$log->write('tax_value NEW');
+            //$log->write($tax_value);
+            //$log->write('tax_value NEW');
+        }
+
+        $total = $data['price'] * $data['quantity'];
+
+        //$this->deleteOrderProduct($order_id,$product_id);
+
+        $sql = 'SELECT * FROM ' . DB_PREFIX . "credit_note_products WHERE order_id = '" . (int) $order_id . "' and product_id = '" . $product_id . "'";
+
+        $query = $this->db->query($sql);
+
+        if (!$query->num_rows) {
+            $product_info = 'SELECT * FROM ' . DB_PREFIX . "product_to_store WHERE product_store_id = '" . (int) $product_id . "'";
+            $products_info = $this->db->query($product_info);
+            $products_info_new = $products_info->row;
+
+            $sql = 'INSERT into ' . DB_PREFIX . "credit_note_products SET name = '" . $this->db->escape($data['name']) . "', quantity = '" . $this->db->escape($data['quantity']) . "', price = '" . $this->db->escape($data['price']) . "', model = '" . $this->db->escape($data['model']) . "', unit = '" . $this->db->escape($data['unit']) . "', vendor_id = '" . $data['vendor_id'] . "', store_id = '" . $data['store_id'] . "', order_id = '" . $order_id . "', product_id = '" . $product_id . "', general_product_id = '" . $products_info_new['product_id'] . "', produce_type = '" . $data['produce_type'] . "',product_note = '" . $data['product_note'] . "', total = '" . $total . "', tax = '" . $tax_value . "'";
+
+            $query = $this->db->query($sql);
+        } else {
+            //echo "<pre>";print_r($query->row['quantity']);die;
+
+            $data['quantity'] += $query->row['quantity'];
+
+            $total = $data['price'] * $data['quantity'];
+
+            //echo "<pre>";print_r($data['quantity']);die;
+
+            $log->write('else ss');
+
+            $log->write($total);
+
+            $sql = 'UPDATE ' . DB_PREFIX . "credit_note_products SET name = '" . $this->db->escape($data['name']) . "', quantity = '" . $this->db->escape($data['quantity']) . "', model = '" . $this->db->escape($data['model']) . "', vendor_id = '" . $data['vendor_id'] . "', store_id = '" . $data['store_id'] . "', price = '" . $this->db->escape($data['price']) . "', unit = '" . $this->db->escape($data['unit']) . "', product_note = '" . $data['product_note'] . "', total = '" . $total . "', tax = '" . $tax_value . "' WHERE order_id = '" . (int) $order_id . "' and product_id = '" . $product_id . "'";
+
+            $query = $this->db->query($sql);
+        }
+    }
+
     public function updateOrderProduct($order_id, $product_id, $data, $tax = NULL) {
         $total = $data['price'] * $data['quantity'];
 
@@ -2943,6 +2997,39 @@ class ModelSaleOrder extends Model {
             }
         } if ($data['quantity'] <= 0) {
             $sql = 'Delete FROM ' . DB_PREFIX . "real_order_product WHERE order_id = '" . (int) $order_id . "' and product_id = '" . (int) $product_id . "'";
+            $query = $this->db->query($sql);
+        }
+    }
+
+    public function updateCreditNoteProduct($order_id, $product_id, $data, $tax = NULL) {
+        $total = $data['price'] * $data['quantity'];
+
+        //$this->deleteOrderProduct($order_id,$product_id);
+        $tax_value = 0;
+        if (is_array($tax) && count($tax) > 0 && array_key_exists('code', $tax[0]) && array_key_exists('title', $tax[0]) && array_key_exists('value', $tax[0]) && array_key_exists('sort_order', $tax[0]) && $tax[0]['code'] == 'tax' && $tax[0]['value'] > 0) {
+            $tax_value = $tax[0]['value'];
+            //$log = new Log('error.log');
+            //$log->write('tax_value OLD');
+            //$log->write($tax_value);
+            //$log->write('tax_value OLD');
+        }
+
+        $sql = 'SELECT * FROM ' . DB_PREFIX . "credit_note_products WHERE order_id = '" . (int) $order_id . "' and product_id = '" . $product_id . "'";
+
+        $query = $this->db->query($sql);
+
+        if ($data['quantity'] > 0) {
+            if (!$query->num_rows) {
+                $sql = 'INSERT into ' . DB_PREFIX . "credit_note_products SET name = '" . $this->db->escape($data['name']) . "', quantity = '" . $this->db->escape($data['quantity']) . "', price = '" . $this->db->escape($data['price']) . "', model = '" . $this->db->escape($data['model']) . "', unit = '" . $this->db->escape($data['unit']) . "', vendor_id = '" . $data['vendor_id'] . "', store_id = '" . $data['store_id'] . "', order_id = '" . $order_id . "', product_id = '" . $product_id . "',produce_type = '" . $data['produce_type'] . "',product_note = '" . $data['product_note'] . "', total = '" . $total . "', tax = '" . $tax_value . "'";
+
+                $query = $this->db->query($sql);
+            } else {
+                $sql = 'UPDATE ' . DB_PREFIX . "credit_note_products SET name = '" . $this->db->escape($data['name']) . "', quantity = '" . $this->db->escape($data['quantity']) . "', vendor_id = '" . $data['vendor_id'] . "', store_id = '" . $data['store_id'] . "', model = '" . $this->db->escape($data['model']) . "', price = '" . $this->db->escape($data['price']) . "', unit = '" . $this->db->escape($data['unit']) . "', total = '" . $total . "', tax = '" . $tax_value . "', product_note = '" . $data['product_note'] . "' WHERE order_id = '" . (int) $order_id . "' and product_id = '" . $product_id . "'";
+
+                $query = $this->db->query($sql);
+            }
+        } if ($data['quantity'] <= 0) {
+            $sql = 'Delete FROM ' . DB_PREFIX . "credit_note_products WHERE order_id = '" . (int) $order_id . "' and product_id = '" . (int) $product_id . "'";
             $query = $this->db->query($sql);
         }
     }
