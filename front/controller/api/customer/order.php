@@ -4691,6 +4691,8 @@ class ControllerApiCustomerOrder extends Controller {
             $log->write('addOrder');
             $stores = array_keys($args['stores']);
 
+            $active_Store_exsists = in_array("75", $stores);
+            
             //print_r($stores);
             foreach ($stores as $store_id) {
                 $order_data[$store_id] = [];
@@ -4724,7 +4726,17 @@ class ControllerApiCustomerOrder extends Controller {
                           $log->write("in loop".$total); */
 
                         //$this->{'model_total_' . $result['code']}->getApiTotal( $order_data[$store_id]['totals'], $total, $taxes,$store_id ,$args['stores'][$store_id]);
+
+                        if ($result['code'] == 'shipping') {
+                            if ($active_Store_exsists == 1) {
+                                $this->{'model_total_' . $result['code']}->getTotal($order_data[$store_id]['totals'], $total, $taxes_by_store, $store_id);
+                            } else if ($result['code'] == 'shipping' && $active_Store_exsists == 0 && $shipping_added == 0) {
+                                $this->{'model_total_' . $result['code']}->getTotal($order_data[$store_id]['totals'], $total, $taxes_by_store, -1);
+                            }
+                            $shipping_added = 1; //shipping charge added to one of the stores
+                        } else {
                         $this->{'model_total_' . $result['code']}->getApiTotal($order_data[$store_id]['totals'], $total, $taxes_by_store, $store_id, $args);
+                        }
                     }
                 }
 

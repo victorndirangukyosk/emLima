@@ -562,7 +562,7 @@
                                         <?php } ?>
                                         <?php if($this->user->hasPermission('modify', 'sale/order')){ ?>
 
-                                         <?php if ($order['missing_products_count'] == 0 && $order['order_status_id'] == 1  && (!$this->user->isVendor()))    { ?>
+                                       <?php if ($order['missing_products_count'] == 0 && $order['order_status_id'] == 1  && (!$this->user->isVendor()))    { ?>
                                        <a href="#" data-toggle="tooltip" data-target="store_modal" title="Missed Products List" data-orderid="<?= $order['order_id'] ?>" id="order_products_list">
                                        <svg xmlns="http://www.w3.org/2000/svg" id="svg<?= $order['order_id'] ?>" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bookmark"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
                                        </a> 
@@ -571,7 +571,13 @@
                                         <a href="#" target="_blank" data-toggle="tooltip" title="Products List" data-orderid="<?= $order['order_id'] ?>" data-order-product-list="<?php echo $order['products_list']; ?>" id="download_product_list">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg>
                                         </a>
-                                           <?php } ?>
+                                        <?php } ?>
+                                        
+                                        <?php if($order['order_status_id'] == 5) { ?>
+                                        <a href="<?php echo $order['creditnote']; ?>" target="_blank" data-toggle="tooltip" title="Credit Note" data-orderid="<?= $order['order_id'] ?>"  id="order_credit_note">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-credit-card"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
+                                        </a>
+                                        <?php } ?>
                                        </div>
                                     </td>
                                         
