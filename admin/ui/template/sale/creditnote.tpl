@@ -522,7 +522,7 @@ $('#button-settle-invoice-refund').on('click', function() {
   }
 
   $.ajax({
-    url: 'index.php?path=sale/editinvoice/updateInvoice&token=<?php echo $token; ?>&order_id=<?php echo $order_id; ?>&customer_id=<?php echo $customer_id; ?>&settle=1&charge=0',
+    url: 'index.php?path=sale/editinvoice/updatecreditnote&token=<?php echo $token; ?>&order_id=<?php echo $order_id; ?>&customer_id=<?php echo $customer_id; ?>&settle=1&charge=0',
     type: 'post',
     dataType: 'json',
     data: $('#edit_invoicex').serialize(),
@@ -573,7 +573,7 @@ $('#button-settle-invoice-charge').on('click', function() {
   }
 
   $.ajax({
-    url: 'index.php?path=sale/editinvoice/updateInvoice&token=<?php echo $token; ?>&order_id=<?php echo $order_id; ?>&customer_id=<?php echo $customer_id; ?>&settle=1&charge=1',
+    url: 'index.php?path=sale/editinvoice/updatecreditnote&token=<?php echo $token; ?>&order_id=<?php echo $order_id; ?>&customer_id=<?php echo $customer_id; ?>&settle=1&charge=1',
     type: 'post',
     dataType: 'json',
     data: $('#edit_invoicex').serialize(),
@@ -674,7 +674,7 @@ $('#button-edit-invoice').on('click', function() {
 
 
   $.ajax({
-    url: 'index.php?path=sale/editinvoice/updateInvoice&token=<?php echo $token; ?>&order_id=<?php echo $order_id; ?>&settle=0',
+    url: 'index.php?path=sale/editinvoice/updatecreditnote&token=<?php echo $token; ?>&order_id=<?php echo $order_id; ?>&settle=0',
     type: 'post',
     dataType: 'json',
     data: $('#edit_invoicex').serialize(),
