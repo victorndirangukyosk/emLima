@@ -294,7 +294,7 @@ class ControllerSaleCreditnote extends Controller {
         $this->response->setOutput($this->load->view('sale/creditnote.tpl', $data));
     }
 
-    public function updateInvoice() {
+    public function updatecreditnote() {
         $json = [];
 
         $this->load->language('sale/order');
