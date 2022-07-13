@@ -14661,7 +14661,7 @@ class ModelReportExcel extends Model {
                 // echo "<pre>";print_r(strtotime($sendingDate));
                 // echo "<pre>";print_r(round($datediff / (60 * 60 * 24)));exit;
                 $result['ageing'] = round($datediff / (60 * 60 * 24));
-                $result['balance'] = round(($result['order_total']??0)-($result['amount_partialy_paid']??0));
+                $result['balance'] = round((($result['order_total']??0)-($result['amount_partialy_paid']??0)),2);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $i);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['order_id']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['company_name']);
