@@ -4692,6 +4692,8 @@ class ControllerApiCustomerOrder extends Controller {
             $stores = array_keys($args['stores']);
 
             $active_Store_exsists = in_array("75", $stores);
+            $shipping_added = 0;
+
             
             //print_r($stores);
             foreach ($stores as $store_id) {
