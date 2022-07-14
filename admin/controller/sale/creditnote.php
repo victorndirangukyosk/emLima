@@ -382,14 +382,6 @@ class ControllerSaleCreditnote extends Controller {
                     }
                 }
 
-                //echo "<pre>";print_r($old_sub_total);die;
-                $product_numbers = array_keys($datas['products']);
-                $product_numbers_string = implode(',', $product_numbers);
-
-                $log->write('product_numbers_string');
-                $log->write($product_numbers_string);
-                $log->write('product_numbers_string');
-
                 $sumTotal = 0;
 
                 $tempProds['products'] = [];
@@ -559,7 +551,7 @@ class ControllerSaleCreditnote extends Controller {
                     if ($subTotal >= $this->config->get('config_active_store_minimum_order_amount') && ($tot['code'] == 'shipping' || $tot['code'] == 'delivery_vat')) {
                         $orderTotal = $orderTotal - $tot['value'];
                     } else {
-                        $this->model_sale_order->insertOrderTotal($order_id, $tot, $shipping_price);
+                        $this->model_sale_order->insertCreditNoteSubTotalAndTotal($order_id, $tot, $shipping_price, $p);
                     }
                     if ($tot['code'] == "credit") {
                         $wallet_amount_positive = abs($tot['value']);
@@ -589,14 +581,9 @@ class ControllerSaleCreditnote extends Controller {
                 $orderTotal = round($orderTotal, 2);
                 $subTotal = round($subTotal, 2);
 
-                $this->model_sale_order->insertOrderSubTotalAndTotal($order_id, $subTotal, $orderTotal, $p);
+                $this->model_sale_order->insertCreditNoteSubTotalAndTotal($order_id, $subTotal, $orderTotal, $p);
                 $log->write($orderTotal);
                 //die;
-                // editDeliveryRequest
-                $this->editDeliveryRequest($order_id);
-
-                //$this->sendNewInvoice($order_id);
-                // echo "<pre>";print_r($this->request->get['settle']);die;
             } else {
                 $json['status'] = false;
             }

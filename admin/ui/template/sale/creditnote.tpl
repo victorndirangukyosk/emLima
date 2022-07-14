@@ -333,10 +333,10 @@
 <script type="text/javascript">
   
 $(document).delegate('.remove','click', function(){
-  if($('#order_status_id').val() == 5) {
+  /*if($('#order_status_id').val() == 5) {
    alert('Delivered Orders Not Editable!');    
    return false;
-  }   
+  }*/   
   $(this).parent().parent().remove();
   $(".changeTotal").trigger("blur");
   $(".changeTotalValue").trigger("blur");
@@ -522,7 +522,7 @@ $('#button-settle-invoice-refund').on('click', function() {
   }
 
   $.ajax({
-    url: 'index.php?path=sale/editinvoice/updatecreditnote&token=<?php echo $token; ?>&order_id=<?php echo $order_id; ?>&customer_id=<?php echo $customer_id; ?>&settle=1&charge=0',
+    url: 'index.php?path=sale/creditnote/updatecreditnote&token=<?php echo $token; ?>&order_id=<?php echo $order_id; ?>&customer_id=<?php echo $customer_id; ?>&settle=1&charge=0',
     type: 'post',
     dataType: 'json',
     data: $('#edit_invoicex').serialize(),
@@ -548,10 +548,10 @@ $('#button-settle-invoice-refund').on('click', function() {
 });
 
 $('#button-settle-invoice-charge').on('click', function() {
-   if($('#order_status_id').val() == 5) {
+   /*if($('#order_status_id').val() == 5) {
    alert('Delivered Orders Not Editable!');    
    return false;
-   }
+   }*/
    if($('#sub_total').val() <= 0) {
    alert('Order Total Should Be Greater Than Zero!');    
    return false;
@@ -573,7 +573,7 @@ $('#button-settle-invoice-charge').on('click', function() {
   }
 
   $.ajax({
-    url: 'index.php?path=sale/editinvoice/updatecreditnote&token=<?php echo $token; ?>&order_id=<?php echo $order_id; ?>&customer_id=<?php echo $customer_id; ?>&settle=1&charge=1',
+    url: 'index.php?path=sale/creditnote/updatecreditnote&token=<?php echo $token; ?>&order_id=<?php echo $order_id; ?>&customer_id=<?php echo $customer_id; ?>&settle=1&charge=1',
     type: 'post',
     dataType: 'json',
     data: $('#edit_invoicex').serialize(),
@@ -674,7 +674,7 @@ $('#button-edit-invoice').on('click', function() {
 
 
   $.ajax({
-    url: 'index.php?path=sale/editinvoice/updatecreditnote&token=<?php echo $token; ?>&order_id=<?php echo $order_id; ?>&settle=0',
+    url: 'index.php?path=sale/creditnote/updatecreditnote&token=<?php echo $token; ?>&order_id=<?php echo $order_id; ?>&settle=0',
     type: 'post',
     dataType: 'json',
     data: $('#edit_invoicex').serialize(),
@@ -712,10 +712,10 @@ function makeid() {
 
 function add() {
 
-  if($('#order_status_id').val() == 5) {
+  /*if($('#order_status_id').val() == 5) {
    alert('Delivered Orders Not Editable!');    
    return false;
-  }  
+  }*/  
   noProduct = makeid();
 
   $html  = '<tr>';        
