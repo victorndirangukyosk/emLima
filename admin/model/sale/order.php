@@ -2956,7 +2956,7 @@ class ModelSaleOrder extends Model {
             $products_info = $this->db->query($product_info);
             $products_info_new = $products_info->row;
 
-            $sql = 'INSERT into ' . DB_PREFIX . "credit_note_products SET name = '" . $this->db->escape($data['name']) . "', quantity = '" . $this->db->escape($data['quantity']) . "', price = '" . $this->db->escape($data['price']) . "', model = '" . $this->db->escape($data['model']) . "', unit = '" . $this->db->escape($data['unit']) . "', vendor_id = '" . $data['vendor_id'] . "', store_id = '" . $data['store_id'] . "', order_id = '" . $order_id . "', product_id = '" . $product_id . "', general_product_id = '" . $products_info_new['product_id'] . "', product_note = '" . $data['product_note'] . "', total = '" . $total . "', tax = '" . $tax_value . "'";
+            $sql = 'INSERT into ' . DB_PREFIX . "credit_note_products SET name = '" . $this->db->escape($data['name']) . "', quantity = '" . $this->db->escape($data['quantity']) . "', price = '" . $this->db->escape($data['price']) . "', model = '" . $this->db->escape($data['model']) . "', unit = '" . $this->db->escape($data['unit']) . "', vendor_id = '" . $data['vendor_id'] . "', store_id = '" . $data['store_id'] . "', order_id = '" . $order_id . "', product_id = '" . $product_id . "', general_product_id = '" . $data['general_product_id'] . "', product_note = '" . $data['product_note'] . "', total = '" . $total . "', tax = '" . $tax_value . "', created_by = '" . $this->user->getId() . "', created_at = NOW()";
 
             $query = $this->db->query($sql);
         } else {
@@ -2972,7 +2972,7 @@ class ModelSaleOrder extends Model {
 
             $log->write($total);
 
-            $sql = 'UPDATE ' . DB_PREFIX . "credit_note_products SET name = '" . $this->db->escape($data['name']) . "', quantity = '" . $this->db->escape($data['quantity']) . "', model = '" . $this->db->escape($data['model']) . "', vendor_id = '" . $data['vendor_id'] . "', store_id = '" . $data['store_id'] . "', price = '" . $this->db->escape($data['price']) . "', unit = '" . $this->db->escape($data['unit']) . "', product_note = '" . $data['product_note'] . "', total = '" . $total . "', tax = '" . $tax_value . "' WHERE order_id = '" . (int) $order_id . "' and product_id = '" . $product_id . "'";
+            $sql = 'UPDATE ' . DB_PREFIX . "credit_note_products SET name = '" . $this->db->escape($data['name']) . "', quantity = '" . $this->db->escape($data['quantity']) . "', model = '" . $this->db->escape($data['model']) . "', vendor_id = '" . $data['vendor_id'] . "', store_id = '" . $data['store_id'] . "', price = '" . $this->db->escape($data['price']) . "', unit = '" . $this->db->escape($data['unit']) . "', product_note = '" . $data['product_note'] . "', total = '" . $total . "', tax = '" . $tax_value . "', updated_by = '" . $this->user->getId() . "', updated_at = NOW() WHERE order_id = '" . (int) $order_id . "' and product_id = '" . $product_id . "'";
 
             $query = $this->db->query($sql);
         }
@@ -3030,11 +3030,11 @@ class ModelSaleOrder extends Model {
 
         if ($data['quantity'] > 0) {
             if (!$query->num_rows) {
-                $sql = 'INSERT into ' . DB_PREFIX . "credit_note_products SET name = '" . $this->db->escape($data['name']) . "', quantity = '" . $this->db->escape($data['quantity']) . "', price = '" . $this->db->escape($data['price']) . "', model = '" . $this->db->escape($data['model']) . "', unit = '" . $this->db->escape($data['unit']) . "', vendor_id = '" . $data['vendor_id'] . "', store_id = '" . $data['store_id'] . "', order_id = '" . $order_id . "', product_id = '" . $product_id . "',product_note = '" . $data['product_note'] . "', total = '" . $total . "', tax = '" . $tax_value . "'";
+                $sql = 'INSERT into ' . DB_PREFIX . "credit_note_products SET name = '" . $this->db->escape($data['name']) . "', quantity = '" . $this->db->escape($data['quantity']) . "', price = '" . $this->db->escape($data['price']) . "', model = '" . $this->db->escape($data['model']) . "', unit = '" . $this->db->escape($data['unit']) . "', vendor_id = '" . $data['vendor_id'] . "', store_id = '" . $data['store_id'] . "', order_id = '" . $order_id . "', product_id = '" . $product_id . "', general_product_id = '" . $data['general_product_id'] . "', product_note = '" . $data['product_note'] . "', total = '" . $total . "', tax = '" . $tax_value . "', created_by = '" . $this->user->getId() . "', created_at = NOW()";
 
                 $query = $this->db->query($sql);
             } else {
-                $sql = 'UPDATE ' . DB_PREFIX . "credit_note_products SET name = '" . $this->db->escape($data['name']) . "', quantity = '" . $this->db->escape($data['quantity']) . "', vendor_id = '" . $data['vendor_id'] . "', store_id = '" . $data['store_id'] . "', model = '" . $this->db->escape($data['model']) . "', price = '" . $this->db->escape($data['price']) . "', unit = '" . $this->db->escape($data['unit']) . "', total = '" . $total . "', tax = '" . $tax_value . "', product_note = '" . $data['product_note'] . "' WHERE order_id = '" . (int) $order_id . "' and product_id = '" . $product_id . "'";
+                $sql = 'UPDATE ' . DB_PREFIX . "credit_note_products SET name = '" . $this->db->escape($data['name']) . "', quantity = '" . $this->db->escape($data['quantity']) . "', vendor_id = '" . $data['vendor_id'] . "', store_id = '" . $data['store_id'] . "', model = '" . $this->db->escape($data['model']) . "', price = '" . $this->db->escape($data['price']) . "', unit = '" . $this->db->escape($data['unit']) . "', total = '" . $total . "', tax = '" . $tax_value . "', product_note = '" . $data['product_note'] . "', updated_by = '" . $this->user->getId() . "', updated_at = NOW() WHERE order_id = '" . (int) $order_id . "' and product_id = '" . $product_id . "'";
 
                 $query = $this->db->query($sql);
             }

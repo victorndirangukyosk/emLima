@@ -307,6 +307,8 @@ class ControllerSaleCreditnote extends Controller {
 
         $this->load->model('tool/image');
 
+        $this->load->model('catalog/vendor_product');
+
         $datas = $this->request->post;
 
         $allp_id = true;
@@ -409,9 +411,13 @@ class ControllerSaleCreditnote extends Controller {
 
                 //echo "<pre>";print_r($datas['products']);die;
                 foreach ($datas['products'] as $p_id_key => $updateProduct) {
+
+                    $product_details = $this->model_catalog_vendor_product->getProduct($p_id_key);
+
                     $updateProduct['quantity'] = $updateProduct['quantity'];
                     $updateProduct['store_id'] = $store_id;
                     $updateProduct['vendor_id'] = $vendor_id;
+                    $updateProduct['general_product_id'] = $product_details['product_id'];
                     $custom_price = $updateProduct['price'];
 
                     if (is_numeric($p_id_key)) {
