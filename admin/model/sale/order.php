@@ -2861,6 +2861,7 @@ class ModelSaleOrder extends Model {
     }
 
     public function insertCreditNoteSubTotalAndTotal($order_id, $sub_total, $total, $sort_order) {
+
         $sql = 'INSERT into ' . DB_PREFIX . "credit_note_total SET value = '" . $sub_total . "', order_id = '" . $order_id . "', title = 'Sub-Total', code = 'sub_total', sort_order = '1'";
 
         $query = $this->db->query($sql);

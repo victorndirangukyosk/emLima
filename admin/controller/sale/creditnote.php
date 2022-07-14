@@ -554,7 +554,7 @@ class ControllerSaleCreditnote extends Controller {
                     /* $log->write("updatetotals");
                       $log->write($tot); */
                     $tot['sort'] = $p;
-                    if ($subTotal >= $this->config->get('config_active_store_minimum_order_amount') && ($tot['code'] == 'shipping' || $tot['code'] == 'delivery_vat')) {
+                    if ($subTotal >= $this->config->get('config_active_store_minimum_order_amount') && ($tot['code'] == 'shipping' || $tot['code'] == 'delivery_vat' || $tot['code'] == 'transaction_fee')) {
                         $orderTotal = $orderTotal - $tot['value'];
                     } else {
                         $this->model_sale_order->insertCreditNoteSubTotalAndTotal($order_id, $tot, $shipping_price, $p);
