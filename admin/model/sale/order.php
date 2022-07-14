@@ -2638,6 +2638,18 @@ class ModelSaleOrder extends Model {
         return $query->rows;
     }
 
+    public function getCreditNoteProducts($order_id, $store_id = 0) {
+        $sql = "SELECT * ,'0' as quantity_updated,'0' as unit_updated FROM " . DB_PREFIX . "credit_note_products WHERE order_id = '" . (int) $order_id . "'";
+
+        if ($store_id) {
+            $sql .= " AND store_id='" . $store_id . "'";
+        }
+
+        $query = $this->db->query($sql);
+        // echo "<pre>";print_r( $query->rows);die;
+        return $query->rows;
+    }
+
     public function getOrderProductById($order_id, $product_id) {
         $sql = "SELECT * ,'0' as quantity_updated,'0' as unit_updated FROM " . DB_PREFIX . "order_product WHERE order_id = '" . (int) $order_id . "' AND order_product_id ='" . (int) $product_id . "'";
         $query = $this->db->query($sql);

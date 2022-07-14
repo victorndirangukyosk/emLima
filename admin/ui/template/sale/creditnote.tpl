@@ -295,28 +295,6 @@
     right: 0;
 "  <?php if($settlement_done) { ?> disabled="true" <?php } ?> ><i class="fa fa-check-square"></i> Update and Save </button>
 <?php } ?>
-
-<!-- <div>
-  <?php if($settlement_tab) { ?>
-
-  
-    <button type="submit" class="btn btn-lg btn-danger" id="button-settle-invoice-refund" value="Save" style="
-    position: fixed;
-    top: 60px;
-    right: 0;
-"  <?php if($settlement_done) { ?> disabled="true" <?php } ?> ><i class="fa fa-rotate-left"></i> Refund </button>
-
-
-<?php } ?>
-</div> -->
-
-
-
-
-
-
-
-
 </div>
 </body>
 
