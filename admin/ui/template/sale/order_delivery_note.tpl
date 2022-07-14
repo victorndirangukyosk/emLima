@@ -73,7 +73,7 @@
                                 </ul>
                             </div>
                             <div class="col-md-5 text-right">
-                                <!--<h6 class="bold">TAX INVOICE # <?= $order['order_id'] ?><?= $order['invoice_no'] ?></h6>-->
+                              <h6 class="bold">Delivery Note # <?= $order['order_id'] ?><?= $order['invoice_no'] ?></h6> 
                                 <?php if($order['po_number']) { ?>
                                     <h6 class="bold">P.O. NUMBER <?= $order['po_number'] ?></h6>
                                 <?php } ?>
