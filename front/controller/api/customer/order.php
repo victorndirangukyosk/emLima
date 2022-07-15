@@ -4809,6 +4809,12 @@ class ControllerApiCustomerOrder extends Controller {
                     $order_data[$store_id]['payment_method'] = '';
                 }
 
+                if (isset($args['mpesa_phonenumber']) && $args['mpesa_phonenumber'] != NULL) {
+                    $order_data['mpesa_phonenumber'] = $args['mpesa_phonenumber'];
+                } else {
+                    $order_data['mpesa_phonenumber'] = $this->customer->getTelephone();
+                }
+
                 if (isset($args['payment_method_code'])) {
                     $order_data[$store_id]['payment_code'] = $args['payment_method_code'];
 
@@ -5096,6 +5102,7 @@ class ControllerApiCustomerOrder extends Controller {
 
             if (('mpesa' == $args['payment_method_code']) || ('mpesa' == $args['payment_method_code'] && 'wallet' == $args['payment_wallet_method_code'])) {
                 //save for refrence id correct order id
+                $order_ids['mpesa_phonenumber'] = $args['mpesa_phonenumber'];
                 if (('mpesa' == $args['payment_method_code']) && (!isset($args['payment_wallet_method_code']))) {
                     $mpesa_result = $this->load->controller('api/customer/mpesa/mpesacheckout', $order_ids);
                 }
@@ -5106,7 +5113,7 @@ class ControllerApiCustomerOrder extends Controller {
                 $log->write('mpesa_result');
                 $log->write($mpesa_result);
                 $log->write('mpesa_result');
-                if(isset($mpesa_result)) {
+                if (isset($mpesa_result)) {
                     
                 }
             } elseif (('pezesha' == $args['payment_method_code']) || ('pezesha' == $args['payment_method_code'] && 'wallet' == $args['payment_wallet_method_code'])) {
