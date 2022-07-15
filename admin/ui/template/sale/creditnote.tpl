@@ -295,6 +295,14 @@
     right: 0;
 "  <?php if($settlement_done) { ?> disabled="true" <?php } ?> ><i class="fa fa-check-square"></i> Update and Save </button>
 <?php } ?>
+
+<?php if($credit_note_tab) { ?>
+    <button type="submit" class="btn btn-lg btn-success" id="button-settle-invoice-charge" data-loading-text="Wait..." value="Save" style="
+    position: fixed;
+    top: 120px;
+    right: 0;
+"  <?php if($settlement_done) { ?> disabled="true" <?php } ?> ><i class="fa fa-check-square"></i> Print Credit Note </button>
+<?php } ?>
 </div>
 </body>
 
