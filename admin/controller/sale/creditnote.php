@@ -1245,22 +1245,6 @@ class ControllerSaleCreditnote extends Controller {
                 ];
             }
         }
-
-        //   echo "<pre>";print_r($data);die;
-        /* $log = new Log('error.log');
-          $log->write(DIR_TEMPLATE);
-          require_once DIR_ROOT . '/vendor/autoload.php';
-          $mpdf = new \Mpdf\Mpdf();
-          $stylesheet = file_get_contents(DIR_TEMPLATE.'pdf_css/bootstrap.min.css');
-          $stylesheet2 = file_get_contents(DIR_TEMPLATE.'pdf_css/font-awesome.min.css');
-          $stylesheet3 = file_get_contents(DIR_TEMPLATE.'pdf_css/print.css');
-          $mpdf->WriteHTML($stylesheet,\Mpdf\HTMLParserMode::HEADER_CSS);
-          $mpdf->WriteHTML($stylesheet2,\Mpdf\HTMLParserMode::HEADER_CSS);
-          $mpdf->WriteHTML($stylesheet3,\Mpdf\HTMLParserMode::HEADER_CSS);
-          $mpdf->WriteHTML($this->load->view('sale/order_invoice_mpdf.tpl', $data['orders'][0]),\Mpdf\HTMLParserMode::HTML_BODY);
-          $mpdf->Output();
-          $mpdf->Output("KwikBasket Invoice # ".$order_id.".pdf", 'D'); */
-
         $this->response->setOutput($this->load->view('sale/order_credit_note.tpl', $data));
     }
 
