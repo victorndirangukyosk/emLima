@@ -5106,6 +5106,9 @@ class ControllerApiCustomerOrder extends Controller {
                 $log->write('mpesa_result');
                 $log->write($mpesa_result);
                 $log->write('mpesa_result');
+                if(isset($mpesa_result)) {
+                    
+                }
             } elseif (('pezesha' == $args['payment_method_code']) || ('pezesha' == $args['payment_method_code'] && 'wallet' == $args['payment_wallet_method_code'])) {
                 if (('pezesha' == $args['payment_method_code']) && (!isset($args['payment_wallet_method_code']))) {
                     $pezesha_result = $this->load->controller('api/customer/pezesha/applyloanone', $order_ids);
