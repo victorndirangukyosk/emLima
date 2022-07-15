@@ -73,11 +73,15 @@
                                 </ul>
                             </div>
                             <div class="col-md-5 text-right">
-                                <h6 class="bold">TAX INVOICE # <?= $order['order_id'] ?><?= $order['invoice_no'] ?></h6>
+                                <h6 class="bold">CREDIT NOTE # <?= $order['order_id'] ?></h6>
+                                <h6><?= date("d/m/Y") ?></h6>
+                                <br>
+                                <h6>Against Invoice</h6>
+                                <h6>Tax Invoice # <?= $order['order_id'] ?><?= $order['invoice_no'] ?></h6>
                                 <?php if($order['po_number']) { ?>
                                     <h6 class="bold">P.O. NUMBER <?= $order['po_number'] ?></h6>
                                 <?php } ?>
-                                <h6><?= $order['delivery_date'] ?></h6>
+                                <h6>Dated <?= $order['delivery_date'] ?></h6>
 
                                 
                                 <br>
@@ -95,6 +99,7 @@
                                     
                                     <li>Transaction ID :  <label style="width:40px"></label> </li>
                                      <?php }?>
+                                    <li>Rason : Bad Quality </li>
                                 
                                     <li></li>
                                     <li></li>
