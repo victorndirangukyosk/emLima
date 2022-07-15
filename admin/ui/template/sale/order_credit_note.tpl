@@ -99,7 +99,7 @@
                                     
                                     <li>Transaction ID :  <label style="width:40px"></label> </li>
                                      <?php }?>
-                                    <li>Rason : Bad Quality </li>
+                                    <li>Reason : Bad Quality </li>
                                 
                                     <li></li>
                                     <li></li>
