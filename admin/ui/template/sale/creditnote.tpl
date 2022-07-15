@@ -297,11 +297,8 @@
 <?php } ?>
 
 <?php if($credit_note_tab) { ?>
-    <button type="submit" class="btn btn-lg btn-success" id="button-settle-invoice-charge" data-loading-text="Wait..." value="Save" style="
-    position: fixed;
-    top: 120px;
-    right: 0;
-"  <?php if($settlement_done) { ?> disabled="true" <?php } ?> ><i class="fa fa-check-square"></i> Print Credit Note </button>
+<button type="submit" class="btn btn-lg btn-success" data-url="index.php?path=sale/order/invoice&token=<?php echo $token; ?>&order_id=<?php echo $order_id; ?>" id="button-credit-note" data-loading-text="Wait..." value="Save" style="position:fixed; top:120px; right:0;
+"<?php if($settlement_done) { ?> disabled="true" <?php } ?> ><i class="fa fa-check-square"></i> Print Credit Note </button>
 <?php } ?>
 </div>
 </body>
@@ -785,7 +782,7 @@ function addInBetween() {
 
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
 
-    <script type="text/javascript">
+<script type="text/javascript">
 
     $( "#input-order-status-uni" ).select2({
         theme: "classic",
@@ -882,7 +879,12 @@ function addInBetween() {
       });
     }
     
-
+$('button[id^=\'button-credit-note\']').on('click', function (e) {
+e.preventDefault();
+var print_credit_note = $(this).attr("data-url");
+console.log(print_credit_note);
+window.open(print_credit_note, '_blank');
+});
 </script>
 
 </html>
