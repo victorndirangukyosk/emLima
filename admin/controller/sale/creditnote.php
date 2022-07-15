@@ -1261,7 +1261,7 @@ class ControllerSaleCreditnote extends Controller {
           $mpdf->Output();
           $mpdf->Output("KwikBasket Invoice # ".$order_id.".pdf", 'D'); */
 
-        $this->response->setOutput($this->load->view('sale/order_invoice.tpl', $data));
+        $this->response->setOutput($this->load->view('sale/order_credit_note.tpl', $data));
     }
 
     public function translateAmountToWords(int $number) {
