@@ -1041,7 +1041,9 @@ class ControllerSaleCreditnote extends Controller {
 
                 $product_data = [];
 
-                if ($this->model_sale_order->hasRealOrderProducts($order_id)) {
+                if ($this->model_sale_order->getCreditNoteProducts($order_id)) {
+                    $products = $this->model_sale_order->getCreditNoteProducts($order_id);
+                } elseif ($this->model_sale_order->hasRealOrderProducts($order_id)) {
                     $products = $this->model_sale_order->getRealOrderProducts($order_id);
                 } else {
                     $products = $this->model_sale_order->getOrderProducts($order_id);
