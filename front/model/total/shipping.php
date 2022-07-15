@@ -138,6 +138,11 @@ class ModelTotalShipping extends Model {
 
             $total += $shipping_charge + $shipping_charge_VAT;
         }
+        else{
+            $log = new Log('error.log');
+            $log->write('Shipping 3 , coming here');
+            $log->write('Shipping 3 , coming here');
+        }
     }
 
     public function getApiTotal(&$total_data, &$total, &$taxes, $store_id = '', $args) {

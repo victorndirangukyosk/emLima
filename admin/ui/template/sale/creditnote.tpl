@@ -289,54 +289,27 @@
 
 
 <?php if($settlement_tab) { ?>
-
     <button type="submit" class="btn btn-lg btn-success" id="button-settle-invoice-charge" data-loading-text="Wait..." value="Save" style="
     position: fixed;
     top: 60px;
     right: 0;
 "  <?php if($settlement_done) { ?> disabled="true" <?php } ?> ><i class="fa fa-check-square"></i> Update and Save </button>
-  
-
-  <button type="submit" class="btn btn-lg btn-success" id="button-settle-invoice-charge-notify" data-loading-text="Wait..." value="Save" style="
-    position: fixed;
-    top: 120px;
-    right: 0;
-"  <?php if($settlement_done) { ?> disabled="true" <?php } ?> ><i class="fa fa-envelope"></i> Notify </button>
-
-
 <?php } ?>
 
-<!-- <div>
-  <?php if($settlement_tab) { ?>
-
-  
-    <button type="submit" class="btn btn-lg btn-danger" id="button-settle-invoice-refund" value="Save" style="
-    position: fixed;
-    top: 60px;
-    right: 0;
-"  <?php if($settlement_done) { ?> disabled="true" <?php } ?> ><i class="fa fa-rotate-left"></i> Refund </button>
-
-
+<?php if($credit_note_tab) { ?>
+<button type="submit" class="btn btn-lg btn-success" data-url="index.php?path=sale/creditnote/creditnote&token=<?php echo $token; ?>&order_id=<?php echo $order_id; ?>" id="button-credit-note" data-loading-text="Wait..." value="Save" style="position:fixed; top:120px; right:0;
+"<?php if($settlement_done) { ?> disabled="true" <?php } ?> ><i class="fa fa-check-square"></i> Print Credit Note </button>
 <?php } ?>
-</div> -->
-
-
-
-
-
-
-
-
 </div>
 </body>
 
 <script type="text/javascript">
   
 $(document).delegate('.remove','click', function(){
-  if($('#order_status_id').val() == 5) {
+  /*if($('#order_status_id').val() == 5) {
    alert('Delivered Orders Not Editable!');    
    return false;
-  }   
+  }*/   
   $(this).parent().parent().remove();
   $(".changeTotal").trigger("blur");
   $(".changeTotalValue").trigger("blur");
@@ -522,7 +495,7 @@ $('#button-settle-invoice-refund').on('click', function() {
   }
 
   $.ajax({
-    url: 'index.php?path=sale/editinvoice/updatecreditnote&token=<?php echo $token; ?>&order_id=<?php echo $order_id; ?>&customer_id=<?php echo $customer_id; ?>&settle=1&charge=0',
+    url: 'index.php?path=sale/creditnote/updatecreditnote&token=<?php echo $token; ?>&order_id=<?php echo $order_id; ?>&customer_id=<?php echo $customer_id; ?>&settle=1&charge=0',
     type: 'post',
     dataType: 'json',
     data: $('#edit_invoicex').serialize(),
@@ -548,10 +521,10 @@ $('#button-settle-invoice-refund').on('click', function() {
 });
 
 $('#button-settle-invoice-charge').on('click', function() {
-   if($('#order_status_id').val() == 5) {
+   /*if($('#order_status_id').val() == 5) {
    alert('Delivered Orders Not Editable!');    
    return false;
-   }
+   }*/
    if($('#sub_total').val() <= 0) {
    alert('Order Total Should Be Greater Than Zero!');    
    return false;
@@ -573,7 +546,7 @@ $('#button-settle-invoice-charge').on('click', function() {
   }
 
   $.ajax({
-    url: 'index.php?path=sale/editinvoice/updatecreditnote&token=<?php echo $token; ?>&order_id=<?php echo $order_id; ?>&customer_id=<?php echo $customer_id; ?>&settle=1&charge=1',
+    url: 'index.php?path=sale/creditnote/updatecreditnote&token=<?php echo $token; ?>&order_id=<?php echo $order_id; ?>&customer_id=<?php echo $customer_id; ?>&settle=1&charge=1',
     type: 'post',
     dataType: 'json',
     data: $('#edit_invoicex').serialize(),
@@ -674,7 +647,7 @@ $('#button-edit-invoice').on('click', function() {
 
 
   $.ajax({
-    url: 'index.php?path=sale/editinvoice/updatecreditnote&token=<?php echo $token; ?>&order_id=<?php echo $order_id; ?>&settle=0',
+    url: 'index.php?path=sale/creditnote/updatecreditnote&token=<?php echo $token; ?>&order_id=<?php echo $order_id; ?>&settle=0',
     type: 'post',
     dataType: 'json',
     data: $('#edit_invoicex').serialize(),
@@ -712,10 +685,10 @@ function makeid() {
 
 function add() {
 
-  if($('#order_status_id').val() == 5) {
+  /*if($('#order_status_id').val() == 5) {
    alert('Delivered Orders Not Editable!');    
    return false;
-  }  
+  }*/  
   noProduct = makeid();
 
   $html  = '<tr>';        
@@ -809,7 +782,7 @@ function addInBetween() {
 
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
 
-    <script type="text/javascript">
+<script type="text/javascript">
 
     $( "#input-order-status-uni" ).select2({
         theme: "classic",
@@ -906,7 +879,12 @@ function addInBetween() {
       });
     }
     
-
+$('button[id^=\'button-credit-note\']').on('click', function (e) {
+e.preventDefault();
+var print_credit_note = $(this).attr("data-url");
+console.log(print_credit_note);
+window.open(print_credit_note, '_blank');
+});
 </script>
 
 </html>
