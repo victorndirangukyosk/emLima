@@ -45,7 +45,7 @@
                                 </div>
                             </div>
                             <div class="col-md-3 text-left">
-                                <?php if(($order['vendor_terms_cod'] == 1 || $order['payment_terms'] == 'Payment On Delivery') && $order['payment_method'] != 'Pezesha') { ?>
+                               <!-- <?php if(($order['vendor_terms_cod'] == 1 || $order['payment_terms'] == 'Payment On Delivery') && $order['payment_method'] != 'Pezesha') { ?>
                                <img width="210" src="ui/images/pod.png" alt="POD" class="mb-2">
 
                                 <?php } else if($order['paid'] != 'Y' && $order['payment_method'] == 'Pezesha') { ?>
@@ -62,18 +62,18 @@
                                     <li></li>
                                     <li></li>
                                 </ul>
-                                <?php } ?>
+                                <?php } ?>-->
                                   <br>
-                                 <h6 class="bold mb-3">ORDER INFO</h6>
+                                 <!--<h6 class="bold mb-3">ORDER INFO</h6>
                                 <ul class="list-block">
                                     <li>Order # <?= $order['order_id'] ?></li>
                                     <li>Placed On <?= $order['date_added'] ?></li>
                                     <li>Delivered On <?= $order['delivery_date'] ?></li>
                                     <li><?= $order['shipping_method'] ?></li>
-                                </ul>
+                                </ul>-->
                             </div>
                             <div class="col-md-5 text-right">
-                              <h6 class="bold">Delivery Note # <?= $order['order_id'] ?><?= $order['invoice_no'] ?></h6> 
+                              <h4 class="bold mb-3">Delivery Note # <?= $order['order_id'] ?><?= $order['invoice_no'] ?></h4> 
                                 <?php if($order['po_number']) { ?>
                                     <h6 class="bold">P.O. NUMBER <?= $order['po_number'] ?></h6>
                                 <?php } ?>
@@ -81,7 +81,7 @@
 
                                 
                                 <br>
-                                   <h6 class="bold mb-3">PAYMENT DETAILS</h6>                                
+                                  <!-- <h6 class="bold mb-3">PAYMENT DETAILS</h6>                                
                                 <ul class="list-block" style="margin-bottom:60px;">
                                    
                                  <?php if($order['order_transcation_id']!=NULL && $order['order_transcation_id'] !='' && $order['paid'] =='Y') { ?>
@@ -102,7 +102,7 @@
                                     <li></li>
                                     <li></li>
                                     <li></li>
-                                </ul>
+                                </ul>-->
                                 <!--<?php if($order['driver_name'] != NULL) { ?>
                                 <h6 class="bold mb-3">DRIVER DETAILS</h6>
                                 <ul class="list-block">
@@ -126,18 +126,35 @@
                                 <br>
                                 <?php } ?>
                                 
-                                <?php if($order['customer_experience_first_last_name'] != NULL) { ?>
+                                 <!--<?php if($order['customer_experience_first_last_name'] != NULL) { ?>
                                  
-                                <h6 class="bold mb-3">CUSTOMER ACCOUNT MANAGER DETAILS</h6>
+                               <h6 class="bold mb-3">CUSTOMER ACCOUNT MANAGER DETAILS</h6>
                                 <ul class="list-block">
                                     <li>Name : <?= $order['customer_experience_first_last_name'] ?></li>
-                                    <li>Phone : <?= $order['customer_experince_phone'] ?></li>
+                                    <li>Phone : <?= $order['customer_experince_phone'] ?></li>-->
                                 <!--<?php if($order['delivery_charge'] != NULL && $order['delivery_charge'] >0) { ?>
                                     <li>Delivery Charge : <?= $order['delivery_charge'] ?></li>
                                  <?php } ?>-->
-                                </ul>
+                                 <!--</ul>
                                 <br>
-                                <?php } ?>
+                                <?php } ?>-->
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                
+                        <h6 class="bold mb-3">ORDER INFO</h6>
+                                
+                                  <ul class="list-block">
+                                    <li>Order # <?= $order['order_id'] ?></li>
+                                    <li>Placed On <?= $order['date_added'] ?></li>
+                                    <li>Delivered On <?= $order['delivery_date'] ?></li>
+                                    <li><?= $order['shipping_method'] ?></li>
+
+
+                                    
+                                </ul>
 
                                 
                             </div>
@@ -224,7 +241,7 @@
                             <p><?= $order['comment']?></p>
                         </div>
                         
-                        <table class="payment-details-table mt-4">
+                        <!--<table class="payment-details-table mt-4">
                             <thead>
                             <tr>
                                 <td colspan="2" class="text-left">
@@ -259,7 +276,7 @@
                                 </td>
                             </tr>
                             </tbody>
-                        </table>
+                        </table>-->
                     </div>
                 </div>
             </td>
