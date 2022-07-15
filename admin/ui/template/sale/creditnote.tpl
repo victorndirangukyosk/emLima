@@ -297,7 +297,7 @@
 <?php } ?>
 
 <?php if($credit_note_tab) { ?>
-<button type="submit" class="btn btn-lg btn-success" data-url="index.php?path=sale/order/invoice&token=<?php echo $token; ?>&order_id=<?php echo $order_id; ?>" id="button-credit-note" data-loading-text="Wait..." value="Save" style="position:fixed; top:120px; right:0;
+<button type="submit" class="btn btn-lg btn-success" data-url="index.php?path=sale/creditnote/creditnote&token=<?php echo $token; ?>&order_id=<?php echo $order_id; ?>" id="button-credit-note" data-loading-text="Wait..." value="Save" style="position:fixed; top:120px; right:0;
 "<?php if($settlement_done) { ?> disabled="true" <?php } ?> ><i class="fa fa-check-square"></i> Print Credit Note </button>
 <?php } ?>
 </div>
