@@ -5114,7 +5114,8 @@ class ControllerApiCustomerOrder extends Controller {
                 $log->write($mpesa_result);
                 $log->write('mpesa_result');
                 if (isset($mpesa_result)) {
-                    
+                    $json['status'] = 200;
+                    $json['msg'] = 'Payment Request Sent To Mpesa!';
                 }
             } elseif (('pezesha' == $args['payment_method_code']) || ('pezesha' == $args['payment_method_code'] && 'wallet' == $args['payment_wallet_method_code'])) {
                 if (('pezesha' == $args['payment_method_code']) && (!isset($args['payment_wallet_method_code']))) {
