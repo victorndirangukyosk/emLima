@@ -1102,7 +1102,7 @@ class ControllerSaleCreditnote extends Controller {
                 if ($store_id) {
                     $totals = $this->model_sale_order->getVendorOrderTotals($order_id, $store_id);
                 } else {
-                    $totals = $this->model_sale_order->getOrderTotals($order_id);
+                    $totals = $this->model_sale_order->getCreditNoteTotals($order_id);
                 }
                 $credit_amount = 0;
                 foreach ($totals as $total) {
