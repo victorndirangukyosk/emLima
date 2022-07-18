@@ -52,7 +52,7 @@
                                                                    <?php echo ($wishlist['product_count'] > 0 ?  '<a href="'.$wishlist['href'].'" class="btn-newview">' .View .' '. Basket    .'</a>' : ''); ?>
                                                                      
                                                                      <!--<a href="'.$wishlist['href'].'"  data-id='<?=$wishlist["wishlist_id"] ?>'   class="btn-newview">View Basket</a>-->
-                                                                     <a href="#" id="addWishlisttocart" data-id='<?=$wishlist["wishlist_id"] ?>'  style="color: #00f;" class="btn-newadd">Add To Cart</a>
+                                                                     <a href="#" id="addWishlisttocart" data-id='<?=$wishlist["wishlist_id"] ?>'  style="color: #00f;" class="btn-newadd">Add All Products To Cart</a>
 
                                                                     </span>
                                                              </div>
@@ -289,7 +289,12 @@ __kdt.push({"post_on_load": false});
         }
         console.log("addWishlisttocart click");
         console.log($(this).attr('data-id'));
-        $('#addWishlisttocart').html('Wait...');
+        //$('#addWishlisttocart').html('Wait...');
+        $(this).html('Please Wait...');
+        $(this).css("background-color", "grey");
+      
+        $('#addWishlisttocart').off('click');
+        $('this').off('click');         
         var orderId = $(this).attr('data-id');
         $.ajax({
             url: 'index.php?path=account/wishlist/addWishlistProductToCart',
@@ -392,7 +397,7 @@ font-style: normal;
 font-weight: 600;
 font-size: 16px;
 line-height: 24px;
-margin: 0px 16px;
+margin: 0px 8px;
 padding: 10px 12px;
 
   
@@ -411,7 +416,7 @@ font-style: normal;
 font-weight: 600;
 font-size: 14px;
 line-height: 20px;
-margin: 0px 16px;
+margin: 0px 8px;
 padding: 10px 12px;
 }
     </style>
