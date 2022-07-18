@@ -106,6 +106,8 @@
 
 <?php echo $footer; ?>
 
+<div id="opaque"></div>
+
 <script src="<?= $base ?>front/ui/theme/mvgv2/js/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="<?= $base ?>front/ui/theme/mvgv2/js/bootstrap.min.js"></script>
@@ -292,9 +294,11 @@ __kdt.push({"post_on_load": false});
         //$('#addWishlisttocart').html('Wait...');
         $(this).html('Please Wait...');
         $(this).css("background-color", "grey");
-      
-        $('#addWishlisttocart').off('click');
-        $('this').off('click');         
+         
+        //$(this).on("click",function(){return false;}); 
+        //$('#addWishlisttocart').on("click",function(){return false;}); 
+        document.getElementById('opaque').style.display='block';
+
         var orderId = $(this).attr('data-id');
         $.ajax({
             url: 'index.php?path=account/wishlist/addWishlistProductToCart',
@@ -419,6 +423,25 @@ line-height: 20px;
 margin: 0px 8px;
 padding: 10px 12px;
 }
+
+
+
+#opaque {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    z-index: 4000;
+    display: none;
+    background-color: black;
+    filter: alpha(opacity=30);
+    opacity: 0.3;
+}
+* html #opaque {
+    position: absolute;
+}
+
     </style>
 </body>
 
