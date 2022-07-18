@@ -163,11 +163,11 @@
                                                 <div class="col-md-16">
 
                                                     <?php if($store_selected) { ?>
-                                                    <button id="selected-add-to-cart" data-id="<?php echo $wishlist_id; ?>" class="btn btn-primary" type="button" data-confirm="This will  add products to basket!!">
+                                                    <button id="selected-add-to-cart" data-id="<?php echo $wishlist_id; ?>" class="btn btn-primary" type="button" data-confirm="This will  add selected products to cart!!">
                                                         <?php } else { ?>
-                                                        <button id="selected-add-to-cart" data-id="<?php echo $wishlist_id; ?>" class="btn btn-primary" type="button" disabled data-confirm="This will add products to basket!!">
+                                                        <button id="selected-add-to-cart" data-id="<?php echo $wishlist_id; ?>" class="btn btn-primary" type="button" disabled data-confirm="This will add selected products to cart!!">
                                                             <?php } ?>
-                                                            <?= $text_add_selection_to_cart ?></button>
+                                                            Add Selected Items To Cart</button>
                                                 </div>
                                             </div>
 
@@ -177,14 +177,14 @@
                                                 <div class="col-md-16">
 
                                                     <?php if($store_selected) { ?>
-                                                    <button id="list-add-to-cart" data-id="<?php echo $wishlist_id; ?>"  class="btn btn-primary" type="button" data-confirm="This will add products to basket!!">
+                                                    <button id="list-add-to-cart" data-id="<?php echo $wishlist_id; ?>"  class="btn btn-primary" type="button" data-confirm="This will add all products to cart!!">
 
 
                                                         <?php } else { ?>
-                                                        <button id="list-add-to-cart" data-id="<?php echo $wishlist_id; ?>" class="btn btn-primary" type="button" disabled data-confirm="This will add products to basket!!">
+                                                        <button id="list-add-to-cart" data-id="<?php echo $wishlist_id; ?>" class="btn btn-primary" type="button" disabled data-confirm="This will add all products to cart!!">
                                                             <?php } ?>
 
-                                                            <?= $text_add_list_to_cart ?> </button>
+                                                            Add All Items To Cart </button>
 
 
 
@@ -217,6 +217,10 @@
     </div>
 </div>
 <?php echo $footer; ?>
+
+<div id="opaque"></div>
+
+
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script src="<?= $base; ?>front/ui/theme/mvgv2/js/jquery.min.js"></script>
 <!-- Include all compiled plugins (below), or include individual files as needed -->
@@ -417,6 +421,9 @@
                 alert('Please select atleast one product!');
                 return false;
             }
+        document.getElementById('opaque').style.display='block';
+        $(this).html('Please Wait...');
+        $(this).css("background-color", "grey");
 
             $.ajax({
                 url: 'index.php?path=account/wishlist/addWishlistProductToCartByProduct',
@@ -449,7 +456,12 @@
         if (choice) {
             console.log("addWishlisttocart click");
             console.log($(this).attr('data-id'));
+         document.getElementById('opaque').style.display='block';
+
             $('#addWishlisttocart').html('Wait...');
+             $(this).html('Please Wait...');
+        $(this).css("background-color", "grey");
+        
             var orderId = $(this).attr('data-id');
             $.ajax({
                 url: 'index.php?path=account/wishlist/addWishlistProductToCart',
@@ -560,5 +572,25 @@ font-size: 18px;
 line-height: 27px;
 color: #FA8700;
 }
+
+
+
+#opaque {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    z-index: 4000;
+    display: none;
+    background-color: black;
+    filter: alpha(opacity=30);
+    opacity: 0.3;
+}
+* html #opaque {
+    position: absolute;
+}
+
+
 </style>
 </html>
