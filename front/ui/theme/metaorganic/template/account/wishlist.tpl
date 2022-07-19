@@ -52,7 +52,7 @@
                                                                    <?php echo ($wishlist['product_count'] > 0 ?  '<a href="'.$wishlist['href'].'" class="btn-newview">' .View .' '. Basket    .'</a>' : ''); ?>
                                                                      
                                                                      <!--<a href="'.$wishlist['href'].'"  data-id='<?=$wishlist["wishlist_id"] ?>'   class="btn-newview">View Basket</a>-->
-                                                                     <a href="#" id="addWishlisttocart" data-id='<?=$wishlist["wishlist_id"] ?>'  style="color: #00f;" class="btn-newadd">Add To Cart</a>
+                                                                     <a href="#" id="addWishlisttocart" data-id='<?=$wishlist["wishlist_id"] ?>'  style="color: #00f;" class="btn-newadd">Add All Products To Cart</a>
 
                                                                     </span>
                                                              </div>
@@ -105,6 +105,8 @@
 </div>
 
 <?php echo $footer; ?>
+
+<div id="opaque"></div>
 
 <script src="<?= $base ?>front/ui/theme/mvgv2/js/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
@@ -289,7 +291,14 @@ __kdt.push({"post_on_load": false});
         }
         console.log("addWishlisttocart click");
         console.log($(this).attr('data-id'));
-        $('#addWishlisttocart').html('Wait...');
+        //$('#addWishlisttocart').html('Wait...');
+        $(this).html('Please Wait...');
+        $(this).css("background-color", "grey");
+         
+        //$(this).on("click",function(){return false;}); 
+        //$('#addWishlisttocart').on("click",function(){return false;}); 
+        document.getElementById('opaque').style.display='block';
+
         var orderId = $(this).attr('data-id');
         $.ajax({
             url: 'index.php?path=account/wishlist/addWishlistProductToCart',
@@ -392,7 +401,7 @@ font-style: normal;
 font-weight: 600;
 font-size: 16px;
 line-height: 24px;
-margin: 0px 16px;
+margin: 0px 8px;
 padding: 10px 12px;
 
   
@@ -411,9 +420,28 @@ font-style: normal;
 font-weight: 600;
 font-size: 14px;
 line-height: 20px;
-margin: 0px 16px;
+margin: 0px 8px;
 padding: 10px 12px;
 }
+
+
+
+#opaque {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    z-index: 4000;
+    display: none;
+    background-color: black;
+    filter: alpha(opacity=30);
+    opacity: 0.3;
+}
+* html #opaque {
+    position: absolute;
+}
+
     </style>
 </body>
 
