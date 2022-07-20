@@ -6353,6 +6353,10 @@ class ModelSaleOrder extends Model {
             $sql .= " AND CONCAT(cust.firstname, ' ', cust.lastname) LIKE '%" . $this->db->escape($data['filter_customer']) . "%'";
         }
 
+        if (!empty($data['filter_payment']) && $data['filter_payment'] != 'undefined') {
+            $sql .= " AND o.payment_method LIKE '%" . $data['filter_payment'] . "%'";
+        }
+
         if (!empty($data['filter_date_start']) && empty($data['filter_date_end'])) {
             $sql .= " AND DATE(o.delivery_date) >= DATE('" . $this->db->escape($data['filter_date_start']) . "')";
         }
@@ -6414,6 +6418,10 @@ class ModelSaleOrder extends Model {
 
         if (!empty($data['filter_customer'])) {
             $sql .= " AND CONCAT(cust.firstname, ' ', cust.lastname) LIKE '%" . $this->db->escape($data['filter_customer']) . "%'";
+        }
+
+        if (!empty($data['filter_payment']) && $data['filter_payment'] != 'undefined') {
+            $sql .= " AND o.payment_method LIKE '%" . $data['filter_payment'] . "%'";
         }
 
         if (!empty($data['filter_date_start']) && empty($data['filter_date_end'])) {
