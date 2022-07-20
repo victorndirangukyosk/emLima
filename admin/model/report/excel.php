@@ -15331,7 +15331,8 @@ class ModelReportExcel extends Model {
             $mail->addAttachment($filepath);
             $mail->addAttachment($filepath1);
             $mail->addAttachment($filepath2);
-            $mail->send();
+            // $mail->send();
+            $mail->sendMail();
             #endregion
 
 
