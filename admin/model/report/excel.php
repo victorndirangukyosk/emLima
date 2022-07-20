@@ -14955,7 +14955,7 @@ class ModelReportExcel extends Model {
         try {
             // set appropriate timeout limit
             #region 1
-            set_time_limit(1800);
+            set_time_limit(2800);
 
             $objPHPExcel = new PHPExcel();
             $objPHPExcel->getProperties()->setTitle('Orders Sheet')->setDescription('none');
