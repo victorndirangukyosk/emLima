@@ -35,6 +35,13 @@ class ControllerReportReceivablesAgeing extends Controller
             $filter_company = '';
         }
 
+        if (isset($this->request->get['filter_payment'])) {
+            $filter_payment = $this->request->get['filter_payment'];
+        } else {
+            $filter_payment = null;
+        }
+
+
         if (isset($this->request->get['page'])) {
             $page = $this->request->get['page'];
         } else {
@@ -61,6 +68,11 @@ class ControllerReportReceivablesAgeing extends Controller
             $url .= '&filter_company='.$this->request->get['filter_company'];
         }
 
+        if (isset($this->request->get['filter_payment'])) {
+            $url .= '&filter_payment=' . urlencode(html_entity_decode($this->request->get['filter_payment'], ENT_QUOTES, 'UTF-8'));
+        }
+
+
         if (isset($this->request->get['page'])) {
             $url .= '&page='.$this->request->get['page'];
         }
@@ -86,6 +98,8 @@ class ControllerReportReceivablesAgeing extends Controller
             'filter_date_end' => $filter_date_end,
             'filter_customer' => $filter_customer,
             'filter_company' => $filter_company,
+            'filter_payment' => $filter_payment,
+
             // 'start' => ($page - 1) * $this->config->get('config_limit_admin'),
             // 'limit' => $this->config->get('config_limit_admin'),
         ];
@@ -246,6 +260,11 @@ class ControllerReportReceivablesAgeing extends Controller
             $url .= '&filter_company='.$this->request->get['filter_company'];
         }
 
+        if (isset($this->request->get['filter_payment'])) {
+            $url .= '&filter_payment=' . urlencode(html_entity_decode($this->request->get['filter_payment'], ENT_QUOTES, 'UTF-8'));
+        }
+
+
         $pagination = new Pagination();
         $pagination->total = $customer_total;
         $pagination->page = $page;
@@ -260,6 +279,7 @@ class ControllerReportReceivablesAgeing extends Controller
         $data['filter_date_end'] = $filter_date_end;
         $data['filter_customer'] = $filter_customer;
         $data['filter_company'] = $filter_company;
+        $data['filter_payment'] = $filter_payment;
 
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');
@@ -300,11 +320,19 @@ class ControllerReportReceivablesAgeing extends Controller
             $filter_company = 0;
         }
 
+        if (isset($this->request->get['filter_payment'])) {
+            $filter_payment = $this->request->get['filter_payment'];
+        } else {
+            $filter_payment = null;
+        }
+
         $filter_data = [
             'filter_date_start' => $filter_date_start,
             'filter_date_end' => $filter_date_end,
             'filter_customer' => $filter_customer,
             'filter_company' => $filter_company,
+            'filter_payment' => $filter_payment,
+
         ];
 
         $this->load->model('report/excel');

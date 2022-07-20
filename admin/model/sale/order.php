@@ -6354,7 +6354,7 @@ class ModelSaleOrder extends Model {
         }
 
         if (!empty($data['filter_payment']) && $data['filter_payment'] != 'undefined') {
-            $sql .= " AND o.payment_method LIKE '%" . $data['filter_payment'] . "%'";
+            $sql .= " AND o.payment_method LIKE '%" . $this->db->escape($data['filter_payment']) . "%'";
         }
 
         if (!empty($data['filter_date_start']) && empty($data['filter_date_end'])) {
@@ -6421,7 +6421,7 @@ class ModelSaleOrder extends Model {
         }
 
         if (!empty($data['filter_payment']) && $data['filter_payment'] != 'undefined') {
-            $sql .= " AND o.payment_method LIKE '%" . $data['filter_payment'] . "%'";
+            $sql .= " AND o.payment_method LIKE '%" . $this->db->escape($data['filter_payment']) . "%'";
         }
 
         if (!empty($data['filter_date_start']) && empty($data['filter_date_end'])) {
@@ -6466,6 +6466,11 @@ class ModelSaleOrder extends Model {
         if (!empty($data['filter_customer'])) {
             $sql .= " AND CONCAT(cust.firstname, ' ', cust.lastname) LIKE '%" . $this->db->escape($data['filter_customer']) . "%'";
         }
+
+        if (!empty($data['filter_payment']) && $data['filter_payment'] != 'undefined') {
+            $sql .= " AND o.payment_method LIKE '%" . $this->db->escape($data['filter_payment']) . "%'";
+        }
+
 
         $sql .= ' Group  BY cust.company_name,cust.firstname,o.delivery_date';
         $sql .= ' ORDER BY cust.company_name,cust.firstname';
@@ -6516,6 +6521,11 @@ class ModelSaleOrder extends Model {
         if (!empty($data['filter_customer'])) {
             $sql .= " AND CONCAT(cust.firstname, ' ', cust.lastname) LIKE '%" . $this->db->escape($data['filter_customer']) . "%'";
         }
+
+        if (!empty($data['filter_payment']) && $data['filter_payment'] != 'undefined') {
+            $sql .= " AND o.payment_method LIKE '%" . $this->db->escape($data['filter_payment']) . "%'";
+        }
+
 
         $sql .= ' Group  BY cust.company_name,cust.firstname';
         $sql .= ' ORDER BY cust.company_name,cust.firstname';
