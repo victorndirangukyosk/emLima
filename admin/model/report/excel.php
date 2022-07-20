@@ -9887,6 +9887,12 @@ class ModelReportExcel extends Model {
             $filter_company = null;
         }
 
+        if (isset($this->request->get['filter_customer_group'])) {
+            $filter_customer_group = $this->request->get['filter_customer_group'];
+        } else {
+            $filter_customer_group = null;
+        }
+
         if (isset($this->request->get['sort'])) {
             $sort = $this->request->get['sort'];
         } else {
@@ -9904,6 +9910,7 @@ class ModelReportExcel extends Model {
             'filter_order_id' => $filter_order_id,
             'filter_customer' => $filter_customer,
             'filter_company' => $filter_company,
+            'filter_customer_group' => $filter_customer_group,
             'filter_total' => $filter_total,
             'filter_date_added' => $filter_date_added,
             'sort' => $sort,
@@ -10300,6 +10307,13 @@ class ModelReportExcel extends Model {
             $filter_company = null;
         }
 
+
+        if (isset($this->request->get['filter_customer_group'])) {
+            $filter_customer_group = $this->request->get['filter_customer_group'];
+        } else {
+            $filter_customer_group = null;
+        }
+
         if (isset($this->request->get['sort'])) {
             $sort = $this->request->get['sort'];
         } else {
@@ -10317,6 +10331,7 @@ class ModelReportExcel extends Model {
             'filter_order_id' => $filter_order_id,
             'filter_customer' => $filter_customer,
             'filter_company' => $filter_company,
+            'filter_customer_group' => $filter_customer_group,
             'filter_total' => $filter_total,
             'filter_date_added' => $filter_date_added,
             'sort' => $sort,
