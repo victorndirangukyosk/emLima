@@ -14926,7 +14926,7 @@ class ModelReportExcel extends Model {
         return null;
     }
 
-    public function mail_customer_all_unpaid_order_excel($data,$data_kibanda,$date_pezesha) {
+    public function mail_customer_all_unpaid_order_excel($data,$data_kibanda,$data_pezesha) {
         $this->load->library('excel');
         $this->load->library('iofactory');
         // echo "<pre>";print_r($data);
