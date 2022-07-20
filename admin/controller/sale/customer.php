@@ -4732,6 +4732,7 @@ class ControllerSaleCustomer extends Controller {
     }
 
     public function autocompletepayment() {
+        $extensions = NULL;
         $json = [];
 
         if (isset($this->request->get['filter_name'])) {
