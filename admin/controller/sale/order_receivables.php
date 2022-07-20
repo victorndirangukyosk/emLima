@@ -213,7 +213,7 @@ class ControllerSaleOrderReceivables extends Controller
             $amount_balance =0;
             $amount_balance_KES=0;
             $amount_success_pending_amount =0;
-            $results = null;
+            $results = null;$results_success =null;
         }
 
 
