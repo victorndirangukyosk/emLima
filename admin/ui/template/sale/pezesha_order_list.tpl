@@ -6,7 +6,7 @@
             <div class="pull-right">
                 <button type="button" onclick="downloadOrders();" data-toggle="tooltip" title="" class="btn btn-success" data-original-title="Pezesha Orders Excel"><i class="fa fa-download"></i></button>
             </div>
-            <h1>Pezesha Receivables</h1>
+            <h1>Pezesha Received</h1>
             <ul class="breadcrumb">
                 <?php foreach ($breadcrumbs as $breadcrumb) { ?>
                 <li><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a></li>
