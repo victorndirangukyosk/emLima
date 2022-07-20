@@ -797,9 +797,20 @@ class ControllerCommonScheduler extends Controller {
         $log = new Log('error.log');
         $data['filter_status'] = 1;
         $data['sendingDate'] = $sendingDate;
-        $data['filter_payment_terms'] = 'Payment On Delivery';        
+        $data['filter_payment_terms'] = 'Payment On Delivery'; 
+        
+        
+        $data_pezesha['filter_status'] = 1;
+        $data_pezesha['sendingDate'] = $sendingDate;
+         $data_pezesha['filter_payment'] = 'Pezesha'; 
+
+         $data_kibanda['filter_status'] = 1;
+        $data_kibanda['sendingDate'] = $sendingDate;
+        $data_kibanda['filter_customer_group_id'] = $this->config->get('config_kibandas_customer_group_id');        
+
+
         $this->load->model('report/excel');
-        $this->model_report_excel->mail_customer_all_unpaid_order_excel($data);
+        $this->model_report_excel->mail_customer_all_unpaid_order_excel($data,$data_kibanda,$data_pezesha);
         $log->write('Unpaid Orders Excel Sent Successfully -' . $sendingDate);
 
         }
