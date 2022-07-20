@@ -110,6 +110,23 @@
                                     </span>
                                 </div>
                             </div>-->
+
+
+                             <div class="form-group">
+                                <label class="control-label" for="input-customer-groups">Customer Group</label>
+                                <select name="filter_customer_group" id="input-customer-group" class="form-control">
+                                    <option value="*"></option>
+                                    
+                                     <?php foreach ($customer_groups as $cust_group) { ?>
+                                    <?php if ($cust_group['customer_group_id'] == $filter_customer_group) { ?>
+                                    <option value="<?php echo $cust_group['customer_group_id']; ?>" selected="selected"><?php echo $cust_group['name']; ?></option>
+                                    <?php } else { ?>
+                                    <option value="<?php echo $cust_group['customer_group_id']; ?>"><?php echo $cust_group['name']; ?></option>
+                                    <?php } ?>
+                                    <?php } ?>
+                                </select>    
+                            </div>
+
                             <br>
                             
                             <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>
@@ -228,6 +245,9 @@
                                     </td>
                                     
                                     <td class="text-right"><?php echo $order['grand_total']; ?></td>
+                                    <td class="text-right"><?php echo $order['grand_partialy_paid']; ?></td>
+                                    <td class="text-right"><?php echo $order['grand_pending_amount']; ?></td>
+                                    
                                     
                                     
                                 </tr>
@@ -368,6 +388,8 @@
                                     </td>
                                     
                                     <td class="text-right"><?php echo $order['grand_total']; ?></td>
+                                    <td class="text-right"></td>
+                                    <td class="text-right"><?php echo $order['amount_grand_pending_amount']; ?></td>
                                     
                                     
                                 </tr>
@@ -493,6 +515,12 @@
                 url += '&filter_company=' + encodeURIComponent(filter_company);
             }
 
+    var filter_customer_group = $('select[name=\'filter_customer_group\']').val();
+
+            if (filter_customer_group != '*') {
+                url += '&filter_customer_group=' + encodeURIComponent(filter_customer_group);
+            }
+
 
             var filter_date_added = $('input[name=\'filter_date_added\']').val();
 
@@ -606,6 +634,12 @@
                 url += '&filter_company=' + encodeURIComponent(filter_company);
             }
   
+      var filter_customer_group = $('select[name=\'filter_customer_group\']').val();
+
+            if (filter_customer_group != '*') {
+                url += '&filter_customer_group=' + encodeURIComponent(filter_customer_group);
+            }
+
             var filter_customer = $('input[name=\'filter_customer\']').val();
 
             if (filter_customer) {
@@ -650,6 +684,12 @@ function excel() {
                 url += '&filter_company=' + encodeURIComponent(filter_company);
             }
   
+      var filter_customer_group = $('select[name=\'filter_customer_group\']').val();
+
+            if (filter_customer_group != '*') {
+                url += '&filter_customer_group=' + encodeURIComponent(filter_customer_group);
+            }
+
             var filter_customer = $('input[name=\'filter_customer\']').val();
 
             if (filter_customer) {

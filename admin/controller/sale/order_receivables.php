@@ -43,6 +43,11 @@ class ControllerSaleOrderReceivables extends Controller
         }
 
       
+        if (isset($this->request->get['filter_customer_group'])) {
+            $filter_customer_group = $this->request->get['filter_customer_group'];
+        } else {
+            $filter_customer_group = null;
+        }
 
         if (isset($this->request->get['filter_date_added'])) {
             $filter_date_added = $this->request->get['filter_date_added'];
@@ -95,6 +100,10 @@ class ControllerSaleOrderReceivables extends Controller
             $url .= '&filter_company='.urlencode(html_entity_decode($this->request->get['filter_company'], ENT_QUOTES, 'UTF-8'));
         }
 
+        if (isset($this->request->get['filter_customer_group'])) {
+            $url .= '&filter_customer_group=' . $this->request->get['filter_customer_group'];
+        }
+
         if (isset($this->request->get['filter_order_status'])) {
             $url .= '&filter_order_status='.$this->request->get['filter_order_status'];
         }
@@ -142,6 +151,7 @@ class ControllerSaleOrderReceivables extends Controller
             'filter_order_id' => $filter_order_id,
             'filter_customer' => $filter_customer,
             'filter_company' => $filter_company,            
+            'filter_customer_group' => $filter_customer_group,            
             'filter_date_added' => $filter_date_added,
             'filter_date_added_end' => $filter_date_added_end,
 
@@ -155,7 +165,9 @@ class ControllerSaleOrderReceivables extends Controller
         $filter_data_success = [
             'filter_order_id' => $filter_order_id,
             'filter_customer' => $filter_customer,
-            'filter_company' => $filter_company,            
+            'filter_company' => $filter_company,   
+            'filter_customer_group' => $filter_customer_group,     
+
             'filter_date_added' => $filter_date_added,
             'filter_date_added_end' => $filter_date_added_end,
 
@@ -176,7 +188,17 @@ class ControllerSaleOrderReceivables extends Controller
         $order_total =$order_total_grandTotal['total'];
         $order_total_success =$order_total_grandTotal_success['total'];
         $amount =$order_total_grandTotal['GrandTotal'];
+        $amount_KES =$this->currency->format($amount);
+        $amount_partially_paid =$order_total_grandTotal['GrandPartialyPaid'];
+        $amount_partially_paid_KES =$this->currency->format($amount_partially_paid);
+
+        $amount_balance =$amount-$amount_partially_paid;
+        $amount_balance_KES =$this->currency->format($amount_balance);
+
         $amount_success =$order_total_grandTotal_success['GrandTotal'];
+
+        $amount_success_pending_amount =$this->model_sale_order_receivables->getTotalPendingAmount($filter_data_success);;
+        $amount_success_pending_amount_KES=$this->currency->format($amount_success_pending_amount);
         $results = $this->model_sale_order_receivables->getOrderReceivables($filter_data);
         $results_success = $this->model_sale_order_receivables->getSuccessfulOrderReceivables($filter_data_success);
 
@@ -186,7 +208,12 @@ class ControllerSaleOrderReceivables extends Controller
             $order_total_grandTotal = null;
             $order_total=0;
             $amount=0;
-            $results = null;
+            $amount_partially_paid =0;
+            $amount_partially_paid_KES=0;
+            $amount_balance =0;
+            $amount_balance_KES=0;
+            $amount_success_pending_amount =0;
+            $results = null;$results_success =null;
         }
 
 
@@ -225,7 +252,10 @@ class ControllerSaleOrderReceivables extends Controller
                 'total' => $this->currency->format($result['total']),
                 'total_value' =>($result['total']),
                 // 'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
-                'grand_total' => $this->currency->format($amount),
+                'grand_total' => $amount_KES,
+                'grand_partialy_paid' => $amount_partially_paid_KES,
+                'grand_pending_amount' => $amount_balance_KES,
+
                 'total_pages' => $totalPages,
                 // o.paid,o.amount_partialy_paid
                 'paid' => $result['paid'],
@@ -286,7 +316,8 @@ class ControllerSaleOrderReceivables extends Controller
                 'pending_amount' => ($result_success['amount_partialy_paid']>0?round(($result_success['total']-$result_success['amount_partialy_paid']),2):0),
                 // 'pending_amount' => $this->currency->format ($result_success['total']-$result_success['amount_partialy_paid']),
                 'paid_to' => $result_success['paid_to'],
-
+                'amount_grand_pending_amount' => $amount_success_pending_amount_KES,
+                
 
 
             ];
@@ -402,6 +433,9 @@ class ControllerSaleOrderReceivables extends Controller
         }
 
        
+        if (isset($this->request->get['filter_customer_group'])) {
+            $url .= '&filter_customer_group=' . $this->request->get['filter_customer_group'];
+        }          
 
         if (isset($this->request->get['filter_date_added'])) {
             $url .= '&filter_date_added='.$this->request->get['filter_date_added'];
@@ -444,11 +478,16 @@ class ControllerSaleOrderReceivables extends Controller
         
         $data['filter_customer'] = $filter_customer;
         $data['filter_company'] = $filter_company;
+        $data['filter_customer_group'] = $filter_customer_group;
 
          
         $data['filter_date_added'] = $filter_date_added;
         $data['filter_order_id'] = $filter_order_id;
         $data['filter_date_added_end'] = $filter_date_added_end;
+
+        $this->load->model('localisation/order_status');
+
+        $data['customer_groups'] = $this->model_localisation_order_status->getCustomerGroups();
 
 
         $data['sort'] = $sort;
@@ -485,6 +524,12 @@ class ControllerSaleOrderReceivables extends Controller
             $filter_company = null;
         }
 
+        if (isset($this->request->get['filter_customer_group'])) {
+            $filter_customer_group = $this->request->get['filter_customer_group'];
+        } else {
+            $filter_customer_group = null;
+        }
+
         // if (isset($this->request->get['filter_total'])) {
         //     $filter_total = $this->request->get['filter_total'];
         // } else {
@@ -515,6 +560,7 @@ class ControllerSaleOrderReceivables extends Controller
             'filter_order_id' => $filter_order_id,
             'filter_customer' => $filter_customer,
             'filter_company' => $filter_company,
+            'filter_customer_group' => $filter_customer_group,
             // 'filter_total' => $filter_total,
             // 'filter_date_added' => $filter_date_added,
             // 'sort' => $sort,
@@ -551,6 +597,12 @@ class ControllerSaleOrderReceivables extends Controller
             $filter_company = null;
         }
 
+        if (isset($this->request->get['filter_customer_group'])) {
+            $filter_customer_group = $this->request->get['filter_customer_group'];
+        } else {
+            $filter_customer_group = null;
+        }
+
         // if (isset($this->request->get['filter_total'])) {
         //     $filter_total = $this->request->get['filter_total'];
         // } else {
@@ -581,6 +633,7 @@ class ControllerSaleOrderReceivables extends Controller
             'filter_order_id' => $filter_order_id,
             'filter_customer' => $filter_customer,
             'filter_company' => $filter_company,
+            'filter_customer_group' => $filter_customer_group,
             // 'filter_total' => $filter_total,
             // 'filter_date_added' => $filter_date_added,
             // 'sort' => $sort,
