@@ -788,6 +788,32 @@ class ControllerCommonScheduler extends Controller {
        
     }
 
+
+    public function getAllUnpaidOrders() {
+
+        try{
+
+        $sendingDate =   date("Y-m-d");
+        $log = new Log('error.log');
+        $data['filter_status'] = 1;
+        $data['sendingDate'] = $sendingDate;
+        $data['filter_payment_terms'] = 'Payment On Delivery';        
+        $this->load->model('report/excel');
+        $this->model_report_excel->mail_customer_all_unpaid_order_excel($data);
+        $log->write('Unpaid Orders Excel Sent Successfully -' . $sendingDate);
+
+        }
+        catch(excetion $ex)
+        {
+            $log = new Log('error.log');
+            $log->write($ex);
+            $log->write('Unpaid Orders Excel Sending Failed -' . $sendingDate);
+
+        }
+
+       
+    }
+
     //Notify unapproved orders to parent user , 30mins before cutoff time
     //and update order to next timeslot, if cutoff time is reached
     public function updateUnapprovedOrderTimeslot() {
