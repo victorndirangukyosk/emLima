@@ -49,16 +49,20 @@
                             
 
                               <div class="form-group">
-                                <label class="control-label" for="input-date-added">From date added</label>
-                                <div class="input-group date">
-                                    <input type="text" name="filter_date_added" value="<?php echo $filter_date_added; ?>" placeholder="From date added" data-date-format="YYYY-MM-DD" id="input-date-added" class="form-control" />
-                                    <span class="input-group-btn">
-                                        <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
-                                    </span>
-                                </div>
-                            </div>
+                                <label class="control-label" for="input-payment">Payment Method</label>
+                                    <input type="text"  name="filter_payment" value="<?php echo $filter_payment; ?>" placeholder="Payment Method" id="input-payment" class="form-control" />                                    
+                           </div>
 
                            
+                             <div class="form-group">
+                <label class="control-label" for="input-payment-terms">Payment Terms</label>
+                <select name="filter_payment_terms" id="input-payment-terms" class="form-control">
+                            <option value=""></option>
+                            <option value="Payment On Delivery" <?php if (isset($filter_payment_terms) && !is_null($filter_payment_terms) && $filter_payment_terms == 'Payment On Delivery') { ?> selected="selected" <?php } ?> >Payment On Delivery</option>
+                            <option value="Credit" <?php if (isset($filter_payment_terms) && !is_null($filter_payment_terms) && $filter_payment_terms == 'Credit') { ?> selected="selected" <?php } ?> >Credit</option>
+                          
+                </select>
+              </div>   
                             
                         </div>
 
@@ -70,9 +74,9 @@
                                 <input type="text" name="filter_customer" value="<?php echo $filter_customer; ?>" placeholder="<?php echo $entry_customer; ?>" id="input-customer" class="form-control" />
                             </div>
                             <div class="form-group">    
-                                <label class="control-label" for="input-date-added-end">To date added</label>
+                                <label class="control-label" for="input-date-added">From date added</label>
                                 <div class="input-group date">
-                                    <input type="text" name="filter_date_added_end" value="<?php echo $filter_date_added_end; ?>" placeholder="To date added" data-date-format="YYYY-MM-DD" id="input-date-end" class="form-control" />
+                                    <input type="text" name="filter_date_added" value="<?php echo $filter_date_added; ?>" placeholder="From date added" data-date-format="YYYY-MM-DD" id="input-date-added" class="form-control" />
                                     <span class="input-group-btn">
                                         <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
                                     </span>
@@ -96,16 +100,20 @@
 
                         <div class="col-sm-4">
                             
-                           <div class="form-group">
-                <label class="control-label" for="input-payment-terms">Payment Terms</label>
-                <select name="filter_payment_terms" id="input-payment-terms" class="form-control">
-                            <option value=""></option>
-                            <option value="Payment On Delivery" <?php if (isset($filter_payment_terms) && !is_null($filter_payment_terms) && $filter_payment_terms == 'Payment On Delivery') { ?> selected="selected" <?php } ?> >Payment On Delivery</option>
-                            <option value="Credit" <?php if (isset($filter_payment_terms) && !is_null($filter_payment_terms) && $filter_payment_terms == 'Credit') { ?> selected="selected" <?php } ?> >Credit</option>
-                          
-                </select>
-              </div>   
+                           <div class="form-group">    
+                                <label class="control-label" for="input-date-added-end">To date added</label>
+                                <div class="input-group date">
+                                    <input type="text" name="filter_date_added_end" value="<?php echo $filter_date_added_end; ?>" placeholder="To date added" data-date-format="YYYY-MM-DD" id="input-date-end" class="form-control" />
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+                                    </span>
+                                </div>
+                            </div>
+                           
                             <br>
+
+
+                            
                             
                             <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>
                         </div>
@@ -241,6 +249,11 @@
                 url += '&filter_company=' + encodeURIComponent(filter_company);
             }
 
+var filter_payment = $('input[name=\'filter_payment\']').val();
+
+            if (filter_payment) {
+                url += '&filter_payment=' + encodeURIComponent(filter_payment);
+            }
 
             var filter_date_added = $('input[name=\'filter_date_added\']').val();
 
@@ -328,6 +341,26 @@
         });
 
 
+ $('input[name=\'filter_payment\']').autocomplete({
+            'source': function (request, response) {
+                $.ajax({
+                    url: 'index.php?path=sale/customer/autocompletepaymentByFilter&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
+                    dataType: 'json',
+                    success: function (json) {
+                        response($.map(json, function (item) {
+                            return {
+                                label: item['name'],
+                                value: item['name']
+                            }
+                        }));
+                    }
+                });
+            },
+            'select': function (item) {
+                $('input[name=\'filter_payment\']').val(item['label']);
+            }
+            
+        });
         //--></script> 
    
     <script src="ui/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
@@ -361,6 +394,7 @@ function excel() {
             var filter_customer = $('input[name=\'filter_customer\']').val();
 
 
+
    var filter_date_added = $('input[name=\'filter_date_added\']').val();
 
             if (filter_date_added != '*' && filter_date_added != '') {
@@ -382,6 +416,12 @@ function excel() {
                 if (filter_payment_terms != '*' && filter_payment_terms != '') {
                     url += '&filter_payment_terms=' + encodeURIComponent(filter_payment_terms); 
                 } 
+
+var filter_payment = $('input[name=\'filter_payment\']').val();
+
+            if (filter_payment) {
+                url += '&filter_payment=' + encodeURIComponent(filter_payment);
+            }
 
             if(filter_date_added=='' || filter_date_added_end=='')
             {

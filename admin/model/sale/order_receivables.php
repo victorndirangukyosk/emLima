@@ -40,6 +40,9 @@ class ModelSaleOrderReceivables extends Model
             $sql .= " AND c.payment_terms LIKE '%".$data['filter_payment_terms']."%'";
         }
 
+        if (!empty($data['filter_payment'])) {
+            $sql .= " AND o.payment_method LIKE '%" . $data['filter_payment'] . "%'";
+        }
 
         // if (!empty($data['filter_date_modified'])) {
         //     $sql .= " AND DATE(o.date_modified) = DATE('".$this->db->escape($data['filter_date_modified'])."')";
@@ -114,6 +117,10 @@ class ModelSaleOrderReceivables extends Model
 
         if (isset($data['filter_customer_group']) && !empty($data['filter_customer_group'])) {
             $sql .= ' AND c.customer_group_id="' . $data['filter_customer_group'] . '"';
+        }
+
+        if (!empty($data['filter_payment'])) {
+            $sql .= " AND o.payment_method LIKE '%" . $data['filter_payment'] . "%'";
         }
 
         if (!empty($data['filter_date_added']) && empty($data['filter_date_added_end'])) {
