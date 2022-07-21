@@ -1484,7 +1484,7 @@ class ModelReportExcel extends Model {
             $filepath = DIR_UPLOAD . 'schedulertemp/' . $filename;
             $mail = new Mail($this->config->get('config_mail'));
             $mail->setTo($email);
-            $mail->setBCC($bccemail);
+            // $mail->setBCC($bccemail);
             $mail->setFrom($this->config->get('config_from_email'));
             $mail->setSender($this->config->get('config_name'));
             $mail->setSubject($subject);
@@ -8746,7 +8746,7 @@ class ModelReportExcel extends Model {
             $filepath = DIR_UPLOAD . 'schedulertemp/' . $filename;
             $mail = new Mail($this->config->get('config_mail'));
             $mail->setTo($email);
-            $mail->setBCC($bccemail);
+            // $mail->setBCC($bccemail);
             $mail->setFrom($this->config->get('config_from_email'));
             $mail->setSender($this->config->get('config_name'));
             $mail->setSubject($subject);
@@ -10708,7 +10708,7 @@ class ModelReportExcel extends Model {
             $filepath = DIR_UPLOAD . 'schedulertemp/' . $filename;
             $mail = new Mail($this->config->get('config_mail'));
             $mail->setTo($email);
-            $mail->setBCC($bccemail);
+            // $mail->setBCC($bccemail);
             $mail->setFrom($this->config->get('config_from_email'));
             $mail->setSender($this->config->get('config_name'));
             $mail->setSubject($subject);
@@ -11055,7 +11055,7 @@ class ModelReportExcel extends Model {
             $filepath = DIR_UPLOAD . 'schedulertemp/' . $filename;
             $mail = new Mail($this->config->get('config_mail'));
             $mail->setTo($email);
-            $mail->setBCC($bccemail);
+            // $mail->setBCC($bccemail);
             $mail->setFrom($this->config->get('config_from_email'));
             $mail->setSender($this->config->get('config_name'));
             $mail->setSubject($subject);
@@ -14658,7 +14658,7 @@ class ModelReportExcel extends Model {
             $filepath = DIR_UPLOAD . 'schedulertemp/' . $filename;
             $mail = new Mail($this->config->get('config_mail'));
             $mail->setTo($email);
-            $mail->setBCC($bccemail);
+            // $mail->setBCC($bccemail);
             $mail->setFrom($this->config->get('config_from_email'));
             $mail->setSender($this->config->get('config_name'));
             $mail->setSubject($subject);
@@ -14861,7 +14861,7 @@ class ModelReportExcel extends Model {
             $filepath = DIR_UPLOAD . 'schedulertemp/' . $filename;
             $mail = new Mail($this->config->get('config_mail'));
             $mail->setTo($email);
-            $mail->setBCC($bccemail);
+            // $mail->setBCC($bccemail);
             $mail->setFrom($this->config->get('config_from_email'));
             $mail->setSender($this->config->get('config_name'));
             $mail->setSubject($subject);
@@ -15293,6 +15293,7 @@ class ModelReportExcel extends Model {
 
         $objWriter2 = PHPExcel_IOFactory::createWriter($objPHPExcel2, 'Excel2007');
         $objWriter2->save(DIR_UPLOAD . 'schedulertemp/' . $filename2);
+
         #endregion
 
             // $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
@@ -15310,7 +15311,8 @@ class ModelReportExcel extends Model {
             $message = $this->emailtemplate->getMessage('ConsolidatedOrderSheet', 'ConsolidatedOrderSheet_1', $maildata);
 
             // if ($name != "") {
-            $subject = 'Unpaid Orders';
+            $subject = 'Unpaid Orders'; 
+            
             // }
             // $subject = "Consolidated Order Sheet";
             $message = str_replace('consolidated', 'unpaid', $message);
@@ -15328,7 +15330,7 @@ class ModelReportExcel extends Model {
             $filepath2 = DIR_UPLOAD . 'schedulertemp/' . $filename2;
             $mail = new Mail($this->config->get('config_mail'));
             $mail->setTo($email);
-            $mail->setBCC($bccemail);
+            // $mail->setBCC($bccemail);
             $mail->setFrom($this->config->get('config_from_email'));
             $mail->setSender($this->config->get('config_name'));
             $mail->setSubject($subject);
