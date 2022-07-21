@@ -1571,36 +1571,7 @@ class ModelAssetsProduct extends Model {
         if (!empty($data['filter_name'])) {
             if (!empty($data['filter_name'])) {
                 // original
-
                 $this->db->like('product_description.name', $this->db->escape_str($data['filter_name']), 'both');
-
-                //working try 0
-
-                /* $searchCSV = implode(",",explode(" ",$data['filter_name']));
-                  $this->db->where('(MATCH('. DB_PREFIX .'product_description.name) AGAINST("'.$searchCSV.'"))'); */
-
-                //try 1
-
-                /* $search_text = $this->db->escape( $data['filter_name'] );
-                  $search_text1 = $this->db->escape( $data['filter_name'] ) .' ';
-                  $search_text2 = ' '.$this->db->escape( $data['filter_name'] );
-                  $search_text3 = ' '.$this->db->escape( $data['filter_name'] ) .' ';
-
-
-                  $this->db->where('(hf7_product_description.name ="'.$search_text.'" OR hf7_product_description.name ="'.$search_text1 .'" OR hf7_product_description.name ="'.$search_text2 .'" OR hf7_product_description.name ="'.$search_text3 .'")', NULL, FALSE); */
-
-                //$this->db->where("product_description.name REGEXP '[[:<:]]pencil[[:>:]]'");
-                //try 2
-
-                /*
-                  $this->db->group_start();
-
-                  $this->db->or_like('product_description.name', ' '.$this->db->escape( $data['filter_name'] ) .' ', 'both');
-                  $this->db->or_like('product_description.name', ' '.$this->db->escape( $data['filter_name'] ), 'before');
-                  $this->db->or_like('product_description.name', $this->db->escape( $data['filter_name'] ) .' ', 'after');
-                  $this->db->or_like('product_description.nasme', $this->db->escape( $data['filter_name'] ), 'none');
-
-                  $this->db->group_end(); */
             }
         }
 
