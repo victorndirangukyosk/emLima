@@ -178,7 +178,7 @@ class ControllerSaleOrderReceivables extends Controller
         ];
         //filter commented, becoz, if multiple customers, then unable to add wallet to  particular customer
         //|| '' != $filter_company|| '' != $filter_date_added || '' != $filter_date_added_end
-        if ('' != $filter_customer  || '' != $filter_order_id || '' != $filter_company) {
+        if ('' != $filter_customer  || '' != $filter_order_id || '' != $filter_customer_group) {
            // $order_total = $this->model_sale_transactions->getTotaltransactions($filter_data);
            $order_total_grandTotal = $this->model_sale_order_receivables->getTotalOrderReceivablesAndGrandTotal($filter_data);
            $order_total_grandTotal_success = $this->model_sale_order_receivables->getTotalSuccessfulOrderReceivablesAndGrandTotal($filter_data_success);
@@ -204,7 +204,7 @@ class ControllerSaleOrderReceivables extends Controller
 
             // echo "<pre>";print_r($results_success);die; 
 
-        } else {
+        } else { 
             $order_total_grandTotal = null;
             $order_total=0;
             $amount=0;
