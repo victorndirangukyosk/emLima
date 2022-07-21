@@ -243,6 +243,19 @@
 									  </select>
 								</div>
 							</div>
+
+							
+
+							<div class="form-group ">
+								<label class="col-sm-2 control-label" for="input-hs-code">
+									HS Code</label>
+								<div class="col-sm-10">
+									<input type="text" name="hs_code" value="<?php echo $hs_code; ?>" placeholder="HS Code" id="input-hs-code" class="form-control" maxlength="80" />
+									 
+								</div>
+							</div>
+
+
                                                         
                 <div class="form-group">
                        <label class="col-sm-2 control-label">Delivery Days</label> 

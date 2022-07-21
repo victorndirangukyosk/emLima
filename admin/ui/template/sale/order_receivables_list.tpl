@@ -423,11 +423,28 @@
         $('input[name^=\'selected\']').on('change', function () 
         {
 
+         var filter_order_id = $('input[name=\'filter_order_id\']').val();   
+         var filter_customer = $('input[name=\'filter_customer\']').val();              
+
+
             $('#button-bulkpayment').prop('disabled', true);
-            var selected = $('input[name^=\'selected\']:checked');            
-                if (selected.length) {
+
+            var selected = $('input[name^=\'selected\']:checked');   
+
+              if(filter_customer==0 && filter_order_id==0 )
+            {
+                $('#button-bulkpayment').prop('disabled', true);
+
+            }
+            else
+            {
+               if (selected.length) {
                     $('#button-bulkpayment').prop('disabled', false);                
                 }
+
+            }
+
+                
                 $grand_total_array=0;
                 for (i = 0; i < selected.length; i++) {                
                 $total_array= ($(selected[i]).parent().find('input[name^=\'order_value\']').val()) ;
@@ -537,17 +554,19 @@
         //filter commented, becoz, if multiple customers, then unable to add wallet to  particular customer
              //add wallet to parent 
             //&& filter_company==0 && filter_date_added== '' && filter_date_added_end == ''
-             if(filter_customer==0 && filter_order_id==0  && filter_company==0)
+            if(filter_customer==0 && filter_order_id==0 && filter_customer_group =='*')
             {
-                //or company or date filters
-                alert("Please select either customer or order_id ");
+                alert("Please select either customer or order_id or customer group");
                 return;
             }
             
-
+          
+            
             
 
             location = url;
+
+            
         });
         //--></script> 
    
@@ -646,9 +665,9 @@
                 url += '&filter_customer=' + encodeURIComponent(filter_customer);
             }
 
-        if(filter_customer==0 && filter_order_id==0 && filter_company==0)
+        if(filter_customer==0 && filter_order_id==0 && filter_customer_group =='*')
             {
-                alert("Please select either customer or order_id or company");
+                alert("Please select either customer or order_id or company or customer group");
                 return;
             }
 
@@ -696,9 +715,9 @@ function excel() {
                 url += '&filter_customer=' + encodeURIComponent(filter_customer);
             }
 
-        if(filter_customer==0 && filter_order_id==0 && filter_company==0)
+        if(filter_customer==0 && filter_order_id==0 && filter_customer_group =='*')
             {
-                alert("Please select either customer or order_id or company");
+                alert("Please select either customer or order_id or customer group");
                 return;
             }
 

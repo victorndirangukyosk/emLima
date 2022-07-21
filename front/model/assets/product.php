@@ -1568,39 +1568,14 @@ class ModelAssetsProduct extends Model {
             }
         }
 
+        if (isset($data['filter_multiple_category_id']) && !empty($data['filter_multiple_category_id'])) {
+            $this->db->where_in('product_to_category.category_id', $data['filter_multiple_category_id']);
+        }
+
         if (!empty($data['filter_name'])) {
             if (!empty($data['filter_name'])) {
                 // original
-
                 $this->db->like('product_description.name', $this->db->escape_str($data['filter_name']), 'both');
-
-                //working try 0
-
-                /* $searchCSV = implode(",",explode(" ",$data['filter_name']));
-                  $this->db->where('(MATCH('. DB_PREFIX .'product_description.name) AGAINST("'.$searchCSV.'"))'); */
-
-                //try 1
-
-                /* $search_text = $this->db->escape( $data['filter_name'] );
-                  $search_text1 = $this->db->escape( $data['filter_name'] ) .' ';
-                  $search_text2 = ' '.$this->db->escape( $data['filter_name'] );
-                  $search_text3 = ' '.$this->db->escape( $data['filter_name'] ) .' ';
-
-
-                  $this->db->where('(hf7_product_description.name ="'.$search_text.'" OR hf7_product_description.name ="'.$search_text1 .'" OR hf7_product_description.name ="'.$search_text2 .'" OR hf7_product_description.name ="'.$search_text3 .'")', NULL, FALSE); */
-
-                //$this->db->where("product_description.name REGEXP '[[:<:]]pencil[[:>:]]'");
-                //try 2
-
-                /*
-                  $this->db->group_start();
-
-                  $this->db->or_like('product_description.name', ' '.$this->db->escape( $data['filter_name'] ) .' ', 'both');
-                  $this->db->or_like('product_description.name', ' '.$this->db->escape( $data['filter_name'] ), 'before');
-                  $this->db->or_like('product_description.name', $this->db->escape( $data['filter_name'] ) .' ', 'after');
-                  $this->db->or_like('product_description.nasme', $this->db->escape( $data['filter_name'] ), 'none');
-
-                  $this->db->group_end(); */
             }
         }
 
@@ -1609,8 +1584,6 @@ class ModelAssetsProduct extends Model {
         }
 
         if (!empty($data['selectedProducts'])) {
-
-
             $this->db->where_not_in('product_to_store.product_store_id', $data['selectedProducts']);
         }
 
@@ -1656,6 +1629,8 @@ class ModelAssetsProduct extends Model {
         $this->db->where('product.status', 1);
         // $this->db->order_by('product_description.name','asc');
         $ret = $this->db->get('product_to_store', $limit, $offset)->rows;
+        /* $log = new Log('error.log');
+          $log->write($this->db->last_query()); */
         //die;
         //		echo $this->db->last_query();die;
         //		echo "<pre>";print_r($ret);die;

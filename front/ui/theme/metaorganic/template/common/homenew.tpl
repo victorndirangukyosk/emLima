@@ -192,7 +192,7 @@
                   <div class="menuset">
                     <div class="newset" style="margin-top: 20px;"><a class="btn" href="#">
                         <span>
-                          <?= $full_name ?>
+                          <?= substr($full_name, 0, 5) ?>
                         </span> </a>
 
                       <div class="dropdownset" style="display:none;">

@@ -619,7 +619,14 @@ class ControllerProductSearch extends Controller {
         $this->load->model('assets/category');
         $this->load->model('tool/image');
         $categories = $this->model_assets_category->getCategoryByStoreId(ACTIVE_STORE_ID, 0);
-        $categories = array_column($categories, 'category_id');
+        $customer_categories = $this->model_assets_category->getCustomerCategories($this->customer->getCustomerParent());
+        $new_categories = array_merge($categories, $customer_categories);
+
+        $multiple_categories = NULL;
+        if (isset($new_categories) && count($new_categories) > 0) {
+            $new_categories = array_column($new_categories, 'category_id');
+            $multiple_categories = implode(',', $new_categories);
+        }
 
         $filter_data_product = [
             'start' => 0,
@@ -627,6 +634,7 @@ class ControllerProductSearch extends Controller {
             'store_id' => ACTIVE_STORE_ID,
             'filter_name' => $filter_name,
             'filter_category_id' => $filter_category,
+            'filter_multiple_category_id' => $multiple_categories,
         ];
 
         //$json = $this->model_assets_product->getProducts($filter_data_product);
@@ -637,99 +645,99 @@ class ControllerProductSearch extends Controller {
         foreach ($json as $key => $value) {
             //CATEGORY CHECK REMOVED
             //if (in_array($value['category_id'], $categories)) {
-                $link = $this->url->link('product/category', 'category=' . $value['category_id']);
-                $link_array = explode('/', $link);
-                $page_link = end($link_array);
-                $value['href_cat'] = $this->url->link('product/store', 'store_id=' . $value['store_id']) . '?cat=' . $page_link . '&product=' . $value['pd_name'];
-                if (file_exists(DIR_IMAGE . $value['image'])) {
-                    $value['image'] = $this->model_tool_image->resize($value['image'], 100, 100);
+            $link = $this->url->link('product/category', 'category=' . $value['category_id']);
+            $link_array = explode('/', $link);
+            $page_link = end($link_array);
+            $value['href_cat'] = $this->url->link('product/store', 'store_id=' . $value['store_id']) . '?cat=' . $page_link . '&product=' . $value['pd_name'];
+            if (file_exists(DIR_IMAGE . $value['image'])) {
+                $value['image'] = $this->model_tool_image->resize($value['image'], 100, 100);
+            } else {
+                $value['image'] = $this->model_tool_image->resize('placeholder.png', 100, 100);
+            }
+
+            if (isset($this->session->data['config_store_id'])) {
+                $store_id1 = $this->session->data['config_store_id'];
+            } else {
+                $store_id1 = $value['store_id'];
+            }
+            $key1 = base64_encode(serialize(['product_store_id' => (int) $value['product_store_id'], 'store_id' => $store_id1]));
+            $value['key1'] = $key1;
+            if (array_key_exists($key1, $this->session->data['cart']) && $this->session->data['cart'][$key1]['quantity']) {
+                $value['quantityadded'] = $this->session->data['cart'][$key1]['quantity'];
+            } else {
+                $value['quantityadded'] = 0;
+            }
+
+            $s_price = 0;
+            $o_price = 0;
+
+            if (!$this->config->get('config_inclusiv_tax')) {
+                //FOR CATEGORY PRICING
+                $category_s_price = 0;
+                $category_o_price = 0;
+                if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$value['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $value['store_id']])) {
+                    $category_s_price = $cachePrice_data[$value['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $value['store_id']];
+                    $category_o_price = $cachePrice_data[$value['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $value['store_id']];
+                    if ($category_s_price != NULL && $category_s_price > 0) {
+                        $value['price'] = $category_s_price;
+                        $value['special_price'] = $category_s_price;
+                    }
+                }
+                //FOR CATEGORY PRICING
+                //get price html
+                if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
+                    $price = $this->currency->format($this->tax->calculate($value['price'], $value['tax_class_id'], $this->config->get('config_tax')));
+
+                    $o_price = $this->tax->calculate($value['price'], $value['tax_class_id'], $this->config->get('config_tax'));
                 } else {
-                    $value['image'] = $this->model_tool_image->resize('placeholder.png', 100, 100);
+                    $price = false;
+                }
+                if ((float) $value['special_price']) {
+                    $special_price = $this->currency->format($this->tax->calculate($value['special_price'], $value['tax_class_id'], $this->config->get('config_tax')));
+
+                    $s_price = $this->tax->calculate($value['special_price'], $value['tax_class_id'], $this->config->get('config_tax'));
+                } else {
+                    $special_price = false;
                 }
 
-                if (isset($this->session->data['config_store_id'])) {
-                    $store_id1 = $this->session->data['config_store_id'];
+                $value['price'] = $this->currency->formatWithoutCurrency($o_price);
+                $value['special_price'] = $this->currency->formatWithoutCurrency($s_price);
+            } else {
+                if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
+                    $price = $this->currency->format($value['price']);
                 } else {
-                    $store_id1 = $value['store_id'];
-                }
-                $key1 = base64_encode(serialize(['product_store_id' => (int) $value['product_store_id'], 'store_id' => $store_id1]));
-                $value['key1'] = $key1;
-                if (array_key_exists($key1, $this->session->data['cart']) && $this->session->data['cart'][$key1]['quantity']) {
-                    $value['quantityadded'] = $this->session->data['cart'][$key1]['quantity'];
-                } else {
-                    $value['quantityadded'] = 0;
+                    $price = $value['price'];
                 }
 
-                $s_price = 0;
-                $o_price = 0;
-
-                if (!$this->config->get('config_inclusiv_tax')) {
-                    //FOR CATEGORY PRICING
-                    $category_s_price = 0;
-                    $category_o_price = 0;
-                    if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$value['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $value['store_id']])) {
-                        $category_s_price = $cachePrice_data[$value['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $value['store_id']];
-                        $category_o_price = $cachePrice_data[$value['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $value['store_id']];
-                        if ($category_s_price != NULL && $category_s_price > 0) {
-                            $value['price'] = $category_s_price;
-                            $value['special_price'] = $category_s_price;
-                        }
-                    }
-                    //FOR CATEGORY PRICING
-                    //get price html
-                    if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
-                        $price = $this->currency->format($this->tax->calculate($value['price'], $value['tax_class_id'], $this->config->get('config_tax')));
-
-                        $o_price = $this->tax->calculate($value['price'], $value['tax_class_id'], $this->config->get('config_tax'));
-                    } else {
-                        $price = false;
-                    }
-                    if ((float) $value['special_price']) {
-                        $special_price = $this->currency->format($this->tax->calculate($value['special_price'], $value['tax_class_id'], $this->config->get('config_tax')));
-
-                        $s_price = $this->tax->calculate($value['special_price'], $value['tax_class_id'], $this->config->get('config_tax'));
-                    } else {
-                        $special_price = false;
-                    }
-
-                    $value['price'] = $this->currency->formatWithoutCurrency($o_price);
-                    $value['special_price'] = $this->currency->formatWithoutCurrency($s_price);
+                if ((float) $value['special_price']) {
+                    $special_price = $this->currency->format($value['special_price']);
                 } else {
-                    if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
-                        $price = $this->currency->format($value['price']);
-                    } else {
-                        $price = $value['price'];
-                    }
-
-                    if ((float) $value['special_price']) {
-                        $special_price = $this->currency->format($value['special_price']);
-                    } else {
-                        $special_price = $value['special_price'];
-                    }
-
-                    $s_price = $value['special_price'];
-                    $o_price = $value['price'];
-
-                    // echo $s_price.'===>'.$o_price.'==>'.$special_price.'===>'.$price.'</br>';//exit;
-
-                    if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$value['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $value['store_id']])) {
-                        $s_price = $cachePrice_data[$value['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $value['store_id']];
-                        $o_price = $cachePrice_data[$value['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $value['store_id']];
-                    }
-                    $value['price'] = $this->currency->formatWithoutCurrency($o_price);
-                    $value['special_price'] = $this->currency->formatWithoutCurrency($s_price);
+                    $special_price = $value['special_price'];
                 }
 
-                /* if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$value['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . ACTIVE_STORE_ID])) { */
-                //echo $cachePrice_data[$product_info['product_store_id'].'_'.$_SESSION['customer_category'].'_'.$store_id];//exit;
-                /* $s_price = $cachePrice_data[$value['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . ACTIVE_STORE_ID];
-                  $o_price = $cachePrice_data[$value['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . ACTIVE_STORE_ID]; */
-                /* $value['special_price'] = $this->currency->format($s_price);
-                  $value['price'] = $this->currency->format($o_price); */
-                /* $value['special_price'] = $s_price;
-                  $value['price'] = $o_price;
-                  } */
-                $products[] = $value;
+                $s_price = $value['special_price'];
+                $o_price = $value['price'];
+
+                // echo $s_price.'===>'.$o_price.'==>'.$special_price.'===>'.$price.'</br>';//exit;
+
+                if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$value['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $value['store_id']])) {
+                    $s_price = $cachePrice_data[$value['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $value['store_id']];
+                    $o_price = $cachePrice_data[$value['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . $value['store_id']];
+                }
+                $value['price'] = $this->currency->formatWithoutCurrency($o_price);
+                $value['special_price'] = $this->currency->formatWithoutCurrency($s_price);
+            }
+
+            /* if (CATEGORY_PRICE_ENABLED == true && isset($cachePrice_data) && isset($cachePrice_data[$value['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . ACTIVE_STORE_ID])) { */
+            //echo $cachePrice_data[$product_info['product_store_id'].'_'.$_SESSION['customer_category'].'_'.$store_id];//exit;
+            /* $s_price = $cachePrice_data[$value['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . ACTIVE_STORE_ID];
+              $o_price = $cachePrice_data[$value['product_store_id'] . '_' . $_SESSION['customer_category'] . '_' . ACTIVE_STORE_ID]; */
+            /* $value['special_price'] = $this->currency->format($s_price);
+              $value['price'] = $this->currency->format($o_price); */
+            /* $value['special_price'] = $s_price;
+              $value['price'] = $o_price;
+              } */
+            $products[] = $value;
             //}
         }
 
