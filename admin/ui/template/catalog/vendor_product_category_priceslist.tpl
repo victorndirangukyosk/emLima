@@ -307,7 +307,11 @@
 									<?php }?>
                                  
                                 <td class="text-right">
-                <?php if($this->user->hasPermission('modify', 'category/prices')){ ?>
+                                    <?php if(isset($product['category_price_status']) && $product['category_price_status'] == NULL) { ?>
+                                     <button type="button" onclick="enableinallpricecategories('<?php echo $product['product_store_id'];?>','<?php echo $product['product_id'];?>','<?php echo $product['name']; ?>', 0, '<?php echo $price_cat['price_category']; ?>')" data-toggle="tooltip" title="" class="btn btn-default" data-original-title="Enable In All Price Categories"><i class="fa fa-check-circle text-success"></i></button>
+                                     <button type="button" onclick="disableinallpricecategories('<?php echo $product['product_store_id'];?>','<?php echo $product['product_id'];?>','<?php echo $product['name']; ?>', 0, '<?php echo $price_cat['price_category']; ?>')" data-toggle="tooltip" title="" class="btn btn-default" data-original-title="Disable In All Price Categories"><i class="fa fa-times-circle text-danger"></i></button>
+                                     <?php } ?> 
+                                    <?php if($this->user->hasPermission('modify', 'category/prices')){ ?>
 
                                     <?php if(isset($product['category_price_status']) && $product['category_price_status'] != NULL && $product['category_price_status'] == 1) { ?>
                                     <button type="button" onclick="ChangeCategoryPricesStatus('<?php echo $product['product_store_id'];?>','<?php echo $product['product_id'];?>','<?php echo $product['name']; ?>', 0, '<?php echo $price_cat['price_category']; ?>')" data-toggle="tooltip" title="" class="btn btn-default" data-original-title="Disable Product Category Price Status"><i class="fa fa-check-circle text-success"></i></button>

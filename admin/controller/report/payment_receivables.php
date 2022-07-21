@@ -49,7 +49,11 @@ class ControllerReportPaymentReceivables extends Controller
             $filter_payment_terms = null;
         }
 
-      
+        if (isset($this->request->get['filter_payment'])) {
+            $filter_payment = $this->request->get['filter_payment'];
+        } else {
+            $filter_payment = null;
+        }
 
         if (isset($this->request->get['filter_date_added'])) {
             $filter_date_added = $this->request->get['filter_date_added'];
@@ -107,6 +111,10 @@ class ControllerReportPaymentReceivables extends Controller
         }
 
         
+        if (isset($this->request->get['filter_payment'])) {
+            $url .= '&filter_payment=' . urlencode(html_entity_decode($this->request->get['filter_payment'], ENT_QUOTES, 'UTF-8'));
+        }
+
 
         if (isset($this->request->get['filter_date_added'])) {
             $url .= '&filter_date_added='.$this->request->get['filter_date_added'];
@@ -157,6 +165,8 @@ class ControllerReportPaymentReceivables extends Controller
             'filter_date_added' => $filter_date_added,
             'filter_date_added_end' => $filter_date_added_end,
             'filter_payment_terms' => $filter_payment_terms,
+            'filter_payment' => $filter_payment,
+
             'sort' => $sort,
             'order' => $order,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
@@ -238,7 +248,7 @@ class ControllerReportPaymentReceivables extends Controller
 
         // echo "<pre>";print_r($results_success);die; 
  
-    //    echo'<pre>';print_r($data['orders_success']);exit;
+        //    echo'<pre>';print_r($data['orders_success']);exit;
         $data['heading_title'] = $this->language->get('heading_title');
 
         $data['text_list'] = $this->language->get('text_list');
@@ -317,6 +327,9 @@ class ControllerReportPaymentReceivables extends Controller
             $url .= '&filter_date_added_end=' . $this->request->get['filter_date_added_end'];
         }
 
+        if (isset($this->request->get['filter_payment'])) {
+            $url .= '&filter_payment=' . urlencode(html_entity_decode($this->request->get['filter_payment'], ENT_QUOTES, 'UTF-8'));
+        }
         if ('ASC' == $order) {
             $url .= '&order=DESC';
         } else {
@@ -355,6 +368,7 @@ class ControllerReportPaymentReceivables extends Controller
             $url .= '&filter_date_added='.$this->request->get['filter_date_added'];
         }
 
+
         if (isset($this->request->get['filter_date_added_end'])) {
             $url .= '&filter_date_added_end=' . $this->request->get['filter_date_added_end'];
         }
@@ -368,6 +382,9 @@ class ControllerReportPaymentReceivables extends Controller
 
         if (isset($this->request->get['filter_payment_terms'])) {
             $url .= '&order='.$this->request->get['filter_payment_terms'];
+        }
+        if (isset($this->request->get['filter_payment'])) {
+            $url .= '&filter_payment=' . urlencode(html_entity_decode($this->request->get['filter_payment'], ENT_QUOTES, 'UTF-8'));
         }
 
         $pagination = new Pagination();
@@ -387,6 +404,7 @@ class ControllerReportPaymentReceivables extends Controller
         $data['filter_customer'] = $filter_customer;
         $data['filter_company'] = $filter_company;
         $data['filter_payment_terms'] = $filter_payment_terms;
+        $data['filter_payment'] = $filter_payment;
          
         $data['filter_date_added'] = $filter_date_added;
         $data['filter_order_id'] = $filter_order_id;
@@ -444,6 +462,12 @@ class ControllerReportPaymentReceivables extends Controller
         } else {
             $filter_payment_terms = null;
         }
+
+        if (isset($this->request->get['filter_payment'])) {
+            $filter_payment = $this->request->get['filter_payment'];
+        } else {
+            $filter_payment = null;
+        }
         if (isset($this->request->get['sort'])) {
             $sort  = $this->request->get['sort'];
         }
@@ -463,6 +487,8 @@ class ControllerReportPaymentReceivables extends Controller
             'filter_customer' => $filter_customer,
             'filter_company' => $filter_company,
             'filter_payment_terms' => $filter_payment_terms,
+            'filter_payment' => $filter_payment,
+
             // 'filter_total' => $filter_total,
             'filter_date_added' => $filter_date_added,
             'filter_date_added_end' => $filter_date_added_end,

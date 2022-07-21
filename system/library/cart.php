@@ -926,6 +926,68 @@ class Cart {
         return $total;
     }
 
+
+    public function getTotalWithShipping() {
+        $total = 0;
+        //echo '<pre>';print_r($this->getProducts());exit;
+        $log = new Log('error.log');
+        /* $log->write('getTotal system_library_cart.php');
+          $log->write($this->getProducts());
+          $log->write('getTotal system_library_cart.php'); */
+        if (is_array($this->getProducts())) {
+            foreach ($this->getProducts() as $product) {
+                $total += $this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')) * $product['quantity'];
+            }
+        }       
+        
+        if ($this->getSubTotal() <= $this->config->get('config_active_store_minimum_order_amount') ) {//&& ($store_id == 75 || $store_id == -1 || $store_id == '')
+            //$shipping_charge = $this->config->get('config_active_store_delivery_charge') ?? 0;
+
+            $shipping_charge = $this->config->get('config_active_store_delivery_charge') > 0 ? $this->config->get('config_active_store_delivery_charge') : 0;
+            if (isset($this->session->data['adminlogin']) && $this->session->data['adminlogin'] && isset($this->session->data['add_delivery_charges'])) {
+                $shipping_charge = isset($this->session->data['add_delivery_charges']) && $this->session->data['add_delivery_charges'] == 'true' ? $shipping_charge : 0;
+                $log->write('admin login delivery charge, cart library, get order Total with shipping');
+            }
+            $shipping_charge_VAT = 0;
+
+            // $total_data[] = [
+            //     'code' => 'shipping',
+            //     'title' => 'Standard Delivery',
+            //     'value' => $shipping_charge,
+            //     'sort_order' => $this->config->get('shipping_sort_order'),
+            // ];
+            if ($this->config->get('config_active_store_delivery_charge_vat')>0 ) {
+                $shipping_charge_VAT = ($shipping_charge * ($this->config->get('config_active_store_delivery_charge_vat')/100));
+
+            // $total_data[] = [
+            //     'code' => 'delivery_vat',
+            //     'title' => 'VAT on Standard Delivery',
+            //     'value' => $shipping_charge_VAT,
+            //     'sort_order' => $this->config->get('shipping_sort_order') + 1,
+            // ];
+        }
+
+            // echo "<pre>";print_r($total_data);die;
+
+            $total += $shipping_charge + $shipping_charge_VAT;
+    }
+
+    elseif (isset($this->session->data['add_delivery_charges']) && $this->session->data['add_delivery_charges'] != NULL) {
+        $log = new Log('error.log');
+        $log->write('Shipping 2 , cart library');
+
+        $shipping_charge = $this->config->get('config_active_store_delivery_charge') > 0 ? $this->config->get('config_active_store_delivery_charge') : 0;
+        $shipping_charge = $this->session->data['add_delivery_charges'] == 'true' ? $shipping_charge : 0;
+        $shipping_charge_VAT = ($shipping_charge * 0.16);       
+        // echo "<pre>";print_r($total_data);die;
+        $total += $shipping_charge + $shipping_charge_VAT;
+    }
+
+
+        //echo '<pre>';echo $total;exit;
+        return $total;
+    }
+
     public function getTotalForKwikBasket() {
         $store_id = 75;
         $total = 0;

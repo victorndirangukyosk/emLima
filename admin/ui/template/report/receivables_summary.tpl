@@ -53,6 +53,14 @@
                                 <input type="text" name="filter_company" value="<?php echo $filter_company; ?>" placeholder="Company Name" id="input-company" class="form-control" />
                             </div>
 
+ <div class="form-group">
+                                    <label class="control-label" for="input-payment">Payment Method</label>
+                                    <input type="text"  z-index: -1; name="filter_payment" value="<?php echo $filter_payment; ?>" placeholder="Payment Method" id="input-payment" class="form-control" />
+                               
+                                
+                               
+                                </div>
+
              <!-- <div class="form-group">
                 <label class="control-label" for="input-status"><?php echo $entry_status; ?></label>
                 <select name="filter_order_status_id" id="input-status" class="form-control">
@@ -82,11 +90,16 @@
               </div>
 
 
+
+
                   
                               
  </div>
  
              <br>
+            <br>
+            <br>
+            <br>
             <br>
             <br>
             <br>
@@ -156,6 +169,11 @@ $('#button-filter').on('click', function() {
             }
   
   
+ var filter_payment = $('input[name=\'filter_payment\']').val();
+
+            if (filter_payment) {
+                url += '&filter_payment=' + encodeURIComponent(filter_payment);
+            }
 
 	
 	var filter_date_start = $('input[name=\'filter_date_start\']').val();
@@ -231,6 +249,28 @@ $('#button-filter').on('click', function() {
             }
         });
 
+         $('input[name=\'filter_payment\']').autocomplete({
+            'source': function (request, response) {
+                $.ajax({
+                    url: 'index.php?path=sale/customer/autocompletepaymentByFilter&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
+                    dataType: 'json',
+                    success: function (json) {
+                        response($.map(json, function (item) {
+                            return {
+                                label: item['name'],
+                                value: item['name']
+                            }
+                        }));
+                    }
+                });
+            },
+            'select': function (item) {
+                $('input[name=\'filter_payment\']').val(item['label']);
+            }
+            
+        });
+
+
  
 function excel() {
        url = 'index.php?path=report/receivables_summary/receivablessummaryexcel&token=<?php echo $token; ?>';
@@ -249,7 +289,12 @@ function excel() {
                 url += '&filter_company=' + encodeURIComponent(filter_company);
             }
   
-  
+      var filter_payment = $('input[name=\'filter_payment\']').val();
+
+            if (filter_payment) {
+                url += '&filter_payment=' + encodeURIComponent(filter_payment);
+            }
+
 
 	
 	var filter_date_start = $('input[name=\'filter_date_start\']').val();

@@ -11,5 +11,33 @@
   <script src="assets/js/scripts.min.js"></script>
   <script src="front/ui/javascript/carousel.js" type="text/javascript"></script>
   <link href = "front/ui/stylesheet/carousel.css" rel = "stylesheet">
+  <script>
+        const togglePassword = document.querySelector("#togglePassword");
+        const password = document.querySelector("#login-password");
+
+        togglePassword.addEventListener("click", function (e) {
+            // toggle the type attribute
+            e.preventDefault();
+            const type = password.getAttribute("type") === "password" ? "text" : "password";
+            password.setAttribute("type", type);
+            
+           if($(this).hasClass('fa-eye-slash')){
+           
+          $(this).removeClass('fa-eye-slash');
+          
+          $(this).addClass('fa-eye');
+          
+            
+        }else{
+         
+          $(this).removeClass('fa-eye');
+          
+          $(this).addClass('fa-eye-slash');  
+          
+        }
+        }); 
+
+         
+    </script>
 </body>
 </html>

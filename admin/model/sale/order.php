@@ -273,7 +273,6 @@ class ModelSaleOrder extends Model {
         return $ret2;
     }
 
-
     //to get all products , irrespective of disable status
     public function getProductsForEditInvoice_All($filter_name, $store_id, $order_id) {
 
@@ -432,7 +431,6 @@ class ModelSaleOrder extends Model {
         return $ret;
     }
 
-
     public function getProductsForInventory_all($filter_name) {
 
         $store_id = 0;
@@ -476,7 +474,6 @@ class ModelSaleOrder extends Model {
         return $ret;
     }
 
-
     public function getProductForPopup_all($product_store_id, $is_admin = false, $store_id) {
         if (!isset($store_id)) {
             $store_id = $this->session->data['config_store_id'];
@@ -513,7 +510,7 @@ class ModelSaleOrder extends Model {
         $result = $this->db->query($all_variations);
 
         foreach ($result->rows as $r) {
-            if ($r['status']) { 
+            if ($r['status']) {
                 //REMOVED QUANTITY VALIDATION
                 //if ($r['quantity'] > 0 && $r['status']) {
                 $key = base64_encode(serialize(['product_store_id' => (int) $r['product_store_id'], 'store_id' => $store_id]));
@@ -595,7 +592,7 @@ class ModelSaleOrder extends Model {
         return $returnData;
     }
 
-    public function getProductVariationsDisabled($product_name, $store_id, $order_id,$product_id, $price,$formated = false) {
+    public function getProductVariationsDisabled($product_name, $store_id, $order_id, $product_id, $price, $formated = false) {
         $returnData = [];
 
         $this->load->model('sale/order');
@@ -609,19 +606,19 @@ class ModelSaleOrder extends Model {
             $parent_customer_info = $this->model_account_customer->getCustomer($customer_info['parent']);
         }
 
-        $all_variations = 'SELECT * ,product_store_id as variation_id FROM ' . DB_PREFIX . 'product_to_store ps LEFT JOIN ' . DB_PREFIX . "product p ON (ps.product_id = p.product_id) WHERE name = '".$product_name."'" ;//ps.status=1
+        $all_variations = 'SELECT * ,product_store_id as variation_id FROM ' . DB_PREFIX . 'product_to_store ps LEFT JOIN ' . DB_PREFIX . "product p ON (ps.product_id = p.product_id) WHERE name = '" . $product_name . "'"; //ps.status=1
 
         $result = $this->db->query($all_variations);
 
         foreach ($result->rows as $r) {
             // if ($r['status'])
-             {
+            {
                 //REMOVED QUANTITY VALIDATION
                 //if ($r['quantity'] > 0 && $r['status']) {
                 $key = base64_encode(serialize(['product_store_id' => (int) $r['product_store_id'], 'store_id' => $store_id]));
 
                 $r['key'] = $key;
-                $r['price']=$r['price']=$price;
+                $r['price'] = $r['price'] = $price;
                 $percent_off = null;
                 if (isset($r['special_price']) && isset($r['price']) && 0 != $r['price'] && 0 != $r['special_price']) {
                     $percent_off = (($r['price'] - $r['special_price']) / $r['price']) * 100;
@@ -644,7 +641,7 @@ class ModelSaleOrder extends Model {
 
                     if (is_array($category_price_data) && count($category_price_data) > 0) {
                         $category_price = $this->currency->formatWithoutCurrency((float) $category_price_data['price']);
-                        $category_price_status =1;// $category_price_data['status'];
+                        $category_price_status = 1; // $category_price_data['status'];
                     } else {
                         $category_price = 0;
                         $category_price_status = 1;
@@ -656,7 +653,7 @@ class ModelSaleOrder extends Model {
 
                     if (is_array($category_price_data) && count($category_price_data) > 0) {
                         $category_price = $this->currency->formatWithoutCurrency((float) $category_price_data['price']);
-                        $category_price_status =1;// $category_price_data['status'];
+                        $category_price_status = 1; // $category_price_data['status'];
                     } else {
                         $category_price = 0;
                         $category_price_status = 1;
@@ -807,11 +804,10 @@ class ModelSaleOrder extends Model {
         return $returnData;
     }
 
-
     public function getVendorProductVariations_all($product_name, $store_id, $formated = false) {
         $returnData = [];
 
-        $all_variations = 'SELECT * ,product_store_id as variation_id FROM ' . DB_PREFIX . 'product_to_store ps LEFT JOIN ' . DB_PREFIX . "product p ON (ps.product_id = p.product_id) WHERE name = '$product_name' ";//and ps.status=1
+        $all_variations = 'SELECT * ,product_store_id as variation_id FROM ' . DB_PREFIX . 'product_to_store ps LEFT JOIN ' . DB_PREFIX . "product p ON (ps.product_id = p.product_id) WHERE name = '$product_name' "; //and ps.status=1
         $log = new Log('error.log');
         $log->write($all_variations);
         $result = $this->db->query($all_variations);
@@ -1371,23 +1367,17 @@ class ModelSaleOrder extends Model {
 
         if (!empty($data['filter_customer_group'])) {
             $sql .= ' AND cust.customer_group_id="' . $data['filter_customer_group'] . '"';
-            
-        }  
+        }
 
         //   echo "<pre>";print_r($data['filter_order_type']);die; 
 
         if (isset($data['filter_order_placed_from'])) {
 
-            if($data['filter_order_placed_from']=="Mobile")
-            {
+            if ($data['filter_order_placed_from'] == "Mobile") {
                 $sql .= ' AND user_agent not like "%Mozilla%"';
-
-            }
-            else
-            {
+            } else {
                 $sql .= ' AND user_agent  like "%Mozilla%"';
             }
-
         }
         if (isset($data['filter_order_type'])) {
 
@@ -1448,7 +1438,7 @@ class ModelSaleOrder extends Model {
         if (!empty($data['filter_customer_id'])) {
             $sql .= " AND o.customer_id = '" . $data['filter_customer_id'] . "'";
         }
-        
+
         if (isset($data['filter_customer_id_array']) && !is_null($data['filter_customer_id_array'])) {
             $sql .= "AND o.customer_id IN (" . $data['filter_customer_id_array'] . ")";
         }
@@ -1555,31 +1545,26 @@ class ModelSaleOrder extends Model {
 
         // if (isset($data['filter_order_status'])) {
         //     $implode = [];
-
         //     $order_statuses = explode(',', $data['filter_order_status']);
-
         //     foreach ($order_statuses as $order_status_id) {
         //         $implode[] = "o.order_status_id = '" . (int) $order_status_id . "'";
         //     }
-
         //     if ($implode) {
         //         $sql .= ' WHERE (' . implode(' OR ', $implode) . ')';
         //     } else {
-                
         //     }
         // } else {
-            $sql .= " WHERE o.order_status_id > '0'";
+        $sql .= " WHERE o.order_status_id > '0'";
         // }
-
         //   echo "<pre>";print_r($data['filter_order_type']);die; 
 
 
-        if (isset($data['filter_order_type']) && $data['filter_order_type']!='undefined') {
+        if (isset($data['filter_order_type']) && $data['filter_order_type'] != 'undefined') {
 
             $sql .= ' AND isadmin_login= ' . $data['filter_order_type'] . '';
         }
 
-        
+
         if (isset($data['filter_orders'])) {
             $sql .= ' AND  o.order_id in (' . $data['filter_orders'] . ')';
         }
@@ -1610,7 +1595,7 @@ class ModelSaleOrder extends Model {
         }
 
 
-        if (!empty($data['filter_company']) && $data['filter_company']!='undefined') {
+        if (!empty($data['filter_company']) && $data['filter_company'] != 'undefined') {
             $sql .= " AND cust.company_name LIKE '%" . $this->db->escape($data['filter_company']) . "%'";
         }
 
@@ -1633,7 +1618,7 @@ class ModelSaleOrder extends Model {
             $sql .= " AND o.store_name = '" . $data['filter_store_name'] . "'";
         }
 
-        if (!empty($data['filter_payment']) && $data['filter_payment']!='undefined') {
+        if (!empty($data['filter_payment']) && $data['filter_payment'] != 'undefined') {
             $sql .= " AND o.payment_method LIKE '%" . $data['filter_payment'] . "%'";
         }
 
@@ -2653,6 +2638,18 @@ class ModelSaleOrder extends Model {
         return $query->rows;
     }
 
+    public function getCreditNoteProducts($order_id, $store_id = 0) {
+        $sql = "SELECT * ,'0' as quantity_updated,'0' as unit_updated FROM " . DB_PREFIX . "credit_note_products WHERE order_id = '" . (int) $order_id . "'";
+
+        if ($store_id) {
+            $sql .= " AND store_id='" . $store_id . "'";
+        }
+
+        $query = $this->db->query($sql);
+        // echo "<pre>";print_r( $query->rows);die;
+        return $query->rows;
+    }
+
     public function getOrderProductById($order_id, $product_id) {
         $sql = "SELECT * ,'0' as quantity_updated,'0' as unit_updated FROM " . DB_PREFIX . "order_product WHERE order_id = '" . (int) $order_id . "' AND order_product_id ='" . (int) $product_id . "'";
         $query = $this->db->query($sql);
@@ -2789,7 +2786,6 @@ class ModelSaleOrder extends Model {
         return $query->row;
     }
 
-
     public function getOrderTransactionIdandDate($order_id) {
         $sql = 'SELECT transaction_id,created_at FROM ' . DB_PREFIX . "order_transaction_id WHERE order_id = '" . (int) $order_id . "'";
 
@@ -2797,8 +2793,6 @@ class ModelSaleOrder extends Model {
 
         return $query->row;
     }
-
-    
 
     public function getOrderTransactionIdExists($order_id) {
         $sql = 'SELECT transaction_id FROM ' . DB_PREFIX . "order_transaction_id WHERE order_id = '" . (int) $order_id . "'";
@@ -2825,6 +2819,11 @@ class ModelSaleOrder extends Model {
         $query = $this->db->query($sql);
     }
 
+    public function deleteCreditNoteOrderTotal($order_id) {
+        $sql = 'DELETE FROM ' . DB_PREFIX . "credit_note_total WHERE order_id = '" . (int) $order_id . "'";
+
+        $query = $this->db->query($sql);
+    }
 
     public function deleteOrderTotalWithOutShipping($order_id) {
         $sql = 'DELETE FROM ' . DB_PREFIX . "order_total WHERE order_id = '" . (int) $order_id . "' and code !='shipping' and code !='delivery_vat'";
@@ -2873,6 +2872,17 @@ class ModelSaleOrder extends Model {
         $order_query = $this->db->query($order_sql);
     }
 
+    public function insertCreditNoteSubTotalAndTotal($order_id, $sub_total, $total, $sort_order) {
+
+        $sql = 'INSERT into ' . DB_PREFIX . "credit_note_total SET value = '" . $sub_total . "', order_id = '" . $order_id . "', title = 'Sub-Total', code = 'sub_total', sort_order = '1'";
+
+        $query = $this->db->query($sql);
+
+        $sql = 'INSERT into ' . DB_PREFIX . "credit_note_total SET value = '" . $total . "', order_id = '" . $order_id . "', title = 'Total', code = 'total', sort_order = '" . $sort_order . "'";
+
+        $query = $this->db->query($sql);
+    }
+
     public function hasRealOrderProducts($order_id) {
         $sql = 'SELECT * FROM ' . DB_PREFIX . "real_order_product WHERE order_id = '" . (int) $order_id . "'";
 
@@ -2910,7 +2920,7 @@ class ModelSaleOrder extends Model {
             $product_info = 'SELECT * FROM ' . DB_PREFIX . "product_to_store WHERE product_store_id = '" . (int) $product_id . "'";
             $products_info = $this->db->query($product_info);
             $products_info_new = $products_info->row;
-            
+
             $sql = 'INSERT into ' . DB_PREFIX . "real_order_product SET name = '" . $this->db->escape($data['name']) . "', quantity = '" . $this->db->escape($data['quantity']) . "', price = '" . $this->db->escape($data['price']) . "', model = '" . $this->db->escape($data['model']) . "', unit = '" . $this->db->escape($data['unit']) . "', vendor_id = '" . $data['vendor_id'] . "', store_id = '" . $data['store_id'] . "', order_id = '" . $order_id . "', product_id = '" . $product_id . "', general_product_id = '" . $products_info_new['product_id'] . "', produce_type = '" . $data['produce_type'] . "',product_note = '" . $data['product_note'] . "', total = '" . $total . "', tax = '" . $tax_value . "'";
 
             $query = $this->db->query($sql);
@@ -2928,6 +2938,54 @@ class ModelSaleOrder extends Model {
             $log->write($total);
 
             $sql = 'UPDATE ' . DB_PREFIX . "real_order_product SET name = '" . $this->db->escape($data['name']) . "', quantity = '" . $this->db->escape($data['quantity']) . "', model = '" . $this->db->escape($data['model']) . "', vendor_id = '" . $data['vendor_id'] . "', store_id = '" . $data['store_id'] . "', price = '" . $this->db->escape($data['price']) . "', unit = '" . $this->db->escape($data['unit']) . "', product_note = '" . $data['product_note'] . "', total = '" . $total . "', tax = '" . $tax_value . "' WHERE order_id = '" . (int) $order_id . "' and product_id = '" . $product_id . "'";
+
+            $query = $this->db->query($sql);
+        }
+    }
+
+    public function updateCreditNoteNewProduct($order_id, $product_id, $data, $tax = NULL) {
+        $log = new Log('error.log');
+        $log->write('updateCreditNoteNewProduct');
+
+        $log->write($data);
+        $tax_value = 0;
+        if (is_array($tax) && count($tax) > 0 && array_key_exists('code', $tax[0]) && array_key_exists('title', $tax[0]) && array_key_exists('value', $tax[0]) && array_key_exists('sort_order', $tax[0]) && $tax[0]['code'] == 'tax' && $tax[0]['value'] > 0) {
+            $tax_value = $tax[0]['value'];
+            //$log->write('tax_value NEW');
+            //$log->write($tax_value);
+            //$log->write('tax_value NEW');
+        }
+
+        $total = $data['price'] * $data['quantity'];
+
+        //$this->deleteOrderProduct($order_id,$product_id);
+
+        $sql = 'SELECT * FROM ' . DB_PREFIX . "credit_note_products WHERE order_id = '" . (int) $order_id . "' and product_id = '" . $product_id . "'";
+
+        $query = $this->db->query($sql);
+
+        if (!$query->num_rows) {
+            $product_info = 'SELECT * FROM ' . DB_PREFIX . "product_to_store WHERE product_store_id = '" . (int) $product_id . "'";
+            $products_info = $this->db->query($product_info);
+            $products_info_new = $products_info->row;
+
+            $sql = 'INSERT into ' . DB_PREFIX . "credit_note_products SET name = '" . $this->db->escape($data['name']) . "', quantity = '" . $this->db->escape($data['quantity']) . "', price = '" . $this->db->escape($data['price']) . "', model = '" . $this->db->escape($data['model']) . "', unit = '" . $this->db->escape($data['unit']) . "', vendor_id = '" . $data['vendor_id'] . "', store_id = '" . $data['store_id'] . "', order_id = '" . $order_id . "', product_id = '" . $product_id . "', general_product_id = '" . $data['general_product_id'] . "', product_note = '" . $data['product_note'] . "', total = '" . $total . "', tax = '" . $tax_value . "', created_by = '" . $this->user->getId() . "', created_at = NOW()";
+
+            $query = $this->db->query($sql);
+        } else {
+            //echo "<pre>";print_r($query->row['quantity']);die;
+
+            $data['quantity'] += $query->row['quantity'];
+
+            $total = $data['price'] * $data['quantity'];
+
+            //echo "<pre>";print_r($data['quantity']);die;
+
+            $log->write('else ss');
+
+            $log->write($total);
+
+            $sql = 'UPDATE ' . DB_PREFIX . "credit_note_products SET name = '" . $this->db->escape($data['name']) . "', quantity = '" . $this->db->escape($data['quantity']) . "', model = '" . $this->db->escape($data['model']) . "', vendor_id = '" . $data['vendor_id'] . "', store_id = '" . $data['store_id'] . "', price = '" . $this->db->escape($data['price']) . "', unit = '" . $this->db->escape($data['unit']) . "', product_note = '" . $data['product_note'] . "', total = '" . $total . "', tax = '" . $tax_value . "', updated_by = '" . $this->user->getId() . "', updated_at = NOW() WHERE order_id = '" . (int) $order_id . "' and product_id = '" . $product_id . "'";
 
             $query = $this->db->query($sql);
         }
@@ -2962,6 +3020,39 @@ class ModelSaleOrder extends Model {
             }
         } if ($data['quantity'] <= 0) {
             $sql = 'Delete FROM ' . DB_PREFIX . "real_order_product WHERE order_id = '" . (int) $order_id . "' and product_id = '" . (int) $product_id . "'";
+            $query = $this->db->query($sql);
+        }
+    }
+
+    public function updateCreditNoteProduct($order_id, $product_id, $data, $tax = NULL) {
+        $total = $data['price'] * $data['quantity'];
+
+        //$this->deleteOrderProduct($order_id,$product_id);
+        $tax_value = 0;
+        if (is_array($tax) && count($tax) > 0 && array_key_exists('code', $tax[0]) && array_key_exists('title', $tax[0]) && array_key_exists('value', $tax[0]) && array_key_exists('sort_order', $tax[0]) && $tax[0]['code'] == 'tax' && $tax[0]['value'] > 0) {
+            $tax_value = $tax[0]['value'];
+            //$log = new Log('error.log');
+            //$log->write('tax_value OLD');
+            //$log->write($tax_value);
+            //$log->write('tax_value OLD');
+        }
+
+        $sql = 'SELECT * FROM ' . DB_PREFIX . "credit_note_products WHERE order_id = '" . (int) $order_id . "' and product_id = '" . $product_id . "'";
+
+        $query = $this->db->query($sql);
+
+        if ($data['quantity'] > 0) {
+            if (!$query->num_rows) {
+                $sql = 'INSERT into ' . DB_PREFIX . "credit_note_products SET name = '" . $this->db->escape($data['name']) . "', quantity = '" . $this->db->escape($data['quantity']) . "', price = '" . $this->db->escape($data['price']) . "', model = '" . $this->db->escape($data['model']) . "', unit = '" . $this->db->escape($data['unit']) . "', vendor_id = '" . $data['vendor_id'] . "', store_id = '" . $data['store_id'] . "', order_id = '" . $order_id . "', product_id = '" . $product_id . "', general_product_id = '" . $data['general_product_id'] . "', product_note = '" . $data['product_note'] . "', total = '" . $total . "', tax = '" . $tax_value . "', created_by = '" . $this->user->getId() . "', created_at = NOW()";
+
+                $query = $this->db->query($sql);
+            } else {
+                $sql = 'UPDATE ' . DB_PREFIX . "credit_note_products SET name = '" . $this->db->escape($data['name']) . "', quantity = '" . $this->db->escape($data['quantity']) . "', vendor_id = '" . $data['vendor_id'] . "', store_id = '" . $data['store_id'] . "', model = '" . $this->db->escape($data['model']) . "', price = '" . $this->db->escape($data['price']) . "', unit = '" . $this->db->escape($data['unit']) . "', total = '" . $total . "', tax = '" . $tax_value . "', product_note = '" . $data['product_note'] . "', updated_by = '" . $this->user->getId() . "', updated_at = NOW() WHERE order_id = '" . (int) $order_id . "' and product_id = '" . $product_id . "'";
+
+                $query = $this->db->query($sql);
+            }
+        } if ($data['quantity'] <= 0) {
+            $sql = 'Delete FROM ' . DB_PREFIX . "credit_note_products WHERE order_id = '" . (int) $order_id . "' and product_id = '" . (int) $product_id . "'";
             $query = $this->db->query($sql);
         }
     }
@@ -3011,6 +3102,12 @@ class ModelSaleOrder extends Model {
 
         return $query->rows;
     }
+    
+    public function getCreditNoteTotals($order_id) {
+        $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "credit_note_total WHERE order_id = '" . (int) $order_id . "' ORDER BY sort_order");
+
+        return $query->rows;
+    }
 
     public function getOrderTransactionFee($order_id) {
         $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "order_total WHERE order_id = '" . (int) $order_id . "' AND code = 'transaction_fee' ORDER BY sort_order");
@@ -3050,28 +3147,21 @@ class ModelSaleOrder extends Model {
 
         if (!empty($data['filter_customer_group'])) {
             $sql .= ' AND cust.customer_group_id="' . $data['filter_customer_group'] . '"';
-            
-        }  
+        }
 
         if (isset($data['filter_order_type'])) {
             $sql .= ' AND isadmin_login="' . $data['filter_order_type'] . '"';
         }
         if (isset($data['filter_order_placed_from'])) {
 
-            if($data['filter_order_placed_from']=="Mobile")
-            {
+            if ($data['filter_order_placed_from'] == "Mobile") {
                 $sql .= ' AND user_agent not like "%Mozilla%"';
-
-            }
-            else
-            {
+            } else {
                 $sql .= ' AND user_agent  like "%Mozilla%"';
             }
-
         }
 
         // echo "<pre>";print_r($sql);die;
-
         //below if condition added for fast orders
         if (!empty($data['filter_order_day'])) {
             $current_date = date('Y-m-d');
@@ -3187,18 +3277,15 @@ class ModelSaleOrder extends Model {
 
         // if (!empty($data['filter_order_status'])) {
         //     $implode = [];
-
         //     $order_statuses = explode(',', $data['filter_order_status']);
-
         //     foreach ($order_statuses as $order_status_id) {
         //         $implode[] = "o.order_status_id = '" . (int) $order_status_id . "'";
         //     }
-
         //     if ($implode) {
         //         $sql .= ' WHERE (' . implode(' OR ', $implode) . ')';
         //     }
         // } else {
-            $sql .= " WHERE o.order_status_id > '0'";
+        $sql .= " WHERE o.order_status_id > '0'";
         // }
 
         if (isset($data['filter_order_type'])) {
@@ -6047,13 +6134,14 @@ class ModelSaleOrder extends Model {
     }
 
     public function getUnpaidOrders($data = []) {
-        $sql = "SELECT c.name as city, o.firstname,o.lastname,o.comment, o.delivery_id, o.vendor_order_status_id,    cust.company_name AS company_name,o.order_id, o.delivery_date, o.delivery_timeslot, o.shipping_method, o.shipping_address, o.payment_method, o.commission, CONCAT(o.firstname, ' ', o.lastname) AS customer, (SELECT os.name FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS status, o.shipping_code, o.order_status_id,o.store_name,o.store_id,  o.total, o.currency_code, o.currency_value, o.date_added, o.date_modified,o.po_number,o.SAP_customer_no,o.SAP_doc_no,o.paid,o.amount_partialy_paid,o.delivery_charges,ot.value as order_total FROM `" . DB_PREFIX . 'order` o ';
+        $sql = "SELECT c.name as city, o.firstname,o.lastname,o.comment, o.delivery_id, o.vendor_order_status_id,    cust.company_name AS company_name,o.order_id, o.delivery_date, o.delivery_timeslot, o.shipping_method, o.shipping_address, o.payment_method, o.commission, CONCAT(o.firstname, ' ', o.lastname) AS customer, (SELECT os.name FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS status, o.shipping_code, o.order_status_id,o.store_name,o.store_id,  o.total, o.currency_code, o.currency_value, o.date_added, o.date_modified,o.po_number,o.SAP_customer_no,o.SAP_doc_no,o.paid,o.amount_partialy_paid,o.delivery_charges,ot.value as order_total,cgd.name as customer_group FROM `" . DB_PREFIX . 'order` o ';
         //    ('SELECT o.customer_id, o.parent_approval, o.head_chef, o.procurement, o.delivery_date,o.delivery_timeslot,o.shipping_zipcode,o.shipping_city_id,o.payment_method,o.payment_code,o.shipping_address,o.shipping_flat_number,o.shipping_method,o.shipping_building_name,o.store_name,o.store_id,o.shipping_name, o.order_id, o.firstname, o.lastname, os.name as status , os.color as order_status_color ,o.order_status_id, o.date_modified , o.date_added, o.total, o.currency_code, o.currency_value, ot.value,o.amount_partialy_paid,o.paid FROM `' . DB_PREFIX . 'order` o LEFT JOIN ' . DB_PREFIX . 'order_status os ON (o.order_status_id = os.order_status_id) LEFT JOIN ' . DB_PREFIX . 'order_total ot ON (o.order_id = ot.order_id) WHERE o.customer_id IN (' . $sub_users_od . ") AND o.order_status_id IN (4,5) AND o.paid IN ('N', 'P') AND os.language_id = '" . (int) $this->config->get('config_language_id') . "' AND ot.code = 'total' AND ot.title = 'Total' ORDER BY o.order_id DESC LIMIT " . (int) $start . ',' . (int) $limit);
 
         $sql .= 'left join `' . DB_PREFIX . 'city` c on c.city_id = o.shipping_city_id';
         $sql .= ' LEFT JOIN ' . DB_PREFIX . 'store on(' . DB_PREFIX . 'store.store_id = o.store_id) ';
         $sql .= ' LEFT JOIN ' . DB_PREFIX . 'customer cust on (cust.customer_id = o.customer_id) ';
         $sql .= ' LEFT JOIN ' . DB_PREFIX . 'order_total ot ON (o.order_id = ot.order_id)';
+        $sql .= ' LEFT JOIN ' . DB_PREFIX . 'customer_group_description cgd ON (cgd.customer_group_id = cust.customer_group_id)';
 
         $sql .= " WHERE o.order_status_id in(4,5) AND o.paid IN ('N', 'P') And ot.code = 'total' AND ot.title = 'Total'";
 
@@ -6128,7 +6216,7 @@ class ModelSaleOrder extends Model {
         // echo "<pre>";print_r( $query->rows);die;
         return $query->row;
     }
-    
+
     public function SaveMissingOrderProductLink($order_id, $link) {
         $orders = $this->db->query('SELECT * FROM ' . DB_PREFIX . "missing_order_products_links WHERE order_id = '" . $order_id . "'");
 
@@ -6140,28 +6228,40 @@ class ModelSaleOrder extends Model {
             return $url_id;
         }
     }
-    
+
     public function getinvoiceproducts($product_numbers_string, $order_id) {
-        $invoice_products = $this->db->query('SELECT * FROM ' . DB_PREFIX . "missing_products WHERE product_store_id NOT IN (".$product_numbers_string.")   AND order_id = '" . $order_id . "'");
+        $invoice_products = $this->db->query('SELECT * FROM ' . DB_PREFIX . "missing_products WHERE product_store_id NOT IN (" . $product_numbers_string . ")   AND order_id = '" . $order_id . "'");
         return $invoice_products->rows;
     }
 
-
     public function insertOrderTotal_History($order_id, $totals) {
-         
+
         $query_count = $this->db->query('SELECT * FROM ' . DB_PREFIX . "order_total_history WHERE order_id = '" . (int) $order_id . "'");
 
         // echo "<pre>";print_r(count($query->rows));die;
 
-            if(count($query_count->rows)<=0)
-            {
-                foreach ($totals as $total) {
-                        $sql = 'INSERT into ' . DB_PREFIX . "order_total_history SET value = '" . $total['value'] . "', actual_value = '" . $total['actual_value'] . "', order_id = '" . $order_id . "', title = '" . $total['title'] . "', sort_order = '" . $total['sort'] . "', code = '" . $total['code'] . "'";
+        if (count($query_count->rows) <= 0) {
+            foreach ($totals as $total) {
+                $sql = 'INSERT into ' . DB_PREFIX . "order_total_history SET value = '" . $total['value'] . "', actual_value = '" . $total['actual_value'] . "', order_id = '" . $order_id . "', title = '" . $total['title'] . "', sort_order = '" . $total['sort'] . "', code = '" . $total['code'] . "'";
 
-                        $query = $this->db->query($sql);
-                }
-                    
+                $query = $this->db->query($sql);
             }
+        }
+    }
+
+    public function insertCreditNoteTotal_History($order_id, $totals) {
+
+        $query_count = $this->db->query('SELECT * FROM ' . DB_PREFIX . "credit_note_total WHERE order_id = '" . (int) $order_id . "'");
+
+        // echo "<pre>";print_r(count($query->rows));die;
+
+        if (count($query_count->rows) <= 0) {
+            foreach ($totals as $total) {
+                $sql = 'INSERT into ' . DB_PREFIX . "credit_note_total_history SET value = '" . $total['value'] . "', actual_value = '" . $total['actual_value'] . "', order_id = '" . $order_id . "', title = '" . $total['title'] . "', sort_order = '" . $total['sort'] . "', code = '" . $total['code'] . "'";
+
+                $query = $this->db->query($sql);
+            }
+        }
     }
 
     public function getOrderTotals_History($order_id) {
@@ -6170,35 +6270,31 @@ class ModelSaleOrder extends Model {
         return $query->rows;
     }
 
-
-
     public function getMissingProductsSummary($data = []) {
         $sql = "SELECT mp.product_store_id,mp.name,mp.unit,sum(mp.quantity_required) as quanity,sum(mp.total) as total FROM `" . DB_PREFIX . 'missing_products` mp  join hf7_order o on mp.order_id =o.order_id';
         $sql .= " where o.order_status_id not in (6,8,9,16)  ";
-
-         
 
         //   echo "<pre>";print_r($data['filter_order_type']);die; 
 
         if (!empty($data['filter_name'])) {
             $sql .= " AND mp.name LIKE '%" . $data['filter_name'] . "%'";
         }
-         
+
 
         if (!empty($data['filter_date_added']) && empty($data['filter_date_added_to'])) {
             $sql .= " AND DATE(mp.created_at) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
         }
 
-        
+
 
         if (!empty($data['filter_date_added']) && !empty($data['filter_date_added_to'])) {
             $sql .= " AND DATE(mp.created_at) BETWEEN DATE('" . $this->db->escape($data['filter_date_added']) . "') AND DATE('" . $this->db->escape($data['filter_date_added_to']) . "')";
         }
 
-        
+
 
         $sort_data = [
-            'mp.product_store_id',             
+            'mp.product_store_id',
             'mp.name',
         ];
         $sql .= " Group by mp.product_store_id,mp.name, mp.unit  ";
@@ -6257,10 +6353,14 @@ class ModelSaleOrder extends Model {
             $sql .= " AND CONCAT(cust.firstname, ' ', cust.lastname) LIKE '%" . $this->db->escape($data['filter_customer']) . "%'";
         }
 
+        if (!empty($data['filter_payment']) && $data['filter_payment'] != 'undefined') {
+            $sql .= " AND o.payment_method LIKE '%" . $this->db->escape($data['filter_payment']) . "%'";
+        }
+
         if (!empty($data['filter_date_start']) && empty($data['filter_date_end'])) {
             $sql .= " AND DATE(o.delivery_date) >= DATE('" . $this->db->escape($data['filter_date_start']) . "')";
         }
- 
+
         if (!empty($data['filter_date_start']) && !empty($data['filter_date_end'])) {
             $sql .= " AND DATE(o.delivery_date) BETWEEN DATE('" . $this->db->escape($data['filter_date_start']) . "') AND DATE('" . $this->db->escape($data['filter_date_end']) . "')";
         }
@@ -6296,7 +6396,6 @@ class ModelSaleOrder extends Model {
         return $query->rows;
     }
 
-
     public function getTotalReceivablesSummary($data = []) {
         $sql = "SELECT  count(distinct concat(cust.firstname,' ',cust.lastname)) as count FROM `" . DB_PREFIX . 'order` o ';
         //    ('SELECT o.customer_id, o.parent_approval, o.head_chef, o.procurement, o.delivery_date,o.delivery_timeslot,o.shipping_zipcode,o.shipping_city_id,o.payment_method,o.payment_code,o.shipping_address,o.shipping_flat_number,o.shipping_method,o.shipping_building_name,o.store_name,o.store_id,o.shipping_name, o.order_id, o.firstname, o.lastname, os.name as status , os.color as order_status_color ,o.order_status_id, o.date_modified , o.date_added, o.total, o.currency_code, o.currency_value, ot.value,o.amount_partialy_paid,o.paid FROM `' . DB_PREFIX . 'order` o LEFT JOIN ' . DB_PREFIX . 'order_status os ON (o.order_status_id = os.order_status_id) LEFT JOIN ' . DB_PREFIX . 'order_total ot ON (o.order_id = ot.order_id) WHERE o.customer_id IN (' . $sub_users_od . ") AND o.order_status_id IN (4,5) AND o.paid IN ('N', 'P') AND os.language_id = '" . (int) $this->config->get('config_language_id') . "' AND ot.code = 'total' AND ot.title = 'Total' ORDER BY o.order_id DESC LIMIT " . (int) $start . ',' . (int) $limit);
@@ -6321,10 +6420,14 @@ class ModelSaleOrder extends Model {
             $sql .= " AND CONCAT(cust.firstname, ' ', cust.lastname) LIKE '%" . $this->db->escape($data['filter_customer']) . "%'";
         }
 
+        if (!empty($data['filter_payment']) && $data['filter_payment'] != 'undefined') {
+            $sql .= " AND o.payment_method LIKE '%" . $this->db->escape($data['filter_payment']) . "%'";
+        }
+
         if (!empty($data['filter_date_start']) && empty($data['filter_date_end'])) {
             $sql .= " AND DATE(o.delivery_date) >= DATE('" . $this->db->escape($data['filter_date_start']) . "')";
         }
- 
+
         if (!empty($data['filter_date_start']) && !empty($data['filter_date_end'])) {
             $sql .= " AND DATE(o.delivery_date) BETWEEN DATE('" . $this->db->escape($data['filter_date_start']) . "') AND DATE('" . $this->db->escape($data['filter_date_end']) . "')";
         }
@@ -6364,6 +6467,11 @@ class ModelSaleOrder extends Model {
             $sql .= " AND CONCAT(cust.firstname, ' ', cust.lastname) LIKE '%" . $this->db->escape($data['filter_customer']) . "%'";
         }
 
+        if (!empty($data['filter_payment']) && $data['filter_payment'] != 'undefined') {
+            $sql .= " AND o.payment_method LIKE '%" . $this->db->escape($data['filter_payment']) . "%'";
+        }
+
+
         $sql .= ' Group  BY cust.company_name,cust.firstname,o.delivery_date';
         $sql .= ' ORDER BY cust.company_name,cust.firstname';
 
@@ -6391,7 +6499,6 @@ class ModelSaleOrder extends Model {
         return $query->rows;
     }
 
-
     public function getReceivablesAgeing_customers($data = []) {
         $sql = "SELECT cust.customer_id, cust.company_name AS company_name,CONCAT(cust.firstname, ' ', cust.lastname) AS customer,cust.payment_terms FROM `" . DB_PREFIX . 'order` o ';
         //    ('SELECT o.customer_id, o.parent_approval, o.head_chef, o.procurement, o.delivery_date,o.delivery_timeslot,o.shipping_zipcode,o.shipping_city_id,o.payment_method,o.payment_code,o.shipping_address,o.shipping_flat_number,o.shipping_method,o.shipping_building_name,o.store_name,o.store_id,o.shipping_name, o.order_id, o.firstname, o.lastname, os.name as status , os.color as order_status_color ,o.order_status_id, o.date_modified , o.date_added, o.total, o.currency_code, o.currency_value, ot.value,o.amount_partialy_paid,o.paid FROM `' . DB_PREFIX . 'order` o LEFT JOIN ' . DB_PREFIX . 'order_status os ON (o.order_status_id = os.order_status_id) LEFT JOIN ' . DB_PREFIX . 'order_total ot ON (o.order_id = ot.order_id) WHERE o.customer_id IN (' . $sub_users_od . ") AND o.order_status_id IN (4,5) AND o.paid IN ('N', 'P') AND os.language_id = '" . (int) $this->config->get('config_language_id') . "' AND ot.code = 'total' AND ot.title = 'Total' ORDER BY o.order_id DESC LIMIT " . (int) $start . ',' . (int) $limit);
@@ -6414,6 +6521,11 @@ class ModelSaleOrder extends Model {
         if (!empty($data['filter_customer'])) {
             $sql .= " AND CONCAT(cust.firstname, ' ', cust.lastname) LIKE '%" . $this->db->escape($data['filter_customer']) . "%'";
         }
+
+        if (!empty($data['filter_payment']) && $data['filter_payment'] != 'undefined') {
+            $sql .= " AND o.payment_method LIKE '%" . $this->db->escape($data['filter_payment']) . "%'";
+        }
+
 
         $sql .= ' Group  BY cust.company_name,cust.firstname';
         $sql .= ' ORDER BY cust.company_name,cust.firstname';
@@ -6441,6 +6553,7 @@ class ModelSaleOrder extends Model {
 
         return $query->rows;
     }
+
     public function getOrdersWithFilters($data = []) {
         $sql = "SELECT c.name as city, o.firstname,o.lastname,o.comment, o.delivery_id, cust.company_name  AS company_name,cust.SAP_customer_no AS SAP_customer_no,o.order_id, o.delivery_date, o.delivery_timeslot, o.shipping_method, o.shipping_address, o.payment_method,o.commission, CONCAT(o.firstname, ' ', o.lastname) AS customer, (SELECT os.name FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS status,(SELECT os.color FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS color, o.shipping_code, o.order_status_id,o.store_name,o.store_id , o.total, o.currency_code, o.currency_value, o.date_added, o.date_modified,o.po_number,o.SAP_doc_no FROM `" . DB_PREFIX . 'order` o ';
         //$sql = "SELECT c.name as city, o.firstname,o.lastname,o.comment, (SELECT cust.company_name FROM hf7_customer cust WHERE o.customer_id = cust.customer_id ) AS company_name,o.order_id, o.delivery_date, o.delivery_timeslot, o.shipping_method, o.shipping_address, o.payment_method, CONCAT(o.firstname, ' ', o.lastname) AS customer, (SELECT os.name FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS status,(SELECT os.color FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS color, o.shipping_code, o.order_status_id,o.store_name,  o.total, o.currency_code, o.currency_value, o.date_added, o.date_modified,o.po_number FROM `" . DB_PREFIX . "order` o ";
@@ -6460,15 +6573,14 @@ class ModelSaleOrder extends Model {
 
         if (isset($data['filter_customer_group']) && !empty($data['filter_customer_group'])) {
             $sql .= ' AND cust.customer_group_id="' . $data['filter_customer_group'] . '"';
-            
-        } 
+        }
 
         if (isset($data['filter_orders'])) {
 
 
             $sql .= ' and  o.order_id in (' . $data['filter_orders'] . ')';
         }
-        
+
         if ($this->user->isVendor()) {
             $sql .= ' AND ' . DB_PREFIX . 'store.vendor_id="' . $this->user->getId() . '"';
         }
@@ -6577,9 +6689,8 @@ class ModelSaleOrder extends Model {
         return false;
     }
 
-
     public function getUnpaidOrders_Kibanda($data = []) {
-        $sql = "SELECT  o.firstname,o.lastname,    cust.company_name AS company_name,o.order_id, o.delivery_date, o.payment_method,  CONCAT(o.firstname, ' ', o.lastname) AS customer, (SELECT os.name FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS status,  o.order_status_id,o.store_name,o.store_id,  o.total, o.currency_code, o.currency_value, o.date_added, o.date_modified,o.po_number,o.SAP_customer_no,o.SAP_doc_no,o.paid,o.delivery_charges,ot.value as order_total,tran.transaction_id,tran.created_at,o.paid_to,o.amount_partialy_paid FROM `" . DB_PREFIX . 'order` o ';
+        $sql = "SELECT  o.firstname,o.lastname,    cust.company_name AS company_name,o.order_id, o.delivery_date, o.payment_method,  CONCAT(o.firstname, ' ', o.lastname) AS customer, (SELECT os.name FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS status,  o.order_status_id,o.store_name,o.store_id,  o.total, o.currency_code, o.currency_value, o.date_added, o.date_modified,o.po_number,o.SAP_customer_no,o.SAP_doc_no,o.paid,o.delivery_charges,ot.value as order_total,tran.transaction_id,tran.created_at,o.paid_to,o.amount_partialy_paid,cgd.name as customer_group FROM `" . DB_PREFIX . 'order` o ';
         //    ('SELECT o.customer_id, o.parent_approval, o.head_chef, o.procurement, o.delivery_date,o.delivery_timeslot,o.shipping_zipcode,o.shipping_city_id,o.payment_method,o.payment_code,o.shipping_address,o.shipping_flat_number,o.shipping_method,o.shipping_building_name,o.store_name,o.store_id,o.shipping_name, o.order_id, o.firstname, o.lastname, os.name as status , os.color as order_status_color ,o.order_status_id, o.date_modified , o.date_added, o.total, o.currency_code, o.currency_value, ot.value,o.amount_partialy_paid,o.paid FROM `' . DB_PREFIX . 'order` o LEFT JOIN ' . DB_PREFIX . 'order_status os ON (o.order_status_id = os.order_status_id) LEFT JOIN ' . DB_PREFIX . 'order_total ot ON (o.order_id = ot.order_id) WHERE o.customer_id IN (' . $sub_users_od . ") AND o.order_status_id IN (4,5) AND o.paid IN ('N', 'P') AND os.language_id = '" . (int) $this->config->get('config_language_id') . "' AND ot.code = 'total' AND ot.title = 'Total' ORDER BY o.order_id DESC LIMIT " . (int) $start . ',' . (int) $limit);
 
         $sql .= 'left join `' . DB_PREFIX . 'city` c on c.city_id = o.shipping_city_id';
@@ -6587,6 +6698,7 @@ class ModelSaleOrder extends Model {
         $sql .= ' LEFT JOIN ' . DB_PREFIX . 'customer cust on (cust.customer_id = o.customer_id) ';
         $sql .= ' LEFT JOIN ' . DB_PREFIX . 'order_total ot ON (o.order_id = ot.order_id)';
         $sql .= ' LEFT JOIN ' . DB_PREFIX . 'order_transaction_id tran ON (tran.order_id = o.order_id)';
+        $sql .= ' LEFT JOIN ' . DB_PREFIX . 'customer_group_description cgd ON (cgd.customer_group_id = cust.customer_group_id)';
 
         $sql .= " WHERE o.order_status_id in(4,5) AND o.paid IN ('N', 'P') And ot.code = 'total' AND ot.title = 'Total'";
 
@@ -6627,4 +6739,59 @@ class ModelSaleOrder extends Model {
 
         return $query->rows;
     }
+
+  
+    //pezesha
+
+    public function getUnpaidOrders_Pezesha($data = []) {
+        $sql = "SELECT c.name as city, o.firstname,o.lastname,o.comment, o.delivery_id, o.vendor_order_status_id,    cust.company_name AS company_name,o.order_id, o.delivery_date, o.delivery_timeslot, o.shipping_method, o.shipping_address, o.payment_method, o.commission, CONCAT(o.firstname, ' ', o.lastname) AS customer, (SELECT os.name FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS status, o.shipping_code, o.order_status_id,o.store_name,o.store_id,  o.total, o.currency_code, o.currency_value, o.date_added, o.date_modified,o.po_number,o.SAP_customer_no,o.SAP_doc_no,o.paid,o.amount_partialy_paid,o.delivery_charges,ot.value as order_total,cgd.name as customer_group FROM `" . DB_PREFIX . 'order` o ';
+        //    ('SELECT o.customer_id, o.parent_approval, o.head_chef, o.procurement, o.delivery_date,o.delivery_timeslot,o.shipping_zipcode,o.shipping_city_id,o.payment_method,o.payment_code,o.shipping_address,o.shipping_flat_number,o.shipping_method,o.shipping_building_name,o.store_name,o.store_id,o.shipping_name, o.order_id, o.firstname, o.lastname, os.name as status , os.color as order_status_color ,o.order_status_id, o.date_modified , o.date_added, o.total, o.currency_code, o.currency_value, ot.value,o.amount_partialy_paid,o.paid FROM `' . DB_PREFIX . 'order` o LEFT JOIN ' . DB_PREFIX . 'order_status os ON (o.order_status_id = os.order_status_id) LEFT JOIN ' . DB_PREFIX . 'order_total ot ON (o.order_id = ot.order_id) WHERE o.customer_id IN (' . $sub_users_od . ") AND o.order_status_id IN (4,5) AND o.paid IN ('N', 'P') AND os.language_id = '" . (int) $this->config->get('config_language_id') . "' AND ot.code = 'total' AND ot.title = 'Total' ORDER BY o.order_id DESC LIMIT " . (int) $start . ',' . (int) $limit);
+
+        $sql .= 'left join `' . DB_PREFIX . 'city` c on c.city_id = o.shipping_city_id';
+        $sql .= ' LEFT JOIN ' . DB_PREFIX . 'store on(' . DB_PREFIX . 'store.store_id = o.store_id) ';
+        $sql .= ' LEFT JOIN ' . DB_PREFIX . 'customer cust on (cust.customer_id = o.customer_id) ';
+        $sql .= ' LEFT JOIN ' . DB_PREFIX . 'order_total ot ON (o.order_id = ot.order_id)';
+        $sql .= ' LEFT JOIN ' . DB_PREFIX . 'customer_group_description cgd ON (cgd.customer_group_id = cust.customer_group_id)';
+
+        $sql .= " WHERE o.order_status_id in(4,5) AND o.paid IN ('N', 'P') And ot.code = 'total' AND ot.title = 'Total'";
+
+        if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
+            $sql .= " and cust.status = '" . (int) $data['filter_status'] . "'";
+        }
+
+        if (isset($data['filter_payment_terms']) && !is_null($data['filter_payment_terms'])) {
+            $sql .= " and cust.payment_terms = '" . $data['filter_payment_terms'] . "'";
+        }
+        if (isset($data['filter_payment']) && !is_null($data['filter_payment'])) {
+            $sql .= " and o.payment_method = '" . $data['filter_payment'] . "'";
+        }
+
+
+
+        $sql .= ' ORDER BY cust.company_name,cust.firstname,o.order_id';
+
+        if (isset($data['order']) && ('DESC' == $data['order'])) {
+            $sql .= ' DESC';
+        } else {
+            $sql .= ' ASC';
+        }
+
+        if (isset($data['start']) || isset($data['limit'])) {
+            if ($data['start'] < 0) {
+                $data['start'] = 0;
+            }
+
+            if ($data['limit'] < 1) {
+                $data['limit'] = 20;
+            }
+
+            $sql .= ' LIMIT ' . (int) $data['start'] . ',' . (int) $data['limit'];
+        }
+
+        //   echo "<pre>";print_r($sql);die;
+        $query = $this->db->query($sql);
+
+        return $query->rows;
+    }
+
 }

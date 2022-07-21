@@ -4692,7 +4692,8 @@ class ControllerApiCustomerOrder extends Controller {
             $stores = array_keys($args['stores']);
 
             $active_Store_exsists = in_array("75", $stores);
-            
+            $shipping_added = 0;
+
             //print_r($stores);
             foreach ($stores as $store_id) {
                 $order_data[$store_id] = [];
@@ -4735,7 +4736,7 @@ class ControllerApiCustomerOrder extends Controller {
                             }
                             $shipping_added = 1; //shipping charge added to one of the stores
                         } else {
-                        $this->{'model_total_' . $result['code']}->getApiTotal($order_data[$store_id]['totals'], $total, $taxes_by_store, $store_id, $args);
+                            $this->{'model_total_' . $result['code']}->getApiTotal($order_data[$store_id]['totals'], $total, $taxes_by_store, $store_id, $args);
                         }
                     }
                 }
@@ -4806,6 +4807,12 @@ class ControllerApiCustomerOrder extends Controller {
                     $order_data[$store_id]['payment_method'] = $args['payment_method'];
                 } else {
                     $order_data[$store_id]['payment_method'] = '';
+                }
+
+                if (isset($args['mpesa_phonenumber']) && $args['mpesa_phonenumber'] != NULL) {
+                    $order_data['mpesa_phonenumber'] = $args['mpesa_phonenumber'];
+                } else {
+                    $order_data['mpesa_phonenumber'] = $this->customer->getTelephone();
                 }
 
                 if (isset($args['payment_method_code'])) {
@@ -5095,45 +5102,21 @@ class ControllerApiCustomerOrder extends Controller {
 
             if (('mpesa' == $args['payment_method_code']) || ('mpesa' == $args['payment_method_code'] && 'wallet' == $args['payment_wallet_method_code'])) {
                 //save for refrence id correct order id
-                $log = new Log('error.log');
-                foreach ($order_ids as $order_id) {
-                    $order_details = $this->model_account_order->getOrderDetailsById($order_id);
-                    $kwikbasket_order_reference_number = $order_data[$order_details['store_id']]['order_reference_number'];
-                    $log->write($kwikbasket_order_reference_number);
-
-                    if ($kwikbasket_order_reference_number != NULL) {
-                        $this->load->model('payment/mpesa');
-                        $this->load->model('account/order');
-                        $this->load->model('checkout/order');
-
-                        $mpesaDetails = $this->model_payment_mpesa->getMpesaByOrderReferenceNumber($kwikbasket_order_reference_number);
-                        $log->write('add order new mpesaDetails');
-                        $log->write($mpesaDetails);
-                        $log->write('add order new mpesaDetails');
-                        $transaction_details = $this->model_payment_mpesa->getOrderTransactionDetails($kwikbasket_order_reference_number);
-                        $log->write('MOBILE transaction_details');
-                        $log->write($transaction_details);
-                        $log->write('MOBILE transaction_details');
-                        if (is_array($mpesaDetails) && count($mpesaDetails) > 0) {
-
-                            $mpesa_order_details = $this->model_account_order->getOrderByReferenceIdStoreIdApi($kwikbasket_order_reference_number, $order_details['store_id']);
-                            $log->write($mpesa_order_details);
-
-                            if (is_array($transaction_details) && count($transaction_details) > 0) {
-                                $this->model_payment_mpesa->updateMpesaOrderTransactionWithOrderId($mpesa_order_details['order_id'], $kwikbasket_order_reference_number);
-                            }
-
-                            $this->model_checkout_order->addOrderHistory($mpesa_order_details['order_id'], $this->config->get('mpesa_order_status_id'), 'MPESA ORDER', true, $this->customer->getId(), 'customer', null, 'Y');
-                            $this->model_payment_mpesa->updateMpesaOrder($mpesa_order_details['order_id'], $mpesaDetails['mpesa_receipt_number']);
-                        }
-                    }
+                $order_ids['mpesa_phonenumber'] = $args['mpesa_phonenumber'];
+                if (('mpesa' == $args['payment_method_code']) && (!isset($args['payment_wallet_method_code']))) {
+                    $mpesa_result = $this->load->controller('api/customer/mpesa/mpesacheckout', $order_ids);
                 }
-                $json['status'] = 200;
-                $json['msg'] = 'Order placed Successfully';
-                unset($this->session->data['accept_vendor_terms']);
-                unset($this->session->data['delivery_charge_terms']);
 
-                $this->cart->clear();
+                if (('mpesa' == $args['payment_method_code']) && isset($args['payment_wallet_method_code']) && 'wallet' == $args['payment_wallet_method_code']) {
+                    $mpesa_result = $this->load->controller('api/customer/mpesa/mpesacheckout', $order_ids);
+                }
+                $log->write('mpesa_result');
+                $log->write($mpesa_result);
+                $log->write('mpesa_result');
+                if (isset($mpesa_result)) {
+                    $json['status'] = 200;
+                    $json['msg'] = 'Payment Request Sent To Mpesa!';
+                }
             } elseif (('pezesha' == $args['payment_method_code']) || ('pezesha' == $args['payment_method_code'] && 'wallet' == $args['payment_wallet_method_code'])) {
                 if (('pezesha' == $args['payment_method_code']) && (!isset($args['payment_wallet_method_code']))) {
                     $pezesha_result = $this->load->controller('api/customer/pezesha/applyloanone', $order_ids);

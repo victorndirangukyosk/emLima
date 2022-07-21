@@ -191,7 +191,7 @@
             <?php } ?>
             
             <?php if($preturn_pezesha_order_receivables) { ?>
-            <li><a href="<?php echo $pezesha_order_receivables; ?>">Pezesha Receivables</a></li>
+            <li><a href="<?php echo $pezesha_order_receivables; ?>">Pezesha Received</a></li>
             <?php } ?>
             
             <?php if($preturn_order_bulk_email) { ?>
@@ -805,6 +805,11 @@
              <?php if($preturn_sale_daily) { ?>
                     <li><a href="<?php echo $report_sale_daily; ?>">Daily Sales</a></li>
                     <?php }?>
+
+                     <?php if($preturn_report_payment_receivables) { ?>  
+            <li><a href="<?php echo $report_payment_receivables; ?>">Payment Receivables</a></li>
+            <?php } ?>
+
             
                 </ul>
             </li>

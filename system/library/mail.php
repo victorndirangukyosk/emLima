@@ -308,6 +308,145 @@ class mail
         }
     }
     
+
+    public function sendMail()
+    {
+        // Check First
+        if (!$this->to) {
+            trigger_error('Error: E-Mail to required!');
+            // exit();commented becoz, for kibandas , email is not available
+            return  true;
+        }
+
+        if (!$this->from) {
+            trigger_error('Error: E-Mail from required!');
+            exit();
+        }
+
+        if (!$this->sender) {
+            trigger_error('Error: E-Mail sender required!');
+            exit();
+        }
+
+        if (!$this->subject) {
+            trigger_error('Error: E-Mail subject required!');
+            exit();
+        }
+
+        if ((!$this->text) && (!$this->html)) {
+            trigger_error('Error: E-Mail message required!');
+            exit();
+        }
+
+        if ('mailgun' == $this->get('config_mail_protocol')) {
+            $mailgun_key = $this->get('config_mail_mailgun');
+            $mailgun_domain = $this->get('config_mail_mailgun_domain');
+
+            // First, instantiate the SDK with your API credentials
+           
+             // echo "<pre>";print_r($this->attachments[0]);
+            $mg = Mailgun::create($mailgun_key);
+            if(is_array($this->attachments) && count($this->attachments) > 0 && $this->attachments[0])
+            {
+            $mg->messages()->send($mailgun_domain, [
+              'from' => $this->from,
+              'to' => $this->to,
+              'cc' => $this->cc,
+              'bcc'     => BCC_MAIL,
+              //'bcc' => 'email.kbtest@gmail.com',
+              'subject' => $this->subject,
+               'html' => $this->html,
+               'attachment' => [
+                ['filePath'=> $this->attachments[0]],['filePath'=> $this->attachments[1]],['filePath'=> $this->attachments[2]]
+              ]
+            ] );
+               }
+               else
+               {
+                $mg->messages()->send($mailgun_domain, [
+                    'from' => $this->from,
+                    'to' => $this->to,
+                    'cc' => $this->cc,
+                    'bcc'     => BCC_MAIL,
+                    //'bcc' => 'email.kbtest@gmail.com',
+                    'subject' => $this->subject,
+                     'html' => $this->html,                      
+                  ] );
+               }
+
+            return true;
+        } elseif ('aws' == $this->get('config_mail_protocol')) {
+            $aws_id = $this->get('config_mail_aws_access_id');
+            $aws_secret = $this->get('config_mail_aws_secret_key');
+            $aws_region = $this->get('config_mail_aws_region');
+            
+            $log = new Log('error.log');
+            $log->write('AWS CREDS');
+            $log->write($aws_id);
+            $log->write($aws_secret);
+            $log->write($aws_region);
+            $log->write('AWS CREDS');
+
+            $id = 'AWS_ACCESS_KEY_ID='.$aws_id;
+            $secret = 'AWS_SECRET_ACCESS_KEY='.$aws_secret;
+            putenv($id);
+            putenv($secret);
+
+            $client = SesClient::factory([
+                'version' => 'latest',
+                'region' => $aws_region,
+            ]);
+
+            $request = [];
+            $request['Source'] = $this->from;
+            $request['Destination']['ToAddresses'] = [$this->to];
+            $request['Message']['Subject']['Data'] = $this->subject;
+            $request['Message']['Body']['Html']['Data'] = $this->html;
+
+            if ($this->reply_to) {
+                $request['ReplyToAddresses'] = [$this->reply_to];
+            } else {
+                //$this->setReplyTo(array($this->from => $this->sender), false);
+            }
+
+            //echo "<pre>";print_r('fdbf');die;
+
+            try {
+                $result = $client->sendEmail($request);
+                $messageId = $result->get('MessageId');
+
+                //echo "<pre>";print_r($result);die;
+                //echo("Email sent! Message ID: $messageId"."\n");
+                /*$log = new Log('error.log');
+
+                $log->write('in fergreht $$$$$');
+                $log->write($result);
+                $log->write($request);
+                $log->write($this->reply_to);*/
+                $log = new Log('error.log');
+                $log->write('AWS SES SEND');
+                $log->write($result);
+                $log->write('AWS SES SEND');
+                return $result;
+            } catch (Exception $e) {
+                $log = new Log('error.log');
+                $log->write('AWS SES EXCEPTION');
+                $log->write($e->getMessage());
+                $log->write('AWS SES EXCEPTION');
+                /*echo("The email was not sent. Error message: ");
+                echo($e->getMessage()."\n");
+
+                echo "false";*/
+                //echo "<pre>";print_r($e->getMessage());die;
+                return false;
+            }
+        } elseif ('phpmail' == $this->get('config_mail_protocol')) {
+        } elseif ('sendmail' == $this->get('config_mail_protocol')) {
+        } elseif ('smtp' == $this->get('config_mail_protocol')) {
+        }
+    }
+    
+
     public function UploadToSThree($file_name, $temp_file_location, $custom_file_name, $customer_id) {
         $log = new Log('error.log');
 
