@@ -15293,6 +15293,7 @@ class ModelReportExcel extends Model {
 
         $objWriter2 = PHPExcel_IOFactory::createWriter($objPHPExcel2, 'Excel2007');
         $objWriter2->save(DIR_UPLOAD . 'schedulertemp/' . $filename2);
+
         #endregion
 
             // $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
@@ -15310,7 +15311,8 @@ class ModelReportExcel extends Model {
             $message = $this->emailtemplate->getMessage('ConsolidatedOrderSheet', 'ConsolidatedOrderSheet_1', $maildata);
 
             // if ($name != "") {
-            $subject = 'Unpaid Orders';
+            $subject = 'Unpaid Orders'; 
+            
             // }
             // $subject = "Consolidated Order Sheet";
             $message = str_replace('consolidated', 'unpaid', $message);
