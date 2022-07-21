@@ -1484,7 +1484,7 @@ class ModelReportExcel extends Model {
             $filepath = DIR_UPLOAD . 'schedulertemp/' . $filename;
             $mail = new Mail($this->config->get('config_mail'));
             $mail->setTo($email);
-            $mail->setBCC($bccemail);
+            // $mail->setBCC($bccemail);
             $mail->setFrom($this->config->get('config_from_email'));
             $mail->setSender($this->config->get('config_name'));
             $mail->setSubject($subject);
@@ -8746,7 +8746,7 @@ class ModelReportExcel extends Model {
             $filepath = DIR_UPLOAD . 'schedulertemp/' . $filename;
             $mail = new Mail($this->config->get('config_mail'));
             $mail->setTo($email);
-            $mail->setBCC($bccemail);
+            // $mail->setBCC($bccemail);
             $mail->setFrom($this->config->get('config_from_email'));
             $mail->setSender($this->config->get('config_name'));
             $mail->setSubject($subject);
@@ -10708,7 +10708,7 @@ class ModelReportExcel extends Model {
             $filepath = DIR_UPLOAD . 'schedulertemp/' . $filename;
             $mail = new Mail($this->config->get('config_mail'));
             $mail->setTo($email);
-            $mail->setBCC($bccemail);
+            // $mail->setBCC($bccemail);
             $mail->setFrom($this->config->get('config_from_email'));
             $mail->setSender($this->config->get('config_name'));
             $mail->setSubject($subject);
@@ -11055,7 +11055,7 @@ class ModelReportExcel extends Model {
             $filepath = DIR_UPLOAD . 'schedulertemp/' . $filename;
             $mail = new Mail($this->config->get('config_mail'));
             $mail->setTo($email);
-            $mail->setBCC($bccemail);
+            // $mail->setBCC($bccemail);
             $mail->setFrom($this->config->get('config_from_email'));
             $mail->setSender($this->config->get('config_name'));
             $mail->setSubject($subject);
@@ -14658,7 +14658,7 @@ class ModelReportExcel extends Model {
             $filepath = DIR_UPLOAD . 'schedulertemp/' . $filename;
             $mail = new Mail($this->config->get('config_mail'));
             $mail->setTo($email);
-            $mail->setBCC($bccemail);
+            // $mail->setBCC($bccemail);
             $mail->setFrom($this->config->get('config_from_email'));
             $mail->setSender($this->config->get('config_name'));
             $mail->setSubject($subject);
@@ -14861,7 +14861,7 @@ class ModelReportExcel extends Model {
             $filepath = DIR_UPLOAD . 'schedulertemp/' . $filename;
             $mail = new Mail($this->config->get('config_mail'));
             $mail->setTo($email);
-            $mail->setBCC($bccemail);
+            // $mail->setBCC($bccemail);
             $mail->setFrom($this->config->get('config_from_email'));
             $mail->setSender($this->config->get('config_name'));
             $mail->setSubject($subject);
@@ -15328,7 +15328,7 @@ class ModelReportExcel extends Model {
             $filepath2 = DIR_UPLOAD . 'schedulertemp/' . $filename2;
             $mail = new Mail($this->config->get('config_mail'));
             $mail->setTo($email);
-            $mail->setBCC($bccemail);
+            // $mail->setBCC($bccemail);
             $mail->setFrom($this->config->get('config_from_email'));
             $mail->setSender($this->config->get('config_name'));
             $mail->setSubject($subject);
