@@ -2510,6 +2510,15 @@ class ControllerCatalogVendorProduct extends Controller {
         } else {
             $data['status'] = '';
         }
+
+        if (isset($this->request->post['hs_code'])) {
+            $data['hs_code'] = $this->request->post['hs_code'];
+        } elseif (!empty($product_info)) {
+            $data['hs_code'] = $product_info['hs_code'];
+        } else {
+            $data['hs_code'] = '';
+        }
+
         $this->load->model('catalog/general');
 
         if (isset($this->request->get['store_product_id'])) {
