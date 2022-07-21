@@ -9913,7 +9913,8 @@ class ModelReportExcel extends Model {
             'order' => $order,
         ];
 
-        if ('' != $filter_customer || '' != $filter_company) {
+        if ('' != $filter_customer  || '' != $filter_order_id || '' != $filter_customer_group) {
+            // if ('' != $filter_customer || '' != $filter_company ) {
             // $order_total = $this->model_sale_transactions->getTotaltransactions($filter_data);
             $order_total_grandTotal = $this->model_sale_order_receivables->getTotalOrderReceivablesAndGrandTotal($filter_data);
 
@@ -10329,7 +10330,9 @@ class ModelReportExcel extends Model {
             'order' => $order,
         ];
 
-        if ('' != $filter_customer || '' != $filter_company) {
+        // if ('' != $filter_customer || '' != $filter_company) {
+        if ('' != $filter_customer  || '' != $filter_order_id || '' != $filter_customer_group) {
+
             // $order_total = $this->model_sale_transactions->getTotaltransactions($filter_data);
             $order_total_grandTotal = $this->model_sale_order_receivables->getTotalSuccessfulOrderReceivablesAndGrandTotal($filter_data);
 
@@ -10384,8 +10387,9 @@ class ModelReportExcel extends Model {
                 'paid' => $result['paid'],
                 'amount_partialy_paid_value' => $result['amount_partialy_paid'],
                 'amount_partialy_paid' => $result['amount_partialy_paid'] ? $this->currency->format($result['amount_partialy_paid']) : '',
-                'pending_amount' => $this->currency->format($result['total'] - $result['amount_partialy_paid']),
-                'pending_amount_value' => ($result['total'] - $result['amount_partialy_paid']),
+                // 'pending_amount' => $this->currency->format($result['total'] - $result['amount_partialy_paid']),
+                'pending_amount' => $this->currency->format($result['amount_partialy_paid']>0?round(($result['total']-$result['amount_partialy_paid']),2):0),                
+                'pending_amount_value' => ($result['amount_partialy_paid']>0?round(($result['total']-$result['amount_partialy_paid']),2):0),
                 'paid_to' => $result['paid_to'],
             ];
         }
@@ -15312,7 +15316,7 @@ class ModelReportExcel extends Model {
 
             // if ($name != "") {
             $subject = 'Unpaid Orders'; 
-            
+
             // }
             // $subject = "Consolidated Order Sheet";
             $message = str_replace('consolidated', 'unpaid', $message);
