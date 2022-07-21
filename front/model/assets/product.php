@@ -1568,6 +1568,10 @@ class ModelAssetsProduct extends Model {
             }
         }
 
+        if (isset($data['filter_multiple_category_id']) && !empty($data['filter_multiple_category_id'])) {
+            $this->db->where_in('product_to_category.category_id', $data['filter_multiple_category_id']);
+        }
+
         if (!empty($data['filter_name'])) {
             if (!empty($data['filter_name'])) {
                 // original
@@ -1580,8 +1584,6 @@ class ModelAssetsProduct extends Model {
         }
 
         if (!empty($data['selectedProducts'])) {
-
-
             $this->db->where_not_in('product_to_store.product_store_id', $data['selectedProducts']);
         }
 
@@ -1627,6 +1629,8 @@ class ModelAssetsProduct extends Model {
         $this->db->where('product.status', 1);
         // $this->db->order_by('product_description.name','asc');
         $ret = $this->db->get('product_to_store', $limit, $offset)->rows;
+        /* $log = new Log('error.log');
+          $log->write($this->db->last_query()); */
         //die;
         //		echo $this->db->last_query();die;
         //		echo "<pre>";print_r($ret);die;
