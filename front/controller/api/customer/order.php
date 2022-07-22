@@ -3837,15 +3837,15 @@ class ControllerApiCustomerOrder extends Controller {
                 unset($this->session->data['delivery_charge_terms']);
 
                 $this->cart->clear();
-            } else {
-                $data['payment'] = $this->load->controller('payment/' . $args['payment_method_code'] . '/apiConfirm', $order_ids);
-                $json['status'] = 200;
-                $json['msg'] = 'Order placed Successfully';
-                unset($this->session->data['accept_vendor_terms']);
-                unset($this->session->data['delivery_charge_terms']);
+            } /* else {
+              $data['payment'] = $this->load->controller('payment/' . $args['payment_method_code'] . '/apiConfirm', $order_ids);
+              $json['status'] = 200;
+              $json['msg'] = 'Order placed Successfully';
+              unset($this->session->data['accept_vendor_terms']);
+              unset($this->session->data['delivery_charge_terms']);
 
-                $this->cart->clear();
-            }
+              $this->cart->clear();
+              } */
         } else {
             $json['status'] = 10014;
 
