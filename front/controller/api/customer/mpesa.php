@@ -705,4 +705,40 @@ class ControllerApiCustomerMpesa extends Controller {
         return $json;
     }
 
+    public function addMpesaCheckOutNew($args = []) {
+
+        $log = new Log('error.log');
+        $json['status'] = false;
+
+        $amount = 1;
+        $number = 111234101;
+        $order_reference_number = 'GPK';
+        $live = 'true';
+        $mpesa = new \Safaricom\Mpesa\Mpesa($this->config->get('mpesa_customer_key'), $this->config->get('mpesa_customer_secret'), $this->config->get('mpesa_environment'), $live);
+        $sta = false;
+
+        $log->write('addMpesaCheckOutNew');
+        $log->write($sta);
+        if (!$sta) {
+            $PartyA = $this->config->get('config_telephone_code') . '' . $number;
+
+            $BusinessShortCode = $this->config->get('mpesa_business_short_code');
+            $LipaNaMpesaPasskey = $this->config->get('mpesa_lipanampesapasskey');
+            $TransactionType = 'CustomerPayBillOnline'; //'CustomerBuyGoodsOnline';    
+            $CallBackURL = $this->url->link('deliversystem/deliversystem/mpesaMobileCallback', '', 'SSL');
+            $Amount = $amount;
+            $PartyB = $this->config->get('mpesa_business_short_code');
+            $PhoneNumber = $this->config->get('config_telephone_code') . '' . $number;
+            $AccountReference = "#" . $order_reference_number; //$this->config->get('config_name');
+            $TransactionDesc = "#" . $order_reference_number;
+            $Remarks = 'PAYMENT';
+            $log->write($BusinessShortCode . 'x' . $LipaNaMpesaPasskey . 'x' . $TransactionType . 'amount' . $Amount . 'x' . $PartyA . 'x' . $PartyB . 'x' . $PhoneNumber . 'x' . $CallBackURL . 'x' . $AccountReference . 'x' . $TransactionDesc . 'x' . $Remarks);
+            $stkPushSimulation = $mpesa->STKPushSimulation($BusinessShortCode, $LipaNaMpesaPasskey, $TransactionType, $Amount, $PartyA, $PartyB, $PhoneNumber, $CallBackURL, $AccountReference, $TransactionDesc, $Remarks);
+            $log->write('STKPushSimulation');
+            $log->write($stkPushSimulation);
+            $stkPushSimulation = json_decode($stkPushSimulation);
+            $json['response'] = $stkPushSimulation;
+        }
+    }
+
 }
