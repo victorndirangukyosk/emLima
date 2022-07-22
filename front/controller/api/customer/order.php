@@ -5811,7 +5811,9 @@ class ControllerApiCustomerOrder extends Controller {
                 $log->write('mpesa_result');
                 if (isset($mpesa_result) && isset($mpesa_result['ResponseCode']) && $mpesa_result['ResponseCode'] == 0) {
                     $json['status'] = 200;
-                    $json['message'] = 'Payment Request Sent To Mpesa!';
+                    $json['message'] = $mpesa_result['ResponseDescription'];
+                    $json['data']['merchant_request_id'] = $mpesa_result['MerchantRequestID'];
+                    $json['data']['checkout_request_id'] = $mpesa_result['CheckoutRequestID'];
                 } elseif (isset($mpesa_result) && isset($mpesa_result['errorCode']) && $mpesa_result['errorCode'] > 0) {
                     $json['status'] = 400;
                     $json['message'] = $mpesa_result['errorMessage'];
