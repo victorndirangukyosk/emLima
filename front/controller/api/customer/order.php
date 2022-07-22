@@ -5800,11 +5800,11 @@ class ControllerApiCustomerOrder extends Controller {
                 //save for refrence id correct order id
                 $mpesa_result = NULL;
                 if (('mpesa' == $args['payment_method_code']) && (!isset($args['payment_wallet_method_code']))) {
-                    $mpesa_result = $this->SendPaymentRequestToMpesa($this->cart->getTotalWithShipping(), $args['mpesa_mobile_number'], base64_encode($this->customer->getId() . '_' . $this->cart->getTotalWithShipping() . '_' . date("Y-m-d h:i:s")));
+                    $mpesa_result = $this->SendPaymentRequestToMpesa($this->cart->getTotal(), $args['mpesa_mobile_number'], base64_encode($this->customer->getId() . '_' . $this->cart->getTotalWithShipping() . '_' . date("Y-m-d h:i:s")));
                 }
 
                 if (('mpesa' == $args['payment_method_code']) && isset($args['payment_wallet_method_code']) && 'wallet' == $args['payment_wallet_method_code']) {
-                    $mpesa_result = $this->SendPaymentRequestToMpesa($this->cart->getTotalWithShipping(), $args['mpesa_mobile_number'], base64_encode($this->customer->getId() . '_' . $this->cart->getTotalWithShipping() . '_' . date("Y-m-d h:i:s")));
+                    $mpesa_result = $this->SendPaymentRequestToMpesa($this->cart->getTotal(), $args['mpesa_mobile_number'], base64_encode($this->customer->getId() . '_' . $this->cart->getTotalWithShipping() . '_' . date("Y-m-d h:i:s")));
                 }
                 $log->write('mpesa_result');
                 $log->write($mpesa_result);
