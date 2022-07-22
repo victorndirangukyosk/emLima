@@ -14930,7 +14930,7 @@ class ModelReportExcel extends Model {
         return null;
     }
 
-    public function mail_customer_all_unpaid_order_excel($data,$data_kibanda,$data_pezesha) {
+    public function mail_customer_all_unpaid_order_excel($data,$data_kibanda,$data_pezesha,$data_other) {
         $this->load->library('excel');
         $this->load->library('iofactory');
         // echo "<pre>";print_r($data);
@@ -14951,6 +14951,7 @@ class ModelReportExcel extends Model {
         $filename = 'KB_Unpaid_Order_Sheet_POD_' . $sendingDate . '.xlsx';
         $filename1 = 'KB_Unpaid_Order_Sheet_Kibanda_' . $sendingDate . '.xlsx';
         $filename2 = 'KB_Unpaid_Order_Sheet_Pezesha_' . $sendingDate . '.xlsx';
+        $filename3 = 'KB_Unpaid_Order_Sheet_Others_' . $sendingDate . '.xlsx';
         // $filename = 'KB_Pezesha_Unpaid_Order_Sheet_' . $sendingDate . '.xlsx';
 
 
@@ -15300,6 +15301,132 @@ class ModelReportExcel extends Model {
 
         #endregion
 
+
+
+
+         #region 4
+
+         $rows3 = $this->model_sale_order->getUnpaidOrders_Other($data_other);
+
+         $objPHPExcel3 = new PHPExcel();
+         $objPHPExcel3->getProperties()->setTitle('Orders Sheet')->setDescription('none');
+         $objPHPExcel3->setActiveSheetIndex(0);
+ 
+         // Field names in the first row
+         // ID, Photo, Name, Contact no., Reason, Valid from, Valid upto, Intime, Outtime
+         $title = [
+             'font' => [
+                 'bold' => true,
+                 'color' => [
+                     'rgb' => 'FFFFFF',
+                 ],
+             ],
+             'fill' => [
+                 'type' => PHPExcel_Style_Fill::FILL_SOLID,
+                 'startcolor' => [
+                     'rgb' => '4390df',
+                 ],
+             ],
+         ];
+ 
+         //Company name, address
+         $objPHPExcel3->getActiveSheet()->mergeCells('A1:M2');
+         $objPHPExcel3->getActiveSheet()->setCellValue('A1', 'Unpaid Orders Sheet');
+         $objPHPExcel3->getActiveSheet()->getStyle('A1:M2')->applyFromArray(['font' => ['bold' => true], 'color' => [
+                 'rgb' => '4390df',
+         ]]);
+ 
+         //subtitle
+ 
+ 
+         $objPHPExcel3->getActiveSheet()->getStyle('A1:M2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+         $objPHPExcel3->getActiveSheet()->getStyle('F')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+ 
+         foreach (range('A', 'M') as $columnID) {
+             $objPHPExcel3->getActiveSheet()->getColumnDimension($columnID)
+                     ->setAutoSize(true);
+         }
+ 
+         $objPHPExcel3->getActiveSheet()->setCellValueByColumnAndRow(0, 3, 'S.NO');
+         $objPHPExcel3->getActiveSheet()->setCellValueByColumnAndRow(1, 3, 'Order ID');
+         $objPHPExcel3->getActiveSheet()->setCellValueByColumnAndRow(2, 3, 'Name');
+         $objPHPExcel3->getActiveSheet()->setCellValueByColumnAndRow(3, 3, 'Customer Group');
+         $objPHPExcel3->getActiveSheet()->setCellValueByColumnAndRow(4, 3, 'Order Date');
+         $objPHPExcel3->getActiveSheet()->setCellValueByColumnAndRow(5, 3, 'Delivery Date');
+         $objPHPExcel3->getActiveSheet()->setCellValueByColumnAndRow(6, 3, 'Order Value');
+         $objPHPExcel3->getActiveSheet()->setCellValueByColumnAndRow(7, 3, 'Ageing  (No. of days due)');
+         $objPHPExcel3->getActiveSheet()->setCellValueByColumnAndRow(8, 3, 'Paid Amount');
+         // $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, 3, 'Paid To');
+         $objPHPExcel3->getActiveSheet()->setCellValueByColumnAndRow(9, 3, 'Payment Mode');
+         $objPHPExcel3->getActiveSheet()->setCellValueByColumnAndRow(10, 3, 'Reference Number');
+         $objPHPExcel3->getActiveSheet()->setCellValueByColumnAndRow(11, 3, 'Payment Date');
+         $objPHPExcel3->getActiveSheet()->setCellValueByColumnAndRow(12, 3, 'Balance');
+ 
+         // $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, 3, 'Order Status');
+ 
+         $objPHPExcel3->getActiveSheet()->getStyleByColumnAndRow(0, 3)->applyFromArray($title);
+         $objPHPExcel3->getActiveSheet()->getStyleByColumnAndRow(1, 3)->applyFromArray($title);
+         $objPHPExcel3->getActiveSheet()->getStyleByColumnAndRow(2, 3)->applyFromArray($title);
+         $objPHPExcel3->getActiveSheet()->getStyleByColumnAndRow(3, 3)->applyFromArray($title);
+         $objPHPExcel3->getActiveSheet()->getStyleByColumnAndRow(4, 3)->applyFromArray($title);
+         $objPHPExcel3->getActiveSheet()->getStyleByColumnAndRow(5, 3)->applyFromArray($title);
+         $objPHPExcel3->getActiveSheet()->getStyleByColumnAndRow(6, 3)->applyFromArray($title);
+         $objPHPExcel3->getActiveSheet()->getStyleByColumnAndRow(7, 3)->applyFromArray($title);
+         $objPHPExcel3->getActiveSheet()->getStyleByColumnAndRow(8, 3)->applyFromArray($title);
+         $objPHPExcel3->getActiveSheet()->getStyleByColumnAndRow(9, 3)->applyFromArray($title);
+         $objPHPExcel3->getActiveSheet()->getStyleByColumnAndRow(10, 3)->applyFromArray($title);
+         $objPHPExcel3->getActiveSheet()->getStyleByColumnAndRow(11, 3)->applyFromArray($title);
+         $objPHPExcel3->getActiveSheet()->getStyleByColumnAndRow(12, 3)->applyFromArray($title);
+         // $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(7, 3)->applyFromArray($title);
+         // Fetching the table data
+         $row = 4;
+ 
+         //echo "<pre>";print_r($data['filter_date_end']."er".$data['filter_date_start']);
+         $i = 1;
+         foreach ($rows3 as $result) {
+ 
+             $datediff = strtotime($sendingDate) - strtotime($result['delivery_date']);
+ 
+             if ($result['company_name'] == '' || $result['company_name'] == NULL || $result['company_name'] == 'Individual ' || $result['company_name'] == 'Individual' || $result['company_name'] == 'N/A' || $result['company_name'] == 'n/a') {
+                 $result['company_name'] = $result['customer'];
+             }
+             // echo "<pre>";print_r(strtotime($result['delivery_date']));
+             // echo "<pre>";print_r(strtotime($sendingDate));
+             // echo "<pre>";print_r(round($datediff / (60 * 60 * 24)));exit;
+             $result['ageing'] = round($datediff / (60 * 60 * 24));
+             $result['balance'] = round((($result['order_total'] ?? 0) - ($result['amount_partialy_paid'] ?? 0)), 2);
+             $objPHPExcel3->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $i);
+             $objPHPExcel3->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['order_id']);
+             $objPHPExcel3->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['company_name']);
+             $objPHPExcel3->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['customer_group']);
+             $objPHPExcel3->getActiveSheet()->setCellValueByColumnAndRow(4, $row, $result['date_added']);
+             $objPHPExcel3->getActiveSheet()->setCellValueByColumnAndRow(5, $row, $result['delivery_date']);
+ 
+             $objPHPExcel3->getActiveSheet()->setCellValueByColumnAndRow(6, $row, $this->currency->format($result['order_total']));
+             $objPHPExcel3->getActiveSheet()->setCellValueByColumnAndRow(7, $row, $result['ageing']);
+             $objPHPExcel3->getActiveSheet()->setCellValueByColumnAndRow(8, $row, $result['amount_partialy_paid'] ?? 0);
+             $objPHPExcel3->getActiveSheet()->setCellValueByColumnAndRow(9, $row, $result['payment_method']);
+             $objPHPExcel3->getActiveSheet()->setCellValueByColumnAndRow(10, $row, $result['transaction_id'] ?? '');
+             $objPHPExcel3->getActiveSheet()->setCellValueByColumnAndRow(11, $row, $result['created_at'] ?? '');
+             $objPHPExcel3->getActiveSheet()->setCellValueByColumnAndRow(12, $row, $result['balance']);
+             // $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, $row, $result['status']);
+             $i++;
+             ++$row;
+         }
+ 
+         $objPHPExcel3->setActiveSheetIndex(0);
+ 
+         // $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+         // header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+         // header('Content-Disposition: attachment;filename="unpaid_orders_sheet.xlsx"');
+         // header('Cache-Control: max-age=0');
+         // $objWriter->save('php://output');
+ 
+         $objWriter3 = PHPExcel_IOFactory::createWriter($objPHPExcel3, 'Excel2007');
+         $objWriter3->save(DIR_UPLOAD . 'schedulertemp/' . $filename3);
+ 
+         #endregion
+
             // $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
             // header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
             // header('Content-Disposition: attachment;filename="unpaid_orders_sheet.xlsx"');
@@ -15332,6 +15459,7 @@ class ModelReportExcel extends Model {
             $filepath = DIR_UPLOAD . 'schedulertemp/' . $filename;
             $filepath1 = DIR_UPLOAD . 'schedulertemp/' . $filename1;
             $filepath2 = DIR_UPLOAD . 'schedulertemp/' . $filename2;
+            $filepath3 = DIR_UPLOAD . 'schedulertemp/' . $filename3;
             $mail = new Mail($this->config->get('config_mail'));
             $mail->setTo($email);
             // $mail->setBCC($bccemail);
@@ -15342,6 +15470,7 @@ class ModelReportExcel extends Model {
             $mail->addAttachment($filepath);
             $mail->addAttachment($filepath1);
             $mail->addAttachment($filepath2);
+            $mail->addAttachment($filepath3);
             // $mail->send();
             $mail->sendMail();
             #endregion
@@ -15357,6 +15486,190 @@ class ModelReportExcel extends Model {
             }
             // echo "<pre>";print_r($file);;
 
+            exit;
+        } catch (Exception $e) {
+            echo "<pre>";
+            print_r($e->getMessage());
+            echo "<pre>";
+            print_r($e->getFile());
+            echo "<pre>";
+            print_r($e->getCode());
+            echo "<pre>";
+            print_r($e->getLine());
+
+            $errstr = $e->getMessage();
+            $errline = $e->getLine();
+            $errfile = $e->getFile();
+            $errno = $e->getCode();
+            $this->session->data['export_import_error'] = ['errstr' => $errstr, 'errno' => $errno, 'errfile' => $errfile, 'errline' => $errline];
+            if ($this->config->get('config_error_log')) {
+                $this->log->write('PHP ' . get_class($e) . ':  ' . $errstr . ' in ' . $errfile . ' on line ' . $errline);
+            }
+
+            return;
+        }
+    }
+
+
+    public function mail_customer_unpaid_order_other_excel($data) {
+        $this->load->library('excel');
+        $this->load->library('iofactory');
+        // echo "<pre>";print_r($data);
+
+        $this->load->language('report/vendor_order');
+        $this->load->model('sale/order');
+        $rows = $this->model_sale_order->getUnpaidOrders_other($data);
+        $sendingDate = $data['sendingDate'];
+
+        // echo "<pre>";print_r($rows);exit;
+        try {
+            // set appropriate timeout limit
+            set_time_limit(1800);
+
+            $objPHPExcel = new PHPExcel();
+            $objPHPExcel->getProperties()->setTitle('Orders Sheet')->setDescription('none');
+            $objPHPExcel->setActiveSheetIndex(0);
+
+            // Field names in the first row
+            // ID, Photo, Name, Contact no., Reason, Valid from, Valid upto, Intime, Outtime
+            $title = [
+                'font' => [
+                    'bold' => true,
+                    'color' => [
+                        'rgb' => 'FFFFFF',
+                    ],
+                ],
+                'fill' => [
+                    'type' => PHPExcel_Style_Fill::FILL_SOLID,
+                    'startcolor' => [
+                        'rgb' => '4390df',
+                    ],
+                ],
+            ];
+
+            //Company name, address
+            $objPHPExcel->getActiveSheet()->mergeCells('A1:H2');
+            $objPHPExcel->getActiveSheet()->setCellValue('A1', 'Unpaid Orders Sheet Other');
+            $objPHPExcel->getActiveSheet()->getStyle('A1:H2')->applyFromArray(['font' => ['bold' => true], 'color' => [
+                    'rgb' => '4390df',
+            ]]);
+
+            //subtitle
+
+
+            $objPHPExcel->getActiveSheet()->getStyle('A1:H2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $objPHPExcel->getActiveSheet()->getStyle('F')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+
+            foreach (range('A', 'L') as $columnID) {
+                $objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
+                        ->setAutoSize(true);
+            }
+
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, 3, 'S.NO');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 3, 'Order ID');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, 3, 'Company Name');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 3, 'Customer Group');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, 3, 'Order Date');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, 3, 'Delivery Date');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, 3, 'Order Value');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, 3, 'Ageing  (No. of days due)');
+            // $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, 3, 'Order Status');
+
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, 3)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(1, 3)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(2, 3)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(3, 3)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(4, 3)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(5, 3)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(6, 3)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(7, 3)->applyFromArray($title);
+            // Fetching the table data
+            $row = 4;
+
+            //echo "<pre>";print_r($data['filter_date_end']."er".$data['filter_date_start']);
+            $i = 1;
+            foreach ($rows as $result) {
+
+                $datediff = strtotime($sendingDate) - strtotime($result['delivery_date']);
+
+                if ($result['company_name'] == '' || $result['company_name'] == NULL || $result['company_name'] == 'Individual ' || $result['company_name'] == 'Individual' || $result['company_name'] == 'N/A' || $result['company_name'] == 'n/a') {
+                    $result['company_name'] = $result['customer'];
+                }
+                // echo "<pre>";print_r(strtotime($result['delivery_date']));
+                // echo "<pre>";print_r(strtotime($sendingDate));
+                // echo "<pre>";print_r(round($datediff / (60 * 60 * 24)));exit;
+                $result['ageing'] = round($datediff / (60 * 60 * 24));
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $i);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['order_id']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['company_name']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['customer_group']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, $result['date_added']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, $result['delivery_date']);
+
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, $this->currency->format($result['order_total']));
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, $row, $result['ageing']);
+                // $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, $row, $result['status']);
+                $i++;
+                ++$row;
+            }
+
+            $objPHPExcel->setActiveSheetIndex(0);
+
+            // $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+            // header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            // header('Content-Disposition: attachment;filename="unpaid_orders_sheet.xlsx"');
+            // header('Cache-Control: max-age=0');
+            // $objWriter->save('php://output');
+
+            $filename = 'KB_Unpaid_Order_Sheet_Other_' . $sendingDate . '.xlsx';
+
+            $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+
+            if (!file_exists(DIR_UPLOAD . 'schedulertemp/')) {
+                mkdir(DIR_UPLOAD . 'schedulertemp/', 0777, true);
+            }
+            // unlink($filename);
+            $folder_path = DIR_UPLOAD . 'schedulertemp';
+            $files = glob($folder_path . '/*');
+            // Deleting all the files in the list
+            foreach ($files as $file) {
+                if (is_file($file)) {
+                    unlink($file); // Delete the given file
+                }
+            }
+            // echo "<pre>";print_r($file);;
+            $objWriter->save(DIR_UPLOAD . 'schedulertemp/' . $filename);
+
+            #region mail sending
+            $maildata['deliverydate'] = $sendingDate;
+            // $subject = $this->emailtemplate->getSubject('ConsolidatedOrderSheet', 'ConsolidatedOrderSheet_1', $maildata);
+            $message = $this->emailtemplate->getMessage('ConsolidatedOrderSheet', 'ConsolidatedOrderSheet_1', $maildata);
+
+            // if ($name != "") {
+            $subject = 'Unpaid Orders';
+            // }
+            // $subject = "Consolidated Order Sheet";
+            $message = str_replace('consolidated', 'other unpaid', $message);
+            $message = str_replace('Consolidated', 'Other Unpaid', $message);
+            $this->load->model('setting/setting');
+            $email = $this->model_setting_setting->getEmailSetting('financeteam');
+
+            // if (strpos($email, "@") == false) {//if mail Id not set in define.php
+            //     $email = "sridivya.talluri@technobraingroup.com";
+            // }
+            // $bccemail = "sridivya.talluri@technobraingroup.com";
+            //   echo "<pre>";print_r($email);die;
+            $filepath = DIR_UPLOAD . 'schedulertemp/' . $filename;
+            $mail = new Mail($this->config->get('config_mail'));
+            $mail->setTo($email);
+            // $mail->setBCC($bccemail);
+            $mail->setFrom($this->config->get('config_from_email'));
+            $mail->setSender($this->config->get('config_name'));
+            $mail->setSubject($subject);
+            $mail->setHTML($message);
+            $mail->addAttachment($filepath);
+            $mail->send();
+            #endregion
             exit;
         } catch (Exception $e) {
             echo "<pre>";
