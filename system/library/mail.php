@@ -357,7 +357,7 @@ class mail
               'subject' => $this->subject,
                'html' => $this->html,
                'attachment' => [
-                ['filePath'=> $this->attachments[0]],['filePath'=> $this->attachments[1]],['filePath'=> $this->attachments[2]]
+                ['filePath'=> $this->attachments[0]],['filePath'=> $this->attachments[1]],['filePath'=> $this->attachments[2]],['filePath'=> $this->attachments[3]]
               ]
             ] );
                }
