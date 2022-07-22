@@ -5827,12 +5827,6 @@ class ControllerApiCustomerOrder extends Controller {
             http_response_code(400);
         }
 
-        if (200 == $json['status']) {
-            $json['data']['status'] = true;
-        } else {
-            $json['data']['status'] = false;
-        }
-
         $log->write('ordernew json');
         $log->write($json);
         $log->write('ordernew json');
