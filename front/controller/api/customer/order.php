@@ -5798,7 +5798,6 @@ class ControllerApiCustomerOrder extends Controller {
 
             if (('mpesa' == $args['payment_method_code']) || ('mpesa' == $args['payment_method_code'] && 'wallet' == $args['payment_wallet_method_code'])) {
                 //save for refrence id correct order id
-                $order_ids['mpesa_phonenumber'] = $args['mpesa_phonenumber'];
                 if (('mpesa' == $args['payment_method_code']) && (!isset($args['payment_wallet_method_code']))) {
                     $mpesa_result = $this->SendPaymentRequestToMpesa($this->cart->getTotalWithShipping(), $args['mpesa_mobile_number'], base64_encode($this->customer->getId() . '_' . $this->cart->getTotalWithShipping() . '_' . date("Y-m-d h:i:s")));
                 }
@@ -5864,7 +5863,7 @@ class ControllerApiCustomerOrder extends Controller {
             $stkPushSimulation = $mpesa->STKPushSimulation($BusinessShortCode, $LipaNaMpesaPasskey, $TransactionType, $Amount, $PartyA, $PartyB, $PhoneNumber, $CallBackURL, $AccountReference, $TransactionDesc, $Remarks);
             $log->write('STKPushSimulation');
             $log->write($stkPushSimulation);
-            //$stkPushSimulation = json_decode($stkPushSimulation);
+            $stkPushSimulation = json_decode($stkPushSimulation);
             //$json['response'] = $stkPushSimulation;
             return $stkPushSimulation;
         }
