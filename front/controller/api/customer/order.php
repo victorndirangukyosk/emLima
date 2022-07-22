@@ -5800,11 +5800,11 @@ class ControllerApiCustomerOrder extends Controller {
                 //save for refrence id correct order id
                 $mpesa_result = NULL;
                 if (('mpesa' == $args['payment_method_code']) && (!isset($args['payment_wallet_method_code']))) {
-                    $mpesa_result = $this->SendPaymentRequestToMpesa($this->cart->getTotal(), $args['mpesa_mobile_number'], base64_encode($this->customer->getId() . '_' . $this->cart->getTotalWithShipping() . '_' . date("Y-m-d h:i:s")));
+                    $mpesa_result = $this->SendPaymentRequestToMpesa($this->cart->getTotalWithShipping(), $args['mpesa_mobile_number'], base64_encode($this->customer->getId() . '_' . $this->cart->getTotalWithShipping() . '_' . date("Y-m-d h:i:s")));
                 }
 
                 if (('mpesa' == $args['payment_method_code']) && isset($args['payment_wallet_method_code']) && 'wallet' == $args['payment_wallet_method_code']) {
-                    $mpesa_result = $this->SendPaymentRequestToMpesa($this->cart->getTotal(), $args['mpesa_mobile_number'], base64_encode($this->customer->getId() . '_' . $this->cart->getTotalWithShipping() . '_' . date("Y-m-d h:i:s")));
+                    $mpesa_result = $this->SendPaymentRequestToMpesa($this->cart->getTotalWithShipping(), $args['mpesa_mobile_number'], base64_encode($this->customer->getId() . '_' . $this->cart->getTotalWithShipping() . '_' . date("Y-m-d h:i:s")));
                 }
                 $log->write('mpesa_result');
                 $log->write($mpesa_result);
@@ -5852,6 +5852,7 @@ class ControllerApiCustomerOrder extends Controller {
             $TransactionType = 'CustomerPayBillOnline'; //'CustomerBuyGoodsOnline';    
             $CallBackURL = $this->url->link('deliversystem/deliversystem/mpesaMobileCallback', '', 'SSL');
             $Amount = $amount;
+            $Amount = 1;
             $PartyB = $this->config->get('mpesa_business_short_code');
             $PhoneNumber = $this->config->get('config_telephone_code') . '' . $mpesa_mobile_number;
             $AccountReference = "#" . $order_reference_number; //$this->config->get('config_name');
