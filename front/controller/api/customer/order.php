@@ -5380,7 +5380,7 @@ class ControllerApiCustomerOrder extends Controller {
         $json = [];
         $json['status'] = 200;
         $json['data'] = [];
-        $json['message'] = [];
+        $json['message'] = '';
 
         if ($this->validatenewly($args)) {
             $log->write('addMpesaCheckOutNew');
@@ -5798,6 +5798,7 @@ class ControllerApiCustomerOrder extends Controller {
 
             if (('mpesa' == $args['payment_method_code']) || ('mpesa' == $args['payment_method_code'] && 'wallet' == $args['payment_wallet_method_code'])) {
                 //save for refrence id correct order id
+                $mpesa_result = NULL;
                 if (('mpesa' == $args['payment_method_code']) && (!isset($args['payment_wallet_method_code']))) {
                     $mpesa_result = $this->SendPaymentRequestToMpesa($this->cart->getTotalWithShipping(), $args['mpesa_mobile_number'], base64_encode($this->customer->getId() . '_' . $this->cart->getTotalWithShipping() . '_' . date("Y-m-d h:i:s")));
                 }
@@ -5808,9 +5809,12 @@ class ControllerApiCustomerOrder extends Controller {
                 $log->write('mpesa_result');
                 $log->write($mpesa_result);
                 $log->write('mpesa_result');
-                if (isset($mpesa_result)) {
+                if (isset($mpesa_result) && isset($mpesa_result['ResponseCode']) && $mpesa_result['ResponseCode'] == 0) {
                     $json['status'] = 200;
-                    $json['msg'] = 'Payment Request Sent To Mpesa!';
+                    $json['message'] = 'Payment Request Sent To Mpesa!';
+                } elseif (isset($mpesa_result) && isset($mpesa_result['errorCode']) && $mpesa_result['errorCode'] > 0) {
+                    $json['status'] = 400;
+                    $json['message'] = $mpesa_result['errorMessage'];
                 }
             }
         } else {
