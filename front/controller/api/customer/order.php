@@ -3458,9 +3458,9 @@ class ControllerApiCustomerOrder extends Controller {
                 }
 
                 if (isset($args['mpesa_phonenumber']) && $args['mpesa_phonenumber'] != NULL) {
-                    $order_data['mpesa_phonenumber'] = $args['mpesa_phonenumber'];
+                    $order_data[$store_id]['mpesa_phonenumber'] = $args['mpesa_phonenumber'];
                 } else {
-                    $order_data['mpesa_phonenumber'] = $this->customer->getTelephone();
+                    $order_data[$store_id]['mpesa_phonenumber'] = $this->customer->getTelephone();
                 }
 
                 if (isset($args['payment_method_code'])) {
@@ -3724,6 +3724,10 @@ class ControllerApiCustomerOrder extends Controller {
             $order_ids = [];
 
             $order_ids = $this->model_api_checkout->addMultiOrder($order_data);
+            $log->write('ORDER_IDS');
+            $log->write($order_data);
+            $log->write($order_ids);
+            $log->write('ORDER_IDS');
 
             $tot = 0;
 
