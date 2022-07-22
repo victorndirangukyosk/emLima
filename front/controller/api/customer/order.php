@@ -4361,6 +4361,10 @@ class ControllerApiCustomerOrder extends Controller {
             $this->response->redirect($this->url->link('checkout/cart'));
         }
 
+        $log = new Log('error.log');
+        $log->write($this->customer->getId() . 'ORDER_VALIDATION_FAILED');
+        $log->write($this->error);
+        $log->write($this->customer->getId() . 'ORDER_VALIDATION_FAILED');
         //echo "<pre>";print_r($this->error);die;
         return !$this->error;
     }
