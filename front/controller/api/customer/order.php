@@ -2852,6 +2852,10 @@ class ControllerApiCustomerOrder extends Controller {
             $this->error['customer_id_invalid'] = 'Please Login Again!';
         }
 
+        if ($this->cart->countProducts() <= 0) {
+            $this->error['customer_cart_is_empty'] = 'Your Cart Is Empty Please Login Again!';
+        }
+
         $log = new Log('error.log');
         $log->write($this->customer->getId() . 'ORDER_VALIDATION_FAILED');
         $log->write($this->error);
