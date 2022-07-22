@@ -2848,6 +2848,10 @@ class ControllerApiCustomerOrder extends Controller {
             $this->response->redirect($this->url->link('checkout/cart'));
         }
 
+        if ($this->customer->getId() == NULL || $this->customer->getId() <= 0 || $this->customer->getId() == '') {
+            $this->error['customer_id_invalid'] = 'Please Login Again!';
+        }
+
         $log = new Log('error.log');
         $log->write($this->customer->getId() . 'ORDER_VALIDATION_FAILED');
         $log->write($this->error);
