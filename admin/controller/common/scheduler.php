@@ -825,6 +825,39 @@ class ControllerCommonScheduler extends Controller {
        
     }
 
+
+    public function getUnpaidOrdersOther() {
+
+        try{
+
+        $sendingDate =   date("Y-m-d");
+        $log = new Log('error.log');
+        
+        
+
+        $data_other['filter_status'] = 1;
+        $data_other['sendingDate'] = $sendingDate;
+        $data_other['filter_customer_group_id'] = $this->config->get('config_kibandas_customer_group_id');        
+        $data_other['filter_payment_terms'] = 'Payment On Delivery'; 
+        $data_other['filter_payment'] = 'Pezesha'; 
+
+
+        $this->load->model('report/excel');
+        $this->model_report_excel->mail_customer_unpaid_order_other_excel($data_other);
+        $log->write('Unpaid Orders Excel Others Sent Successfully -' . $sendingDate);
+
+        }
+        catch(excetion $ex)
+        {
+            $log = new Log('error.log');
+            $log->write($ex);
+            $log->write('Unpaid Orders Excel Others Sending Failed -' . $sendingDate);
+
+        }
+
+       
+    }
+
     //Notify unapproved orders to parent user , 30mins before cutoff time
     //and update order to next timeslot, if cutoff time is reached
     public function updateUnapprovedOrderTimeslot() {
