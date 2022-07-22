@@ -307,7 +307,7 @@
                   <td class="text-left"><?php echo $customer['ip']; ?></td>
                   <td class="text-left"><?php echo $customer['date_added']; ?></td>
                   <td class="text-left"><?php if ($customer['approve']) { ?>
-                    <?php if($this->user->hasPermission('modify', 'sale/customer_approve')) { ?>
+                    <?php if($this->user->hasPermission('modify', 'sale/kibanda_approve')) { ?>
                     <a href="<?php echo $customer['approve']; ?>" data-toggle="tooltip" title="<?php echo $button_verify; ?>"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check"><polyline points="20 6 9 17 4 12"></polyline></svg></i></a>
                     <?php } } else { ?>
                     <a href="#" class="customer_verified" data-toggle="tooltip" title="Verified"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user-check"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><polyline points="17 11 19 13 23 9"></polyline></svg></a>
@@ -315,7 +315,7 @@
                     <?php } ?>
                    
                    <?php if($customer['status_row'] && $customer['approved_row']) { ?>
-                <?php if($this->user->hasPermission('modify', 'sale/customer_login')){ ?>
+                <?php if($this->user->hasPermission('modify', 'sale/kibanda_login')){ ?>
 
                    <a target="_blank" data-toggle="tooltip" title="Login" href="index.php?path=sale/kibanda/login&token=<?php echo $token; ?>&customer_id=<?php echo $customer['customer_id']; ?>&store_id=0">
                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-lock"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
