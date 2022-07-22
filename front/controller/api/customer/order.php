@@ -3725,6 +3725,7 @@ class ControllerApiCustomerOrder extends Controller {
 
             $order_ids = $this->model_api_checkout->addMultiOrder($order_data);
             $log->write('ORDER_IDS');
+            $log->write($order_data);
             $log->write($order_ids);
             $log->write('ORDER_IDS');
 
