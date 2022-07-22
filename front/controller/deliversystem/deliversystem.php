@@ -873,7 +873,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
             if (isset($stkCallback->stkCallback->CallbackMetadata->Item)) {
                 foreach ($stkCallback->stkCallback->CallbackMetadata->Item as $key => $value) {
                     $log->write($value);
-                    
+
                     if ('Amount' == $value->Name) {
                         $amount_topup = $value->Value;
                     }
@@ -2164,7 +2164,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
                         'actual_value' => NULL,
                         'text' => $this->currency->format($new_total),
                     ];
-                }elseif ($total['code'] == 'shipping') {
+                } elseif ($total['code'] == 'shipping') {
                     $total_data[] = [
                         'code' => $total['code'],
                         'title' => $total['title'],
@@ -2173,7 +2173,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
                         'actual_value' => NULL,
                         'text' => 0,
                     ];
-                }elseif ($total['code'] == 'delivery_vat') {
+                } elseif ($total['code'] == 'delivery_vat') {
                     $total_data[] = [
                         'code' => $total['code'],
                         'title' => $total['title'],
@@ -2198,7 +2198,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
                 return $a['sort_order'] <=> $b['sort_order'];
             });
 
-            if (($new_order_details == NULL || count($new_order_details) == 0) && $order_info != NULL && is_array($order_info) && count($order_info) > 0 && is_array($data['products'])&& count($data['products']) > 0) {
+            if (($new_order_details == NULL || count($new_order_details) == 0) && $order_info != NULL && is_array($order_info) && count($order_info) > 0 && is_array($data['products']) && count($data['products']) > 0) {
 
                 $transaction_details['customer_id'] = $order_info['customer_id'];
                 $transaction_details['no_of_products'] = $i;
@@ -2590,18 +2590,42 @@ class ControllerDeliversystemDeliversystem extends Controller {
         }
 
         // echo "<pre>";print_r($data['order_ids']);die;
-            if($new_order_id )
-            {
-        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/success.tpl')) {
-            $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/common/success.tpl', $data));
+        if ($new_order_id) {
+            if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/success.tpl')) {
+                $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/common/success.tpl', $data));
+            } else {
+                $this->response->setOutput($this->load->view('default/template/common/success.tpl', $data));
+            }
         } else {
-            $this->response->setOutput($this->load->view('default/template/common/success.tpl', $data));
+            $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/common/success_missing.tpl', $data));
         }
     }
-    else {
-        $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/common/success_missing.tpl', $data));
-    
-    }
+
+    public function mpesaMobileCallback() {
+
+        $response['status'] = false;
+
+        $postData = file_get_contents('php://input');
+
+        $log = new Log('error.log');
+        $log->write('CALLBACK MPESA MOBILE CHECKOUT NEW');
+        $log->write($postData);
+
+        $file = fopen('system/log/mpesa_mobile_checkout_log.txt', 'w+'); //url fopen should be allowed for this to occur
+        if (false === fwrite($file, $postData)) {
+            fwrite('Error: no data written');
+        }
+        fclose($file);
+
+        $postData = json_decode($postData);
+
+        $stkCallback = $postData->Body;
+
+        $log->write($stkCallback);
+
+        $log->write($stkCallback->stkCallback->MerchantRequestID);
+
+        return $response;
     }
 
 }
