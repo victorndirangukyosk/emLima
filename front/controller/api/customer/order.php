@@ -5667,7 +5667,27 @@ class ControllerApiCustomerOrder extends Controller {
                     $json['msg'] = 'Payment Request Sent To Mpesa!';
                 }
             }
+        } else {
+            $json['status'] = 10014;
+
+            foreach ($this->error as $key => $value) {
+                $json['message'][] = ['type' => $key, 'body' => $value];
+            }
+
+            http_response_code(400);
         }
+
+        if (200 == $json['status']) {
+            $json['data']['status'] = true;
+        } else {
+            $json['data']['status'] = false;
+        }
+
+        $log->write('ordernew json');
+        $log->write($json);
+        $log->write('ordernew json');
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
     }
 
     public function SendPaymentRequestToMpesa($amount, $mpesa_mobile_number, $order_reference_number) {
