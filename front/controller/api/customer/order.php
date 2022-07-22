@@ -5868,6 +5868,7 @@ class ControllerApiCustomerOrder extends Controller {
             $log->write('STKPushSimulation');
             $log->write($stkPushSimulation);
             $stkPushSimulation = json_decode($stkPushSimulation);
+            $stkPushSimulation = json_decode(json_encode($stkPushSimulation), true);
             //$json['response'] = $stkPushSimulation;
             return $stkPushSimulation;
         }
