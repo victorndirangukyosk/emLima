@@ -69,7 +69,7 @@
                             <button class="btn btn-primary btn-sm" type="button" data-toggle="collapse" data-target="#collapseExample2" aria-expanded="false" aria-controls="collapseExample2"><i class="fa fa-eye"></i></button>
                         </div>
 
-                        <div class="pull-right">                    
+                        <!--<div class="pull-right">                    
 
                             <div class="input-group date monthyear" style=" cursor: pointer; padding: 0px 10px;  font-weight: normal;margin-right:20px;margin-top:-4px;">
                                 <input type="text" name="filter_monthyear_input" value="<?php echo $filter_monthyear_input; ?>"  data-date-format="YYYY-MM" id="input-monthyear-filter" class="form-control" onkeydown="return false">
@@ -77,7 +77,43 @@
                                     <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
                                 </span>
                             </div>
+                            
+                        </div> style="margin:-5px 5px 0px -5px;"-->
+
+                          <div class="pull-right">                    
+
+                                    <button type="button" class="btn btn-success btn-sm" id="filter_range" style="margin:0px 5px 0px 0px;" ><i class="fa fa-search"></i></button>
+                             
+                            
                         </div>
+
+                    <div class="pull-right">                    
+
+                            <div class="input-group date" style=" cursor: pointer; padding: 0px 10px;  font-weight: normal;margin-right:20px;margin-top:-4px;">
+                                <input type="text" name="filter_end_input" value="<?php echo $filter_end_input; ?>"  data-date-format="YYYY-MM-DD" id="input-end-filter" class="form-control" onkeydown="return false">
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+                                </span>
+                            </div>
+                            
+                        </div>
+
+                        <div class="pull-right">                    
+
+                            <div class="input-group date" style=" cursor: pointer; padding: 0px 10px;  font-weight: normal;margin-right:20px;margin-top:-4px;">
+                                <input type="text" name="filter_start_input" value="<?php echo $filter_start_input; ?>"  data-date-format="YYYY-MM-DD" id="input-start-filter" class="form-control" onkeydown="return false">
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+                                </span>
+                            </div>
+                            
+                        </div>
+                       
+
+
+                      
+
+
                     </div>
 
                     <div class="collapse" id="collapseExample2">
@@ -202,6 +238,8 @@
     });
 
     $(document).on('dp.change', '.monthyear', function (e) {
+
+        //alert(1);
         console.log($('#input-monthyear-filter').val());
         var monthyear = $('#input-monthyear-filter').val();
 
@@ -431,13 +469,26 @@
         });
     });
     
-    $(window).load(function() {
-    //$( document ).ready(function() {
-        console.log($('#input-monthyear-filter').val());
-        var monthyear = $('#input-monthyear-filter').val();
+
+    $('#filter_range').on('click', function() {
+
+       // alert(4);
+        //console.log($('#input-monthyear-filter').val());
+        //var monthyear = $('#input-monthyear-filter').val();
+            //url: 'index.php?path=dashboard/order/ReceivedOrders&filter_monthyear_added=' + monthyear + '&token=<?php echo $token; ?>',
+            //url: 'index.php?path=dashboard/order/ProcessedOrders&filter_monthyear_added=' + monthyear + '&token=<?php echo $token; ?>',
+            //url: 'index.php?path=dashboard/order/CancelledOrders&filter_monthyear_added=' + monthyear + '&token=<?php echo $token; ?>',
+            //url: 'index.php?path=dashboard/order/IncompleteOrders&filter_monthyear_added=' + monthyear + '&token=<?php echo $token; ?>',
+            //url: 'index.php?path=dashboard/order/ApprovalPendingOrders&filter_monthyear_added=' + monthyear + '&token=<?php echo $token; ?>',
+            //url: 'index.php?path=dashboard/order/FastOrders&filter_monthyear_added=' + monthyear + '&token=<?php echo $token; ?>',
+            //url: 'index.php?path=dashboard/onlineorders&filter_monthyear_added=' + monthyear + '&token=<?php echo $token; ?>',
+            //url: 'index.php?path=dashboard/manualorders&filter_monthyear_added=' + monthyear + '&token=<?php echo $token; ?>',
+
+        var filterdateadded = $('#input-start-filter').val();
+        var filterdateaddedend = $('#input-end-filter').val();
                 $.ajax({
             type: 'get',
-            url: 'index.php?path=dashboard/order/ReceivedOrders&filter_monthyear_added=' + monthyear + '&token=<?php echo $token; ?>',
+            url: 'index.php?path=dashboard/order/ReceivedOrdersByRange&filter_date_added=' + filterdateadded + '&filter_date_added_end=' + filterdateaddedend + '&token=<?php echo $token; ?>',
             dataType: 'json',
             beforeSend: function () {
                 $('#collapseExample2 #total_received_orders').html('<img src="ui/image/loader.gif">');
@@ -453,7 +504,7 @@
 
         $.ajax({
             type: 'get',
-            url: 'index.php?path=dashboard/order/ProcessedOrders&filter_monthyear_added=' + monthyear + '&token=<?php echo $token; ?>',
+            url: 'index.php?path=dashboard/order/ProcessedOrdersByRange&filter_date_added=' + filterdateadded + '&filter_date_added_end=' + filterdateaddedend + '&token=<?php echo $token; ?>',
             dataType: 'json',
             beforeSend: function () {
                 $('#collapseExample2 #total_processing_orders').html('<img src="ui/image/loader.gif">');
@@ -469,7 +520,7 @@
 
         $.ajax({
             type: 'get',
-            url: 'index.php?path=dashboard/order/CancelledOrders&filter_monthyear_added=' + monthyear + '&token=<?php echo $token; ?>',
+            url: 'index.php?path=dashboard/order/CancelledOrdersByRange&filter_date_added=' + filterdateadded + '&filter_date_added_end=' + filterdateaddedend + '&token=<?php echo $token; ?>',
             dataType: 'json',
             beforeSend: function () {
                 $('#collapseExample2 #total_cancelled_orders').html('<img src="ui/image/loader.gif">');
@@ -485,7 +536,7 @@
 
         $.ajax({
             type: 'get',
-            url: 'index.php?path=dashboard/order/IncompleteOrders&filter_monthyear_added=' + monthyear + '&token=<?php echo $token; ?>',
+            url: 'index.php?path=dashboard/order/IncompleteOrdersByRange&filter_date_added=' + filterdateadded + '&filter_date_added_end=' + filterdateaddedend + '&token=<?php echo $token; ?>',
             dataType: 'json',
             beforeSend: function () {
                 $('#collapseExample2 #total_incomplete_orders').html('<img src="ui/image/loader.gif">');
@@ -500,7 +551,7 @@
 
         $.ajax({
             type: 'get',
-            url: 'index.php?path=dashboard/order/ApprovalPendingOrders&filter_monthyear_added=' + monthyear + '&token=<?php echo $token; ?>',
+            url: 'index.php?path=dashboard/order/ApprovalPendingOrdersByRange&filter_date_added=' + filterdateadded + '&filter_date_added_end=' + filterdateaddedend + '&token=<?php echo $token; ?>',
             dataType: 'json',
             beforeSend: function () {
                 $('#collapseExample2 #total_approvalpending_orders').html('<img src="ui/image/loader.gif">');
@@ -516,7 +567,7 @@
 
         $.ajax({
             type: 'get',
-            url: 'index.php?path=dashboard/order/FastOrders&filter_monthyear_added=' + monthyear + '&token=<?php echo $token; ?>',
+            url: 'index.php?path=dashboard/order/FastOrdersAll&filter_date_added=' + filterdateadded + '&filter_date_added_end=' + filterdateaddedend + '&token=<?php echo $token; ?>',
             dataType: 'json',
             beforeSend: function () {
                 $('#collapseExample2 #total_fast_orders').html('<img src="ui/image/loader.gif">');
@@ -532,7 +583,7 @@
 
         $.ajax({
             type: 'get',
-            url: 'index.php?path=dashboard/onlineorders&filter_monthyear_added=' + monthyear + '&token=<?php echo $token; ?>',
+            url: 'index.php?path=dashboard/onlineorders/onlineordersByRange&filter_date_added=' + filterdateadded + '&filter_date_added_end=' + filterdateaddedend + '&token=<?php echo $token; ?>',
             dataType: 'json',
             beforeSend: function () {
                 $('#collapseExample2 #total_online_orders').html('<img src="ui/image/loader.gif">');
@@ -548,7 +599,7 @@
 
         $.ajax({
             type: 'get',
-            url: 'index.php?path=dashboard/manualorders&filter_monthyear_added=' + monthyear + '&token=<?php echo $token; ?>',
+            url: 'index.php?path=dashboard/manualorders/manualordersByRange&filter_date_added=' + filterdateadded + '&filter_date_added_end=' + filterdateaddedend + '&token=<?php echo $token; ?>',
             dataType: 'json',
             beforeSend: function () {
                 $('#collapseExample2 #total_manual_orders').html('<img src="ui/image/loader.gif">');
@@ -564,7 +615,8 @@
         var total = 0;
         $.ajax({
             type: 'get',
-            url: 'index.php?path=dashboard/customer/CustomersOnboarded&filter_monthyear_added=' + monthyear + '&token=<?php echo $token; ?>',
+            //url: 'index.php?path=dashboard/customer/CustomersOnboarded&filter_monthyear_added=' + monthyear + '&token=<?php echo $token; ?>',
+            url: 'index.php?path=dashboard/customer/CustomersOnboardedByRange&filter_date_added=' + filterdateadded + '&filter_date_added_end=' + filterdateaddedend + '&token=<?php echo $token; ?>',
             dataType: 'json',
             beforeSend: function () {
                 $('#collapseExample2 #total_customer_onboarded').html('<img src="ui/image/loader.gif">');
@@ -585,7 +637,8 @@
 
         $.ajax({
             type: 'get',
-            url: 'index.php?path=dashboard/customer/CustomersRegistered&filter_monthyear_added=' + monthyear + '&token=<?php echo $token; ?>',
+            //url: 'index.php?path=dashboard/customer/CustomersRegistered&filter_monthyear_added=' + monthyear + '&token=<?php echo $token; ?>',
+            url: 'index.php?path=dashboard/customer/CustomersRegisteredByRange&filter_date_added=' + filterdateadded + '&filter_date_added_end=' + filterdateaddedend + '&token=<?php echo $token; ?>',
             dataType: 'json',
             beforeSend: function () {
                 $('#collapseExample2 #total_customer_registered').html('<img src="ui/image/loader.gif">');
@@ -601,7 +654,8 @@
 
         $.ajax({
             type: 'get',
-            url: 'index.php?path=dashboard/customer/CustomersPendingApproval&filter_monthyear_added=' + monthyear + '&token=<?php echo $token; ?>',
+            //url: 'index.php?path=dashboard/customer/CustomersPendingApproval&filter_monthyear_added=' + monthyear + '&token=<?php echo $token; ?>',
+            url: 'index.php?path=dashboard/customer/CustomersPendingApprovalByRange&filter_date_added=' + filterdateadded + '&filter_date_added_end=' + filterdateaddedend + '&token=<?php echo $token; ?>',
             dataType: 'json',
             beforeSend: function () {
                 $('#collapseExample2 #total_customer_pending_approval').html('<img src="ui/image/loader.gif">');
@@ -617,7 +671,8 @@
 
         $.ajax({
             type: 'get',
-            url: 'index.php?path=dashboard/order/TotalRevenueBookedDashBoard&filter_monthyear_added=' + monthyear + '&token=<?php echo $token; ?>',
+            //url: 'index.php?path=dashboard/order/TotalRevenueBookedDashBoard&filter_monthyear_added=' + monthyear + '&token=<?php echo $token; ?>',
+            url: 'index.php?path=dashboard/order/TotalRevenueBookedDashBoardByRange&filter_date_added=' + filterdateadded + '&filter_date_added_end=' + filterdateaddedend + '&token=<?php echo $token; ?>',
             dataType: 'json',
             beforeSend: function () {
                 $('#collapseExample2 #actual_sales').html('<img src="ui/image/loader.gif">');
@@ -632,7 +687,8 @@
 
         $.ajax({
             type: 'get',
-            url: 'index.php?path=dashboard/order/TotalRevenueCollectedDashBoard&filter_monthyear_added=' + monthyear + '&token=<?php echo $token; ?>',
+            //url: 'index.php?path=dashboard/order/TotalRevenueCollectedDashBoard&filter_monthyear_added=' + monthyear + '&token=<?php echo $token; ?>',
+            url: 'index.php?path=dashboard/order/TotalRevenueCollectedDashBoardByRange&filter_date_added=' + filterdateadded + '&filter_date_added_end=' + filterdateaddedend + '&token=<?php echo $token; ?>',
             dataType: 'json',
             beforeSend: function () {
                 $('#collapseExample2 #actual_sales_revenue').html('<img src="ui/image/loader.gif">');
@@ -647,7 +703,258 @@
 
         $.ajax({
             type: 'get',
-            url: 'index.php?path=dashboard/order/TotalRevenuePendingDashBoard&filter_monthyear_added=' + monthyear + '&token=<?php echo $token; ?>',
+            //url: 'index.php?path=dashboard/order/TotalRevenuePendingDashBoard&filter_monthyear_added=' + monthyear + '&token=<?php echo $token; ?>',
+            url: 'index.php?path=dashboard/order/TotalRevenuePendingDashBoardByRange&filter_date_added=' + filterdateadded + '&filter_date_added_end=' + filterdateaddedend + '&token=<?php echo $token; ?>',
+            dataType: 'json',
+            beforeSend: function () {
+                $('#collapseExample2 #actual_pending_sales').html('<img src="ui/image/loader.gif">');
+            },
+            success: function (json) {
+                console.log(json);
+                $('#collapseExample2 #actual_pending_sales').html('<span>' + json.total + '</span>');
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+            }
+        });
+        
+    });
+
+    
+    $(window).load(function() {
+    //$( document ).ready(function() {
+
+        //alert(3);
+        //console.log($('#input-monthyear-filter').val());
+        //var monthyear = $('#input-monthyear-filter').val();
+        var filterdateadded = $('#input-start-filter').val();
+        var filterdateaddedend = $('#input-end-filter').val();
+                $.ajax({
+            type: 'get',
+            //url: 'index.php?path=dashboard/order/ReceivedOrders&filter_monthyear_added=' + monthyear + '&token=<?php echo $token; ?>',
+            url: 'index.php?path=dashboard/order/ReceivedOrdersByRange&filter_date_added=' + filterdateadded + '&filter_date_added_end=' + filterdateaddedend + '&token=<?php echo $token; ?>',
+            dataType: 'json',
+            beforeSend: function () {
+                $('#collapseExample2 #total_received_orders').html('<img src="ui/image/loader.gif">');
+            },
+            success: function (json) {
+                console.log(json);
+                $('#collapseExample2 #total_received_orders').html('<span>' + json.total + '</span>');
+                $('#collapseExample2 #total_received_orders_url').attr("href", json.url);
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+            }
+        });
+
+        $.ajax({
+            type: 'get',
+            //url: 'index.php?path=dashboard/order/ProcessedOrders&filter_monthyear_added=' + monthyear + '&token=<?php echo $token; ?>',
+            url: 'index.php?path=dashboard/order/ProcessedOrdersByRange&filter_date_added=' + filterdateadded + '&filter_date_added_end=' + filterdateaddedend + '&token=<?php echo $token; ?>',
+            dataType: 'json',
+            beforeSend: function () {
+                $('#collapseExample2 #total_processing_orders').html('<img src="ui/image/loader.gif">');
+            },
+            success: function (json) {
+                console.log(json);
+                $('#collapseExample2 #total_processing_orders').html('<span>' + json.total + '</span>');
+                $('#collapseExample2 #total_processing_orders_url').attr("href", json.url);
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+            }
+        });
+
+        $.ajax({
+            type: 'get',
+            //url: 'index.php?path=dashboard/order/CancelledOrders&filter_monthyear_added=' + monthyear + '&token=<?php echo $token; ?>',
+            url: 'index.php?path=dashboard/order/CancelledOrdersByRange&filter_date_added=' + filterdateadded + '&filter_date_added_end=' + filterdateaddedend + '&token=<?php echo $token; ?>',
+            dataType: 'json',
+            beforeSend: function () {
+                $('#collapseExample2 #total_cancelled_orders').html('<img src="ui/image/loader.gif">');
+            },
+            success: function (json) {
+                console.log(json);
+                $('#collapseExample2 #total_cancelled_orders').html('<span>' + json.total + '</span>');
+                $('#collapseExample2 #total_cancelled_orders_url').attr("href", json.url);
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+            }
+        });
+
+        $.ajax({
+            type: 'get',
+            //url: 'index.php?path=dashboard/order/IncompleteOrders&filter_monthyear_added=' + monthyear + '&token=<?php echo $token; ?>',
+            url: 'index.php?path=dashboard/order/IncompleteOrdersByRange&filter_date_added=' + filterdateadded + '&filter_date_added_end=' + filterdateaddedend + '&token=<?php echo $token; ?>',
+            dataType: 'json',
+            beforeSend: function () {
+                $('#collapseExample2 #total_incomplete_orders').html('<img src="ui/image/loader.gif">');
+            },
+            success: function (json) {
+                console.log(json);
+                $('#collapseExample2 #total_incomplete_orders').html('<span>' + json.total + '</span>');
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+            }
+        });
+
+        $.ajax({
+            type: 'get',
+            //url: 'index.php?path=dashboard/order/ApprovalPendingOrders&filter_monthyear_added=' + monthyear + '&token=<?php echo $token; ?>',
+            url: 'index.php?path=dashboard/order/ApprovalPendingOrdersByRange&filter_date_added=' + filterdateadded + '&filter_date_added_end=' + filterdateaddedend + '&token=<?php echo $token; ?>',
+            dataType: 'json',
+            beforeSend: function () {
+                $('#collapseExample2 #total_approvalpending_orders').html('<img src="ui/image/loader.gif">');
+            },
+            success: function (json) {
+                console.log(json);
+                $('#collapseExample2 #total_approvalpending_orders').html('<span>' + json.total + '</span>');
+                $('#collapseExample2 #total_approvalpending_orders_url').attr("href", json.url);
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+            }
+        });
+
+        $.ajax({
+            type: 'get',
+            //url: 'index.php?path=dashboard/order/FastOrders&filter_monthyear_added=' + monthyear + '&token=<?php echo $token; ?>',
+            url: 'index.php?path=dashboard/order/FastOrdersAll&filter_date_added=' + filterdateadded + '&filter_date_added_end=' + filterdateaddedend + '&token=<?php echo $token; ?>',
+            dataType: 'json',
+            beforeSend: function () {
+                $('#collapseExample2 #total_fast_orders').html('<img src="ui/image/loader.gif">');
+            },
+            success: function (json) {
+                console.log(json);
+                $('#collapseExample2 #total_fast_orders').html('<span>' + json.total + '</span>');
+                $('#collapseExample2 #total_fast_orders_url').attr("href", json.url);
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+            }
+        });
+
+        $.ajax({
+            type: 'get',
+            //url: 'index.php?path=dashboard/onlineorders&filter_monthyear_added=' + monthyear + '&token=<?php echo $token; ?>',
+            url: 'index.php?path=dashboard/onlineorders/onlineordersByRange&filter_date_added=' + filterdateadded + '&filter_date_added_end=' + filterdateaddedend + '&token=<?php echo $token; ?>',
+            dataType: 'json',
+            beforeSend: function () {
+                $('#collapseExample2 #total_online_orders').html('<img src="ui/image/loader.gif">');
+            },
+            success: function (json) {
+                console.log(json);
+                $('#collapseExample2 #total_online_orders').html('<span>' + json.total + '</span>');
+                $('#collapseExample2 #total_online_orders_url').attr("href", json.online_orders_url);
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+            }
+        });
+
+        $.ajax({
+            type: 'get',
+            //url: 'index.php?path=dashboard/manualorders&filter_monthyear_added=' + monthyear + '&token=<?php echo $token; ?>',
+            url: 'index.php?path=dashboard/manualorders/manualordersByRange&filter_date_added=' + filterdateadded + '&filter_date_added_end=' + filterdateaddedend + '&token=<?php echo $token; ?>',
+            dataType: 'json',
+            beforeSend: function () {
+                $('#collapseExample2 #total_manual_orders').html('<img src="ui/image/loader.gif">');
+            },
+            success: function (json) {
+                console.log(json);
+                $('#collapseExample2 #total_manual_orders').html('<span>' + json.total + '</span>');
+                $('#collapseExample2 #manualordersa').attr("href", json.manual_orders_url);
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+            }
+        });
+        var total = 0;
+        $.ajax({
+            type: 'get',
+            //url: 'index.php?path=dashboard/customer/CustomersOnboarded&filter_monthyear_added=' + monthyear + '&token=<?php echo $token; ?>',
+            url: 'index.php?path=dashboard/customer/CustomersOnboardedByRange&filter_date_added=' + filterdateadded + '&filter_date_added_end=' + filterdateaddedend + '&token=<?php echo $token; ?>',
+            dataType: 'json',
+            beforeSend: function () {
+                $('#collapseExample2 #total_customer_onboarded').html('<img src="ui/image/loader.gif">');
+            },
+            success: function (json) {
+                console.log(json);
+                if(json.total != null) {
+                    total = json.total;
+                } else {
+                   total = 0; 
+                }
+                $('#collapseExample2 #total_customer_onboarded').html('<span>' + total + '</span>');
+                //$('#collapseExample2 #total_customer_onboarded_url').attr("href", json.url);
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+            }
+        });
+
+        $.ajax({
+            type: 'get',
+            //url: 'index.php?path=dashboard/customer/CustomersRegistered&filter_monthyear_added=' + monthyear + '&token=<?php echo $token; ?>',
+            url: 'index.php?path=dashboard/customer/CustomersRegisteredByRange&filter_date_added=' + filterdateadded + '&filter_date_added_end=' + filterdateaddedend + '&token=<?php echo $token; ?>',
+            dataType: 'json',
+            beforeSend: function () {
+                $('#collapseExample2 #total_customer_registered').html('<img src="ui/image/loader.gif">');
+            },
+            success: function (json) {
+                console.log(json);
+                $('#collapseExample2 #total_customer_registered').html('<span>' + json.total + '</span>');
+                $('#collapseExample2 #total_customer_registered_url').attr("href", json.url);
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+            }
+        });
+
+        $.ajax({
+            type: 'get',
+            //url: 'index.php?path=dashboard/customer/CustomersPendingApproval&filter_monthyear_added=' + monthyear + '&token=<?php echo $token; ?>',
+            url: 'index.php?path=dashboard/customer/CustomersPendingApprovalByRange&filter_date_added=' + filterdateadded + '&filter_date_added_end=' + filterdateaddedend + '&token=<?php echo $token; ?>',
+            dataType: 'json',
+            beforeSend: function () {
+                $('#collapseExample2 #total_customer_pending_approval').html('<img src="ui/image/loader.gif">');
+            },
+            success: function (json) {
+                console.log(json);
+                $('#collapseExample2 #total_customer_pending_approval').html('<span>' + json.total + '</span>');
+                $('#collapseExample2 #total_customer_pending_approval_url').attr("href", json.url);
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+            }
+        });
+
+        $.ajax({
+            type: 'get',
+            //url: 'index.php?path=dashboard/order/TotalRevenueBookedDashBoard&filter_monthyear_added=' + monthyear + '&token=<?php echo $token; ?>',
+            url: 'index.php?path=dashboard/order/TotalRevenueBookedDashBoardByRange&filter_date_added=' + filterdateadded + '&filter_date_added_end=' + filterdateaddedend + '&token=<?php echo $token; ?>',
+            dataType: 'json',
+            beforeSend: function () {
+                $('#collapseExample2 #actual_sales').html('<img src="ui/image/loader.gif">');
+            },
+            success: function (json) {
+                console.log(json);
+                $('#collapseExample2 #actual_sales').html('<span>' + json.total + '</span>');
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+            }
+        });
+
+        $.ajax({
+            type: 'get',
+            //url: 'index.php?path=dashboard/order/TotalRevenueCollectedDashBoard&filter_monthyear_added=' + monthyear + '&token=<?php echo $token; ?>',
+            url: 'index.php?path=dashboard/order/TotalRevenueCollectedDashBoardByRange&filter_date_added=' + filterdateadded + '&filter_date_added_end=' + filterdateaddedend + '&token=<?php echo $token; ?>',
+            dataType: 'json',
+            beforeSend: function () {
+                $('#collapseExample2 #actual_sales_revenue').html('<img src="ui/image/loader.gif">');
+            },
+            success: function (json) {
+                console.log(json);
+                $('#collapseExample2 #actual_sales_revenue').html('<span>' + json.total + '</span>');
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+            }
+        });
+
+        $.ajax({
+            type: 'get',
+            //url: 'index.php?path=dashboard/order/TotalRevenuePendingDashBoard&filter_monthyear_added=' + monthyear + '&token=<?php echo $token; ?>',
+            url: 'index.php?path=dashboard/order/TotalRevenuePendingDashBoardByRange&filter_date_added=' + filterdateadded + '&filter_date_added_end=' + filterdateaddedend + '&token=<?php echo $token; ?>',
             dataType: 'json',
             beforeSend: function () {
                 $('#collapseExample2 #actual_pending_sales').html('<img src="ui/image/loader.gif">');
@@ -664,6 +971,8 @@
 
     $('#div_date_filter').datetimepicker().on('dp.change', function (e) {
         //console.log(e.date);
+        //alert(2);
+
         var input_date_filter = $('input[name=\'input_date_filter\']').val();
         if (input_date_filter) {
             //alert(input_date_filter);
