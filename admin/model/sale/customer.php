@@ -1427,7 +1427,7 @@ class ModelSaleCustomer extends Model {
             $implode[] = "approved = '" . (int) $data['filter_approved'] . "'";
         }
 
-        if (!empty($data['filter_date_added'])) {
+        if (!empty($data['filter_date_added'])  && empty($data['filter_date_added_end'])) {
             $implode[] = "DATE(date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
         }
 
@@ -1438,6 +1438,11 @@ class ModelSaleCustomer extends Model {
         if (!empty($data['filter_monthyear_added'])) {
             $implode[] = "DATE_FORMAT(date_added, '%Y-%m') = '" . $this->db->escape($data['filter_monthyear_added']) . "'";
         }
+
+        if (!empty($data['filter_date_added']) && !empty($data['filter_date_added_end'])) {
+            $implode[] = "DATE(date_added) BETWEEN DATE('" . $this->db->escape($data['filter_date_added']) . "') AND DATE('" . $this->db->escape($data['filter_date_added_end']) . "')";
+        }
+
         //REMOVED FETCHING ONLY PARENT CUSTOMERS
         //$implode[] = "parent is null or parent = 0";
 
@@ -1499,7 +1504,7 @@ class ModelSaleCustomer extends Model {
         //     $implode[] = "c.approved = '" . (int) $data['filter_approved'] . "'";
         // }
 
-        if (!empty($data['filter_date_added'])) {
+        if (!empty($data['filter_date_added']) && empty($data['filter_date_added_end'])) {
             $sql .= "And DATE(c.date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
         }
 
@@ -1511,6 +1516,12 @@ class ModelSaleCustomer extends Model {
             $sql .= "And  DATE_FORMAT(c.date_added, '%Y-%m') = '" . $this->db->escape($data['filter_monthyear_added']) . "'";
         }
 
+
+        if (!empty($data['filter_date_added']) && !empty($data['filter_date_added_end'])) {
+            $sql .= "And DATE(c.date_added) BETWEEN DATE('" . $this->db->escape($data['filter_date_added']) . "') AND DATE('" . $this->db->escape($data['filter_date_added_end']) . "')";
+        }
+
+ 
         // $implode[] = " o.order_status_id NOT IN (0)";
         //$implode[] = "c.parent is null or c.parent = 0";
         // if ($implode) {
