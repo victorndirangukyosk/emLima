@@ -54,7 +54,7 @@ class Customer {
                 if ($customer_query->row['customer_id'] > 0 && ($customer_query->row['parent'] == NULL || $customer_query->row['parent'] == 0)) {
                     $this->customer_category = $customer_query->row['customer_category'];
                     $this->customer_discount_category = $customer_query->row['customer_discount_category'];
-                    $this->customer_parent = $customer_query->row['parent'];
+                    $this->customer_parent = $customer_query->row['customer_id'];
                 }
                 /* SET CUSTOMER CATEGORY */
 
@@ -144,7 +144,7 @@ class Customer {
             }
 
             if ($customer_query->row['customer_id'] > 0 && ($customer_query->row['parent'] == NULL || $customer_query->row['parent'] == 0)) {
-                $this->customer_parent = $customer_query->row['parent'];
+                $this->customer_parent = $customer_query->row['customer_id'];
                 $this->customer_category = $customer_query->row['customer_category'];
                 $this->customer_discount_category = $customer_query->row['customer_discount_category'];
             }
@@ -248,7 +248,7 @@ class Customer {
             }
 
             if ($customer_query->row['customer_id'] > 0 && ($customer_query->row['parent'] == NULL || $customer_query->row['parent'] == 0)) {
-                $this->customer_parent = $customer_query->row['parent'];
+                $this->customer_parent = $customer_query->row['customer_id'];
                 $this->customer_category = $customer_query->row['customer_category'];
                 $this->customer_discount_category = $customer_query->row['customer_discount_category'];
             }
