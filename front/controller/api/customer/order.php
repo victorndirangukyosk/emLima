@@ -4309,6 +4309,14 @@ class ControllerApiCustomerOrder extends Controller {
                 $log->write($mpesa_result);
                 $log->write('mpesa_result');
                 if (isset($mpesa_result) && isset($mpesa_result['ResponseCode']) && $mpesa_result['ResponseCode'] == 0) {
+                    $this->load->model('payment/mpesa');
+
+                    $mpesa_request_ids = $this->model_payment_mpesa->insertMobileMpesaRequest($this->customer->getId(), $mpesa_result['MerchantRequestID'], $mpesa_result['CheckoutRequestID'], $this->cart->getTotalWithShipping());
+
+                    $log->write('mpesa_request_ids');
+                    $log->write($mpesa_request_ids);
+                    $log->write('mpesa_request_ids');
+
                     $json['status'] = 200;
                     $json['message'] = $mpesa_result['ResponseDescription'];
                     $json['data']['merchant_request_id'] = $mpesa_result['MerchantRequestID'];
