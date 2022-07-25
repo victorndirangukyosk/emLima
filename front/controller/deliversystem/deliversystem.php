@@ -2627,6 +2627,10 @@ class ControllerDeliversystemDeliversystem extends Controller {
 
         $stkCallback_array = json_decode(json_encode($stkCallback), true);
 
+        $log->write('STK_CALL_BACK_ARRAY');
+        $log->write($stkCallback_array);
+        $log->write('STK_CALL_BACK_ARRAY');
+
         if (isset($stkCallback_array) && is_array($stkCallback_array) && isset($stkCallback_array['ResultCode']) && $stkCallback_array['ResultCode'] > 0) {
             $log->write('PAYMENT_FAILED');
             $log->write($stkCallback_array);
