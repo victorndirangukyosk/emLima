@@ -138,7 +138,7 @@ class ControllerDashboardManualOrders extends Controller {
 
 
 
-    public function ManualOrdersByRange() {
+    public function manualOrdersByRange() {
         // $this->load->language('dashboard/online');
 
         $data['heading_title'] = "Manual Orders"; //$this->language->get('heading_title');
@@ -210,7 +210,7 @@ class ControllerDashboardManualOrders extends Controller {
             $this->response->addHeader('Content-Type: application/json');
             $this->response->setOutput(json_encode($data));
         } else {
-            return $this->load->view('dashboard/manualorders.tpl', $data);
+            return $this->load->view('dashboard/manualorders_1.tpl', $data);
         }
     }
 
