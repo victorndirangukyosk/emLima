@@ -114,9 +114,9 @@ class ControllerDashboardCustomer extends Controller {
         $this->request->get['filter_date_added_end'] = isset($this->request->get['filter_date_added_end']) ? $this->request->get['filter_date_added_end'] : date('Y-m-d');
         $customer_total = $this->model_sale_customer->getTotalCustomersOnBoarded(['filter_date_added' => $this->request->get['filter_date_added'], 'filter_date_added_end' => $this->request->get['filter_date_added_end']]);
         
-        $data['url'] = htmlspecialchars_decode($this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&filter_monthyear_added=' . $this->request->get['filter_monthyear_added'], 'SSL'));
+        $data['url'] = htmlspecialchars_decode($this->url->link('sale/customer', 'token=' . $this->session->data['token'] . 'filter_date_added=' . $this->request->get['filter_date_added'].'&filter_date_added_to=' . $this->request->get['filter_date_added_end'], 'SSL'));
         $data['total'] = $customer_total;
-        $data['customer'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&filter_monthyear_added=' . $this->request->get['filter_monthyear_added'], 'SSL');
+        $data['customer'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&filter_date_added=' . $this->request->get['filter_date_added'].'&filter_date_added_to=' . $this->request->get['filter_date_added_end'], 'SSL');
         if ($this->request->isAjax()) {
             $this->response->addHeader('Content-Type: application/json');
             $this->response->setOutput(json_encode($data));
@@ -198,9 +198,9 @@ class ControllerDashboardCustomer extends Controller {
         $customer_total = $this->model_sale_customer->getTotalCustomersForDashboard(['filter_date_added' => $this->request->get['filter_date_added'], 'filter_date_added_end' => $this->request->get['filter_date_added_end']]);
         
 
-        $data['url'] = htmlspecialchars_decode($this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&filter_monthyear_added=' . $this->request->get['filter_monthyear_added'], 'SSL'));
+        $data['url'] = htmlspecialchars_decode($this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&filter_date_added=' . $this->request->get['filter_date_added'].'&filter_date_added_to=' . $this->request->get['filter_date_added_end'], 'SSL'));
         $data['total'] = $customer_total;
-        $data['customer'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&filter_monthyear_added=' . $this->request->get['filter_monthyear_added'], 'SSL');
+        $data['customer'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&filter_date_added=' . $this->request->get['filter_date_added'].'&filter_date_added_to=' . $this->request->get['filter_date_added_end'], 'SSL');
         if ($this->request->isAjax()) {
             $this->response->addHeader('Content-Type: application/json');
             $this->response->setOutput(json_encode($data));
@@ -280,9 +280,9 @@ class ControllerDashboardCustomer extends Controller {
         $this->request->get['filter_date_added_end'] = isset($this->request->get['filter_date_added_end']) ? $this->request->get['filter_date_added_end'] : date('Y-m-d');
         $customer_total = $this->model_sale_customer->getTotalCustomersForDashboard(['filter_approved' => 0, 'filter_date_added' => $this->request->get['filter_date_added'], 'filter_date_added_end' => $this->request->get['filter_date_added_end']]);
         
-        $data['url'] = htmlspecialchars_decode($this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&filter_approved=0&filter_sub_customer_show=1&filter_monthyear_added=' . $this->request->get['filter_monthyear_added'], 'SSL'));
+        $data['url'] = htmlspecialchars_decode($this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&filter_approved=0&filter_sub_customer_show=1&filter_date_added=' . $this->request->get['filter_date_added'].'&filter_date_added_to=' . $this->request->get['filter_date_added_end'], 'SSL'));
         $data['total'] = $customer_total;
-        $data['customer'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&filter_monthyear_added=' . $this->request->get['filter_monthyear_added'], 'SSL');
+        $data['customer'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&filter_date_added=' . $this->request->get['filter_date_added'].'&filter_date_added_to=' . $this->request->get['filter_date_added_end'], 'SSL');
         if ($this->request->isAjax()) {
             $this->response->addHeader('Content-Type: application/json');
             $this->response->setOutput(json_encode($data));

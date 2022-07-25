@@ -2627,12 +2627,16 @@ class ControllerDeliversystemDeliversystem extends Controller {
 
         if (isset($stkCallback) && isset($stkCallback->stkCallback->ResultCode) && $stkCallback->stkCallback->ResultCode > 0) {
             $log->write('PAYMENT_FAILED');
+            $customer_order_data = $this->cache->get('customer_order_data');
+            $log->write($customer_order_data);
             $log->write($stkCallback);
             $log->write('PAYMENT_FAILED');
         }
 
         if (isset($stkCallback) && isset($stkCallback->stkCallback->result) && $stkCallback->stkCallback->result == 0) {
             $log->write('PAYMENT_SUCCESSED');
+            $customer_order_data = $this->cache->get('customer_order_data');
+            $log->write($customer_order_data);
             $log->write($stkCallback);
             $log->write('PAYMENT_SUCCESSED');
         }

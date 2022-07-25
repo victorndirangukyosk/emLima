@@ -143,7 +143,7 @@ class ControllerDashboardOnlineOrders extends Controller {
     }
 
 
-    public function OnlineOrdersAllByRange() {
+    public function onlineOrdersByRange() {
         // $this->load->language('dashboard/online');
 
         $data['heading_title'] = "Online Orders"; //$this->language->get('heading_title');
@@ -210,7 +210,7 @@ class ControllerDashboardOnlineOrders extends Controller {
             $this->response->addHeader('Content-Type: application/json');
             $this->response->setOutput(json_encode($data));
         } else {
-            return $this->load->view('dashboard/onlineorders.tpl', $data);
+            return $this->load->view('dashboard/onlineorders_1.tpl', $data);
         }
     }
 

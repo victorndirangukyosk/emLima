@@ -222,9 +222,9 @@ class ControllerDashboardOrder extends Controller {
         $this->request->get['filter_date_added_end'] = isset($this->request->get['filter_date_added_end']) ? $this->request->get['filter_date_added_end'] : date('Y-m-d');
         $order_total = $this->model_sale_order->getTotalOrders(['filter_order_status' => 14, 'filter_date_added' => $this->request->get['filter_date_added'], 'filter_date_added_end' => $this->request->get['filter_date_added_end']]);
 
-        $data['url'] = htmlspecialchars_decode($this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=14&filter_monthyear_added=' . $this->request->get['filter_monthyear_added'], 'SSL'));
+        $data['url'] = htmlspecialchars_decode($this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=14&filter_date_added=' . $this->request->get['filter_date_added'].'&filter_date_added_end=' . $this->request->get['filter_date_added_end'], 'SSL'));
         $data['total'] = $order_total;
-        $data['order'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=14&filter_monthyear_added=' . $this->request->get['filter_monthyear_added'], 'SSL');
+        $data['order'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=14&filter_date_added=' . $this->request->get['filter_date_added'].'&filter_date_added_end=' . $this->request->get['filter_date_added_end'], 'SSL');
         if ($this->request->isAjax()) {
             $this->response->addHeader('Content-Type: application/json');
             $this->response->setOutput(json_encode($data));
@@ -280,9 +280,9 @@ class ControllerDashboardOrder extends Controller {
         $this->request->get['filter_date_added_end'] = isset($this->request->get['filter_date_added_end']) ? $this->request->get['filter_date_added_end'] : date('Y-m-d');
         $order_total = $this->model_sale_order->getTotalOrders(['filter_order_status' => 1, 'filter_date_added' => $this->request->get['filter_date_added'], 'filter_date_added_end' => $this->request->get['filter_date_added_end']]);
         
-        $data['url'] = htmlspecialchars_decode($this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=1&filter_monthyear_added=' . $this->request->get['filter_monthyear_added'], 'SSL'));
+        $data['url'] = htmlspecialchars_decode($this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=1&filter_date_added=' . $this->request->get['filter_date_added'].'&filter_date_added_end=' . $this->request->get['filter_date_added_end'], 'SSL'));
         $data['total'] = $order_total;
-        $data['order'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=1&filter_monthyear_added=' . $this->request->get['filter_monthyear_added'], 'SSL');
+        $data['order'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=1&filter_date_added=' . $this->request->get['filter_date_added'].'&filter_date_added_end=' . $this->request->get['filter_date_added_end'], 'SSL');
         if ($this->request->isAjax()) {
             $this->response->addHeader('Content-Type: application/json');
             $this->response->setOutput(json_encode($data));
@@ -388,9 +388,9 @@ class ControllerDashboardOrder extends Controller {
         $order_total = $this->model_sale_order->getTotalOrders(['filter_order_status' => 6, 'filter_date_added' => $this->request->get['filter_date_added'], 'filter_date_added_end' => $this->request->get['filter_date_added_end']]);
         
 
-        $data['url'] = htmlspecialchars_decode($this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=6&filter_monthyear_added=' . $this->request->get['filter_monthyear_added'], 'SSL'));
+        $data['url'] = htmlspecialchars_decode($this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=6&filter_date_added=' . $this->request->get['filter_date_added'].'&filter_date_added_end=' . $this->request->get['filter_date_added_end'], 'SSL'));
         $data['total'] = $order_total;
-        $data['order'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=6&filter_monthyear_added=' . $this->request->get['filter_monthyear_added'], 'SSL');
+        $data['order'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=6&filter_date_added=' . $this->request->get['filter_date_added'].'&filter_date_added_end=' . $this->request->get['filter_date_added_end'], 'SSL');
         if ($this->request->isAjax()) {
             $this->response->addHeader('Content-Type: application/json');
             $this->response->setOutput(json_encode($data));
@@ -442,7 +442,7 @@ class ControllerDashboardOrder extends Controller {
         $order_total = $this->model_sale_order->getTotalIncompleteOrders(['filter_order_status' => 0, 'filter_date_added' => $this->request->get['filter_date_added'], 'filter_date_added_end' => $this->request->get['filter_date_added_end']]);
         
         $data['total'] = $order_total;
-        $data['order'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=6&filter_monthyear_added=' . $this->request->get['filter_monthyear_added'], 'SSL');
+        $data['order'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=6&filter_date_added=' . $this->request->get['filter_date_added'].'&filter_date_added_end=' . $this->request->get['filter_date_added_end'], 'SSL');
         if ($this->request->isAjax()) {
             $this->response->addHeader('Content-Type: application/json');
             $this->response->setOutput(json_encode($data));
@@ -548,9 +548,9 @@ class ControllerDashboardOrder extends Controller {
         $this->request->get['filter_date_added_end'] = isset($this->request->get['filter_date_added_end']) ? $this->request->get['filter_date_added_end'] : date('Y-m-d');
         $order_total = $this->model_sale_order->getTotalOrders(['filter_order_status' => 15, 'filter_date_added' => $this->request->get['filter_date_added'], 'filter_date_added_end' => $this->request->get['filter_date_added_end']]);
         
-        $data['url'] = htmlspecialchars_decode($this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=15&filter_monthyear_added=' . $this->request->get['filter_monthyear_added'], 'SSL'));
+        $data['url'] = htmlspecialchars_decode($this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=15&filter_date_added=' . $this->request->get['filter_date_added'].'&filter_date_added_end=' . $this->request->get['filter_date_added_end'], 'SSL'));
         $data['total'] = $order_total;
-        $data['order'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=15&filter_monthyear_added=' . $this->request->get['filter_monthyear_added'], 'SSL');
+        $data['order'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_order_status=15&filter_date_added=' . $this->request->get['filter_date_added'].'&filter_date_added_end=' . $this->request->get['filter_date_added_end'], 'SSL');
         if ($this->request->isAjax()) {
             $this->response->addHeader('Content-Type: application/json');
             $this->response->setOutput(json_encode($data));
