@@ -1086,6 +1086,10 @@ class ControllerCommonHome extends Controller {
             $new_categories = $this->model_assets_category->getCategoryByStoreId(ACTIVE_STORE_ID, 0);
             //$customer_categories = $this->model_assets_category->getCustomerCategoryById(ACTIVE_STORE_ID, 0);
             $customer_categories = $this->model_assets_category->getCustomerCategories($this->customer->getCustomerParent());
+            $log->write('customer_categories');
+            $log->write($customer_categories);
+            $log->write($this->customer->getCustomerParent());
+            $log->write('customer_categories');
             foreach ($customer_categories as $customer_category) {
                 $new_categories[] = $customer_category;
             }

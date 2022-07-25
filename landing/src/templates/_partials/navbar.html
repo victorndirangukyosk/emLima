@@ -41,8 +41,12 @@
                                 </span> </a>
 
                             <div class="dropdownset">
+                                <?php if(ENV == 'testing') {  ?>
+                                <div class="dropdownsetnew" style="margin-top: 10px;"><a class="header__upper-deck-item-link"
+                                                                                         href="https://stage.register.kwikbasket.com/#/"><i class="fa fa-user"></i>       Register as Customer</a></div> <?php } else { ?>
                                 <div class="dropdownsetnew" style="margin-top: 10px;"><a class="header__upper-deck-item-link"
                                                                                          href="https://register.kwikbasket.com/#/"><i class="fa fa-user"></i>       Register as Customer</a></div>
+                                <?php  } ?>
 
 
                                 <br>

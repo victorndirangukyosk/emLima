@@ -4006,9 +4006,9 @@ class ControllerApiCustomerOrder extends Controller {
                 }
 
                 if (isset($args['mpesa_phonenumber']) && $args['mpesa_phonenumber'] != NULL) {
-                    $order_data['mpesa_phonenumber'] = $args['mpesa_phonenumber'];
+                    $order_data[$store_id]['mpesa_phonenumber'] = $args['mpesa_phonenumber'];
                 } else {
-                    $order_data['mpesa_phonenumber'] = $this->customer->getTelephone();
+                    $order_data[$store_id]['mpesa_phonenumber'] = $this->customer->getTelephone();
                 }
 
                 if (isset($args['payment_method_code'])) {
@@ -4309,11 +4309,24 @@ class ControllerApiCustomerOrder extends Controller {
                 $log->write($mpesa_result);
                 $log->write('mpesa_result');
                 if (isset($mpesa_result) && isset($mpesa_result['ResponseCode']) && $mpesa_result['ResponseCode'] == 0) {
+                    $this->load->model('payment/mpesa');
+
+                    $mpesa_request_ids = $this->model_payment_mpesa->insertMobileMpesaRequest($this->customer->getId(), $mpesa_result['MerchantRequestID'], $mpesa_result['CheckoutRequestID'], $this->cart->getTotalWithShipping());
+
+                    $log->write('mpesa_request_ids');
+                    $log->write($mpesa_request_ids);
+                    $log->write('mpesa_request_ids');
+
+                    $this->cache->delete('customer_order_data');
+                    $this->cache->set('customer_order_data', $order_data);
+
                     $json['status'] = 200;
                     $json['message'] = $mpesa_result['ResponseDescription'];
                     $json['data']['merchant_request_id'] = $mpesa_result['MerchantRequestID'];
                     $json['data']['checkout_request_id'] = $mpesa_result['CheckoutRequestID'];
                 } elseif (isset($mpesa_result) && isset($mpesa_result['errorCode']) && $mpesa_result['errorCode'] > 0) {
+                    $this->cache->delete('customer_order_data');
+
                     $json['status'] = 400;
                     $json['message'] = $mpesa_result['errorMessage'];
                 }

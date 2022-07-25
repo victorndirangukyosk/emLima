@@ -634,7 +634,7 @@
             </li>
             <?php } ?>
 
-             <?php if( $preturn_report_inventory_wastage != false  || $preturn_report_inventory_wastage_consolidated!=false || $preturn_report_product_received_sold !=false || $preturn_inventory_purchased!=false ) { ?>
+             <?php if( $preturn_report_inventory_wastage != false  || $preturn_report_inventory_wastage_consolidated!=false  || $preturn_inventory_purchased!=false ) { ?>
             <li><a class="parent">Inventory</a>
                 <ul>                    
                     <?php if($preturn_report_inventory_wastage) { ?>
@@ -656,13 +656,7 @@
 
                 </ul>
 
-                  <ul>  
-
-                    <?php if($preturn_report_product_received_sold) { ?>  
-            <li><a href="<?php echo $report_product_received_sold; ?>">Product Received and Sold</a></li>
-            <?php } ?>
-
-            </ul>
+                 
 
 
   <ul>  
@@ -780,7 +774,7 @@
             <?php }?>
 
 
-               <?php if( ($preturn_report_finance != false) ||$preturn_sale_daily != false|| ($preturn_report_receivables_summary || $preturn_report_receivables_ageing  || $preturn_report_missing_products_revenue || $preturn_report_order_product_missing_products)) { ?>
+               <?php if( ($preturn_report_finance != false) ||$preturn_sale_daily != false|| ($preturn_report_receivables_summary || $preturn_report_receivables_ageing  || $preturn_report_missing_products_revenue || $preturn_report_order_product_missing_products || $preturn_report_product_received_sold!=false)) { ?>
             <li><a class="parent">Finance</a>
                 <ul>
                    
@@ -812,6 +806,15 @@
 
             
                 </ul>
+
+                 <ul>  
+
+                    <?php if($preturn_report_product_received_sold) { ?>  
+            <li><a href="<?php echo $report_product_received_sold; ?>">Product Received and Sold</a></li>
+            <?php } ?>
+
+            </ul>
+
             </li>
             <?php } ?>
 
