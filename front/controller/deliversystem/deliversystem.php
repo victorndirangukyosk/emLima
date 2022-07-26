@@ -2629,6 +2629,19 @@ class ControllerDeliversystemDeliversystem extends Controller {
             $log->write('PAYMENT_FAILED');
             $customer_order_data = $this->cache->get('customer_order_data');
             $log->write($customer_order_data);
+
+            $log->write('customer_order_data_customer_id');
+            $log->write($customer_order_data['customer_id']);
+            $log->write('customer_order_data_customer_id');
+
+            if (isset($customer_order_data) && isset($customer_order_data['customer_id']) && $customer_order_data['customer_id'] > 0) {
+                $this->load->model('account/customer');
+                $customer_info = $this->model_account_customer->getCustomer($customer_order_data['customer_id']);
+                $log->write('customer_info');
+                $log->write($customer_info);
+                $log->write('customer_info');
+            }
+
             $log->write($stkCallback);
             //$this->emailtemplate->sendPushNotification($customer_info['customer_id'], $customer_info['device_id'], $order_info['order_id'], $order_info['store_id'], $mobile_notification_title, $mobile_notification_template, 'FLUTTER_NOTIFICATION_CLICK', 'true');
             $log->write('PAYMENT_FAILED');
@@ -2638,6 +2651,19 @@ class ControllerDeliversystemDeliversystem extends Controller {
             $log->write('PAYMENT_SUCCESSED');
             $customer_order_data = $this->cache->get('customer_order_data');
             $log->write($customer_order_data);
+
+            $log->write('customer_order_data_customer_id');
+            $log->write($customer_order_data['customer_id']);
+            $log->write('customer_order_data_customer_id');
+
+            if (isset($customer_order_data) && isset($customer_order_data['customer_id']) && $customer_order_data['customer_id'] > 0) {
+                $this->load->model('account/customer');
+                $customer_info = $this->model_account_customer->getCustomer($customer_order_data['customer_id']);
+                $log->write('customer_info');
+                $log->write($customer_info);
+                $log->write('customer_info');
+            }
+
             $log->write($stkCallback);
             //$this->emailtemplate->sendPushNotification($customer_info['customer_id'], $customer_info['device_id'], $order_info['order_id'], $order_info['store_id'], $mobile_notification_title, $mobile_notification_template, 'FLUTTER_NOTIFICATION_CLICK', 'true');
             $log->write('PAYMENT_SUCCESSED');

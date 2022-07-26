@@ -4006,7 +4006,7 @@ class ControllerApiCustomerOrder extends Controller {
                 }
 
                 if (isset($args['mpesa_phonenumber']) && $args['mpesa_phonenumber'] != NULL) {
-                    $order_data[$store_id]['mpesa_phonenumber'] = $args['mpesa_phonenumber'];
+                    $order_data[$store_id]['mpesa_phonenumber'] = $args['mpesa_mobile_number'];
                 } else {
                     $order_data[$store_id]['mpesa_phonenumber'] = $this->customer->getTelephone();
                 }
