@@ -2655,6 +2655,8 @@ class ControllerDeliversystemDeliversystem extends Controller {
 
                 $mobile_notification_title = $this->emailtemplate->getNotificationTitle('Customer', 'customer_93', $customer_info);
                 $mobile_notification_template = $this->emailtemplate->getNotificationMessage('Customer', 'customer_93', $customer_info);
+                $order_id = 'TEST';
+                $this->emailtemplate->sendPushNotification($customer_info['customer_id'], $customer_info['device_id'], $order_id, 75, $mobile_notification_title, $mobile_notification_template, 'FLUTTER_NOTIFICATION_CLICK', 'true');
 
                 $log->write('mobile_notification_template');
                 $log->write($mobile_notification_template);
