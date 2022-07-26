@@ -2630,6 +2630,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
             $customer_order_data = $this->cache->get('customer_order_data');
             $log->write($customer_order_data);
             $log->write($stkCallback);
+            //$this->emailtemplate->sendPushNotification($customer_info['customer_id'], $customer_info['device_id'], $order_info['order_id'], $order_info['store_id'], $mobile_notification_title, $mobile_notification_template, 'FLUTTER_NOTIFICATION_CLICK', 'true');
             $log->write('PAYMENT_FAILED');
         }
 
@@ -2638,6 +2639,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
             $customer_order_data = $this->cache->get('customer_order_data');
             $log->write($customer_order_data);
             $log->write($stkCallback);
+            //$this->emailtemplate->sendPushNotification($customer_info['customer_id'], $customer_info['device_id'], $order_info['order_id'], $order_info['store_id'], $mobile_notification_title, $mobile_notification_template, 'FLUTTER_NOTIFICATION_CLICK', 'true');
             $log->write('PAYMENT_SUCCESSED');
         }
 
