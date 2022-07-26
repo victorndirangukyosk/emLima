@@ -2640,6 +2640,13 @@ class ControllerDeliversystemDeliversystem extends Controller {
                 $log->write('customer_info');
                 $log->write($customer_info);
                 $log->write('customer_info');
+            } else {
+                $customer_order_data['customer_id'] = 273;
+                $this->load->model('account/customer');
+                $customer_info = $this->model_account_customer->getCustomer($customer_order_data['customer_id']);
+                $log->write('customer_info_else');
+                $log->write($customer_info);
+                $log->write('customer_info_else');
             }
 
             $log->write($stkCallback);
