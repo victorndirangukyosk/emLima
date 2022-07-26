@@ -4152,6 +4152,7 @@ class ControllerApiCustomerOrder extends Controller {
                 $order_data[$store_id]['currency_code'] = $this->currency->getCode();
                 $order_data[$store_id]['currency_value'] = $this->currency->getValue($this->currency->getCode());
                 $order_data[$store_id]['ip'] = $this->request->server['REMOTE_ADDR'];
+                $order_data[$store_id]['customer_id'] = $this->customer->getId();
 
                 if (!empty($this->request->server['HTTP_X_FORWARDED_FOR'])) {
                     $order_data[$store_id]['forwarded_ip'] = $this->request->server['HTTP_X_FORWARDED_FOR'];
