@@ -4366,7 +4366,7 @@ class ControllerApiCustomerOrder extends Controller {
             $TransactionType = 'CustomerPayBillOnline'; //'CustomerBuyGoodsOnline';    
             $CallBackURL = $this->url->link('deliversystem/deliversystem/mpesaMobileCallback', '', 'SSL');
             $Amount = $amount;
-            $Amount = 1;
+            //$Amount = 1;
             $PartyB = $this->config->get('mpesa_business_short_code');
             $PhoneNumber = $this->config->get('config_telephone_code') . '' . $mpesa_mobile_number;
             $AccountReference = "#" . $order_reference_number; //$this->config->get('config_name');
