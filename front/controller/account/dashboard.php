@@ -1516,4 +1516,17 @@ class ControllerAccountDashboard extends Controller {
         $this->response->setOutput($this->load->view('metaorganic/template/account/recentorders.tpl', $data));
     }
 
+
+
+    public function customerStatement() {
+ 
+        $pdf = $this->request->get['pdf'];        
+        $filter_data = [
+            // 'filter_date_start' => $filter_date_start,
+            // 'filter_date_end' => $filter_date_end,
+        ];   
+
+        $this->load->model('report/excel');
+        $this->model_report_excel->download_customer_statement_pdf_excel($filter_data, $dt, $pdf);
+    }
 }
