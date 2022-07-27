@@ -2587,9 +2587,19 @@ class ControllerApiCustomerOrder extends Controller {
 
                 $sub_total = $this->cart->getSubTotal();
                 $json['min_order_total_reached'] = $this->config->get('config_active_store_minimum_order_amount') <= $sub_total ? "TRUE" : "FALSE";
+                if($json['min_order_total_reached'] =="FALSE")
+                {
                 $json['amount_required'] = "KES " . ($this->config->get('config_active_store_minimum_order_amount') - $sub_total);
                 // echo "<pre>";print_r($json['amount_required']);die;
                 $json['delivery_charge'] = "KES " . $this->config->get('config_active_store_delivery_charge');
+                }
+                else
+                {
+                    $json['amount_required'] = 0;
+                // echo "<pre>";print_r($json['amount_required']);die;
+                $json['delivery_charge'] = 0;
+     
+                }
                 $log->write($json['min_order_total_reached']);
                 $log->write($sub_total);
                 $log->write('min order value ');
