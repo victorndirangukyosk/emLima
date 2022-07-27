@@ -2648,29 +2648,11 @@ class ControllerDeliversystemDeliversystem extends Controller {
 
                 $mobile_notification_title = $this->emailtemplate->getNotificationTitle('Customer', 'customer_93', $customer_info);
                 $mobile_notification_template = $this->emailtemplate->getNotificationMessage('Customer', 'customer_93', $customer_info);
-                $order_id = 'TEST';
+                $order_id = NULL;
                 $this->emailtemplate->sendPushNotification($customer_info['customer_id'], $customer_info['device_id'], $order_id, 75, $mobile_notification_title, $mobile_notification_template, 'FLUTTER_NOTIFICATION_CLICK', 'true');
-            } else {
-                $customer_id = 273;
-                $this->load->model('account/customer');
-                $customer_info = $this->model_account_customer->getCustomer($customer_id);
-                $log->write('customer_info_else');
-                $log->write($customer_info);
-                $log->write('customer_info_else');
-
-                $mobile_notification_title = $this->emailtemplate->getNotificationTitle('Customer', 'customer_93', $customer_info);
-                $mobile_notification_template = $this->emailtemplate->getNotificationMessage('Customer', 'customer_93', $customer_info);
-                $order_id = 'TEST';
-                $this->emailtemplate->sendPushNotification($customer_info['customer_id'], $customer_info['device_id'], $order_id, 75, $mobile_notification_title, $mobile_notification_template, 'FLUTTER_NOTIFICATION_CLICK', 'true');
-
-                $log->write('mobile_notification_template');
-                $log->write($mobile_notification_template);
-                $log->write($mobile_notification_title);
-                $log->write('mobile_notification_template');
             }
 
             $log->write($stkCallback);
-            //$this->emailtemplate->sendPushNotification($customer_info['customer_id'], $customer_info['device_id'], $order_info['order_id'], $order_info['store_id'], $mobile_notification_title, $mobile_notification_template, 'FLUTTER_NOTIFICATION_CLICK', 'true');
             $log->write('PAYMENT_FAILED');
         }
 
@@ -2685,19 +2667,42 @@ class ControllerDeliversystemDeliversystem extends Controller {
 
             if (isset($customer_id) && $customer_id > 0) {
                 $this->load->model('account/customer');
+                $this->load->model('api/checkout');
+
+                $log->write('addMultiOrder call');
+                $order_ids = [];
+                $order_ids = $this->model_api_checkout->addMultiOrder($customer_order_data);
+                $log->write('ORDER_IDS');
+                $log->write($order_ids);
+                $log->write('ORDER_IDS');
+
+                $order_info = NULL;
+                foreach ($order_ids as $order_number) {
+                    $order_info = $this->model_api_checkout->getOrderInfo($order_number);
+                    $order_products_count = $this->model_api_checkout->getOrderProductsCount($order_number);
+
+                    $transactionData = [
+                        'no_of_products' => $order_products_count,
+                        'total' => $order_info['total'],
+                    ];
+
+                    $log->write($transactionData);
+                    $this->model_api_checkout->apiAddTransaction($transactionData, $order_number);
+                }
+
                 $customer_info = $this->model_account_customer->getCustomer($customer_order_data['customer_id']);
                 $log->write('customer_info');
                 $log->write($customer_info);
                 $log->write('customer_info');
 
+                $order_id = implode(',', $order_ids);
+
                 $mobile_notification_title = $this->emailtemplate->getNotificationTitle('Customer', 'customer_93', $customer_info);
                 $mobile_notification_template = $this->emailtemplate->getNotificationMessage('Customer', 'customer_93', $customer_info);
-                $order_id = 'TEST';
                 $this->emailtemplate->sendPushNotification($customer_info['customer_id'], $customer_info['device_id'], $order_id, 75, $mobile_notification_title, $mobile_notification_template, 'FLUTTER_NOTIFICATION_CLICK', 'true');
             }
 
             $log->write($stkCallback);
-            //$this->emailtemplate->sendPushNotification($customer_info['customer_id'], $customer_info['device_id'], $order_info['order_id'], $order_info['store_id'], $mobile_notification_title, $mobile_notification_template, 'FLUTTER_NOTIFICATION_CLICK', 'true');
             $log->write('PAYMENT_SUCCESSED');
         }
 

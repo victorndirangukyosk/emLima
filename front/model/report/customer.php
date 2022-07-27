@@ -1160,4 +1160,30 @@ class ModelReportCustomer extends Model {
         return $query->rows;
     }
 
+
+    public function getValidCustomerOrdersStatement($data = []) {
+        $sql = "SELECT c.company_name  as company,c.SAP_customer_no, o.delivery_date  as delivery_date,c.customer_id, CONCAT(c.firstname, ' ', c.lastname) AS customer, c.status, o.order_id,o.po_number,o.date_added,o.order_status_id, ot.value as total,o.paid,o.amount_partialy_paid FROM " . DB_PREFIX . 'order o LEFT JOIN ' . DB_PREFIX . 'customer c ON (o.customer_id = c.customer_id) LEFT JOIN ' . DB_PREFIX . "order_total ot ON (o.order_id = ot.order_id) WHERE o.customer_id > 0 and ot.code='total'";
+
+        if (!empty($data['filter_order_status_id'])) {
+            $sql .= " AND o.order_status_id = '" . (int) $data['filter_order_status_id'] . "'";
+        } else {
+            $sql .= " AND o.order_status_id  not in (0,6,8,9,16)";
+        }
+
+        if (!empty($data['filter_customer_id'])) {
+            $sql .= " AND   (c.customer_id   = '" .(int) $this->db->escape($data['filter_customer_id']) . "' || c.parent ='".(int) $this->db->escape($data['filter_customer_id'])."')";
+        }
+        else
+        {
+            $sql .= " AND   c.customer_id   = 0 ";//other cust statements should not be displayed
+
+        }
+        $sql .= 'ORDER BY o.order_id desc';
+
+        // echo  ($sql);die;
+        
+        $query = $this->db->query($sql);
+
+        return $query->rows;
+    }
 }

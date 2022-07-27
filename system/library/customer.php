@@ -17,6 +17,7 @@ class Customer {
     private $email_notification;
     private $payment_terms;
     private $customer_category;
+    private $company_name;
     private $customer_discount_category;
     private $customer_parent;
     private $pezesha_customer_id;
@@ -95,6 +96,7 @@ class Customer {
                 $this->payment_terms = $customer_query->row['payment_terms'];
                 $this->order_approval_access = $customer_query->row['order_approval_access'];
                 $this->order_approval_access_role = $customer_query->row['order_approval_access_role'];
+                $this->company_name = $customer_query->row['company_name'];
 
                 $this->db->query('UPDATE ' . DB_PREFIX . "customer SET cart = '" . $this->db->escape(isset($this->session->data['cart']) ? serialize($this->session->data['cart']) : '') . "', wishlist = '" . $this->db->escape(isset($this->session->data['wishlist']) ? serialize($this->session->data['wishlist']) : '') . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "' WHERE customer_id = '" . (int) $this->customer_id . "'");
 
@@ -211,6 +213,7 @@ class Customer {
             $this->payment_terms = $customer_query->row['payment_terms'];
             $this->order_approval_access = $customer_query->row['order_approval_access'];
             $this->order_approval_access_role = $customer_query->row['order_approval_access_role'];
+            $this->company_name = $customer_query->row['company_name'];
 
             $this->db->query('UPDATE ' . DB_PREFIX . "customer SET ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "' WHERE customer_id = '" . (int) $this->customer_id . "'");
 
@@ -315,6 +318,7 @@ class Customer {
             $this->payment_terms = $customer_query->row['payment_terms'];
             $this->order_approval_access = $customer_query->row['order_approval_access'];
             $this->order_approval_access_role = $customer_query->row['order_approval_access_role'];
+            $this->company_name = $customer_query->row['company_name'];
 
             $this->db->query('UPDATE ' . DB_PREFIX . "customer SET ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "' WHERE customer_id = '" . (int) $this->customer_id . "'");
 
@@ -351,6 +355,8 @@ class Customer {
         $this->pezesha_customer_uuid = '';
         $this->pezesha_identifier = '';
         $this->credit_period = '';
+        $this->company_name = '';
+
     }
 
     public function isLogged() {
@@ -437,6 +443,10 @@ class Customer {
         return $this->customer_category;
     }
 
+    public function getCustomerCompany() {
+        return $this->company_name;
+    }
+
     public function getCustomerDiscountCategory() {
         return $this->customer_discount_category;
     }
@@ -483,6 +493,7 @@ class Customer {
         $this->order_approval_access = $data['order_approval_access'];
         $this->order_approval_access_role = $data['order_approval_access_role'];
         $this->customer_category = $data['customer_category'];
+        $this->company_name = $data['company_name'];
         $this->customer_discount_category = $data['customer_discount_category'];
         $this->customer_parent = $data['parent'];
         $this->pezesha_customer_id = $data['pezesha_customer_id'];
