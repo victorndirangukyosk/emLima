@@ -2625,7 +2625,9 @@ class ControllerDeliversystemDeliversystem extends Controller {
 
         $log->write($stkCallback->stkCallback->MerchantRequestID);
 
-        $customer_order_data = $this->cache->get('customer_order_data');
+        $cache_pre_fix = '_' . $stkCallback->stkCallback->CheckoutRequestID;
+
+        $customer_order_data = $this->cache->get('customer_order_data' . $cache_pre_fix);
         $log->write($customer_order_data);
 
         $customer_id = NULL;
@@ -2658,7 +2660,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
 
         if (isset($stkCallback) && isset($stkCallback->stkCallback->result) && $stkCallback->stkCallback->result == 0) {
             $log->write('PAYMENT_SUCCESSED');
-            $customer_order_data = $this->cache->get('customer_order_data');
+            $customer_order_data = $this->cache->get('customer_order_data' . $cache_pre_fix);
             $log->write($customer_order_data);
 
             $log->write('customer_order_data_customer_id');

@@ -2587,18 +2587,14 @@ class ControllerApiCustomerOrder extends Controller {
 
                 $sub_total = $this->cart->getSubTotal();
                 $json['min_order_total_reached'] = $this->config->get('config_active_store_minimum_order_amount') <= $sub_total ? "TRUE" : "FALSE";
-                if($json['min_order_total_reached'] =="FALSE")
-                {
-                $json['amount_required'] = ($this->config->get('config_active_store_minimum_order_amount') - $sub_total);
-                // echo "<pre>";print_r($json['amount_required']);die;
-                $json['delivery_charge'] =  $this->config->get('config_active_store_delivery_charge')-0;//to display as integer
-                }
-                else
-                {
-                    $json['amount_required'] =0;
-                // echo "<pre>";print_r($json['amount_required']);die;
-                $json['delivery_charge'] = 0;
-     
+                if ($json['min_order_total_reached'] == "FALSE") {
+                    $json['amount_required'] = ($this->config->get('config_active_store_minimum_order_amount') - $sub_total);
+                    // echo "<pre>";print_r($json['amount_required']);die;
+                    $json['delivery_charge'] = $this->config->get('config_active_store_delivery_charge') - 0; //to display as integer
+                } else {
+                    $json['amount_required'] = 0;
+                    // echo "<pre>";print_r($json['amount_required']);die;
+                    $json['delivery_charge'] = 0;
                 }
                 $log->write($json['min_order_total_reached']);
                 $log->write($sub_total);
@@ -4319,6 +4315,7 @@ class ControllerApiCustomerOrder extends Controller {
                 $log->write('mpesa_result');
                 $log->write($mpesa_result);
                 $log->write('mpesa_result');
+                $cache_pre_fix = '_' . $mpesa_result['CheckoutRequestID'];
                 if (isset($mpesa_result) && isset($mpesa_result['ResponseCode']) && $mpesa_result['ResponseCode'] == 0) {
                     $this->load->model('payment/mpesa');
 
@@ -4328,15 +4325,15 @@ class ControllerApiCustomerOrder extends Controller {
                     $log->write($mpesa_request_ids);
                     $log->write('mpesa_request_ids');
 
-                    $this->cache->delete('customer_order_data');
-                    $this->cache->set('customer_order_data', $order_data);
+                    $this->cache->delete('customer_order_data' . $cache_pre_fix);
+                    $this->cache->set('customer_order_data' . $cache_pre_fix, $order_data);
 
                     $json['status'] = 200;
                     $json['message'] = $mpesa_result['ResponseDescription'];
                     $json['data']['merchant_request_id'] = $mpesa_result['MerchantRequestID'];
                     $json['data']['checkout_request_id'] = $mpesa_result['CheckoutRequestID'];
                 } elseif (isset($mpesa_result) && isset($mpesa_result['errorCode']) && $mpesa_result['errorCode'] > 0) {
-                    $this->cache->delete('customer_order_data');
+                    $this->cache->delete('customer_order_data' . $cache_pre_fix);
 
                     $json['status'] = 400;
                     $json['message'] = $mpesa_result['errorMessage'];
