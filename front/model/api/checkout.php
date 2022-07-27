@@ -1286,4 +1286,9 @@ class ModelApiCheckout extends Model {
         return $query->row;
     }
 
+    public function getOrderProductsCount($order_id) {
+        $query = $this->db->query('SELECT COUNT(*) AS products_count FROM ' . DB_PREFIX . "order_product WHERE order_id = '" . (int) $order_id . "'");
+        return $query->row['products_count'];
+    }
+
 }
