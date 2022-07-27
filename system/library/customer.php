@@ -3,6 +3,7 @@
 class Customer {
 
     private $customer_id;
+    private $device_id;
     private $firstname;
     private $lastname;
     private $email;
@@ -81,6 +82,7 @@ class Customer {
                 /* SET CUSTOMER PEZESHA */
 
                 $this->customer_id = $customer_query->row['customer_id'];
+                $this->device_id = $customer_query->row['device_id'];
                 $this->firstname = $customer_query->row['firstname'];
                 $this->lastname = $customer_query->row['lastname'];
                 $this->email = $customer_query->row['email'];
@@ -199,6 +201,7 @@ class Customer {
             }
 
             $this->customer_id = $customer_query->row['customer_id'];
+            $this->device_id = $customer_query->row['device_id'];
             $this->firstname = $customer_query->row['firstname'];
             $this->lastname = $customer_query->row['lastname'];
             $this->email = $customer_query->row['email'];
@@ -304,6 +307,7 @@ class Customer {
             }
 
             $this->customer_id = $customer_query->row['customer_id'];
+            $this->device_id = $customer_query->row['device_id'];
             $this->firstname = $customer_query->row['firstname'];
             $this->lastname = $customer_query->row['lastname'];
             $this->email = $customer_query->row['email'];
@@ -334,6 +338,7 @@ class Customer {
         unset($this->session->data['customer_id']);
 
         $this->customer_id = '';
+        $this->device_id = '';
         $this->firstname = '';
         $this->lastname = '';
         $this->email = '';
@@ -356,7 +361,6 @@ class Customer {
         $this->pezesha_identifier = '';
         $this->credit_period = '';
         $this->company_name = '';
-
     }
 
     public function isLogged() {
@@ -369,6 +373,10 @@ class Customer {
 
     public function getId() {
         return $this->customer_id;
+    }
+
+    public function getDeviceId() {
+        return $this->device_id;
     }
 
     public function getFirstName() {
