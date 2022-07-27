@@ -2591,7 +2591,7 @@ class ControllerApiCustomerOrder extends Controller {
                 {
                 $json['amount_required'] = ($this->config->get('config_active_store_minimum_order_amount') - $sub_total);
                 // echo "<pre>";print_r($json['amount_required']);die;
-                $json['delivery_charge'] =  $this->config->get('config_active_store_delivery_charge');
+                $json['delivery_charge'] =  $this->config->get('config_active_store_delivery_charge')-0;//to display as integer
                 }
                 else
                 {
