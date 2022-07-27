@@ -777,4 +777,305 @@ class ModelReportExcel extends Model {
         }
     }
 
+    // echo "<pre>";print_r($results);die;
+
+    public function download_customer_statement_pdf_excel($data, $dt, $ispdf = 0) {
+
+        $log = new Log('error.log');  
+        // $this->load->library('excel');
+        // $this->load->library('iofactory');        
+        $this->load->model('report/customer');
+        $data['customers'] = [];              
+        $data['filter_customer_id'] = $this->customer->getId();
+        $data['customer'] = $this->customer->getFirstName().' ' .$this->customer->getLastName();
+        $data['company'] = $this->customer->getCustomerCompany();
+        $results = $this->model_report_customer->getValidCustomerOrdersStatement($data);
+        // $results = $this->model_report_customer->getValidCustomerOrdersByDates($data, $dt);
+        if ($results != null) {
+                $Amount_ordervalue_grand = 0;
+                $Amount_paid_grand = 0;
+                $Amount_pending_grand = 0;
+                $data['customers'] = [];
+                foreach ($results as $result) {                  
+                     
+                    $amount_partialy_paid=($result['paid'] =='Y' ? round($result['total'],2):round($result['amount_partialy_paid'],2));
+                    $pending_amount=($result['paid'] =='Y' ? 0:(($result['total']-$result['amount_partialy_paid'])));
+                    $data['customers'][] = [
+                        'company' => $result['company'],
+                        'customer' => $result['customer'],
+                        // 'email' => $result['email'],
+                        // 'customer_group' => $result['customer_group'],
+                        // 'status' => ($result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),
+                        'order_id' => $result['order_id'],
+                        // 'products' => $result['products'],
+                        'delivery_date' => date($this->language->get('date_format_short'), strtotime($result['delivery_date'])),
+                        'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
+                        'total' => $this->currency->format($result['total'], $this->config->get('config_currency')),
+                        'totalvalue' => $result['total'],
+                        'po_number' => $result['po_number'],
+                        'SAP_customer_no' => $result['SAP_customer_no'],
+                        'paid' => ($result['paid'] =='Y' ? 'Paid':($result['paid'] =='N' ? 'Pending':'Partially Paid')),
+                        'amount_partialy_paid' =>$this->currency->format($amount_partialy_paid),
+                        'pending_amount' => $this->currency->format($pending_amount),
+        
+                    ];
+
+                    $Amount_ordervalue_grand = $Amount_ordervalue_grand + $result['total'];
+                    $Amount_paid_grand = $Amount_paid_grand + $amount_partialy_paid;
+                    $Amount_pending_grand = $Amount_pending_grand + $pending_amount;
+                }
+                // echo "<pre>";print_r($data['customers']);die;
+                if ($data['customers'] != null) {
+                    $data['customers'][0]['Amount_ordervalue_grand'] = $this->currency->format($Amount_ordervalue_grand);
+                    $data['customers'][0]['Amount_paid_grand'] = $this->currency->format($Amount_paid_grand);
+                    $data['customers'][0]['Amount_pending_grand'] = $this->currency->format($Amount_pending_grand);
+                }
+
+                          
+
+                if ($ispdf == 1) {
+                    try {
+
+                        require_once DIR_ROOT . '/vendor/autoload.php';
+                        // $pdf = new Pdf([
+                        //     'commandOptions' => array(
+                        //         'useExec' => true, // Can help on Windows systems
+                        //         'procEnv' => array(
+                        //             // Check the output of 'locale -a' on your system to find supported languages
+                        //             'LANG' => 'en_US.utf-8',
+                        //         ),
+                        //     ),
+                        // ]);
+                        // $template = $this->load->view('metaorganic/template/account/customer_statement_pdf.tpl', $data);
+
+                       
+
+                        // $pageOptions = array(
+                        //     'javascript-delay' => 2000,
+                        //     'encoding' => 'UTF-8',
+                        // );
+                        // $pdf->addPage($template, $pageOptions);
+
+                        
+                        // $folder_path = DIR_UPLOAD . 'schedulertemp';
+                        // $files = glob($folder_path . '/*');
+                        // // Deleting all the files in the list
+                        // foreach ($files as $file) {
+                        //     if (is_file($file))
+                        //         unlink($file); // Delete the given file
+                        // }
+                        // echo "<pre>";
+                        // print_r("222222222222222222");
+
+                        // if (!$pdf->saveAs(DIR_UPLOAD . 'schedulertemp/' . "Customer_order_statement_" . $data['customers'][0]['customer'] . ".pdf")) {
+                        //     $errors = $pdf->getError();
+                        //     echo $errors;
+                        //     die;
+                        // }
+
+                        $pdf = new \mikehaertl\wkhtmlto\Pdf;
+                        $template = $this->load->view('metaorganic/template/account/customer_statement_pdf.tpl', $data);
+                        $pdf->addPage($template);
+
+                // $this->response->setOutput($this->load->view('metaorganic/template/account/customer_statement_pdf.tpl', $data));
+
+                        if (!$pdf->send("Customer_order_statement_" . $data['customer'] . ".pdf")) {
+                            $error = $pdf->getError();
+                            echo $error;
+                            die;
+                        }
+                                         
+                        
+                    } catch (Exception $e) {
+            echo $e->getMessage();
+
+                        $errstr = $e->getMessage();
+                        $errline = $e->getLine();
+                        $errfile = $e->getFile();
+                        $errno = $e->getCode();
+                        $log->write($errstr . ' ' . $errline . ' ' . $errfile . ' ' . $errno . ' ' . 'download_customer_statement_excel');
+                        $this->log->write('Error in Automatic PDF Statement');
+                    }
+                    //   exit;//for testing purpose one mail is enough, will uncomment later
+                } else {
+
+
+                    try {
+
+                        $this->load->library('excel');
+                        $this->load->library('iofactory');
+
+                        // set appropriate timeout limit
+                        set_time_limit(3500);
+
+                        $objPHPExcel = new PHPExcel();
+                        $objPHPExcel->getProperties()->setTitle('Customer Order Statement')->setDescription('none');
+
+                        //PHPExcel_Shared_Font::setAutoSizeMethod(PHPExcel_Shared_Font::AUTOSIZE_METHOD_EXACT);
+
+                        $objPHPExcel->setActiveSheetIndex(0);
+
+                        // Field names in the first row
+                        // ID, Photo, Name, Contact no., Reason, Valid from, Valid upto, Intime, Outtime
+                        $title = [
+                            'font' => [
+                                'bold' => true,
+                                'color' => [
+                                    'rgb' => 'FFFFFF',
+                                ],
+                            ],
+                            'fill' => [
+                                'type' => PHPExcel_Style_Fill::FILL_SOLID,
+                                'startcolor' => [
+                                    'rgb' => '4390df',
+                                ],
+                            ],
+                        ];
+
+                        //Company name, address
+                        //$objPHPExcel->getActiveSheet()->mergeCells("A1:E2");
+                        if ($data['customers']) {
+                            $sheet_subtitle = 'Company Name : ' . $data['company'];
+                            // $sheet_subtitle_sap = $data['customers'][0]['SAP_customer_no'];
+                            // $order_start_date = $data['customers'][0]['date_added'];
+                             $sheet_subtitle_sap = '';
+
+                        } else {
+                            $sheet_subtitle = $sheet_subtitle_sap = '';
+                        }
+
+                        $objPHPExcel->getActiveSheet()->mergeCells('A1:B1');
+                        $objPHPExcel->getActiveSheet()->mergeCells('C1:D1');
+                        $objPHPExcel->getActiveSheet()->mergeCells('A2:B2');
+                        $objPHPExcel->getActiveSheet()->setCellValue('A1', 'Customer Orders Statement');
+                        // $objPHPExcel->getActiveSheet()->setCellValue('C1', 'SAP Customer Number');
+                        $objPHPExcel->getActiveSheet()->setCellValue('A2', $sheet_subtitle);
+                        $objPHPExcel->getActiveSheet()->setCellValue('E1', $sheet_subtitle_sap);
+                        $objPHPExcel->getActiveSheet()->getStyle('A1:E2')->applyFromArray(['font' => ['bold' => true], 'color' => [
+                                'rgb' => '4390df',
+                        ]]);
+
+                        //subtitle
+                        // if (!empty($data['filter_date_start']))
+                        //     $from = date('d-m-Y', strtotime($data['filter_date_start']));
+                        // // else
+                        // //     $from = str_replace("/", "-", $order_start_date);
+
+                        // $to = date('d-m-Y', strtotime($data['filter_date_end']));
+                        $objPHPExcel->getActiveSheet()->mergeCells('A3:I3');
+                        // $html = 'FROM ' . $from . ' TO ' . $to;
+
+                        // $objPHPExcel->getActiveSheet()->setCellValue('A3', $html);
+                        $objPHPExcel->getActiveSheet()->getStyle('A1:E2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
+                        $objPHPExcel->getActiveSheet()->getStyle('A3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+                        $objPHPExcel->getActiveSheet()->getStyle('E')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+                        $objPHPExcel->getActiveSheet()->getStyle('G')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+                        $objPHPExcel->getActiveSheet()->getStyle('H')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+                        $objPHPExcel->getActiveSheet()->getStyle('I')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+                        foreach (range('A', 'L') as $columnID) {
+                            $objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
+                                    ->setAutoSize(true);
+                        }
+
+                        $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, 4, 'Customer Name');
+                        $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 4, 'Company Name');
+                        $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, 4, 'Order Id');
+                        $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 4, 'Order Date');
+                        $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, 4, 'Delivery Date');
+
+                        // $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, 4, 'P.O. Number');
+                        $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, 4, 'Order Value');
+                        $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, 4, 'Payment Status');
+                        $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, 4, 'Amount Paid');
+                        $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(8, 4, 'Pending Amount');
+
+                        $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, 4)->applyFromArray($title);
+                        $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(1, 4)->applyFromArray($title);
+                        $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(2, 4)->applyFromArray($title);
+                        $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(3, 4)->applyFromArray($title);
+                        $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(4, 4)->applyFromArray($title);
+                        $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(5, 4)->applyFromArray($title);
+                        $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(6, 4)->applyFromArray($title);
+                        $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(7, 4)->applyFromArray($title);
+                        $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(8, 4)->applyFromArray($title);
+                        // $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(9, 4)->applyFromArray($title);
+                        // Fetching the table data
+                        $row = 5;
+                        $Amount = 0;
+                        $PendingAmountTotal = 0;
+                        if($data['customers'] !=null)
+                        {
+                        foreach ($data['customers'] as $result) {
+                            /* if($result['pt']) {
+                              $amount = $result['pt'];
+                              }else{
+                              $amount = 0;
+                              } */
+                            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $result['customer']);
+                            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['company']);
+                            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['order_id']);
+                            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['date_added']);
+                            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, $result['delivery_date']);
+                            // $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, $result['po_number']);
+                            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, $result['total']);
+                            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, $result['paid']);
+                            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, $row, $result['amount_partialy_paid']);
+                            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(8, $row, $result['pending_amount']);
+                            // $Amount = $Amount + $result['subtotalvalue'];
+                            // $PendingAmountTotal = $PendingAmountTotal + $result['pendingamountvalue'];
+                            ++$row;
+                        }
+                        // $Amount = str_replace('KES', ' ', $this->currency->format($Amount));
+                        $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, $row)->applyFromArray($title);
+                        $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(5, $row)->applyFromArray($title);
+                        $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(7, $row)->applyFromArray($title);
+                        $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(8, $row)->applyFromArray($title);
+                        $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, 'Grand Total');
+                        $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, $data['customers'][0]['Amount_ordervalue_grand']);
+                        $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, $row, $data['customers'][0]['Amount_paid_grand']);
+                        $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(8, $row, $data['customers'][0]['Amount_pending_grand']);
+                        $objPHPExcel->setActiveSheetIndex(0);
+                        //$objWriter = IOFactory::createWriter($objPHPExcel, 'Excel5');
+                        // Sending headers to force the user to download the file
+                        //header('Content-Type: application/vnd.ms-excel');
+                        //header("Content-type: application/octet-stream");
+                        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+                        $filename = 'Customer_order_statement_' . $data['customer'] . '.xlsx';
+
+                        // header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                        // header('Content-Disposition: attachment;filename="' . $filename . '"');
+                        // header('Cache-Control: max-age=0');
+                        // $objWriter->save('php://output');
+
+
+
+                        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+                        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                        header('Content-Disposition: attachment;filename="' . $filename . '"');
+                        header('Cache-Control: max-age=0');
+                        $objWriter->save('php://output');                        
+                    }
+                        $data['customers'][]=null;//empty the previous
+                        $data['customer']=null;//empty the previous
+                        $data['company']=null;//empty the previous
+                        exit;
+                    } catch (Exception $e) {
+                        $errstr = $e->getMessage();
+                        $errline = $e->getLine();
+                        $errfile = $e->getFile();
+                        $errno = $e->getCode();
+
+                        $log->write($errstr . ' ' . $errline . ' ' . $errfile . ' ' . $errno . ' ' . 'download_customer_statement_excel');
+                        $this->session->data['export_import_error'] = ['errstr' => $errstr, 'errno' => $errno, 'errfile' => $errfile, 'errline' => $errline];
+                        if ($this->config->get('config_error_log')) {
+                            $this->log->write('PHP ' . get_class($e) . ':  ' . $errstr . ' in ' . $errfile . ' on line ' . $errline);
+                        }
+
+                        return;
+                    }
+                }
+            }
+         
+    }
+
 }

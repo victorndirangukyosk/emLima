@@ -2587,9 +2587,19 @@ class ControllerApiCustomerOrder extends Controller {
 
                 $sub_total = $this->cart->getSubTotal();
                 $json['min_order_total_reached'] = $this->config->get('config_active_store_minimum_order_amount') <= $sub_total ? "TRUE" : "FALSE";
-                $json['amount_required'] = "KES " . ($this->config->get('config_active_store_minimum_order_amount') - $sub_total);
+                if($json['min_order_total_reached'] =="FALSE")
+                {
+                $json['amount_required'] = ($this->config->get('config_active_store_minimum_order_amount') - $sub_total);
                 // echo "<pre>";print_r($json['amount_required']);die;
-                $json['delivery_charge'] = "KES " . $this->config->get('config_active_store_delivery_charge');
+                $json['delivery_charge'] =  $this->config->get('config_active_store_delivery_charge')-0;//to display as integer
+                }
+                else
+                {
+                    $json['amount_required'] =0;
+                // echo "<pre>";print_r($json['amount_required']);die;
+                $json['delivery_charge'] = 0;
+     
+                }
                 $log->write($json['min_order_total_reached']);
                 $log->write($sub_total);
                 $log->write('min order value ');
@@ -4006,7 +4016,7 @@ class ControllerApiCustomerOrder extends Controller {
                 }
 
                 if (isset($args['mpesa_phonenumber']) && $args['mpesa_phonenumber'] != NULL) {
-                    $order_data[$store_id]['mpesa_phonenumber'] = $args['mpesa_phonenumber'];
+                    $order_data[$store_id]['mpesa_phonenumber'] = $args['mpesa_mobile_number'];
                 } else {
                     $order_data[$store_id]['mpesa_phonenumber'] = $this->customer->getTelephone();
                 }
@@ -4152,6 +4162,7 @@ class ControllerApiCustomerOrder extends Controller {
                 $order_data[$store_id]['currency_code'] = $this->currency->getCode();
                 $order_data[$store_id]['currency_value'] = $this->currency->getValue($this->currency->getCode());
                 $order_data[$store_id]['ip'] = $this->request->server['REMOTE_ADDR'];
+                $order_data[$store_id]['customer_id'] = $this->customer->getId();
 
                 if (!empty($this->request->server['HTTP_X_FORWARDED_FOR'])) {
                     $order_data[$store_id]['forwarded_ip'] = $this->request->server['HTTP_X_FORWARDED_FOR'];
@@ -4365,8 +4376,8 @@ class ControllerApiCustomerOrder extends Controller {
             $LipaNaMpesaPasskey = $this->config->get('mpesa_lipanampesapasskey');
             $TransactionType = 'CustomerPayBillOnline'; //'CustomerBuyGoodsOnline';    
             $CallBackURL = $this->url->link('deliversystem/deliversystem/mpesaMobileCallback', '', 'SSL');
-            $Amount = $amount;
-            $Amount = 1;
+            $Amount = round($amount);
+            //$Amount = 1;
             $PartyB = $this->config->get('mpesa_business_short_code');
             $PhoneNumber = $this->config->get('config_telephone_code') . '' . $mpesa_mobile_number;
             $AccountReference = "#" . $order_reference_number; //$this->config->get('config_name');
