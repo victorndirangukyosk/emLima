@@ -36,6 +36,9 @@
           <div class="profile-number"><?= $DashboardData['customer_name'] ?> </div>
           <div class="profile-number"><?= $DashboardData['email'] ?> </div>
           <div class="profile-number">+254- <?= $DashboardData['telephone'] ?> </div>
+          <div class="profile-number" hidden><a  href="index.php?path=account/dashboard/customerStatement&pdf=1"  data-toggle="tooltip" title="Statement"
+                            class="btn-link text_green" style="color:green !important">
+                             <b>Download Statement</b></a> </div>
         </div>
       </div>
 
