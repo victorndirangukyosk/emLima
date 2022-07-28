@@ -4329,7 +4329,7 @@ class ControllerApiCustomerOrder extends Controller {
                     $this->cache->set('customer_order_data' . $cache_pre_fix, $order_data);
 
                     $json['status'] = 200;
-                    $json['message'] = $mpesa_result['ResponseDescription'];
+                    $json['message'] = $mpesa_result['ResponseDescription'] . 'A payment request has been sent on your above number. Please make the payment by entering mpesa PIN.';
                     $json['data']['merchant_request_id'] = $mpesa_result['MerchantRequestID'];
                     $json['data']['checkout_request_id'] = $mpesa_result['CheckoutRequestID'];
                 } elseif (isset($mpesa_result) && isset($mpesa_result['errorCode']) && $mpesa_result['errorCode'] > 0) {
