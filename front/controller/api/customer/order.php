@@ -4329,7 +4329,8 @@ class ControllerApiCustomerOrder extends Controller {
                     $this->cache->set('customer_order_data' . $cache_pre_fix, $order_data);
 
                     $json['status'] = 200;
-                    $json['message'] = $mpesa_result['ResponseDescription'] . 'A payment request has been sent on your above number. Please make the payment by entering mpesa PIN.';
+                    $json['message_from_mpesa'] = $mpesa_result['ResponseDescription'];
+                    $json['message'] = 'A payment request has been sent on your above number. Please make the payment by entering mpesa PIN.';
                     $json['data']['merchant_request_id'] = $mpesa_result['MerchantRequestID'];
                     $json['data']['checkout_request_id'] = $mpesa_result['CheckoutRequestID'];
                 } elseif (isset($mpesa_result) && isset($mpesa_result['errorCode']) && $mpesa_result['errorCode'] > 0) {
@@ -4389,6 +4390,36 @@ class ControllerApiCustomerOrder extends Controller {
             //$json['response'] = $stkPushSimulation;
             return $stkPushSimulation;
         }
+    }
+
+    public function addConfirmPayment() {
+
+        $json = [];
+        $json['status'] = 200;
+        $json['data'] = [];
+        $json['message'] = [];
+
+        $this->load->model('payment/mpesa');
+        $mpesa_request_ids = $this->model_payment_mpesa->getLatestMpesaRequest($this->customer->getId());
+        $json['data'] = $mpesa_request_ids;
+
+        /* $live = true;
+          $mpesa = new \Safaricom\Mpesa\Mpesa($this->config->get('mpesa_customer_key'), $this->config->get('mpesa_customer_secret'), $this->config->get('mpesa_environment'), $live);
+          $BusinessShortCode = $this->config->get('mpesa_business_short_code');
+          $LipaNaMpesaPasskey = $this->config->get('mpesa_lipanampesapasskey');
+
+          $this->load->model('payment/mpesa');
+          $customer_id = $this->customer->getId();
+          $mpesa_request_ids = $this->model_payment_mpesa->getLatestMpesaRequest($this->customer->getId());
+
+          $checkoutRequestID = $mpesaDetails['checkout_request_id'];
+          $timestamp = '20' . date('ymdhis');
+          $password = base64_encode($BusinessShortCode . $LipaNaMpesaPasskey . $timestamp);
+
+          $stkPushSimulation = $mpesa->STKPushQuery($live, $checkoutRequestID, $BusinessShortCode, $password, $timestamp); */
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
     }
 
 }
