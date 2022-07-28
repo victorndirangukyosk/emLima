@@ -4403,22 +4403,23 @@ class ControllerApiCustomerOrder extends Controller {
         $mpesa_request_ids = $this->model_payment_mpesa->getLatestMpesaRequest($this->customer->getId());
         $log = new Log('error.log');
         $log->write($mpesa_request_ids);
+        if (isset($mpesa_request_ids) && is_array($mpesa_request_ids) && count($mpesa_request_ids) > 0) {
 
-        $live = true;
-        $mpesa = new \Safaricom\Mpesa\Mpesa($this->config->get('mpesa_customer_key'), $this->config->get('mpesa_customer_secret'), $this->config->get('mpesa_environment'), $live);
-        $BusinessShortCode = $this->config->get('mpesa_business_short_code');
-        $LipaNaMpesaPasskey = $this->config->get('mpesa_lipanampesapasskey');
+            $live = true;
+            $mpesa = new \Safaricom\Mpesa\Mpesa($this->config->get('mpesa_customer_key'), $this->config->get('mpesa_customer_secret'), $this->config->get('mpesa_environment'), $live);
+            $BusinessShortCode = $this->config->get('mpesa_business_short_code');
+            $LipaNaMpesaPasskey = $this->config->get('mpesa_lipanampesapasskey');
 
-        $this->load->model('payment/mpesa');
+            $this->load->model('payment/mpesa');
 
-        $checkoutRequestID = $mpesa_request_ids['checkout_request_id'];
-        $timestamp = '20' . date('ymdhis');
-        $password = base64_encode($BusinessShortCode . $LipaNaMpesaPasskey . $timestamp);
+            $checkoutRequestID = $mpesa_request_ids['checkout_request_id'];
+            $timestamp = '20' . date('ymdhis');
+            $password = base64_encode($BusinessShortCode . $LipaNaMpesaPasskey . $timestamp);
 
-        $stkPushSimulation = $mpesa->STKPushQuery($live, $checkoutRequestID, $BusinessShortCode, $password, $timestamp);
+            $stkPushSimulation = $mpesa->STKPushQuery($live, $checkoutRequestID, $BusinessShortCode, $password, $timestamp);
 
-        $log->write($stkPushSimulation);
-
+            $log->write($stkPushSimulation);
+        }
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
