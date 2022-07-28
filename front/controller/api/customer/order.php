@@ -4465,6 +4465,7 @@ class ControllerApiCustomerOrder extends Controller {
                     $log->write('customer_info');
 
                     $order_id = implode(',', $order_ids);
+                    $placed_order_ids = implode('#', $order_ids);
 
                     $mobile_notification_title = $this->emailtemplate->getNotificationTitle('Customer', 'customer_93', $customer_info);
                     $mobile_notification_template = $this->emailtemplate->getNotificationMessage('Customer', 'customer_93', $customer_info);
@@ -4473,6 +4474,7 @@ class ControllerApiCustomerOrder extends Controller {
                 $json['status'] = 200;
                 $json['data']['MerchantRequestID'] = $stkPushSimulation->MerchantRequestID;
                 $json['data']['CheckoutRequestID'] = $stkPushSimulation->CheckoutRequestID;
+                $json['data']['order_details'] = $placed_order_ids;
                 $json['message'] = $stkPushSimulation->ResultDesc;
             }
         } else {
