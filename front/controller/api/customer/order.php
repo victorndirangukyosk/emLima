@@ -4433,6 +4433,10 @@ class ControllerApiCustomerOrder extends Controller {
                 $json['data']['CheckoutRequestID'] = $stkPushSimulation->CheckoutRequestID;
                 $json['message'] = $stkPushSimulation->ResultDesc;
             }
+        } else {
+            $json['status'] = 400;
+            $json['data'] = [];
+            $json['message'] = 'Please Try Again Later!';
         }
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
