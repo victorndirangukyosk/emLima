@@ -4417,8 +4417,22 @@ class ControllerApiCustomerOrder extends Controller {
             $password = base64_encode($BusinessShortCode . $LipaNaMpesaPasskey . $timestamp);
 
             $stkPushSimulation = $mpesa->STKPushQuery($live, $checkoutRequestID, $BusinessShortCode, $password, $timestamp);
-
             $log->write($stkPushSimulation);
+            $stkPushSimulation = json_decode($stkPushSimulation);
+
+            if (isset($stkPushSimulation->ResultCode) && 0 != $stkPushSimulation->ResultCode && $stkPushSimulation->ResultDesc != NULL) {
+                $json['status'] = 400;
+                $json['data']['MerchantRequestID'] = $stkPushSimulation->MerchantRequestID;
+                $json['data']['CheckoutRequestID'] = $stkPushSimulation->CheckoutRequestID;
+                $json['message'] = $stkPushSimulation->ResultDesc;
+            }
+
+            if (isset($stkPushSimulation->ResultCode) && 0 == $stkPushSimulation->ResultCode) {
+                $json['status'] = 200;
+                $json['data']['MerchantRequestID'] = $stkPushSimulation->MerchantRequestID;
+                $json['data']['CheckoutRequestID'] = $stkPushSimulation->CheckoutRequestID;
+                $json['message'] = $stkPushSimulation->ResultDesc;
+            }
         }
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
