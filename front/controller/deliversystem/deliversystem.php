@@ -2668,6 +2668,18 @@ class ControllerDeliversystemDeliversystem extends Controller {
 
             if (isset($stkCallback) && isset($stkCallback->stkCallback->ResultCode) && $stkCallback->stkCallback->ResultCode == 0) {
                 $log->write('PAYMENT_SUCCESSED');
+
+                $MpesaReceiptNumber = NULL;
+                if (isset($stkCallback->CallbackMetadata->Item)) {
+                    foreach ($stkCallback->CallbackMetadata->Item as $key => $value) {
+                        $log->write($value);
+
+                        if ('MpesaReceiptNumber' == $value->Name) {
+                            $MpesaReceiptNumber = $value->Value;
+                        }
+                    }
+                }
+
                 $customer_order_data = $this->cache->get('customer_order_data' . $cache_pre_fix);
                 $log->write($customer_order_data);
 
@@ -2678,8 +2690,8 @@ class ControllerDeliversystemDeliversystem extends Controller {
                 if (isset($customer_id) && $customer_id > 0) {
                     $this->load->model('account/customer');
                     $this->load->model('checkout/order');
-
                     $this->load->model('api/checkout');
+                    $this->load->model('payment/mpesa');
 
                     $log->write('addMultiOrder call');
                     $order_ids = [];
@@ -2693,6 +2705,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
                     $order_info = NULL;
                     foreach ($order_ids as $order_number) {
                         $order_info = $this->model_api_checkout->getOrderInfo($order_number);
+                        $this->model_payment_mpesa->insertOrderTransactionId($order_number, $MpesaReceiptNumber, $customer_id, abs($order_info['amount_partialy_paid'] - $order_info['total']));
                         $order_products_count = $this->model_api_checkout->getOrderProductsCount($order_number);
 
                         $transactionData = [

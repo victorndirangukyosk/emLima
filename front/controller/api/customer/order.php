@@ -4446,6 +4446,7 @@ class ControllerApiCustomerOrder extends Controller {
                     $this->load->model('account/customer');
                     $this->load->model('api/checkout');
                     $this->load->model('checkout/order');
+                    $this->load->model('payment/mpesa');
 
                     $log->write('addMultiOrder call');
                     $order_ids = [];
@@ -4460,6 +4461,7 @@ class ControllerApiCustomerOrder extends Controller {
                     $order_info = NULL;
                     foreach ($order_ids as $order_number) {
                         $order_info = $this->model_api_checkout->getOrderInfo($order_number);
+                        $this->model_payment_mpesa->insertOrderTransactionId($order_number, $stkPushSimulation->CheckoutRequestID, $customer_id, abs($order_info['amount_partialy_paid'] - $order_info['total']));
                         $order_products_count = $this->model_api_checkout->getOrderProductsCount($order_number);
 
                         $transactionData = [
