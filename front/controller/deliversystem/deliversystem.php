@@ -2670,8 +2670,8 @@ class ControllerDeliversystemDeliversystem extends Controller {
                 $log->write('PAYMENT_SUCCESSED');
 
                 $MpesaReceiptNumber = NULL;
-                if (isset($stkCallback->CallbackMetadata->Item)) {
-                    foreach ($stkCallback->CallbackMetadata->Item as $key => $value) {
+                if (isset($stkCallback->stkCallback->CallbackMetadata->Item)) {
+                    foreach ($stkCallback->stkCallback->CallbackMetadata->Item as $key => $value) {
                         $log->write($value);
 
                         if ('MpesaReceiptNumber' == $value->Name) {
