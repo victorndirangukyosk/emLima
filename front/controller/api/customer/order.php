@@ -4484,6 +4484,9 @@ class ControllerApiCustomerOrder extends Controller {
             $json['data'] = [];
             $json['message'] = 'Please Try Again Later!';
         }
+        $log->write('addConfirmPayment');
+        $log->write($json);
+        $log->write('addConfirmPayment');
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
