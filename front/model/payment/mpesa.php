@@ -376,4 +376,9 @@ class ModelPaymentMpesa extends Model {
         return $this->db->getLastId();
     }
 
+    public function getLatestMpesaRequest($customer_id) {
+        $result = $this->db->query('SELECT * FROM `' . DB_PREFIX . "mobile_mpesa_requests` WHERE `customer_id` = '" . (int) $customer_id . "' order by id desc")->row;
+        return $result;
+    }
+
 }

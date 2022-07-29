@@ -2587,18 +2587,14 @@ class ControllerApiCustomerOrder extends Controller {
 
                 $sub_total = $this->cart->getSubTotal();
                 $json['min_order_total_reached'] = $this->config->get('config_active_store_minimum_order_amount') <= $sub_total ? "TRUE" : "FALSE";
-                if($json['min_order_total_reached'] =="FALSE")
-                {
-                $json['amount_required'] = ($this->config->get('config_active_store_minimum_order_amount') - $sub_total);
-                // echo "<pre>";print_r($json['amount_required']);die;
-                $json['delivery_charge'] =  $this->config->get('config_active_store_delivery_charge')-0;//to display as integer
-                }
-                else
-                {
-                    $json['amount_required'] =0;
-                // echo "<pre>";print_r($json['amount_required']);die;
-                $json['delivery_charge'] = 0;
-     
+                if ($json['min_order_total_reached'] == "FALSE") {
+                    $json['amount_required'] = ($this->config->get('config_active_store_minimum_order_amount') - $sub_total);
+                    // echo "<pre>";print_r($json['amount_required']);die;
+                    $json['delivery_charge'] = $this->config->get('config_active_store_delivery_charge') - 0; //to display as integer
+                } else {
+                    $json['amount_required'] = 0;
+                    // echo "<pre>";print_r($json['amount_required']);die;
+                    $json['delivery_charge'] = 0;
                 }
                 $log->write($json['min_order_total_reached']);
                 $log->write($sub_total);
@@ -4319,6 +4315,7 @@ class ControllerApiCustomerOrder extends Controller {
                 $log->write('mpesa_result');
                 $log->write($mpesa_result);
                 $log->write('mpesa_result');
+                $cache_pre_fix = '_' . $mpesa_result['CheckoutRequestID'];
                 if (isset($mpesa_result) && isset($mpesa_result['ResponseCode']) && $mpesa_result['ResponseCode'] == 0) {
                     $this->load->model('payment/mpesa');
 
@@ -4328,15 +4325,16 @@ class ControllerApiCustomerOrder extends Controller {
                     $log->write($mpesa_request_ids);
                     $log->write('mpesa_request_ids');
 
-                    $this->cache->delete('customer_order_data');
-                    $this->cache->set('customer_order_data', $order_data);
+                    $this->cache->delete('customer_order_data' . $cache_pre_fix);
+                    $this->cache->set('customer_order_data' . $cache_pre_fix, $order_data);
 
                     $json['status'] = 200;
-                    $json['message'] = $mpesa_result['ResponseDescription'];
+                    $json['message_from_mpesa'] = $mpesa_result['ResponseDescription'];
+                    $json['message'] = 'A payment request has been sent on your above number. Please make the payment by entering mpesa PIN.';
                     $json['data']['merchant_request_id'] = $mpesa_result['MerchantRequestID'];
                     $json['data']['checkout_request_id'] = $mpesa_result['CheckoutRequestID'];
                 } elseif (isset($mpesa_result) && isset($mpesa_result['errorCode']) && $mpesa_result['errorCode'] > 0) {
-                    $this->cache->delete('customer_order_data');
+                    $this->cache->delete('customer_order_data' . $cache_pre_fix);
 
                     $json['status'] = 400;
                     $json['message'] = $mpesa_result['errorMessage'];
@@ -4392,6 +4390,100 @@ class ControllerApiCustomerOrder extends Controller {
             //$json['response'] = $stkPushSimulation;
             return $stkPushSimulation;
         }
+    }
+
+    public function addConfirmPayment() {
+
+        $json = [];
+        $json['status'] = 200;
+        $json['data'] = [];
+        $json['message'] = [];
+
+        $this->load->model('payment/mpesa');
+        $mpesa_request_ids = $this->model_payment_mpesa->getLatestMpesaRequest($this->customer->getId());
+        $log = new Log('error.log');
+        $log->write($mpesa_request_ids);
+        if (isset($mpesa_request_ids) && is_array($mpesa_request_ids) && count($mpesa_request_ids) > 0) {
+
+            $live = true;
+            $mpesa = new \Safaricom\Mpesa\Mpesa($this->config->get('mpesa_customer_key'), $this->config->get('mpesa_customer_secret'), $this->config->get('mpesa_environment'), $live);
+            $BusinessShortCode = $this->config->get('mpesa_business_short_code');
+            $LipaNaMpesaPasskey = $this->config->get('mpesa_lipanampesapasskey');
+
+            $this->load->model('payment/mpesa');
+
+            $checkoutRequestID = $mpesa_request_ids['checkout_request_id'];
+            $timestamp = '20' . date('ymdhis');
+            $password = base64_encode($BusinessShortCode . $LipaNaMpesaPasskey . $timestamp);
+
+            $stkPushSimulation = $mpesa->STKPushQuery($live, $checkoutRequestID, $BusinessShortCode, $password, $timestamp);
+            $log->write($stkPushSimulation);
+            $stkPushSimulation = json_decode($stkPushSimulation);
+
+            if (isset($stkPushSimulation->ResultCode) && 0 != $stkPushSimulation->ResultCode && $stkPushSimulation->ResultDesc != NULL) {
+                $json['status'] = 400;
+                $json['data']['MerchantRequestID'] = $stkPushSimulation->MerchantRequestID;
+                $json['data']['CheckoutRequestID'] = $stkPushSimulation->CheckoutRequestID;
+                $json['message'] = $stkPushSimulation->ResultDesc;
+            }
+
+            if (isset($stkPushSimulation->ResultCode) && 0 == $stkPushSimulation->ResultCode) {
+
+                $cache_pre_fix = '_' . $checkoutRequestID;
+                $customer_order_data = $this->cache->get('customer_order_data' . $cache_pre_fix);
+                $log->write($customer_order_data);
+
+                if (isset($customer_order_data) && $customer_order_data != NULL && is_array($customer_order_data) && count($customer_order_data) > 0) {
+                    $this->load->model('account/customer');
+                    $this->load->model('api/checkout');
+
+                    $log->write('addMultiOrder call');
+                    $order_ids = [];
+                    $order_ids = $this->model_api_checkout->addMultiOrder($customer_order_data);
+                    $this->cache->delete('customer_order_data' . $cache_pre_fix);
+                    $log->write('ORDER_IDS');
+                    $log->write($order_ids);
+                    $log->write('ORDER_IDS');
+
+                    $order_info = NULL;
+                    foreach ($order_ids as $order_number) {
+                        $order_info = $this->model_api_checkout->getOrderInfo($order_number);
+                        $order_products_count = $this->model_api_checkout->getOrderProductsCount($order_number);
+
+                        $transactionData = [
+                            'no_of_products' => $order_products_count,
+                            'total' => $order_info['total'],
+                        ];
+
+                        $log->write($transactionData);
+                        $this->model_api_checkout->apiAddTransaction($transactionData, $order_number);
+                    }
+
+                    $customer_info = $this->model_account_customer->getCustomer($customer_order_data['customer_id']);
+                    $log->write('customer_info');
+                    $log->write($customer_info);
+                    $log->write('customer_info');
+
+                    $order_id = implode(',', $order_ids);
+                    $placed_order_ids = implode('#', $order_ids);
+
+                    $mobile_notification_title = $this->emailtemplate->getNotificationTitle('Customer', 'customer_93', $customer_info);
+                    $mobile_notification_template = $this->emailtemplate->getNotificationMessage('Customer', 'customer_93', $customer_info);
+                    $this->emailtemplate->sendPushNotification($customer_info['customer_id'], $customer_info['device_id'], $order_id, 75, $mobile_notification_title, $mobile_notification_template, 'FLUTTER_NOTIFICATION_CLICK', 'true');
+                }
+                $json['status'] = 200;
+                $json['data']['MerchantRequestID'] = $stkPushSimulation->MerchantRequestID;
+                $json['data']['CheckoutRequestID'] = $stkPushSimulation->CheckoutRequestID;
+                $json['data']['order_details'] = $placed_order_ids;
+                $json['message'] = $stkPushSimulation->ResultDesc;
+            }
+        } else {
+            $json['status'] = 400;
+            $json['data'] = [];
+            $json['message'] = 'Please Try Again Later!';
+        }
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
     }
 
 }
