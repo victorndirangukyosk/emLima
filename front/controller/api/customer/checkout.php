@@ -480,6 +480,8 @@ class ControllerApiCustomerCheckout extends Controller {
         $json['status'] = 200;
         $json['data'] = [];
         $json['message'] = [];
+        try
+        {
 
         if (isset($this->request->get['total'])) {
 
@@ -487,11 +489,15 @@ class ControllerApiCustomerCheckout extends Controller {
             unset($this->session->data['pezesha_customer_amount_limit']);
             //get the pezesha amount limit 
             // $this->load->controller('customer/getPezeshaLoanOffers');
+
+            $log = new Log('error.log');
+
             $b = $this->getPezeshaLoanOffers();
             $pezesha_customer_credit_limit = $this->getPezeshaCustomerCreditLimit();
 
             // echo "<pre>";print_r($this->session->data['pezesha_amount_limit']);die;
-
+            $customer_id = $this->customer->getId();               
+            $log->write('Getting payments in mobile.....'.$customer_id);
 
             $this->load->language('checkout/checkout');
             // Payment Methods
@@ -544,7 +550,7 @@ class ControllerApiCustomerCheckout extends Controller {
             //    }
 
             foreach ($results as $result) {
-                $log = new Log('error.log');
+               
                 $log->write('code payment 123');
                 $log->write($result['code']);
                 $log->write('code');
@@ -577,7 +583,6 @@ class ControllerApiCustomerCheckout extends Controller {
             //   echo "<pre>";print_r($method_data);die;
             $log->write($method_data);
 
-            $log->write('method_data is empty or not');
 
             $this->session->data['payment_methods'] = $method_data;
 
@@ -585,6 +590,8 @@ class ControllerApiCustomerCheckout extends Controller {
 
             if (empty($this->session->data['payment_methods'])) {
                 $data['error_warning'] = 'No payment methods available.Please contact kwikbasket team';
+             $log->write('method_data is empty or not');
+
             } else {
                 $data['error_warning'] = '';
             }
@@ -605,9 +612,11 @@ class ControllerApiCustomerCheckout extends Controller {
             // echo "<pre>";print_r($data);die;
             $log->write('pezesha data Start ');
 
-            $log->write($this->customer->getPaymentTerms());
+            $log->write($this->customer->getCustomerPezeshauuId());
             $log->write($this->customer->getCustomerPezeshaId());
             $log->write($this->getPezeshaCustomerCreditLimit() . 'PEZESHA LIMIT');
+            $log->write($pezesha_customer_credit_limit . 'PEZESHA LIMIT');
+            
             /* $log->write($this->session->data['pezesha_customer_amount_limit']);
               $log->write($this->session->data['pezesha_amount_limit']); */
             $log->write('pezesha data');
@@ -642,20 +651,47 @@ class ControllerApiCustomerCheckout extends Controller {
                 }
             }
             $log->write('getPaymentTerms');
+
             //}
             $json['data'] = $data;
+            $log->write($data);
+
+            if (empty($data['payment_methods']) && empty($data['payment_wallet_methods'])) {
+                $data['error_warning'] = 'No payment methods available.Please contact kwikbasket team';
+             $log->write('No payment methods available.Please contact kwikbasket team');
+
+            } else {
+                $data['error_warning'] = '';
+            }
+
         } else {
             $json['status'] = 10013;
 
             $json['message'][] = ['type' => '', 'body' => 'Order total is required.'];
 
             http_response_code(400);
+            $log = new Log('error.log');
+            $log->write('total received is 0 and unable to get payment methods');
+
+
         }
+    }
+    catch(exception $ex)
+    {
+        $log = new Log('error.log');
+        $log->write('get Mixed payment methods--ERROR');
+        $log->write($ex->getMessage());
+
+
+    }
+    finally
+    {
         $log->write('PAYMENT METHODS RESPONSE');
         $log->write($json);
         $log->write('PAYMENT METHODS RESPONSE');
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
+    }
     }
 
     public function getPezeshaLoanOffers() {
