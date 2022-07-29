@@ -2704,7 +2704,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
                         $ret = $this->model_checkout_order->addOrderHistory($order_number, 1, 'Paid Through Mpesa Online', FALSE, $this->customer->getId(), 'customer');
                     }
 
-                    $customer_info = $this->model_account_customer->getCustomer($customer_order_data['customer_id']);
+                    $customer_info = $this->model_account_customer->getCustomer($customer_id);
                     $log->write('customer_info');
                     $log->write($customer_info);
                     $log->write('customer_info');
