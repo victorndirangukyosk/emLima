@@ -2700,7 +2700,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
                         ];
 
                         $log->write($transactionData);
-                        $this->model_api_checkout->apiAddTransaction($transactionData, $order_number);
+                        $this->model_api_checkout->apiAddTransaction($transactionData, $order_ids);
                         $ret = $this->model_checkout_order->addOrderHistory($order_number, 1, 'Paid Through Mpesa Online', FALSE, $this->customer->getId(), 'customer');
                     }
 
