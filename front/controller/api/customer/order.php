@@ -4435,6 +4435,14 @@ class ControllerApiCustomerOrder extends Controller {
                 $placed_order_ids = NULL;
 
                 if (isset($customer_order_data) && $customer_order_data != NULL && is_array($customer_order_data) && count($customer_order_data) > 0) {
+                    $customer_id = NULL;
+                    foreach ($customer_order_data as $customer_order_dat) {
+                        $log->write('customer_order_data_customer_id');
+                        $log->write($customer_order_dat['customer_id']);
+                        $customer_id = $customer_order_dat['customer_id'];
+                        $log->write('customer_order_data_customer_id');
+                    }
+
                     $this->load->model('account/customer');
                     $this->load->model('api/checkout');
                     $this->load->model('checkout/order');
@@ -4443,6 +4451,8 @@ class ControllerApiCustomerOrder extends Controller {
                     $order_ids = [];
                     $order_ids = $this->model_api_checkout->addMultiOrder($customer_order_data);
                     $this->cache->delete('customer_order_data' . $cache_pre_fix);
+                    $this->cart->clear();
+
                     $log->write('ORDER_IDS');
                     $log->write($order_ids);
                     $log->write('ORDER_IDS');
@@ -4459,10 +4469,10 @@ class ControllerApiCustomerOrder extends Controller {
 
                         $log->write($transactionData);
                         $this->model_api_checkout->apiAddTransaction($transactionData, $order_number);
-                        $ret = $this->model_checkout_order->addOrderHistory($order_number, 1, 'Paid Through Mpesa Online', FALSE, $this->customer->getId(), 'customer');
+                        $ret = $this->model_checkout_order->addOrderHistory($order_number, 1, 'Paid Through Mpesa Online', FALSE, $this->customer->getId(), 'customer', NULL, 'Y');
                     }
 
-                    $customer_info = $this->model_account_customer->getCustomer($customer_order_data['customer_id']);
+                    $customer_info = $this->model_account_customer->getCustomer($customer_id);
                     $log->write('customer_info');
                     $log->write($customer_info);
                     $log->write('customer_info');
