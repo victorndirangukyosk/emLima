@@ -533,13 +533,15 @@ class ModelApiCheckout extends Model {
                 $log->write('processnig inside');
 
                 foreach ($order_total_query->rows as $order_total) {
-                    $this->load->model('total/' . $order_total['code']);
+                    if ($order_total['code'] != 'delivery_vat') {
+                        $this->load->model('total/' . $order_total['code']);
 
-                    /* $log->write('PayPal Express debug '. $order_total['code']."s"); */
-                    if (method_exists($this->{'model_total_' . $order_total['code']}, 'confirm')) {
-                        //$this->logger();
-                        // $log->write('PayPal Express debug '. $order_total['code']."s");
-                        $this->{'model_total_' . $order_total['code']}->confirm($order_info, $order_total);
+                        /* $log->write('PayPal Express debug '. $order_total['code']."s"); */
+                        if (method_exists($this->{'model_total_' . $order_total['code']}, 'confirm')) {
+                            //$this->logger();
+                            // $log->write('PayPal Express debug '. $order_total['code']."s");
+                            $this->{'model_total_' . $order_total['code']}->confirm($order_info, $order_total);
+                        }
                     }
                 }
             }
