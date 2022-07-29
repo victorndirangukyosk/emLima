@@ -4469,9 +4469,15 @@ class ControllerApiCustomerOrder extends Controller {
                     $order_id = implode(',', $order_ids);
                     $placed_order_ids = implode('#', $order_ids);
 
+                    $transaction['store_id'] = 75;
+                    $transaction['transaction'] = true;
+                    $transaction['mpesa'] = true;
+                    $transaction['status'] = true;
+                    $transaction['order_ids'][] = $order_ids;
+
                     $mobile_notification_title = $this->emailtemplate->getNotificationTitle('Customer', 'customer_93', $customer_info);
                     $mobile_notification_template = $this->emailtemplate->getNotificationMessage('Customer', 'customer_93', $customer_info);
-                    $this->emailtemplate->sendPushNotification($customer_info['customer_id'], $customer_info['device_id'], $order_id, 75, $mobile_notification_title, $mobile_notification_template, 'FLUTTER_NOTIFICATION_CLICK', 'true');
+                    $this->emailtemplate->sendPushNotification($customer_info['customer_id'], $customer_info['device_id'], $order_id, 75, $mobile_notification_title, $mobile_notification_template, 'FLUTTER_NOTIFICATION_CLICK', $transaction);
                 }
                 $json['status'] = 200;
                 $json['data']['MerchantRequestID'] = $stkPushSimulation->MerchantRequestID;
