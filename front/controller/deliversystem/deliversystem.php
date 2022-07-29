@@ -2670,6 +2670,8 @@ class ControllerDeliversystemDeliversystem extends Controller {
 
                 if (isset($customer_id) && $customer_id > 0) {
                     $this->load->model('account/customer');
+                    $this->load->model('checkout/order');
+
                     $this->load->model('api/checkout');
 
                     $log->write('addMultiOrder call');
@@ -2692,6 +2694,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
 
                         $log->write($transactionData);
                         $this->model_api_checkout->apiAddTransaction($transactionData, $order_number);
+                        $ret = $this->model_checkout_order->addOrderHistory($order_number, 1, 'Paid Through Mpesa Online', FALSE, $this->customer->getId(), 'customer');
                     }
 
                     $customer_info = $this->model_account_customer->getCustomer($customer_order_data['customer_id']);
