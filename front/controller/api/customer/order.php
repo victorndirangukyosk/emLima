@@ -4432,6 +4432,7 @@ class ControllerApiCustomerOrder extends Controller {
                 $cache_pre_fix = '_' . $checkoutRequestID;
                 $customer_order_data = $this->cache->get('customer_order_data' . $cache_pre_fix);
                 $log->write($customer_order_data);
+                $placed_order_ids = NULL;
 
                 if (isset($customer_order_data) && $customer_order_data != NULL && is_array($customer_order_data) && count($customer_order_data) > 0) {
                     $this->load->model('account/customer');
