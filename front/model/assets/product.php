@@ -2666,6 +2666,11 @@ class ModelAssetsProduct extends Model {
                 $this->db->where('product_to_category.category_id', (int) $data['filter_category_id']);
             }
         }
+
+        if (isset($data['filter_multiple_category_id']) && !empty($data['filter_multiple_category_id'])) {
+            $this->db->where_in('product_to_category.category_id', $data['filter_multiple_category_id']);
+        }
+
         if (!empty($data['filter_product_store_id'])) {
             $this->db->where('product_to_store.product_store_id', (int) $data['filter_product_store_id']);
         }
