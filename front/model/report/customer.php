@@ -1178,7 +1178,21 @@ class ModelReportCustomer extends Model {
             $sql .= " AND   c.customer_id   = 0 ";//other cust statements should not be displayed
 
         }
-        $sql .= 'ORDER BY o.order_id desc';
+
+        if (!empty($data['filter_date_start'])) {
+            $sql .= " AND DATE(o.date_added) >= '" . $this->db->escape($data['filter_date_start']) . "'";
+        }
+
+        if (!empty($data['filter_date_end'])) {
+            $sql .= " AND DATE(o.date_added) <= '" . $this->db->escape($data['filter_date_end']) . "'";
+        }
+
+        if (!empty($data['filter_sub_customer']) &&  $data['filter_sub_customer']!= -1) {
+            $sql .= " AND c.customer_id='" . (int) $data['filter_sub_customer'] . "'";
+        }
+
+        $sql .= ' ORDER BY o.order_id desc';
+        // echo "<pre>";print_r($data);die;
 
         // echo  ($sql);die;
         
