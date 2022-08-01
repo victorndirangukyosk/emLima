@@ -66,6 +66,39 @@
         right: 0px;
       }
     }
+
+
+    .marquee-text{
+	height: 40px;
+    color: #000;
+    font-size: 16px;
+    overflow: hidden;
+    position: fixed;
+    z-index: 5000;
+    background: linear-gradient(90deg,#feb21a 0,#fedb28 50%,#feb21a 100%);
+padding: 10px;
+	-webkit-marquee-speed: slow !important;
+}
+.marquee-span{
+	margin-right: 7px;
+    color: #cd1212;
+    font-size: 40px;
+    line-height: 19px;
+    vertical-align: text-top;
+}
+.marquee-link{
+	    display: inline-block;
+    cursor: pointer;
+    transition: all .15s ease-in-out;
+    color: #0073dd;
+    text-decoration: none;
+    background-color: transparent;
+}
+.marquee-link:hover{
+	    color: #004b91 !important;
+    text-decoration: underline !important;
+}
+
   </style>
   <!-- Global site tag (gtag.js) - Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-RXVNTRRM14"></script>
@@ -78,7 +111,17 @@
   </script>
 </head>
 
-<body data-wrapper-optimized="" id="homenew" class="new-homepage-image-format drawer drawer--top">
+<?php if (date('Y-m-d') <= date('2022-08-10')) { ?>
+<div>
+	<marquee class="marquee-text" onmouseover="this.stop();" onmouseout="this.start();" loop="100" scrolldelay="100">
+	<span class="marquee-span">•</span>Please note that, Deliveries are closed on 9<sup> th</sup> & 10<sup> th</sup> ,due to elections.
+</marquee>
+</div>
+<br>
+<?php } ?>
+
+<body  onload="loadPriceDrop()" data-wrapper-optimized="" id="homenew" class="new-homepage-image-format drawer drawer--top">
+  <br> 
   <?php if ($error_warning) { ?>
   <div class="alert alert-danger">
     <center><i class="fa fa-exclamation-circle"></i>
@@ -693,6 +736,86 @@
 
     <!-- Modal -->
 
+
+
+    
+ <!-- Modal -->
+    <div class="">
+<div class="modal fade" id="mdlPriceDrop" style="margin-top:10em;"   tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-keyboard="false" data-backdrop="static">
+   <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content" >
+
+             <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin-right:-12em;">
+        
+          <span aria-hidden="true">&times;</span>
+        </button>
+<div class="price-alert">
+        <h3><i class="fa fa-bell" aria-hidden="true"></i> Price drop alert!!!</h3>
+</div>
+      </div>
+
+                <div class="modal-body" id="popup_pricedrop_40815">
+                    <div class="row">
+                        <div class="col-md-5" >
+                            <div class="product-slider xyz" >
+                                <div class="easyzoom easyzoom--overlay" >                                  
+                                        <img src="https://stage.shop.kwikbasket.com/image/cache/data/Fruits/Beetroot-362x362.png" alt="" style="width: 215px;" />
+                                  
+                                </div>                              
+                            </div>
+                        </div>
+                        <div class="col-md-7"  style="margin-top:25px" >                     
+                            
+                             
+                            <h2 class="product_name rating">Baby Beetroot</h2>
+                            <div class="product-variants-list">
+                                <div class="product-variant">
+                                <br>
+
+                            <h3 class="product_name rating">Per Kg</h3>
+                                  
+                                </div>
+                            </div>
+
+                            <div class="product-price">
+                                <div class="homeprice-rate">
+                                   <br>
+                                        <span class="old-price-popup">
+                                            MRP: KES 98
+                                            
+                                        </span>
+                                        <br>
+
+                                        <span class="price-popup">
+                                         KES 70
+                                        </span> 
+                                       
+                                </div>
+                                
+                             
+ 
+                                
+                            </div>
+                            <br>                            
+                            
+
+                        </div>
+
+                    </div>
+
+                    
+                    
+                </div>
+
+                 <!--<div class="modal-footer"></div>-->
+            </div>
+    </div>
+</div>
+  </div>
+
+    <!-- Modal -->
+
   <?php echo $footer ?>
   <!-- Phone Modal -->
   <?= $login_modal ?>
@@ -724,7 +847,22 @@
   <script src="<?= $base; ?>front/ui/theme/metaorganic/javascript/common.js?v=2.0.7" charset="UTF-8"
     type="text/javascript"></script>
 
+
+
+
+
 <script type="text/javascript">
+
+function loadPriceDrop() {
+   
+<?php 
+if ($this->customer->getCustomerCategory()=="" || $this->customer->getCustomerCategory()==NULL) { ?>
+   
+    $('#mdlPriceDrop').modal('show');
+
+ <?php } ?>
+}
+
 $(document).delegate('#selectedCategory', 'change', function () {
 console.log($( this ).val());
 console.log($( this ).attr('data-url'));
@@ -805,6 +943,7 @@ function checkMinimumOrderTotal() {
     });
 }
 
+
 </script>
 
   <link rel="stylesheet" href="https://formden.com/static/cdn/bootstrap-iso.css" />
@@ -835,6 +974,18 @@ function checkMinimumOrderTotal() {
     #welcome-login {
       animation: highlight 2s;
     }
+
+
+    .price-alert h3 {
+    background-color: #f5f5f5;
+    padding: 15px 20px;
+    color: #FF5722;
+    font-weight: normal;
+    font-size: 20px;
+    text-transform: capitalize;
+    margin: 0px;
+}
+
   </style>
 
   <!-- <script src="<?= $base;?>front/ui/theme/mvgv2/js/bootstrap-datepicker.pt-BR.js"></script> -->
