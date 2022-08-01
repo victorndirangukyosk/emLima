@@ -66,6 +66,39 @@
         right: 0px;
       }
     }
+
+
+    .marquee-text{
+	height: 40px;
+    color: #000;
+    font-size: 16px;
+    overflow: hidden;
+    position: fixed;
+    z-index: 5000;
+    background: linear-gradient(90deg,#feb21a 0,#fedb28 50%,#feb21a 100%);
+padding: 10px;
+	-webkit-marquee-speed: slow !important;
+}
+.marquee-span{
+	margin-right: 7px;
+    color: #cd1212;
+    font-size: 40px;
+    line-height: 19px;
+    vertical-align: text-top;
+}
+.marquee-link{
+	    display: inline-block;
+    cursor: pointer;
+    transition: all .15s ease-in-out;
+    color: #0073dd;
+    text-decoration: none;
+    background-color: transparent;
+}
+.marquee-link:hover{
+	    color: #004b91 !important;
+    text-decoration: underline !important;
+}
+
   </style>
   <!-- Global site tag (gtag.js) - Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-RXVNTRRM14"></script>
@@ -78,7 +111,17 @@
   </script>
 </head>
 
+<?php if (date('Y-m-d') <= date('2022-08-10')) { ?>
+<div>
+	<marquee class="marquee-text" onmouseover="this.stop();" onmouseout="this.start();" loop="100" scrolldelay="100">
+	<span class="marquee-span">•</span>Please note that, Deliveries are closed on 9<sup> th</sup> & 10<sup> th</sup> ,due to elections.
+</marquee>
+</div>
+<br>
+<?php } ?>
+
 <body data-wrapper-optimized="" id="homenew" class="new-homepage-image-format drawer drawer--top">
+  <br> 
   <?php if ($error_warning) { ?>
   <div class="alert alert-danger">
     <center><i class="fa fa-exclamation-circle"></i>
