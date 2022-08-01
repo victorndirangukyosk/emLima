@@ -278,7 +278,7 @@ class ControllerApiCustomerDeliverytimeslots extends Controller {
 
         if (isset($this->request->get['total'])) {
 
-            $customer_info = $this->model_extension_extension->getCustomer($this->request->get['cutomer_id']);
+            $customer_info = $this->model_account_customer->getCustomer($this->request->get['cutomer_id']);
 
             if (is_array($customer_info) && count($customer_info) > 0) {
                 // Payment Methods
