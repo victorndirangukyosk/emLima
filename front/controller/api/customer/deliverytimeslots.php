@@ -266,25 +266,64 @@ class ControllerApiCustomerDeliverytimeslots extends Controller {
         $json['status'] = 200;
         $json['data'] = [];
         $json['message'] = [];
+
         $this->load->language('api/general');
+        $this->load->language('checkout/checkout');
+
         $this->load->model('assets/category');
         $this->load->model('assets/product');
         $this->load->model('tool/image');
+        $this->load->model('account/customer');
+        $this->load->model('extension/extension');
 
-        if (isset($this->request->get['total'])) {
-            $this->load->language('checkout/checkout');
-            // Payment Methods
-            $method_data = [];
+        if (isset($this->request->get['total']) && isset($this->request->get['cutomer_id']) && $this->request->get['cutomer_id'] > 0) {
 
-            $this->load->model('extension/extension');
+            $customer_info = $this->model_extension_extension->getCustomer($this->request->get['cutomer_id']);
 
-            $results = $this->model_extension_extension->getExtensions('payment');
+            if (is_array($customer_info) && count($customer_info) > 0) {
+                // Payment Methods
+                $method_data = [];
 
-            // echo "<pre>";print_r($results);die;
-            $total = $this->request->get['total'];
-            if ($this->customer->getPaymentTerms() == 'Payment On Delivery') {
-                foreach ($results as $result) {
-                    if ($result['code'] == 'wallet' || $result['code'] == 'mod' || $result['code'] == 'mpesa' || $result['code'] == 'pesapal' || $result['code'] == 'interswitch') {
+                $results = $this->model_extension_extension->getExtensions('payment');
+
+                // echo "<pre>";print_r($results);die;
+                $total = $this->request->get['total'];
+                if ($customer_info['payment_terms'] == 'Payment On Delivery') {
+                    foreach ($results as $result) {
+                        if ($result['code'] == 'wallet' || $result['code'] == 'mod' || $result['code'] == 'mpesa' || $result['code'] == 'pesapal' || $result['code'] == 'interswitch') {
+                            if ($this->config->get($result['code'] . '_status')) {
+                                $this->load->model('payment/' . $result['code']);
+
+                                $method = $this->{'model_payment_' . $result['code']}->getMethod($total);
+
+                                if ($method) {
+                                    $method['terms'] = str_replace("(No Transaction Fee)", "", $method['terms']);
+                                    //removed  (No Transaction Fee) from terms,as suggested
+                                    //echo "<pre>";print_r($method);die;
+                                    $method_data[] = $method;
+                                }
+                            }
+                        }
+                    }
+                } else if ($customer_info['payment_terms'] == '7 Days Credit' || $customer_info['payment_terms'] == '15 Days Credit' || $customer_info['payment_terms'] == '30 Days Credit') {
+                    foreach ($results as $result) {
+                        if ($result['code'] == 'cod' || $result['code'] == 'wallet') {
+                            if ($this->config->get($result['code'] . '_status')) {
+                                $this->load->model('payment/' . $result['code']);
+
+                                $method = $this->{'model_payment_' . $result['code']}->getMethod($total);
+
+                                if ($method) {
+                                    $method['terms'] = str_replace("(No Transaction Fee)", "", $method['terms']);
+                                    //removed  (No Transaction Fee) from terms,as suggested
+                                    //echo "<pre>";print_r($method);die;
+                                    $method_data[] = $method;
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    foreach ($results as $result) {
                         if ($this->config->get($result['code'] . '_status')) {
                             $this->load->model('payment/' . $result['code']);
 
@@ -299,54 +338,22 @@ class ControllerApiCustomerDeliverytimeslots extends Controller {
                         }
                     }
                 }
-            } else if ($this->customer->getPaymentTerms() == '7 Days Credit' || $this->customer->getPaymentTerms() == '15 Days Credit' || $this->customer->getPaymentTerms() == '30 Days Credit') {
-                foreach ($results as $result) {
-                    if ($result['code'] == 'cod' || $result['code'] == 'wallet') {
-                        if ($this->config->get($result['code'] . '_status')) {
-                            $this->load->model('payment/' . $result['code']);
 
-                            $method = $this->{'model_payment_' . $result['code']}->getMethod($total);
+                $sort_order = [];
 
-                            if ($method) {
-                                $method['terms'] = str_replace("(No Transaction Fee)", "", $method['terms']);
-                                //removed  (No Transaction Fee) from terms,as suggested
-                                //echo "<pre>";print_r($method);die;
-                                $method_data[] = $method;
-                            }
-                        }
-                    }
+                foreach ($method_data as $key => $value) {
+                    $sort_order[$key] = $value['sort_order'];
                 }
-            } else {
-                foreach ($results as $result) {
-                    if ($this->config->get($result['code'] . '_status')) {
-                        $this->load->model('payment/' . $result['code']);
 
-                        $method = $this->{'model_payment_' . $result['code']}->getMethod($total);
+                array_multisort($sort_order, SORT_ASC, $method_data);
 
-                        if ($method) {
-                            $method['terms'] = str_replace("(No Transaction Fee)", "", $method['terms']);
-                            //removed  (No Transaction Fee) from terms,as suggested
-                            //echo "<pre>";print_r($method);die;
-                            $method_data[] = $method;
-                        }
-                    }
-                }
+                //echo "<pre>";print_r($method_data);die;
+                $json['data'] = $method_data;
             }
-
-            $sort_order = [];
-
-            foreach ($method_data as $key => $value) {
-                $sort_order[$key] = $value['sort_order'];
-            }
-
-            array_multisort($sort_order, SORT_ASC, $method_data);
-
-            //echo "<pre>";print_r($method_data);die;
-            $json['data'] = $method_data;
         } else {
             $json['status'] = 10013;
 
-            $json['message'][] = ['type' => '', 'body' => 'Order total is required.'];
+            $json['message'][] = ['type' => '', 'body' => 'Customer ID And Order total is required.'];
 
             http_response_code(400);
         }

@@ -159,6 +159,10 @@ class EventAppApi extends Event {
                 // echo "<pre>";print_r($route);die;   
                 // Authorize
                 $this->load->controller('api/customer/deliverytimeslots/getDeliveryTimeslot', $args);
+            } elseif ('api/customer/deliverytimeslots/getPaymentMethods' == $route) {
+                // echo "<pre>";print_r($route);die;   
+                // Authorize
+                $this->load->controller('api/customer/deliverytimeslots/getPaymentMethods', $args);
             } else {
                 $groups = ['Administrator', 'API User', 'vendor'];
                 if (!$this->authenticateByGroup($groups)) {
