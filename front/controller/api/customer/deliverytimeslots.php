@@ -2270,7 +2270,7 @@ class ControllerApiCustomerDeliverytimeslots extends Controller {
     }
 
     protected function validatenewly($args) {
-        if (empty($args['customer_id']) && (isset($args['customer_id']) && !is_numeric($args['customer_id']))) {
+        if (empty($args['customer_id']) || (isset($args['customer_id']) && !is_numeric($args['customer_id']))) {
             $this->error['customer_id'] = 'Customer ID Required!';
         }
 
