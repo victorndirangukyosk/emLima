@@ -1266,6 +1266,18 @@ class ControllerCommonHome extends Controller {
           $log->write('mostboughtproducts'); */
         $data['category_url'] = $this->url->link('common/home', '', 'SSL');
 
+                // //    echo "<pre>";print_r($this->session->data['price_drop_seen']);die;
+                // $log->write($this->session->data['price_drop_seen']);
+                // $log->write('aaaaaaaaaaaaaaaaaaaa');
+        if ($this->session->data['price_drop_seen']=="" || $this->session->data['price_drop_seen']==NULL) {
+            $_SESSION['price_drop_seen']="false";
+        }
+        else{
+            $_SESSION['price_drop_seen']="true";
+
+        }
+            // $log->write($this->session->data['price_drop_seen']);
+        
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/home.tpl') && isset($this->session->data['customer_id'])) {
             // $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/common/home.tpl', $data));
             $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/common/homenew.tpl', $data));
