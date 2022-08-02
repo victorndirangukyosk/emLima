@@ -276,7 +276,7 @@ class ControllerApiCustomerDeliverytimeslots extends Controller {
         $this->load->model('account/customer');
         $this->load->model('extension/extension');
 
-        if (isset($this->request->get['total'])) {
+        if (isset($this->request->get['total']) && isset($this->request->get['cutomer_id']) && $this->request->get['cutomer_id'] > 0) {
 
             $customer_info = $this->model_account_customer->getCustomer($this->request->get['cutomer_id']);
 
