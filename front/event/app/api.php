@@ -79,6 +79,9 @@ class EventAppApi extends Event {
             } elseif ('api/customer/login/addLogin' == $route) {
                 // Authorize
                 $this->load->controller('api/customer/login');
+            } elseif ('api/customer/login/addLoginAsCustomer' == $route) {
+                // Authorize
+                $this->load->controller('api/customer/loginascustomer');
             } elseif ('api/customer/login/addLoginByOtp' == $route) {
                 // Authorize
                 $this->load->controller('api/customer/login/addLoginByOtp');
