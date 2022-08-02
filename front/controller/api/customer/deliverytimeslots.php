@@ -2386,4 +2386,29 @@ class ControllerApiCustomerDeliverytimeslots extends Controller {
         return !$this->error;
     }
 
+    public function getCheckOtherVendorOrderExist() {
+
+        $json = [];
+        $json['status'] = 200;
+        $json['data'] = [];
+        $json['message'] = [];
+        $log = new Log('error.log');
+        $json['modal_open'] = FALSE;
+        if (isset($this->session->data['accept_vendor_terms']) && $this->session->data['accept_vendor_terms'] == TRUE) {
+            $json['modal_open'] = FALSE;
+        } else {
+            foreach ($this->cart->getProducts() as $store_products) {
+                /* FOR KWIKBASKET ORDERS */
+                $log->write('CheckOtherVendorOrderExists');
+                $log->write($store_products['store_id']);
+                $log->write('CheckOtherVendorOrderExists');
+                if ($store_products['store_id'] > 75 && $this->customer->getPaymentTerms() != 'Payment On Delivery') {
+                    $json['modal_open'] = TRUE;
+                }
+            }
+        }
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
 }
