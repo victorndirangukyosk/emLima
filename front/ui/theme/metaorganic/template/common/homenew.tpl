@@ -114,7 +114,7 @@ padding: 10px;
 <?php if (date('Y-m-d') <= date('2022-08-10')) { ?>
 <div>
 	<marquee class="marquee-text" onmouseover="this.stop();" onmouseout="this.start();" loop="100" scrolldelay="100">
-	<span class="marquee-span">•</span>Please note that, Deliveries are closed on 9<sup> th</sup> & 10<sup> th</sup> ,due to elections.
+	<span class="marquee-span">•</span>Please note, Deliveries are closed on 9<sup> th</sup> & 10<sup> th</sup> August due to Elections.
 </marquee>
 </div>
 <br>
