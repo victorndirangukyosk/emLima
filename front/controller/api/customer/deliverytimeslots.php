@@ -2274,6 +2274,7 @@ class ControllerApiCustomerDeliverytimeslots extends Controller {
             $this->error['customer_id'] = 'Customer ID Required!';
         }
 
+        $args['customer_id'] = isset($args['customer_id']) && $args['customer_id'] > 0 ? $args['customer_id'] : 0;
         if (empty($args['payment_method'])) {
             $this->error['payment_method'] = $this->language->get('error_payment_method');
         }
@@ -2383,7 +2384,6 @@ class ControllerApiCustomerDeliverytimeslots extends Controller {
             $this->error['vendor_terms'] = 'Please accept vendor terms!';
         }
 
-        $args['customer_id'] = isset($args['customer_id']) && $args['customer_id'] > 0 ? $args['customer_id'] : 0;
         $pending_orders_count = $this->getunpaidorderscount($args['customer_id']);
         if (isset($pending_orders_count) && count($pending_orders_count) > 0 && $pending_orders_count['unpaid_orders_count'] > 0) {
             $this->error['unpaid_orders'] = 'Your Order(s) Payment Is Pending!';
@@ -2404,13 +2404,15 @@ class ControllerApiCustomerDeliverytimeslots extends Controller {
         $this->load->model('account/customer');
         $customer_info = $this->model_account_customer->getCustomer($args['customer_id']);
 
-        foreach ($args['products'] as $store_products) {
-            /* FOR KWIKBASKET ORDERS */
-            $log->write('CheckOtherVendorOrderExists');
-            $log->write($store_products['store_id']);
-            $log->write('CheckOtherVendorOrderExists');
-            if ($store_products['store_id'] > 75 && $customer_info['payment_terms'] != 'Payment On Delivery') {
-                $json['modal_open'] = TRUE;
+        if (isset($args['products']) && count($args['products']) > 0) {
+            foreach ($args['products'] as $store_products) {
+                /* FOR KWIKBASKET ORDERS */
+                $log->write('CheckOtherVendorOrderExists');
+                $log->write($store_products['store_id']);
+                $log->write('CheckOtherVendorOrderExists');
+                if ($store_products['store_id'] > 75 && $customer_info['payment_terms'] != 'Payment On Delivery') {
+                    $json['modal_open'] = TRUE;
+                }
             }
         }
 
