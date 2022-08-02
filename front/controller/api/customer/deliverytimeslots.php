@@ -2,6 +2,8 @@
 
 class ControllerApiCustomerDeliverytimeslots extends Controller {
 
+    private $error = [];
+
     public function getDeliveryTimeslot() {
         //echo "<pre>";print_r('getDeliveryTimeslot');die;
         $json = [];
