@@ -755,58 +755,45 @@ padding: 10px;
 </div>
       </div>
 
-                <div class="modal-body" id="popup_pricedrop_40815">
-                    <div class="row">
-                        <div class="col-md-5" >
-                            <div class="product-slider xyz" >
-                                <div class="easyzoom easyzoom--overlay" >                                  
-                                        <img src="https://stage.shop.kwikbasket.com/image/cache/data/Fruits/Beetroot-362x362.png" alt="" style="width: 215px;" />
-                                  
-                                </div>                              
-                            </div>
-                        </div>
-                        <div class="col-md-7"  style="margin-top:25px" >                     
-                            
-                             
-                            <h2 class="product_name rating">Baby Beetroot</h2>
-                            <div class="product-variants-list">
-                                <div class="product-variant">
-                                <br>
 
-                            <h3 class="product_name rating">Per Kg</h3>
-                                  
-                                </div>
-                            </div>
+<div style="display:flex; flex-flow: row nowrap; align-items:center; justify-content: space-between; padding: 4px 16px;">
+								
+								<div class="product-detail-bnt open-popup1" role="button" data-store="" data-id="" target="_blank" aria-label="Tomato (Mixed Sizes - 20 Kg) ">
+	
+								<div style="font-weight:bold">
+								<img height="50px" src="https://www.kwikbasket.com/image/cache/data/Kibandas/tomato-mixed-sizes-100x100.jpeg"> 
+								Tomato (Mixed Sizes - 20 Kg) &nbsp; &nbsp;<del>KES 900</del>
+								&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; 
+                <span class="blink_txt" style="color:green;font-weight:bold">
 
-                            <div class="product-price">
-                                <div class="homeprice-rate">
-                                   <br>
-                                        <span class="old-price-popup">
-                                            MRP: KES 98
-                                            
-                                        </span>
-                                        <br>
+        KES 800
+            </span>
+								( per Crate )
+								</div>
+								</div> 
+								 
+							</div>
 
-                                        <span class="price-popup">
-                                         KES 70
-                                        </span> 
-                                       
-                                </div>
-                                
-                             
+
+              <div style="display:flex; flex-flow: row nowrap; align-items:center; justify-content: space-between; padding: 4px 16px;">
+								
+								<div class="product-detail-bnt open-popup1" role="button" data-store="" data-id="" target="_blank" aria-label="Onion (Mixed Sizes - 20 Kg) ">
+	
+								<div style="font-weight:bold">
+								<img height="50px" src="https://www.kwikbasket.com/image/cache/data/Kibandas/onions-mixed-100x100.jpg"> 
+								Onion (Mixed Sizes - 20 Kg) &nbsp; &nbsp;<del> KES 1000 </del>
+								&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; 
+                <span class="blink_txt" style="color:green;font-weight:bold">
+       KES 900
+    </span>
+								( per Crate )
+								</div>
+								</div>
  
-                                
-                            </div>
-                            <br>                            
-                            
+							</div>
 
-                        </div>
 
-                    </div>
-
-                    
-                    
-                </div>
+               
 
                  <!--<div class="modal-footer"></div>-->
             </div>
@@ -943,6 +930,10 @@ function checkMinimumOrderTotal() {
     });
 }
 
+(function blink() { 
+  $('.blink_txt').fadeOut(500).fadeIn(500, blink); 
+})();
+      
 
 </script>
 
