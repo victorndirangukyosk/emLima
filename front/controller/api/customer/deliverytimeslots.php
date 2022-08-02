@@ -2378,7 +2378,7 @@ class ControllerApiCustomerDeliverytimeslots extends Controller {
             }
         }
 
-        $vendor_terms = json_decode($this->getCheckOtherVendorOrderExist(), true);
+        $vendor_terms = json_decode($this->getCheckOtherVendorOrderExist($args), true);
         if ($vendor_terms['modal_open'] == TRUE) {
             $this->error['vendor_terms'] = 'Please accept vendor terms!';
         }
@@ -2392,7 +2392,7 @@ class ControllerApiCustomerDeliverytimeslots extends Controller {
         return !$this->error;
     }
 
-    public function getCheckOtherVendorOrderExist() {
+    public function getCheckOtherVendorOrderExist($args) {
 
         $json = [];
         $json['status'] = 200;
@@ -2400,19 +2400,20 @@ class ControllerApiCustomerDeliverytimeslots extends Controller {
         $json['message'] = [];
         $log = new Log('error.log');
         $json['modal_open'] = FALSE;
-        if (isset($this->session->data['accept_vendor_terms']) && $this->session->data['accept_vendor_terms'] == TRUE) {
-            $json['modal_open'] = FALSE;
-        } else {
-            foreach ($this->cart->getProducts() as $store_products) {
-                /* FOR KWIKBASKET ORDERS */
-                $log->write('CheckOtherVendorOrderExists');
-                $log->write($store_products['store_id']);
-                $log->write('CheckOtherVendorOrderExists');
-                if ($store_products['store_id'] > 75 && $this->customer->getPaymentTerms() != 'Payment On Delivery') {
-                    $json['modal_open'] = TRUE;
-                }
+
+        $this->load->model('account/customer');
+        $customer_info = $this->model_account_customer->getCustomer($args['customer_id']);
+
+        foreach ($args['products'] as $store_products) {
+            /* FOR KWIKBASKET ORDERS */
+            $log->write('CheckOtherVendorOrderExists');
+            $log->write($store_products['store_id']);
+            $log->write('CheckOtherVendorOrderExists');
+            if ($store_products['store_id'] > 75 && $customer_info['payment_terms'] != 'Payment On Delivery') {
+                $json['modal_open'] = TRUE;
             }
         }
+
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
