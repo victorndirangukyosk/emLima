@@ -2206,7 +2206,6 @@ class ControllerApiCustomerDeliverytimeslots extends Controller {
 
             $transactionData = [
                 'no_of_products' => count($args['products']),
-                //'total' =>$tot,
                 'total' => $args['total'],
             ];
 
