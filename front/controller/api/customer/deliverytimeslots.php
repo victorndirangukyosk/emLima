@@ -2270,7 +2270,7 @@ class ControllerApiCustomerDeliverytimeslots extends Controller {
     }
 
     protected function validatenewly($args) {
-        if (empty($args['customer_id'])) {
+        if (empty($args['customer_id']) && (isset($args['customer_id']) && !is_numeric($args['customer_id']))) {
             $this->error['customer_id'] = 'Customer ID Required!';
         }
 
@@ -2383,8 +2383,9 @@ class ControllerApiCustomerDeliverytimeslots extends Controller {
             $this->error['vendor_terms'] = 'Please accept vendor terms!';
         }
 
-        $pending_orders_count = $this->getunpaidorderscount();
-        if ($pending_orders_count['unpaid_orders_count'] > 0) {
+        $args['customer_id'] = isset($args['customer_id']) && $args['customer_id'] > 0 ? $args['customer_id'] : 0;
+        $pending_orders_count = $this->getunpaidorderscount($args['customer_id']);
+        if (isset($pending_orders_count) && count($pending_orders_count) > 0 && $pending_orders_count['unpaid_orders_count'] > 0) {
             $this->error['unpaid_orders'] = 'Your Order(s) Payment Is Pending!';
         }
 
@@ -2416,68 +2417,82 @@ class ControllerApiCustomerDeliverytimeslots extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
-    public function getunpaidorderscount() {
+    public function getunpaidorderscount($customer_id) {
         $json = [];
+        $data = [];
         $log = new Log('error.log');
-        $log->write($this->customer->getPaymentTerms());
-        $log->write($this->customer->getId());
 
-        $data['pending_order_id'] = NULL;
+        $this->load->model('account/customer');
+        $customer_info = $this->model_account_customer->getCustomer($customer_id);
 
-        if ($this->customer->getPaymentTerms() == 'Payment On Delivery') {
-            $this->load->model('account/order');
-            $this->load->model('sale/order');
-            $page = 1;
-            $results_orders = $this->model_account_order->getOrdersNew(($page - 1) * 10, 10, $NoLimit = true);
-            $PaymentFilter = ['mPesa On Delivery', 'Cash On Delivery', 'mPesa Online', 'Corporate Account/ Cheque Payment', 'PesaPal', 'Interswitch', 'Pezesha'];
-            if (count($results_orders) > 0) {
-                foreach ($results_orders as $order) {
-                    if (in_array($order['payment_method'], $PaymentFilter) && ($order['order_status_id'] == 4 || $order['order_status_id'] == 5)) {
-                        $order['transcation_id'] = $this->model_sale_order->getOrderTransactionId($order['order_id']);
-                        if (empty($order['transcation_id']) || $order['paid'] == 'P') {
-                            $data['pending_order_id'][] = $order['order_id'];
+        if (isset($customer_info) && is_array($customer_info) && count($customer_info) > 0) {
+            $log->write($customer_info['payment_terms']);
+            $log->write($customer_info['customer_id']);
+
+            $data['pending_order_id'] = NULL;
+
+            if ($customer_info['payment_terms'] == 'Payment On Delivery') {
+                $this->load->model('account/order');
+                $this->load->model('sale/order');
+                $page = 1;
+                $results_orders = $this->model_account_order->getOrdersNew(($page - 1) * 10, 10, $NoLimit = true);
+                $PaymentFilter = ['mPesa On Delivery', 'Cash On Delivery', 'mPesa Online', 'Corporate Account/ Cheque Payment', 'PesaPal', 'Interswitch', 'Pezesha'];
+                if (count($results_orders) > 0) {
+                    foreach ($results_orders as $order) {
+                        if (in_array($order['payment_method'], $PaymentFilter) && ($order['order_status_id'] == 4 || $order['order_status_id'] == 5)) {
+                            $order['transcation_id'] = $this->model_sale_order->getOrderTransactionId($order['order_id']);
+                            if (empty($order['transcation_id']) || $order['paid'] == 'P') {
+                                $data['pending_order_id'][] = $order['order_id'];
+                            }
                         }
                     }
                 }
             }
-        }
 
-        $data['unpaid_orders_count'] = count($data['pending_order_id']);
-        $data['message'] = count($data['pending_order_id']) > 0 ? 'Your Order(s) Payment Is Pending!' : '';
+            $data['unpaid_orders_count'] = count($data['pending_order_id']);
+            $data['message'] = count($data['pending_order_id']) > 0 ? 'Your Order(s) Payment Is Pending!' : '';
+        }
         return $data;
     }
 
-    public function getunpaidorderscounts() {
+    public function getunpaidorderscounts($customer_id) {
         $json = [];
         $log = new Log('error.log');
-        $log->write($this->customer->getPaymentTerms());
-        $log->write($this->customer->getId());
 
-        $data['pending_order_id'] = NULL;
+        $this->load->model('account/customer');
+        $customer_info = $this->model_account_customer->getCustomer($customer_id);
 
-        if ($this->customer->getPaymentTerms() == 'Payment On Delivery') {
-            $this->load->model('account/order');
-            $this->load->model('sale/order');
-            $page = 1;
-            $results_orders = $this->model_account_order->getOrdersNew(($page - 1) * 10, 10, $NoLimit = true);
-            $PaymentFilter = ['mPesa On Delivery', 'Cash On Delivery', 'mPesa Online', 'Corporate Account/ Cheque Payment', 'PesaPal', 'Interswitch', 'Pezesha'];
-            if (count($results_orders) > 0) {
-                foreach ($results_orders as $order) {
-                    if (in_array($order['payment_method'], $PaymentFilter) && ($order['order_status_id'] == 4 || $order['order_status_id'] == 5)) {
-                        $order['transcation_id'] = $this->model_sale_order->getOrderTransactionId($order['order_id']);
-                        if (empty($order['transcation_id']) || $order['paid'] == 'P') {
-                            $data['pending_order_id'][] = $order['order_id'];
+        if (isset($customer_info) && is_array($customer_info) && count($customer_info) > 0) {
+
+            $log->write($customer_info['payment_terms']);
+            $log->write($customer_info['customer_id']);
+
+            $data['pending_order_id'] = NULL;
+
+            if ($customer_info['payment_terms'] == 'Payment On Delivery') {
+                $this->load->model('account/order');
+                $this->load->model('sale/order');
+                $page = 1;
+                $results_orders = $this->model_account_order->getOrdersNew(($page - 1) * 10, 10, $NoLimit = true);
+                $PaymentFilter = ['mPesa On Delivery', 'Cash On Delivery', 'mPesa Online', 'Corporate Account/ Cheque Payment', 'PesaPal', 'Interswitch', 'Pezesha'];
+                if (count($results_orders) > 0) {
+                    foreach ($results_orders as $order) {
+                        if (in_array($order['payment_method'], $PaymentFilter) && ($order['order_status_id'] == 4 || $order['order_status_id'] == 5)) {
+                            $order['transcation_id'] = $this->model_sale_order->getOrderTransactionId($order['order_id']);
+                            if (empty($order['transcation_id']) || $order['paid'] == 'P') {
+                                $data['pending_order_id'][] = $order['order_id'];
+                            }
                         }
                     }
                 }
             }
-        }
 
-        $data['unpaid_orders_count'] = count($data['pending_order_id']);
-        $data['message'] = count($data['pending_order_id']) > 0 ? 'Your Order(s) Payment Is Pending!' : '';
-        //return $data;
-        $json['status'] = 200;
-        $json['data'] = $data;
+            $data['unpaid_orders_count'] = count($data['pending_order_id']);
+            $data['message'] = count($data['pending_order_id']) > 0 ? 'Your Order(s) Payment Is Pending!' : '';
+            //return $data;
+            $json['status'] = 200;
+            $json['data'] = $data;
+        }
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
