@@ -4,7 +4,7 @@ class ControllerApiCustomerDeliverytimeslots extends Controller {
 
     private $error = [];
 
-    public function getDeliveryTimeslot() {
+    public function getDeliverytimeslot() {
         //echo "<pre>";print_r('getDeliveryTimeslot');die;
         $json = [];
 
@@ -260,7 +260,7 @@ class ControllerApiCustomerDeliverytimeslots extends Controller {
           $this->response->setOutput(json_encode($json)); */
     }
 
-    public function getPaymentMethods() {
+    public function getPaymentmethods() {
         //echo "<pre>";print_r('getStoreShippingMethods');die;
         $json = [];
 
@@ -1792,7 +1792,7 @@ class ControllerApiCustomerDeliverytimeslots extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
-    public function addCheckOut($args = []) {
+    public function addCheckout($args = []) {
 
         $log = new Log('error.log');
         $json = [];
