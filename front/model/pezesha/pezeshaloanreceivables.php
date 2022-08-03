@@ -16,8 +16,8 @@ class ModelPezeshaPezeshaloanreceivables extends Model {
         return $this->db->getLastId();
     }
 
-    public function savecallbackrequests($data) {
-        $sql = 'INSERT into ' . DB_PREFIX . "pezesha_callback_requests SET request = '" . $data . "'";
+    public function savecallbackrequests($data, $order_id) {
+        $sql = 'INSERT into ' . DB_PREFIX . "pezesha_callback_requests SET order_id = '" . $order_id . "', request = '" . $data . "'";
         $query = $this->db->query($sql);
     }
 
