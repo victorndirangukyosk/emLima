@@ -1792,7 +1792,7 @@ class ControllerApiCustomerDeliverytimeslots extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
-    public function addCheckOut($args = []) {
+    public function addCheckout($args = []) {
 
         $log = new Log('error.log');
         $json = [];
