@@ -1694,6 +1694,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
 
     public function pezeshacallback() {
 
+        $order_id = 0;
         $this->load->model('pezesha/pezeshaloanreceivables');
         $postData = file_get_contents('php://input');
 
@@ -1710,12 +1711,13 @@ class ControllerDeliversystemDeliversystem extends Controller {
         $log = new Log('error.log');
         $log->write($postData);
 
-        $this->model_pezesha_pezeshaloanreceivables->savecallbackrequests($postData);
+        $this->model_pezesha_pezeshaloanreceivables->savecallbackrequests($postData, $order_id);
 
         if ($this->validate($postData)) {
             $orders = $postData['order_id'];
             foreach ($orders as $order) {
                 $postData['order'] = $order;
+                $order_id = $order;
                 $this->model_pezesha_pezeshaloanreceivables->loanmpesadetails($postData);
             }
             $json['status'] = 200;
