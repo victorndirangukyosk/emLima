@@ -17,7 +17,7 @@ class ModelCatalogVendorProduct extends Model {
         $saturday = in_array("saturday", $data['product_delivery']) ? 1 : 0;
         $sunday = in_array("sunday", $data['product_delivery']) ? 1 : 0;
 
-        $this->db->query('INSERT INTO ' . DB_PREFIX . "product_to_store SET  product_id = '" . $data['product_id'] . "', store_id = '" . $this->db->escape($data['product_store']) . "', merchant_id = '" . $this->db->escape($data['merchant_id']) . "', price = '" . $data['price'] . "',special_price = '" . $data['special_price'] . "',tax_percentage = '" . $data['tax_percentage'] . "',quantity = '" . $data['quantity'] . "',min_quantity = '" . $data['min_quantity'] . "',subtract_quantity = '" . $data['subtract_quantity'] . "',status = '" . $data['status'] . "',tax_class_id = '" . $data['tax_class_id'] . "', monday = '" . $monday . "', tuesday = '" . $tuesday . "', wednesday = '" . $wednesday . "', thursday = '" . $thursday . "', friday = '" . $friday . "', saturday = '" . $saturday . "', sunday = '" . $sunday . "',hs_code='". $data['hs_code']."'");
+        $this->db->query('INSERT INTO ' . DB_PREFIX . "product_to_store SET  product_id = '" . $data['product_id'] . "', store_id = '" . $this->db->escape($data['product_store']) . "', merchant_id = '" . $this->db->escape($data['merchant_id']) . "', price = '" . $data['price'] . "',special_price = '" . $data['special_price'] . "',tax_percentage = '" . $data['tax_percentage'] . "',quantity = '" . $data['quantity'] . "',min_quantity = '" . $data['min_quantity'] . "',subtract_quantity = '" . $data['subtract_quantity'] . "',status = '" . $data['status'] . "',tax_class_id = '" . $data['tax_class_id'] . "', monday = '" . $monday . "', tuesday = '" . $tuesday . "', wednesday = '" . $wednesday . "', thursday = '" . $thursday . "', friday = '" . $friday . "', saturday = '" . $saturday . "', sunday = '" . $sunday . "',hs_code='" . $data['hs_code'] . "'");
         $product_store_id = $this->db->getLastId();
 
         foreach ($data['product_variation']['variation'] as $prv => $value) {
@@ -52,7 +52,7 @@ class ModelCatalogVendorProduct extends Model {
             $prev_data_status = $prev_data_query->row['status'];
         }
         // echo "<pre>";print_r($prev_data_status);die;
-        $query = 'UPDATE ' . DB_PREFIX . "product_to_store SET product_id = '" . $data['product_id'] . "', store_id = '" . $this->db->escape($data['product_store']) . "', merchant_id = '" . $data['merchant_id'] . "', price = '" . $data['price'] . "',special_price = '" . $data['special_price'] . "',tax_percentage = '" . $data['tax_percentage'] . "',quantity = '" . $data['quantity'] . "',min_quantity = '" . $data['min_quantity'] . "',subtract_quantity = '" . $data['subtract_quantity'] . "',status = '" . $data['status'] . "',tax_class_id = '" . $data['tax_class_id'] . "', monday = '" . $monday . "', tuesday = '" . $tuesday . "', wednesday = '" . $wednesday . "', thursday = '" . $thursday . "', friday = '" . $friday . "', saturday = '" . $saturday . "', sunday = '" . $sunday . "',hs_code='".$data['hs_code']."'  WHERE product_store_id = '" . (int) $store_product_id . "'";
+        $query = 'UPDATE ' . DB_PREFIX . "product_to_store SET product_id = '" . $data['product_id'] . "', store_id = '" . $this->db->escape($data['product_store']) . "', merchant_id = '" . $data['merchant_id'] . "', price = '" . $data['price'] . "',special_price = '" . $data['special_price'] . "',tax_percentage = '" . $data['tax_percentage'] . "',quantity = '" . $data['quantity'] . "',min_quantity = '" . $data['min_quantity'] . "',subtract_quantity = '" . $data['subtract_quantity'] . "',status = '" . $data['status'] . "',tax_class_id = '" . $data['tax_class_id'] . "', monday = '" . $monday . "', tuesday = '" . $tuesday . "', wednesday = '" . $wednesday . "', thursday = '" . $thursday . "', friday = '" . $friday . "', saturday = '" . $saturday . "', sunday = '" . $sunday . "',hs_code='" . $data['hs_code'] . "'  WHERE product_store_id = '" . (int) $store_product_id . "'";
 
         $this->db->query($query);
 
@@ -172,23 +172,19 @@ class ModelCatalogVendorProduct extends Model {
     }
 
     public function getProducts($data = []) {
-       
-       
+
+
         if (!empty($data['filter_category_price'])) {
 
             $sql = 'SELECT ps.*,p2c.product_id,pd.name as product_name ,p.*,st.name as store_name,v.firstname as fs,v.lastname as ls,ps.status as sts,v.user_id as vendor_id,pp.status as final_status from ' . DB_PREFIX . 'product_to_store ps LEFT JOIN ' . DB_PREFIX . 'product_to_category p2c ON (ps.product_id = p2c.product_id) LEFT JOIN ' . DB_PREFIX . 'product p ON (p.product_id = ps.product_id) LEFT JOIN ' . DB_PREFIX . 'product_description pd ON (p.product_id = pd.product_id) LEFT JOIN ' . DB_PREFIX . 'store st ON (st.store_id = ps.store_id) LEFT JOIN ' . DB_PREFIX . 'user v ON (v.user_id = st.vendor_id) join hf7_product_category_prices pp on pp.product_store_id=ps.product_store_id';
 
             $sql .= " WHERE pd.language_id = '" . (int) $this->config->get('config_language_id') . "'";
-
-            }
-        else
-        {
+        } else {
             $sql = 'SELECT ps.*,p2c.product_id,pd.name as product_name ,p.*,st.name as store_name,v.firstname as fs,v.lastname as ls,ps.status as sts,v.user_id as vendor_id from ' . DB_PREFIX . 'product_to_store ps LEFT JOIN ' . DB_PREFIX . 'product_to_category p2c ON (ps.product_id = p2c.product_id) LEFT JOIN ' . DB_PREFIX . 'product p ON (p.product_id = ps.product_id) LEFT JOIN ' . DB_PREFIX . 'product_description pd ON (p.product_id = pd.product_id) LEFT JOIN ' . DB_PREFIX . 'store st ON (st.store_id = ps.store_id) LEFT JOIN ' . DB_PREFIX . 'user v ON (v.user_id = st.vendor_id)';
 
             $sql .= " WHERE pd.language_id = '" . (int) $this->config->get('config_language_id') . "'";
-    
         }
-       
+
         if (!empty($data['filter_store_id'])) {
             $sql .= " AND st.name LIKE '" . $this->db->escape($data['filter_store_id']) . "%'";
         }
@@ -265,7 +261,7 @@ class ModelCatalogVendorProduct extends Model {
             }
         }
 
-        
+
 
         $sort_data = [
             'pd.name',
@@ -1201,32 +1197,25 @@ class ModelCatalogVendorProduct extends Model {
     }
 
     public function getCategoryPriceDetailsByCategoryName($store_id, $price_category) {
-        if($store_id!=0)
-        {
-        $category_price = 'SELECT * FROM ' . DB_PREFIX . "product_category_prices WHERE price_category='" . $price_category . "' AND store_id='" . $store_id . "'";
-        }
-        else
-        {
-        $category_price = 'SELECT * FROM ' . DB_PREFIX . "product_category_prices WHERE price_category='" . $price_category . "' ";
-            
+        if ($store_id != 0) {
+            $category_price = 'SELECT * FROM ' . DB_PREFIX . "product_category_prices WHERE price_category='" . $price_category . "' AND store_id='" . $store_id . "'";
+        } else {
+            $category_price = 'SELECT * FROM ' . DB_PREFIX . "product_category_prices WHERE price_category='" . $price_category . "' ";
         }
         $res = $this->db->query($category_price);
         return $res->rows;
     }
 
-    public function getCategoryPriceDetailsByCategoryNameByStatus($store_id, $price_category,$status) {
-       
-        if($store_id!=0)
-        {
-             $category_price = 'SELECT * FROM ' . DB_PREFIX . "product_category_prices WHERE price_category='" . $price_category . "' AND store_id='" . $store_id . "' AND status ='".$status ."'";
-        }
-        else{
-            $category_price = 'SELECT * FROM ' . DB_PREFIX . "product_category_prices WHERE price_category='" . $price_category . "'  AND status ='".$status ."'";
+    public function getCategoryPriceDetailsByCategoryNameByStatus($store_id, $price_category, $status) {
 
+        if ($store_id != 0) {
+            $category_price = 'SELECT * FROM ' . DB_PREFIX . "product_category_prices WHERE price_category='" . $price_category . "' AND store_id='" . $store_id . "' AND status ='" . $status . "'";
+        } else {
+            $category_price = 'SELECT * FROM ' . DB_PREFIX . "product_category_prices WHERE price_category='" . $price_category . "'  AND status ='" . $status . "'";
         }
         $res = $this->db->query($category_price);
         // echo "<pre>";print_r('SELECT * FROM ' . DB_PREFIX . "product_category_prices WHERE price_category='" . $price_category . "' AND status ='".$status ."'");die;
-        
+
         return $res->rows;
     }
 
@@ -1296,6 +1285,13 @@ class ModelCatalogVendorProduct extends Model {
 
 
         return $returnData;
+    }
+
+    public function getAllPriceCategories() {
+
+        $query = $this->db->query('SELECT DISTINCT price_category FROM ' . DB_PREFIX . "product_category_prices");
+        $price_category = $query->rows;
+        return $price_category;
     }
 
 }
