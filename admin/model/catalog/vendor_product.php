@@ -1294,4 +1294,27 @@ class ModelCatalogVendorProduct extends Model {
         return $price_category;
     }
 
+    public function updateinsertCategoryPrices($product_store_id, $product_id, $product_name, $status, $price_category, $vendor_product_data) {
+
+        $query_exist = 'SELECT * FROM ' . DB_PREFIX . "product_category_prices WHERE product_store_id ='" . (int) $product_store_id . "' AND product_id ='" . (int) $product_id . "' AND price_category='$price_category'";
+        $res = $this->db->query($query_exist);
+
+        if (count($res->rows) > 0) {
+            $query = 'UPDATE ' . DB_PREFIX . "product_category_prices SET status = '" . $status . "' WHERE product_store_id ='" . (int) $product_store_id . "' AND product_id ='" . (int) $product_id . "' AND price_category='$price_category'";
+        } else {
+            $query = 'INSERT INTO ' . DB_PREFIX . "product_category_prices SET  product_id = '" . $product_id . "', product_store_id = '" . $product_store_id . "', product_name = '" . $vendor_product_data['name'] . "', store_id = 75, price_category = '" . $price_category . "',price = '" . $vendor_product_data['special_price'] . "', status = '" . $status . "'";
+        }
+        $res = $this->db->query($query);
+        $this->db->query('INSERT INTO ' . DB_PREFIX . "product_category_prices_history SET  product_id = '" . $product_id . "', product_store_id = '" . $product_store_id . "', product_name = '" . $this->db->escape($vendor_product_data['name']) . "',price_category = '" . $price_category . "',price = '" . $vendor_product_data['special_price'] . "', date_added = '" . $this->db->escape(date('Y-m-d H:i:s')) . "', updated_by = '" . $this->db->escape($this->user->getId()) . "', updated_by_name = '" . $this->db->escape($this->user->getUserName()) . "'");
+        $log = new Log('error.log');
+        $log->write($res);
+        return $res;
+    }
+
+    public function getVendorProduct($product_store_id, $product_id) {
+        $query = $this->db->query('SELECT p.*, pr.name FROM ' . DB_PREFIX . "product_to_store p INNER JOIN " . DB_PREFIX . "product pr ON pr.product_id = p.product_id  WHERE p.product_id = '" . (int) $product_id . "' AND p.product_store_id = '" . (int) $product_store_id . "'");
+        $vendor_product_data = $query->row;
+        return $vendor_product_data;
+    }
+
 }
