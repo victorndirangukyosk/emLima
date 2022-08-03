@@ -3194,6 +3194,58 @@ class ControllerCatalogVendorProduct extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
+    public function enableinallpricecategories() {
+        $log = new Log('error.log');
+        $this->load->model('catalog/vendor_product');
+        $log->write($this->request->get['product_id']);
+        $product_store_id = $this->request->get['product_store_id'];
+        $product_id = $this->request->get['product_id'];
+        $product_name = $this->request->get['product_name'];
+        $status = $this->request->get['status'];
+
+        $price_category = $this->model_catalog_vendor_product->getAllPriceCategories();
+        foreach ($price_category as $price_cat) {
+            $log->write($price_cat['price_category']);
+            $vendor_product_data = $this->model_catalog_vendor_product->getVendorProduct($product_store_id, $product_id);
+            $log->write($vendor_product_data);
+            if (isset($vendor_product_data) && is_array($vendor_product_data) && count($vendor_product_data) > 0) {
+                $this->model_catalog_vendor_product->updateinsertCategoryPrices($product_store_id, $product_id, $product_name, $status, $price_cat['price_category'], $vendor_product_data);
+            }
+        }
+        // Add to activity log
+        $log = new Log('error.log');
+        $this->load->model('user/user_activity');
+
+        $status_text = $status == 0 ? 'Disabled' : 'Enabled';
+        $activity_data = [
+            'user_id' => $this->user->getId(),
+            'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+            'user_group_id' => $this->user->getGroupId(),
+            'category_pricing_name' => $price_cat['price_category'],
+            'description' => $status_text . ' ' . $product_name . ' in ' . $price_cat['price_category'] . ' Category',
+            'category_pricing_vendor_product_storeid' => $product_store_id,
+            'product_name' => $product_name,
+        ];
+        if ($status == 0) {
+            $log->write('vendor product category pricing status edit');
+
+            $this->model_user_user_activity->addActivity('vendor_product_category_pricing_status_disabled_edit', $activity_data);
+
+            $log->write('vendor product category pricing status edit');
+        }
+        if ($status == 1) {
+            $log->write('vendor product category pricing status edit');
+
+            $this->model_user_user_activity->addActivity('vendor_product_category_pricing_status_enabled_edit', $activity_data);
+
+            $log->write('vendor product category pricing status edit');
+        }
+
+        $json['warning'] = 'Product Category Pricing Status Updated!';
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
     public function InventoryHistory() {
         $this->load->language('catalog/product');
 
