@@ -1709,6 +1709,9 @@ class ControllerDeliversystemDeliversystem extends Controller {
         $postData = json_decode($postData, true);
         $log = new Log('error.log');
         $log->write($postData);
+
+        $this->model_pezesha_pezeshaloanreceivables->savecallbackrequests($postData);
+
         if ($this->validate($postData)) {
             $orders = $postData['order_id'];
             foreach ($orders as $order) {
