@@ -687,6 +687,11 @@ class ControllerCommonHome extends Controller {
                 //$this->response->redirect($this->url->link('common/home/homepage'));
             }
         }
+
+        if ($this->customer->getId() && isset($this->session->data['tempPassword_' . $this->customer->getId()]) && $this->session->data['tempPassword_' . $this->customer->getId()] == 1) {
+            $this->response->redirect($this->url->link('account/changepass'));
+        }
+
         $this->load->model('account/customer');
         $is_he_parents = $this->model_account_customer->CheckHeIsParent();
         $log = new Log('error.log');
@@ -1266,18 +1271,16 @@ class ControllerCommonHome extends Controller {
           $log->write('mostboughtproducts'); */
         $data['category_url'] = $this->url->link('common/home', '', 'SSL');
 
-                // //    echo "<pre>";print_r($this->session->data['price_drop_seen']);die;
-                // $log->write($this->session->data['price_drop_seen']);
-                // $log->write('aaaaaaaaaaaaaaaaaaaa');
-        if ($this->session->data['price_drop_seen']=="" || $this->session->data['price_drop_seen']==NULL) {
-            $_SESSION['price_drop_seen']="false";
+        // //    echo "<pre>";print_r($this->session->data['price_drop_seen']);die;
+        // $log->write($this->session->data['price_drop_seen']);
+        // $log->write('aaaaaaaaaaaaaaaaaaaa');
+        if ($this->session->data['price_drop_seen'] == "" || $this->session->data['price_drop_seen'] == NULL) {
+            $_SESSION['price_drop_seen'] = "false";
+        } else {
+            $_SESSION['price_drop_seen'] = "true";
         }
-        else{
-            $_SESSION['price_drop_seen']="true";
+        // $log->write($this->session->data['price_drop_seen']);
 
-        }
-            // $log->write($this->session->data['price_drop_seen']);
-        
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/home.tpl') && isset($this->session->data['customer_id'])) {
             // $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/common/home.tpl', $data));
             $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/common/homenew.tpl', $data));

@@ -527,7 +527,7 @@
                     <?php if($preturn_report_vendor_orders != false){ ?>
                     <li><a href="<?= $report_vendor_orders ?>">Orders</a></li>
                     <?php } ?>
-                    <?php if($preturn_report_vendor_returns != false){ ?>
+                    <!--<?php if($preturn_report_vendor_returns != false){ ?>
                     <li><a href="<?= $report_vendor_returns ?>">Returns</a></li>
                     <?php } ?>
 
@@ -538,13 +538,13 @@
 
                     <?php if($preturn_report_vendor != false){ ?>
                     <li><a href="<?= $report_vendor ?>">Vendor</a></li>
-                    <?php } ?>
+                    <?php } ?>-->
                     <?php if($preturn_report_vendor_order != false){ ?>
                     <li><a href="<?= $report_vendor_order ?>">Vendor order</a></li>
                     <?php } ?>
-                    <?php if($preturn_report_store_sales != false){ ?>
+                    <!--<?php if($preturn_report_store_sales != false){ ?>
                     <li><a href="<?= $report_store_sales ?>">Store Sales</a></li>
-                    <?php } ?>
+                    <?php } ?>-->
 
                      <?php if($preturn_report_vendor_orders_category != false){ ?>
                     <li><a href="<?= $report_vendor_orders_category ?>">Order Products By Category</a></li>
@@ -615,12 +615,14 @@
             <?php if( $preturn_product_viewed != false || $preturn_product_purchased != false ) { ?>
             <li><a class="parent"><?php echo $text_product; ?></a>
                 <ul>
+                    <!--The below two reports are not using and query is earlier flow based
                     <?php if($preturn_product_viewed) { ?>
-                    <!-- <li><a href="<?php echo $report_product_viewed; ?>"><?php echo $text_report_product_viewed; ?></a></li> -->
+                     <li><a href="<?php echo $report_product_viewed; ?>"><?php echo $text_report_product_viewed; ?></a></li> 
                     <?php } ?>
+                    
                     <?php if($preturn_product_purchased) { ?>
                     <li><a href="<?php echo $report_product_purchased; ?>"><?php echo $text_report_product_purchased; ?></a></li>
-                    <?php } ?>                     
+                    <?php } ?>  -->                   
 
                      <?php if($preturn_inventory_daily_prices) { ?>
                     <li><a href="<?php echo $report_inventory_daily_prices; ?>"><?php echo $text_report_inventory_daily_prices; ?></a></li>

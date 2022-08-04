@@ -790,6 +790,7 @@
                             <option <?php if($payment_terms == "7 Days Credit") { ?>  selected="selected" <?php } ?> value="7 Days Credit">7 Days Credit</option>
                             <option <?php if($payment_terms == "15 Days Credit") { ?>  selected="selected" <?php } ?> value="15 Days Credit">15 Days Credit</option>
                             <option <?php if($payment_terms == "30 Days Credit") { ?>  selected="selected" <?php } ?> value="30 Days Credit">30 Days Credit</option>
+                            <option <?php if($payment_terms == "Pre-Paid") { ?>  selected="selected" <?php } ?> value="Pre-Paid">Pre-Paid</option>
                             </select>
                         </div>
                     </div>
