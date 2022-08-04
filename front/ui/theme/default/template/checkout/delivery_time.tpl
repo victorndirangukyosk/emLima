@@ -48,7 +48,7 @@
                                 <ul class="list-group">
                                     <?php if(count($values) > 0 ) { ?>
                                         <?php foreach ($values as $value): ?>
-                                            <li class="list-group-item timeslot-selected" id="time_selected" data-value="<?= $value['timeslot']?>" data-date="<?= $key?>" data-store="<?= $store['store_id'] ?>" >
+                                            <li class="list-group-item timeslot-selected" id="time_selected" data-value="<?= $value['timeslot']?>" data-day-name="<?= $day_name[$key] ?>" data-date="<?= $key?>" data-store="<?= $store['store_id'] ?>" >
                                                 <label class="control control--radio"><?= $value['timeslot']?>
                                                     <input type="radio" name="radAnswer_<?= $store['store_id'] ?>" />
                                                     <div class="control__indicator"></div>
