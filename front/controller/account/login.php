@@ -676,6 +676,7 @@ class ControllerAccountLogin extends Controller {
                         $this->session->data['redirect'] = $this->url->link('checkout/checkout', '', 'SSL');
 
                         $this->session->data['just_loggedin'] = true;
+                        $this->session->data['tempPassword_' . $this->customer->getId()] = $user_query->row['tempPassword'];
 
                         $data['success_message'] = $this->language->get('text_login_success');
                         $this->model_account_customer->cacheProductPrices(75);
@@ -745,7 +746,6 @@ class ControllerAccountLogin extends Controller {
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($data));
         unset($this->session->data['price_drop_seen']);
-
     }
 
     public function adminRedirectLogin() {

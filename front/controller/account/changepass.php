@@ -53,6 +53,7 @@ class ControllerAccountChangepass extends Controller {
                 $this->$data['error_warning'] = $this->language->get('error_warning_message');
             } else {
                 $this->session->data['success'] = 'Password changed successfully';
+                $this->session->data['tempPassword_' . $this->customer->getId()] = 0;
                 $this->response->redirect($this->url->link('account/account', '', 'SSL'));
 
                 // $this->response->redirect($this->url->link('account/changepass/success'));
