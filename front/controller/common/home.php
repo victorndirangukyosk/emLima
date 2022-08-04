@@ -688,7 +688,7 @@ class ControllerCommonHome extends Controller {
             }
         }
 
-        if ($this->customer->getId() && isset($this->session->data['tempPassword_' . $this->customer->getId()]) && $this->session->data['tempPassword_' . $this->customer->getId()] == 1) {
+        if ($this->customer->getId() && isset($this->session->data['tempPassword_' . $this->customer->getId()]) && $this->session->data['tempPassword_' . $this->customer->getId()] == 1 && ($this->session->data['adminlogin'] = 0 || !isset($this->session->data['adminlogin']))) {
             $this->response->redirect($this->url->link('account/changepass'));
         }
 
