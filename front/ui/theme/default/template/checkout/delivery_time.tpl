@@ -10,9 +10,9 @@
 
                 <?php $i = 0; foreach ($dates as $d): ?>
                         <?php if($i ==  0 ) { ?>
-                        <li role="presentation" class="active" id="dates_selected" data-value="<?php echo $d ?>"  ><a href="#<?= $store['store_id'] ?>_<?php echo $d ?>" aria-controls="<?php echo $d ?>" role="tab" data-toggle="tab"><?php echo $d ?></a></li>
+                        <li role="presentation" class="active" id="dates_selected" data-value="<?php echo $d ?>"  ><a href="#<?= $store['store_id'] ?>_<?php echo $d ?>" aria-controls="<?php echo $d ?>" role="tab" data-toggle="tab"><?php echo $d ?>(<?php echo $day_name[$d]; ?>)</a></li>
                         <?php } else { ?>
-                            <li role="presentation" id="dates_selected" data-value="<?php echo $d ?>" ><a href="#<?= $store['store_id'] ?>_<?php echo $d ?>" aria-controls="<?php echo $d ?>" role="tab" data-toggle="tab"><?php echo $d ?></a></li>
+                            <li role="presentation" id="dates_selected" data-value="<?php echo $d ?>" ><a href="#<?= $store['store_id'] ?>_<?php echo $d ?>" aria-controls="<?php echo $d ?>" role="tab" data-toggle="tab"><?php echo $d ?>(<?php echo $day_name[$d]; ?>)</a></li>
                         <?php } $i++; ?>
 
                 <?php endforeach ?>

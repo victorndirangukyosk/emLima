@@ -89,6 +89,7 @@ class Controllercheckoutdeliverytime extends Controller {
         $log->write($getActiveDays);
         $data['dates'] = $this->getDates($getActiveDays, $store_id, $shipping_method);
         $data['timeslots'] = [];
+        $data['day_name'] = [];
 
         $data['formatted_dates'] = [];
         $log->write($data['dates']);
@@ -126,6 +127,7 @@ class Controllercheckoutdeliverytime extends Controller {
             if (count($amTimeslot) > 0) {
                 $data['timeslots'][$date] = $amTimeslot;
                 $data['formatted_dates'][] = $date;
+                $data['day_name'][$date] = date('l', strtotime($date));
             }
 
             //$data['timeslots'][$date] = $temp;
@@ -181,7 +183,7 @@ class Controllercheckoutdeliverytime extends Controller {
             }
         }
         /* REMOVE DAYS BASED ON CITY OR REGION */
-
+        $log->write($data);
         //echo "<pre>";print_r($data);die;
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/checkout/delivery_time.tpl')) {
             $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/checkout/delivery_time.tpl', $data));
