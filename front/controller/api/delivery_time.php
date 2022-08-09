@@ -219,7 +219,7 @@ class ControllerApiDeliverytime extends Controller {
         $log->write('getothervendordeliverytime');
         $new_time = NULL;
         $this->load->model('user/user');
-        $store_details = $this->model_user_user->getVendor($store_id);
+        $store_details = $this->model_user_user->getVendor(ACTIVE_STORE_ID);
         $vendor_details = $this->model_user_user->getUser($store_details['vendor_id']);
         if ($vendor_details['delivery_time'] != NULL && $vendor_details['delivery_time'] > 0) {
             $new_time = date("d-m-Y H:i:s", strtotime('+' . $vendor_details['delivery_time'] . ' hours'));
