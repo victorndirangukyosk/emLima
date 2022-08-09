@@ -29,51 +29,6 @@ class Controllercheckoutdeliverytime extends Controller {
         $same_day = date('Y-m-d');
         $next_day = date('d-m-Y', strtotime($same_day . "+1 days"));
 
-        if (time() >= strtotime($rangeonestart) && time() <= strtotime($rangeoneend)) {
-            $pre_defined_slots = array('06:00am - 08:00am');
-            $selected_slot = $pre_defined_slots[0];
-            $data['selected_slot'] = $selected_slot;
-            $data['selected_date_slot'] = $next_day;
-            $data['selected_day_name'] = date('l', strtotime($next_day));
-            $log->write($selected_slot);
-            $log->write('RANGE ONE');
-        }
-
-        if (time() >= strtotime($rangetwostart) && time() <= strtotime($rangetwoend)) {
-            $pre_defined_slots = array('08:00am - 10:00am');
-            $selected_slot = $pre_defined_slots[0];
-            $data['selected_slot'] = $selected_slot;
-            $data['selected_date_slot'] = $next_day;
-            $data['selected_day_name'] = date('l', strtotime($next_day));
-            $log->write('RANGE TWO');
-        }
-
-        if (time() >= strtotime($rangethreestart) && time() <= strtotime($rangethreeend)) {
-            $pre_defined_slots = array('10:00am - 12:00pm');
-            $selected_slot = $pre_defined_slots[0];
-            $data['selected_slot'] = $selected_slot;
-            $data['selected_date_slot'] = $next_day;
-            $data['selected_day_name'] = date('l', strtotime($next_day));
-            $log->write('RANGE THREE');
-        }
-
-        if (time() >= strtotime($rangefourstart) && time() <= strtotime($rangefourend)) {
-            $pre_defined_slots = array('02:00pm - 04:00pm');
-            $selected_slot = $pre_defined_slots[0];
-            $data['selected_slot'] = $selected_slot;
-            $data['selected_date_slot'] = date('d-m-Y');
-            $data['selected_day_name'] = date('l', strtotime(date('d-m-Y')));
-            $log->write('RANGE FOUR');
-        }
-
-        /* if (time() >= strtotime($rangefivestart) && time() <= strtotime($rangefiveend)) {
-          $pre_defined_slots = array('04:00pm - 06:00pm');
-          $selected_slot = $pre_defined_slots[0];
-          $data['selected_slot'] = $selected_slot;
-          $data['selected_date_slot'] = date('d-m-Y');
-          $log->write('RANGE FIVE');
-          } */
-
         $this->language->load('checkout/delivery_time');
 
         $data['text_no_timeslot'] = $this->language->get('text_no_timeslot');
@@ -97,6 +52,58 @@ class Controllercheckoutdeliverytime extends Controller {
 
         $data['formatted_dates'] = [];
         $log->write($data['dates']);
+
+        if (time() >= strtotime($rangeonestart) && time() <= strtotime($rangeoneend)) {
+            $pre_defined_slots = array('06:00am - 08:00am');
+            $selected_slot = $pre_defined_slots[0];
+            $data['selected_slot'] = $selected_slot;
+            $data['selected_date_slot'] = $next_day;
+            $data['selected_date_slot'] = $data['dates'][1];
+            $data['selected_day_name'] = date('l', strtotime($data['selected_date_slot']));
+            $log->write($selected_slot);
+            $log->write('RANGE ONE');
+        }
+
+        if (time() >= strtotime($rangetwostart) && time() <= strtotime($rangetwoend)) {
+            $pre_defined_slots = array('08:00am - 10:00am');
+            $selected_slot = $pre_defined_slots[0];
+            $data['selected_slot'] = $selected_slot;
+            $data['selected_date_slot'] = $next_day;
+            $data['selected_date_slot'] = $data['dates'][1];
+            $data['selected_day_name'] = date('l', strtotime($data['selected_date_slot']));
+            $log->write('RANGE TWO');
+        }
+
+        if (time() >= strtotime($rangethreestart) && time() <= strtotime($rangethreeend)) {
+            $pre_defined_slots = array('10:00am - 12:00pm');
+            $selected_slot = $pre_defined_slots[0];
+            $data['selected_slot'] = $selected_slot;
+            $data['selected_date_slot'] = $next_day;
+            $data['selected_date_slot'] = $data['dates'][1];
+            $data['selected_day_name'] = date('l', strtotime($data['selected_date_slot']));
+            $log->write('RANGE THREE');
+        }
+
+        if (time() >= strtotime($rangefourstart) && time() <= strtotime($rangefourend)) {
+            $pre_defined_slots = array('02:00pm - 04:00pm');
+            $selected_slot = $pre_defined_slots[0];
+            $data['selected_slot'] = $selected_slot;
+            $data['selected_date_slot'] = date('d-m-Y');
+            $data['selected_date_slot'] = $data['dates'][0];
+            $data['selected_day_name'] = date('l', strtotime($data['selected_date_slot']));
+            $log->write('RANGE FOUR');
+        }
+
+        /* if (time() >= strtotime($rangefivestart) && time() <= strtotime($rangefiveend)) {
+          $pre_defined_slots = array('04:00pm - 06:00pm');
+          $selected_slot = $pre_defined_slots[0];
+          $data['selected_slot'] = $selected_slot;
+          $data['selected_date_slot'] = date('d-m-Y');
+          $data['selected_date_slot'] = $data['dates'][0];
+          $data['selected_day_name'] = date('l', strtotime($data['selected_date_slot']));
+          $log->write('RANGE FIVE');
+          } */
+
         foreach ($data['dates'] as $date) {
             $amTimeslot = [];
             $pmTimeslot = [];
@@ -1828,56 +1835,6 @@ class Controllercheckoutdeliverytime extends Controller {
         $same_day = date('Y-m-d');
         $next_day = date('d-m-Y', strtotime($same_day . "+1 days"));
 
-        if (time() >= strtotime($rangeonestart) && time() <= strtotime($rangeoneend)) {
-            $pre_defined_slots = array('06:00am - 08:00am');
-            $selected_slot = $pre_defined_slots[0];
-            $data['selected_slot'] = $selected_slot;
-            $data['selected_date_slot'] = $next_day;
-            $data['selected_day_name'] = date('l', strtotime($next_day));
-            $data['disabled_slot'] = array();
-            $log->write($selected_slot);
-            $log->write('RANGE ONE');
-        }
-
-        if (time() >= strtotime($rangetwostart) && time() <= strtotime($rangetwoend)) {
-            $pre_defined_slots = array('08:00am - 10:00am');
-            $selected_slot = $pre_defined_slots[0];
-            $data['selected_slot'] = $selected_slot;
-            $data['selected_date_slot'] = $next_day;
-            $data['selected_day_name'] = date('l', strtotime($next_day));
-            $data['disabled_slot'] = array('06:00am - 08:00am');
-            $log->write('RANGE TWO');
-        }
-
-        if (time() >= strtotime($rangethreestart) && time() <= strtotime($rangethreeend)) {
-            $pre_defined_slots = array('10:00am - 12:00pm');
-            $selected_slot = $pre_defined_slots[0];
-            $data['selected_slot'] = $selected_slot;
-            $data['selected_date_slot'] = $next_day;
-            $data['selected_day_name'] = date('l', strtotime($next_day));
-            $data['disabled_slot'] = array('06:00am - 08:00am', '08:00am - 10:00am');
-            $log->write('RANGE THREE');
-        }
-
-        if (time() >= strtotime($rangefourstart) && time() <= strtotime($rangefourend)) {
-            $pre_defined_slots = array('02:00pm - 04:00pm');
-            $selected_slot = $pre_defined_slots[0];
-            $data['selected_slot'] = $selected_slot;
-            $data['selected_date_slot'] = date('d-m-Y');
-            $data['selected_day_name'] = date('l', strtotime(date('d-m-Y')));
-            $data['disabled_slot'] = array('06:00am - 08:00am', '08:00am - 10:00am', '10:00am - 12:00pm');
-            $log->write('RANGE FOUR');
-        }
-
-        /* if (time() >= strtotime($rangefivestart) && time() <= strtotime($rangefiveend)) {
-          $pre_defined_slots = array('04:00pm - 06:00pm');
-          $selected_slot = $pre_defined_slots[0];
-          $data['selected_slot'] = $selected_slot;
-          $data['selected_date_slot'] = date('d-m-Y');
-          $data['disabled_slot'] = array('06:00am - 08:00am', '08:00am - 10:00am', '10:00am - 12:00pm', '02:00pm - 04:00pm');
-          $log->write('RANGE FIVE');
-          } */
-
         $this->language->load('checkout/delivery_time');
 
         $data['text_no_timeslot'] = $this->language->get('text_no_timeslot');
@@ -1900,6 +1857,63 @@ class Controllercheckoutdeliverytime extends Controller {
 
         $data['formatted_dates'] = [];
         $log->write($data['dates']);
+
+        if (time() >= strtotime($rangeonestart) && time() <= strtotime($rangeoneend)) {
+            $pre_defined_slots = array('06:00am - 08:00am');
+            $selected_slot = $pre_defined_slots[0];
+            $data['selected_slot'] = $selected_slot;
+            $data['selected_date_slot'] = $next_day;
+            $data['selected_date_slot'] = $data['dates'][1];
+            $data['selected_day_name'] = date('l', strtotime($data['selected_date_slot']));
+            $data['disabled_slot'] = array();
+            $log->write($selected_slot);
+            $log->write('RANGE ONE');
+        }
+
+        if (time() >= strtotime($rangetwostart) && time() <= strtotime($rangetwoend)) {
+            $pre_defined_slots = array('08:00am - 10:00am');
+            $selected_slot = $pre_defined_slots[0];
+            $data['selected_slot'] = $selected_slot;
+            $data['selected_date_slot'] = $next_day;
+            $data['selected_date_slot'] = $data['dates'][1];
+            $data['selected_day_name'] = date('l', strtotime($data['selected_date_slot']));
+            $data['disabled_slot'] = array('06:00am - 08:00am');
+            $log->write('RANGE TWO');
+        }
+
+        if (time() >= strtotime($rangethreestart) && time() <= strtotime($rangethreeend)) {
+            $pre_defined_slots = array('10:00am - 12:00pm');
+            $selected_slot = $pre_defined_slots[0];
+            $data['selected_slot'] = $selected_slot;
+            $data['selected_date_slot'] = $next_day;
+            $data['selected_date_slot'] = $data['dates'][1];
+            $data['selected_day_name'] = date('l', strtotime($data['selected_date_slot']));
+            $data['disabled_slot'] = array('06:00am - 08:00am', '08:00am - 10:00am');
+            $log->write('RANGE THREE');
+        }
+
+        if (time() >= strtotime($rangefourstart) && time() <= strtotime($rangefourend)) {
+            $pre_defined_slots = array('02:00pm - 04:00pm');
+            $selected_slot = $pre_defined_slots[0];
+            $data['selected_slot'] = $selected_slot;
+            $data['selected_date_slot'] = date('d-m-Y');
+            $data['selected_date_slot'] = $data['dates'][0];
+            $data['selected_day_name'] = date('l', strtotime($data['selected_date_slot']));
+            $data['disabled_slot'] = array('06:00am - 08:00am', '08:00am - 10:00am', '10:00am - 12:00pm');
+            $log->write('RANGE FOUR');
+        }
+
+        /* if (time() >= strtotime($rangefivestart) && time() <= strtotime($rangefiveend)) {
+          $pre_defined_slots = array('04:00pm - 06:00pm');
+          $selected_slot = $pre_defined_slots[0];
+          $data['selected_slot'] = $selected_slot;
+          $data['selected_date_slot'] = date('d-m-Y');
+          $data['selected_date_slot'] = $data['dates'][0];
+          $data['selected_day_name'] = date('l', strtotime($data['selected_date_slot']));
+          $data['disabled_slot'] = array('06:00am - 08:00am', '08:00am - 10:00am', '10:00am - 12:00pm', '02:00pm - 04:00pm');
+          $log->write('RANGE FIVE');
+          } */
+
         foreach ($data['dates'] as $date) {
             $amTimeslot = [];
             $pmTimeslot = [];
