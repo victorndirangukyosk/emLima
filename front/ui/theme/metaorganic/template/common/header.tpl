@@ -72,14 +72,14 @@
         <?php } ?>
     </div>
 
-<?php if (date('Y-m-d') <= date('2022-08-10')) { ?>
+<!--<?php if (date('Y-m-d') <= date('2022-08-10')) { ?>
 <div>
 	<marquee class="marquee-text" onmouseover="this.stop();" onmouseout="this.start();" loop="100" scrolldelay="100">
 	<span class="marquee-span">•</span>Please note, Deliveries are closed on 9<sup> th</sup> & 10<sup> th</sup> August due to Elections.
 </marquee>
 </div>
 
-<?php } ?>
+<?php } ?>-->
 
   <header>
 <div class="col-md-12" style="position: relative; z-index: 1040;  padding-bottom: 20px; border-bottom: 1px solid #ea6f28; margin-bottom: 14px;">
