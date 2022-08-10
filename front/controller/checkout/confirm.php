@@ -1151,30 +1151,40 @@ class ControllerCheckoutConfirm extends Controller {
                   $order_data[$store_id]['delivery_timeslot'] = '';
                   } */
 
-                if (isset($this->session->data['dates'][$store_id])) {
-                    $order_data[$store_id]['delivery_date'] = $this->session->data['dates'][$store_id];
-                } else {
-                    //$order_data[$store_id]['delivery_date'] = '';
-                    $order_data[$store_id]['delivery_date'] = date('d-m-Y');
-                }
-
-                if (isset($this->session->data['timeslot'][$store_id])) {
-                    $order_data[$store_id]['delivery_timeslot'] = $this->session->data['timeslot'][$store_id];
-                } else {
-                    //$order_data[$store_id]['delivery_timeslot'] = '';
-                    $settings = $this->getSettings('express', 0);
-                    $timeDiff = $settings['express_how_much_time'];
-
-                    $min = 0;
-                    if ($timeDiff) {
-                        $i = explode(':', $timeDiff);
-                        $min = $min + $i[0] * 60 + $i[1]; //add difference minut to current time
+                if ($store_id = 75) {
+                    if (isset($this->session->data['dates'][$store_id])) {
+                        $order_data[$store_id]['delivery_date'] = $this->session->data['dates'][$store_id];
+                    } else {
+                        //$order_data[$store_id]['delivery_date'] = '';
+                        $order_data[$store_id]['delivery_date'] = date('d-m-Y');
                     }
-                    $to = date('h:ia', strtotime('+' . $min . ' minutes', strtotime(date('h:ia'))));
 
-                    $delivery_timeslot = date('h:ia') . ' - ' . $to;
 
-                    $order_data[$store_id]['delivery_timeslot'] = $this->session->data['timeslot'][$store_id] = $delivery_timeslot;
+                    if (isset($this->session->data['timeslot'][$store_id])) {
+                        $order_data[$store_id]['delivery_timeslot'] = $this->session->data['timeslot'][$store_id];
+                    } else {
+                        //$order_data[$store_id]['delivery_timeslot'] = '';
+                        $settings = $this->getSettings('express', 0);
+                        $timeDiff = $settings['express_how_much_time'];
+
+                        $min = 0;
+                        if ($timeDiff) {
+                            $i = explode(':', $timeDiff);
+                            $min = $min + $i[0] * 60 + $i[1]; //add difference minut to current time
+                        }
+                        $to = date('h:ia', strtotime('+' . $min . ' minutes', strtotime(date('h:ia'))));
+
+                        $delivery_timeslot = date('h:ia') . ' - ' . $to;
+
+                        $order_data[$store_id]['delivery_timeslot'] = $this->session->data['timeslot'][$store_id] = $delivery_timeslot;
+                    }
+                } else {
+                    $other_vendor_delivery_time = $this->load->controller('checkout/delivery_time/getothervendordeliverytime', 75);
+                    $log->write('other_vendor_delivery_time');
+                    $log->write($other_vendor_delivery_time);
+                    $log->write('other_vendor_delivery_time');
+                    $order_data[$store_id]['delivery_date'] = $this->session->data['dates'][$store_id];
+                    $order_data[$store_id]['delivery_timeslot'] = $this->session->data['timeslot'][$store_id];
                 }
 
                 $log->write('ON_DEMAND_CATEGORY_DELIVERY_TIME_SLOTS');
