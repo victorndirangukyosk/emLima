@@ -1151,7 +1151,7 @@ class ControllerCheckoutConfirm extends Controller {
                   $order_data[$store_id]['delivery_timeslot'] = '';
                   } */
 
-                if ($store_id = 75) {
+                if ($store_id == 75) {
                     if (isset($this->session->data['dates'][$store_id])) {
                         $order_data[$store_id]['delivery_date'] = $this->session->data['dates'][$store_id];
                     } else {
