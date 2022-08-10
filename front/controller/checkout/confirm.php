@@ -1181,15 +1181,14 @@ class ControllerCheckoutConfirm extends Controller {
                 } else {
                     $other_vendor_delivery_time = $this->load->controller('checkout/delivery_time/getothervendordeliverytime', $store_id);
 
-                    if ($other_vendor_delivery_time != NULL && $other_vendor_delivery_time['selected_time_slot_date'] != NULL && $other_vendor_delivery_time['selected_time_slot_date'] != '') {
+                    if ($other_vendor_delivery_time != NULL && $other_vendor_delivery_time['selected_time_slot'] != NULL && $other_vendor_delivery_time['selected_time_slot'] != '') {
 
                         $log->write('other_vendor_delivery_time');
-                        $log->write($other_vendor_delivery_time['selected_time_slot_date']);
-                        $log->write($other_vendor_delivery_time['selected_time_slot_time']);
+                        $log->write($other_vendor_delivery_time['selected_time_slot']);
                         $log->write('other_vendor_delivery_time');
 
-                        $order_data[$store_id]['delivery_date'] = $other_vendor_delivery_time['selected_time_slot_date'];
-                        $order_data[$store_id]['delivery_timeslot'] = $other_vendor_delivery_time['selected_time_slot_time'];
+                        $order_data[$store_id]['delivery_date'] = $this->session->data['dates'][$store_id];
+                        $order_data[$store_id]['delivery_timeslot'] = $this->session->data['timeslot'][$store_id];
                     } else {
                         $order_data[$store_id]['delivery_date'] = $this->session->data['dates'][75];
                         $order_data[$store_id]['delivery_timeslot'] = $this->session->data['timeslot'][75];
