@@ -1179,7 +1179,7 @@ class ControllerCheckoutConfirm extends Controller {
                         $order_data[$store_id]['delivery_timeslot'] = $this->session->data['timeslot'][$store_id] = $delivery_timeslot;
                     }
                 } else {
-                    $other_vendor_delivery_time = $this->load->controller('checkout/delivery_time/getothervendordeliverytime', 75);
+                    $other_vendor_delivery_time = $this->load->controller('checkout/delivery_time/getothervendordeliverytime', $store_id);
                     $log->write('other_vendor_delivery_time');
                     $log->write($other_vendor_delivery_time);
                     $log->write('other_vendor_delivery_time');
