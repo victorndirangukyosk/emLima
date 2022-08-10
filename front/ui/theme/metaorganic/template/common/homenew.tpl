@@ -111,14 +111,14 @@ padding: 10px;
   </script>
 </head>
 
-<?php if (date('Y-m-d') <= date('2022-08-10')) { ?>
+<!--<?php if (date('Y-m-d') <= date('2022-08-10')) { ?>
 <div>
 	<marquee class="marquee-text" onmouseover="this.stop();" onmouseout="this.start();" loop="100" scrolldelay="100">
 	<span class="marquee-span">•</span>Please note, Deliveries are closed on 9<sup> th</sup> & 10<sup> th</sup> August due to Elections.
 </marquee>
 </div>
 <br>
-<?php } ?>
+<?php } ?>-->
 
 <body  onload="loadPriceDrop()" data-wrapper-optimized="" id="homenew" class="new-homepage-image-format drawer drawer--top">
   <br> 
