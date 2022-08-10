@@ -1180,10 +1180,14 @@ class ControllerCheckoutConfirm extends Controller {
                     }
                 } else {
                     $other_vendor_delivery_time = $this->load->controller('checkout/delivery_time/getothervendordeliverytime', $store_id);
-                    $log->write('other_vendor_delivery_time');
-                    $log->write($other_vendor_delivery_time);
-                    $log->write('other_vendor_delivery_time');
+
                     if ($other_vendor_delivery_time != NULL && $other_vendor_delivery_time['selected_time_slot_date'] != NULL && $other_vendor_delivery_time['selected_time_slot_date'] != '') {
+
+                        $log->write('other_vendor_delivery_time');
+                        $log->write($other_vendor_delivery_time['selected_time_slot_date']);
+                        $log->write($other_vendor_delivery_time['selected_time_slot_time']);
+                        $log->write('other_vendor_delivery_time');
+
                         $order_data[$store_id]['delivery_date'] = $other_vendor_delivery_time['selected_time_slot_date'];
                         $order_data[$store_id]['delivery_timeslot'] = $other_vendor_delivery_time['selected_time_slot_time'];
                     } else {
