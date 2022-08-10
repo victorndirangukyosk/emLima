@@ -2044,7 +2044,7 @@ class Controllercheckoutdeliverytime extends Controller {
         $log->write('getothervendordeliverytime');
         $new_time = NULL;
         $this->load->model('user/user');
-        $store_details = $this->model_user_user->getVendor(ACTIVE_STORE_ID);
+        $store_details = $this->model_user_user->getVendor($store_id);
         $vendor_details = $this->model_user_user->getUser($store_details['vendor_id']);
 
         $log->write($store_details);
