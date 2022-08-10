@@ -2046,6 +2046,10 @@ class Controllercheckoutdeliverytime extends Controller {
         $this->load->model('user/user');
         $store_details = $this->model_user_user->getVendor(ACTIVE_STORE_ID);
         $vendor_details = $this->model_user_user->getUser($store_details['vendor_id']);
+
+        $log->write($store_details);
+        $log->write($vendor_details);
+
         if ($vendor_details['delivery_time'] != NULL && $vendor_details['delivery_time'] > 0) {
             $new_time = date("d-m-Y H:i:s", strtotime('+' . $vendor_details['delivery_time'] . ' hours'));
             $new_time_array = explode(' ', $new_time);
