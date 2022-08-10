@@ -1183,8 +1183,13 @@ class ControllerCheckoutConfirm extends Controller {
                     $log->write('other_vendor_delivery_time');
                     $log->write($other_vendor_delivery_time);
                     $log->write('other_vendor_delivery_time');
-                    $order_data[$store_id]['delivery_date'] = $this->session->data['dates'][$store_id];
-                    $order_data[$store_id]['delivery_timeslot'] = $this->session->data['timeslot'][$store_id];
+                    if ($other_vendor_delivery_time != NULL && $other_vendor_delivery_time['selected_time_slot_date'] != NULL && $other_vendor_delivery_time['selected_time_slot_date'] != '') {
+                        $order_data[$store_id]['delivery_date'] = $other_vendor_delivery_time['selected_time_slot_date'];
+                        $order_data[$store_id]['delivery_timeslot'] = $other_vendor_delivery_time['selected_time_slot_time'];
+                    } else {
+                        $order_data[$store_id]['delivery_date'] = $this->session->data['dates'][75];
+                        $order_data[$store_id]['delivery_timeslot'] = $this->session->data['timeslot'][75];
+                    }
                 }
 
                 $log->write('ON_DEMAND_CATEGORY_DELIVERY_TIME_SLOTS');
