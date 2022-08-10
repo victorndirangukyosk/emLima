@@ -1522,11 +1522,44 @@ class ControllerAccountDashboard extends Controller {
  
         $pdf = $this->request->get['pdf'];        
         $filter_data = [
-            // 'filter_date_start' => $filter_date_start,
-            // 'filter_date_end' => $filter_date_end,
+            'filter_date_start' => $this->request->get['start'],
+            'filter_date_end' => $this->request->get['end'],
+            'filter_sub_customer' => $this->request->get['customer_id'],
+
         ];   
 
         $this->load->model('report/excel');
         $this->model_report_excel->download_customer_statement_pdf_excel($filter_data, $dt, $pdf);
+    }
+
+
+    public function customerStatementrecords() {
+
+
+ 
+        $filter_data = [
+            'filter_date_start' => $this->request->get['start'],
+            'filter_date_end' => $this->request->get['end'],
+            'filter_sub_customer' => $this->request->get['customer_id'],
+            'filter_customer_id' => $this->customer->getId(),
+
+        ];   
+
+        $this->load->model('report/customer');
+        $results = $this->model_report_customer->getValidCustomerOrdersStatement($filter_data);
+                // echo "<pre>";print_r($results);die;
+
+            if(count($results)>0)
+            {
+                $json['value']=1;  
+            }
+            else
+            {
+                $json['value']=0;  
+
+            }
+        
+
+        $this->response->setOutput(json_encode($json));
     }
 }

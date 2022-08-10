@@ -72,9 +72,18 @@
         <?php } ?>
     </div>
 
+<!--<?php if (date('Y-m-d') <= date('2022-08-10')) { ?>
+<div>
+	<marquee class="marquee-text" onmouseover="this.stop();" onmouseout="this.start();" loop="100" scrolldelay="100">
+	<span class="marquee-span">•</span>Please note, Deliveries are closed on 9<sup> th</sup> & 10<sup> th</sup> August due to Elections.
+</marquee>
+</div>
+
+<?php } ?>-->
+
   <header>
 <div class="col-md-12" style="position: relative; z-index: 1040;  padding-bottom: 20px; border-bottom: 1px solid #ea6f28; margin-bottom: 14px;">
-
+<br>
       <div class="row" >
        <div class="col-md-2">
                 <div class="header__logo-container">
@@ -434,5 +443,39 @@ function checkMinimumOrderTotal() {
 
 .mini-wallet-button:hover {
     color: #ccc !important;
+}
+
+
+
+
+    .marquee-text{
+	height: 40px;
+    color: #000;
+    font-size: 16px;
+    overflow: hidden;
+    position: fixed;
+    z-index: 5000;
+    background: linear-gradient(90deg,#feb21a 0,#fedb28 50%,#feb21a 100%);
+padding: 10px;
+	-webkit-marquee-speed: slow !important;
+}
+.marquee-span{
+	margin-right: 7px;
+    color: #cd1212;
+    font-size: 40px;
+    line-height: 19px;
+    vertical-align: text-top;
+}
+.marquee-link{
+	    display: inline-block;
+    cursor: pointer;
+    transition: all .15s ease-in-out;
+    color: #0073dd;
+    text-decoration: none;
+    background-color: transparent;
+}
+.marquee-link:hover{
+	    color: #004b91 !important;
+    text-decoration: underline !important;
 }
 </style>

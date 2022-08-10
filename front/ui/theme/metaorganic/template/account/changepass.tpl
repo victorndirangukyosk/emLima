@@ -4,6 +4,10 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width,initial-scale=1"> 
+<title>
+    <?= $heading_title ?>
+</title>
+<link href="<?= $base;?>front/ui/theme/metaorganic/assets/images/favicon.ico" rel="icon">
 <link rel="preload" href="<?= BASE_URL;?>/front/ui/theme/metaorganic/assets_landing_page/css/style.min.css" as="style">
 <link rel="stylesheet" href="<?= BASE_URL;?>/front/ui/theme/metaorganic/assets_landing_page/css/reset.css">
 <link rel="stylesheet" href="<?= BASE_URL;?>/front/ui/theme/metaorganic/assets_landing_page/css/bootstrap.min.css">

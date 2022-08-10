@@ -10,9 +10,9 @@
 
                 <?php $i = 0; foreach ($dates as $d): ?>
                         <?php if($i ==  0 ) { ?>
-                        <li role="presentation" class="active" id="dates_selected" data-value="<?php echo $d ?>"  ><a href="#<?= $store['store_id'] ?>_<?php echo $d ?>" aria-controls="<?php echo $d ?>" role="tab" data-toggle="tab"><?php echo $d ?></a></li>
+                        <li role="presentation" class="active" id="dates_selected" data-value="<?php echo $d ?>"  ><a href="#<?= $store['store_id'] ?>_<?php echo $d ?>" aria-controls="<?php echo $d ?>" role="tab" data-toggle="tab"><?php echo $d ?>(<?php echo $day_name[$d]; ?>)</a></li>
                         <?php } else { ?>
-                            <li role="presentation" id="dates_selected" data-value="<?php echo $d ?>" ><a href="#<?= $store['store_id'] ?>_<?php echo $d ?>" aria-controls="<?php echo $d ?>" role="tab" data-toggle="tab"><?php echo $d ?></a></li>
+                            <li role="presentation" id="dates_selected" data-value="<?php echo $d ?>" ><a href="#<?= $store['store_id'] ?>_<?php echo $d ?>" aria-controls="<?php echo $d ?>" role="tab" data-toggle="tab"><?php echo $d ?>(<?php echo $day_name[$d]; ?>)</a></li>
                         <?php } $i++; ?>
 
                 <?php endforeach ?>
@@ -28,7 +28,7 @@
                                 <ul class="list-group">
                                     <?php if(count($values) > 0 ) { ?>
                                         <?php foreach ($values as $value): ?>
-                                            <li class="list-group-item timeslot-selected" id="time_selected" data-value="<?= $value['timeslot']?>" data-date="<?= $key ?>" data-store="<?= $store['store_id'] ?>" >
+                                            <li class="list-group-item timeslot-selected" id="time_selected" data-value="<?= $value['timeslot']?>" data-day-name="<?= $day_name[$key] ?>" data-date="<?= $key ?>" data-store="<?= $store['store_id'] ?>" >
                                                 <label class="control control--radio"><?= $value['timeslot']?>
                                                     <input type="radio" name="radAnswer_<?= $store['store_id'] ?>" />
                                                     <div class="control__indicator"></div>
@@ -48,7 +48,7 @@
                                 <ul class="list-group">
                                     <?php if(count($values) > 0 ) { ?>
                                         <?php foreach ($values as $value): ?>
-                                            <li class="list-group-item timeslot-selected" id="time_selected" data-value="<?= $value['timeslot']?>" data-date="<?= $key?>" data-store="<?= $store['store_id'] ?>" >
+                                            <li class="list-group-item timeslot-selected" id="time_selected" data-value="<?= $value['timeslot']?>" data-day-name="<?= $day_name[$key] ?>" data-date="<?= $key?>" data-store="<?= $store['store_id'] ?>" >
                                                 <label class="control control--radio"><?= $value['timeslot']?>
                                                     <input type="radio" name="radAnswer_<?= $store['store_id'] ?>" />
                                                     <div class="control__indicator"></div>
@@ -76,7 +76,7 @@ $('.timeslot-selected').unbind().click(function(e) {
     saveNewTimeSlot($(this).attr('data-store'),$(this).attr('data-value'),$(this).attr('data-date'));
     $(this).children().children().prop("checked", true);
     
-     $('#select-timeslot').html("Selected : "+ $(this).attr('data-date')+ ', ' + $(this).attr('data-value'));
+     $('#select-timeslot').html("Selected : "+ $(this).attr('data-date')+'('+$(this).attr('data-day-name')+')'+ ', ' + $(this).attr('data-value'));
 
     e.preventDefault();
 });

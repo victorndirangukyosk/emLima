@@ -49,6 +49,7 @@ class ControllerAccountLogin extends Controller {
             unset($this->session->data['pezesha_amount_limit']);
             unset($this->session->data['pezesha_customer_amount_limit']);
             unset($this->session->data['add_delivery_charges']);
+            unset($this->session->data['price_drop_seen']);
             setcookie('po_number', null, -1, '/');
 
             $customer_info = $this->model_account_customer->getCustomerByToken($this->request->get['token']);
@@ -77,6 +78,7 @@ class ControllerAccountLogin extends Controller {
 
         if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validate()) {
             unset($this->session->data['guest']);
+            unset($this->session->data['price_drop_seen']);
 
             // Default Shipping Address
             $this->load->model('account/address');
@@ -674,6 +676,7 @@ class ControllerAccountLogin extends Controller {
                         $this->session->data['redirect'] = $this->url->link('checkout/checkout', '', 'SSL');
 
                         $this->session->data['just_loggedin'] = true;
+                        $this->session->data['tempPassword_' . $this->customer->getId()] = $user_query->row['tempPassword'];
 
                         $data['success_message'] = $this->language->get('text_login_success');
                         $this->model_account_customer->cacheProductPrices(75);
@@ -742,6 +745,7 @@ class ControllerAccountLogin extends Controller {
         $this->model_account_customer->getDBCart();
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($data));
+        unset($this->session->data['price_drop_seen']);
     }
 
     public function adminRedirectLogin() {
@@ -771,6 +775,7 @@ class ControllerAccountLogin extends Controller {
             unset($this->session->data['vouchers']);
             unset($this->session->data['adminlogin']);
             unset($this->session->data['add_delivery_charges']);
+            unset($this->session->data['price_drop_seen']);
             setcookie('po_number', null, -1, '/');
 
             $customer_info = $this->model_account_customer->getCustomerByToken($this->request->get['token']);
@@ -986,6 +991,7 @@ class ControllerAccountLogin extends Controller {
             unset($this->session->data['vouchers']);
             unset($this->session->data['adminlogin']);
             unset($this->session->data['add_delivery_charges']);
+            unset($this->session->data['price_drop_seen']);
 
             $api_info = $customer_info = $this->model_account_customer->getCustomerByToken($token);
 

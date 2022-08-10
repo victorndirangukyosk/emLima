@@ -695,7 +695,7 @@ class ControllerDashboardOrder extends Controller {
         
         $this->request->get['filter_date_added'] = isset($this->request->get['filter_date_added']) ? $this->request->get['filter_date_added'] : date('Y-m-d');
         $this->request->get['filter_date_added_end'] = isset($this->request->get['filter_date_added_end']) ? $this->request->get['filter_date_added_end'] : date('Y-m-d');
-        $order_grand_total = $this->model_sale_order->TotalRevenueBookedDashBoard(['filter_order_status_id_not_in' => '0, 6, 8,15,16', 'filter_date_added' => $this->request->get['filter_date_added'], 'filter_date_added_end' => $this->request->get['filter_date_added_end']]);
+        $order_grand_total = $this->model_sale_order->TotalRevenueBookedDashBoard(['filter_order_status_id_not_in' => '0, 6, 8,15,16', 'filter_delivery_date_start' => $this->request->get['filter_date_added'], 'filter_delivery_date_end' => $this->request->get['filter_date_added_end']]);
         $data['total'] = $this->currency->format($order_grand_total);
         $log = new Log('error.log');
         /* $log->write('order_grand_total');
@@ -784,7 +784,7 @@ class ControllerDashboardOrder extends Controller {
         // $order_grand_total = $this->model_sale_order->TotalRevenueBookedDashBoard(['filter_order_status' => 5, 'filter_monthyear_added' => $this->request->get['filter_monthyear_added']]);
         $this->request->get['filter_date_added'] = isset($this->request->get['filter_date_added']) ? $this->request->get['filter_date_added'] : date('Y-m-d');
         $this->request->get['filter_date_added_end'] = isset($this->request->get['filter_date_added_end']) ? $this->request->get['filter_date_added_end'] : date('Y-m-d');
-           $order_grand_total = $this->model_sale_order->TotalRevenueBookedDashBoard(['filter_order_status' => 5, 'filter_date_added' => $this->request->get['filter_date_added'], 'filter_date_added_end' => $this->request->get['filter_date_added_end']]);
+           $order_grand_total = $this->model_sale_order->TotalRevenueBookedDashBoard(['filter_order_status' => 5, 'filter_delivery_date_start' => $this->request->get['filter_date_added'], 'filter_delivery_date_end' => $this->request->get['filter_date_added_end']]);
         
         $data['total'] = $this->currency->format($order_grand_total);
         $log = new Log('error.log');
@@ -872,7 +872,7 @@ class ControllerDashboardOrder extends Controller {
         // $order_grand_total = $this->model_sale_order->TotalRevenueBookedDashBoard(['filter_order_status_id_not_in' => '0, 5, 6, 8,15,16', 'filter_monthyear_added' => $this->request->get['filter_monthyear_added']]);
         $this->request->get['filter_date_added'] = isset($this->request->get['filter_date_added']) ? $this->request->get['filter_date_added'] : date('Y-m-d');
         $this->request->get['filter_date_added_end'] = isset($this->request->get['filter_date_added_end']) ? $this->request->get['filter_date_added_end'] : date('Y-m-d');
-           $order_grand_total = $this->model_sale_order->TotalRevenueBookedDashBoard(['filter_order_status_id_not_in' => '0, 5,6, 8,15,16', 'filter_date_added' => $this->request->get['filter_date_added'], 'filter_date_added_end' => $this->request->get['filter_date_added_end']]);
+           $order_grand_total = $this->model_sale_order->TotalRevenueBookedDashBoard(['filter_order_status_id_not_in' => '0, 5,6, 8,15,16', 'filter_delivery_date_start' => $this->request->get['filter_date_added'], 'filter_delivery_date_end' => $this->request->get['filter_date_added_end']]);
         
 
         $data['total'] = $this->currency->format($order_grand_total);

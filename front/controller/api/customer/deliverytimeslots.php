@@ -1,8 +1,10 @@
 <?php
 
-class ControllerApiCustomerCheckout extends Controller {
+class ControllerApiCustomerDeliverytimeslots extends Controller {
 
-    public function getDeliveryTimeslot() {
+    private $error = [];
+
+    public function getDeliverytimeslot() {
         //echo "<pre>";print_r('getDeliveryTimeslot');die;
         $json = [];
 
@@ -258,7 +260,7 @@ class ControllerApiCustomerCheckout extends Controller {
           $this->response->setOutput(json_encode($json)); */
     }
 
-    public function getPaymentMethods() {
+    public function getPaymentmethods() {
         //echo "<pre>";print_r('getStoreShippingMethods');die;
         $json = [];
 
@@ -266,25 +268,64 @@ class ControllerApiCustomerCheckout extends Controller {
         $json['status'] = 200;
         $json['data'] = [];
         $json['message'] = [];
+
         $this->load->language('api/general');
+        $this->load->language('checkout/checkout');
+
         $this->load->model('assets/category');
         $this->load->model('assets/product');
         $this->load->model('tool/image');
+        $this->load->model('account/customer');
+        $this->load->model('extension/extension');
 
-        if (isset($this->request->get['total'])) {
-            $this->load->language('checkout/checkout');
-            // Payment Methods
-            $method_data = [];
+        if (isset($this->request->get['total']) && isset($this->request->get['cutomer_id']) && $this->request->get['cutomer_id'] > 0) {
 
-            $this->load->model('extension/extension');
+            $customer_info = $this->model_account_customer->getCustomer($this->request->get['cutomer_id']);
 
-            $results = $this->model_extension_extension->getExtensions('payment');
+            if (is_array($customer_info) && count($customer_info) > 0) {
+                // Payment Methods
+                $method_data = [];
 
-            // echo "<pre>";print_r($results);die;
-            $total = $this->request->get['total'];
-            if ($this->customer->getPaymentTerms() == 'Payment On Delivery') {
-                foreach ($results as $result) {
-                    if ($result['code'] == 'wallet' || $result['code'] == 'mod' || $result['code'] == 'mpesa' || $result['code'] == 'pesapal' || $result['code'] == 'interswitch') {
+                $results = $this->model_extension_extension->getExtensions('payment');
+
+                // echo "<pre>";print_r($results);die;
+                $total = $this->request->get['total'];
+                if ($customer_info['payment_terms'] == 'Payment On Delivery') {
+                    foreach ($results as $result) {
+                        if ($result['code'] == 'wallet' || $result['code'] == 'mod' || $result['code'] == 'mpesa' || $result['code'] == 'pesapal' || $result['code'] == 'interswitch') {
+                            if ($this->config->get($result['code'] . '_status')) {
+                                $this->load->model('payment/' . $result['code']);
+
+                                $method = $this->{'model_payment_' . $result['code']}->getMethod($total);
+
+                                if ($method) {
+                                    $method['terms'] = str_replace("(No Transaction Fee)", "", $method['terms']);
+                                    //removed  (No Transaction Fee) from terms,as suggested
+                                    //echo "<pre>";print_r($method);die;
+                                    $method_data[] = $method;
+                                }
+                            }
+                        }
+                    }
+                } else if ($customer_info['payment_terms'] == '7 Days Credit' || $customer_info['payment_terms'] == '15 Days Credit' || $customer_info['payment_terms'] == '30 Days Credit') {
+                    foreach ($results as $result) {
+                        if ($result['code'] == 'cod' || $result['code'] == 'wallet') {
+                            if ($this->config->get($result['code'] . '_status')) {
+                                $this->load->model('payment/' . $result['code']);
+
+                                $method = $this->{'model_payment_' . $result['code']}->getMethod($total);
+
+                                if ($method) {
+                                    $method['terms'] = str_replace("(No Transaction Fee)", "", $method['terms']);
+                                    //removed  (No Transaction Fee) from terms,as suggested
+                                    //echo "<pre>";print_r($method);die;
+                                    $method_data[] = $method;
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    foreach ($results as $result) {
                         if ($this->config->get($result['code'] . '_status')) {
                             $this->load->model('payment/' . $result['code']);
 
@@ -299,54 +340,22 @@ class ControllerApiCustomerCheckout extends Controller {
                         }
                     }
                 }
-            } else if ($this->customer->getPaymentTerms() == '7 Days Credit' || $this->customer->getPaymentTerms() == '15 Days Credit' || $this->customer->getPaymentTerms() == '30 Days Credit') {
-                foreach ($results as $result) {
-                    if ($result['code'] == 'cod' || $result['code'] == 'wallet') {
-                        if ($this->config->get($result['code'] . '_status')) {
-                            $this->load->model('payment/' . $result['code']);
 
-                            $method = $this->{'model_payment_' . $result['code']}->getMethod($total);
+                $sort_order = [];
 
-                            if ($method) {
-                                $method['terms'] = str_replace("(No Transaction Fee)", "", $method['terms']);
-                                //removed  (No Transaction Fee) from terms,as suggested
-                                //echo "<pre>";print_r($method);die;
-                                $method_data[] = $method;
-                            }
-                        }
-                    }
+                foreach ($method_data as $key => $value) {
+                    $sort_order[$key] = $value['sort_order'];
                 }
-            } else {
-                foreach ($results as $result) {
-                    if ($this->config->get($result['code'] . '_status')) {
-                        $this->load->model('payment/' . $result['code']);
 
-                        $method = $this->{'model_payment_' . $result['code']}->getMethod($total);
+                array_multisort($sort_order, SORT_ASC, $method_data);
 
-                        if ($method) {
-                            $method['terms'] = str_replace("(No Transaction Fee)", "", $method['terms']);
-                            //removed  (No Transaction Fee) from terms,as suggested
-                            //echo "<pre>";print_r($method);die;
-                            $method_data[] = $method;
-                        }
-                    }
-                }
+                //echo "<pre>";print_r($method_data);die;
+                $json['data'] = $method_data;
             }
-
-            $sort_order = [];
-
-            foreach ($method_data as $key => $value) {
-                $sort_order[$key] = $value['sort_order'];
-            }
-
-            array_multisort($sort_order, SORT_ASC, $method_data);
-
-            //echo "<pre>";print_r($method_data);die;
-            $json['data'] = $method_data;
         } else {
             $json['status'] = 10013;
 
-            $json['message'][] = ['type' => '', 'body' => 'Order total is required.'];
+            $json['message'][] = ['type' => '', 'body' => 'Customer ID And Order total is required.'];
 
             http_response_code(400);
         }
@@ -480,469 +489,205 @@ class ControllerApiCustomerCheckout extends Controller {
         $json['status'] = 200;
         $json['data'] = [];
         $json['message'] = [];
-        try
-        {
+        try {
 
-        if (isset($this->request->get['total'])) {
+            if (isset($this->request->get['total'])) {
 
-            unset($this->session->data['pezesha_amount_limit']);
-            unset($this->session->data['pezesha_customer_amount_limit']);
-            //get the pezesha amount limit 
-            // $this->load->controller('customer/getPezeshaLoanOffers');
+                unset($this->session->data['pezesha_amount_limit']);
+                unset($this->session->data['pezesha_customer_amount_limit']);
+                //get the pezesha amount limit 
+                // $this->load->controller('customer/getPezeshaLoanOffers');
 
-            $log = new Log('error.log');
+                $log = new Log('error.log');
 
-            $b = $this->getPezeshaLoanOffers();
-            $pezesha_customer_credit_limit = $this->getPezeshaCustomerCreditLimit();
+                $b = $this->getPezeshaLoanOffers();
+                $pezesha_customer_credit_limit = $this->getPezeshaCustomerCreditLimit();
 
-            // echo "<pre>";print_r($this->session->data['pezesha_amount_limit']);die;
-            $customer_id = $this->customer->getId();               
-            $log->write('Getting payments in mobile.....'.$customer_id);
+                // echo "<pre>";print_r($this->session->data['pezesha_amount_limit']);die;
+                $customer_id = $this->customer->getId();
+                $log->write('Getting payments in mobile.....' . $customer_id);
 
-            $this->load->language('checkout/checkout');
-            // Payment Methods
-            $method_data = [];
+                $this->load->language('checkout/checkout');
+                // Payment Methods
+                $method_data = [];
 
-            $this->load->model('extension/extension');
+                $this->load->model('extension/extension');
 
-            $results = $this->model_extension_extension->getExtensions('payment');
+                $results = $this->model_extension_extension->getExtensions('payment');
 
-            // echo "<pre>";print_r($this->customer);die;
-            $total = $this->request->get['total'];
-            // if ($this->customer->getPaymentTerms() == 'Payment On Delivery') {
-            // Totals
-            $total_data = [];
-            $total = 0;
-            $taxes = $this->cart->getTaxes();
-            // echo "<pre>";print_r($taxes);die;
-            $this->load->model('extension/extension');
-            $sort_order = [];
-            $results = $this->model_extension_extension->getExtensions('total');
+                // echo "<pre>";print_r($this->customer);die;
+                $total = $this->request->get['total'];
+                // if ($this->customer->getPaymentTerms() == 'Payment On Delivery') {
+                // Totals
+                $total_data = [];
+                $total = 0;
+                $taxes = $this->cart->getTaxes();
+                // echo "<pre>";print_r($taxes);die;
+                $this->load->model('extension/extension');
+                $sort_order = [];
+                $results = $this->model_extension_extension->getExtensions('total');
 
-            foreach ($results as $key => $value) {
-                $sort_order[$key] = $this->config->get($value['code'] . '_sort_order');
-            }
-
-            array_multisort($sort_order, SORT_ASC, $results);
-
-            foreach ($results as $result) {
-                if ($this->config->get($result['code'] . '_status')) {
-                    $this->load->model('total/' . $result['code']);
-
-                    $this->{'model_total_' . $result['code']}->getTotal($total_data, $total, $taxes);
+                foreach ($results as $key => $value) {
+                    $sort_order[$key] = $this->config->get($value['code'] . '_sort_order');
                 }
-            }
 
-            // Payment Methods
-            $method_data = [];
+                array_multisort($sort_order, SORT_ASC, $results);
 
-            $this->load->model('extension/extension');
+                foreach ($results as $result) {
+                    if ($this->config->get($result['code'] . '_status')) {
+                        $this->load->model('total/' . $result['code']);
 
-            $results = $this->model_extension_extension->getExtensions('payment');
+                        $this->{'model_total_' . $result['code']}->getTotal($total_data, $total, $taxes);
+                    }
+                }
 
-            //    echo "<pre>";print_r($total);die;
-            $recurring = $this->cart->hasRecurringProducts();
-            //    if($total !=$this->request->get['total'] )
-            //    {
-            //     $log = new Log('error.log');
-            //     $log->write('total in payment methods API not same as send amount');
-            //     $total =$this->request->get['total'];
-            //    }
+                // Payment Methods
+                $method_data = [];
 
-            foreach ($results as $result) {
-               
-                $log->write('code payment 123');
-                $log->write($result['code']);
-                $log->write('code');
-                if ($this->config->get($result['code'] . '_status')) {
-                    $this->load->model('payment/' . $result['code']);
+                $this->load->model('extension/extension');
 
-                    $method = $this->{'model_payment_' . $result['code']}->getMethod($total);
-                    //    echo "<pre>";print_r($method);
-                    $log->write($total);
-                    $log->write('total calculated');
+                $results = $this->model_extension_extension->getExtensions('payment');
 
-                    if ($method) {
-                        if ($recurring) {
-                            if (method_exists($this->{'model_payment_' . $result['code']}, 'recurringPayments') && $this->{'model_payment_' . $result['code']}->recurringPayments()) {
+                //    echo "<pre>";print_r($total);die;
+                $recurring = $this->cart->hasRecurringProducts();
+                //    if($total !=$this->request->get['total'] )
+                //    {
+                //     $log = new Log('error.log');
+                //     $log->write('total in payment methods API not same as send amount');
+                //     $total =$this->request->get['total'];
+                //    }
+
+                foreach ($results as $result) {
+
+                    $log->write('code payment 123');
+                    $log->write($result['code']);
+                    $log->write('code');
+                    if ($this->config->get($result['code'] . '_status')) {
+                        $this->load->model('payment/' . $result['code']);
+
+                        $method = $this->{'model_payment_' . $result['code']}->getMethod($total);
+                        //    echo "<pre>";print_r($method);
+                        $log->write($total);
+                        $log->write('total calculated');
+
+                        if ($method) {
+                            if ($recurring) {
+                                if (method_exists($this->{'model_payment_' . $result['code']}, 'recurringPayments') && $this->{'model_payment_' . $result['code']}->recurringPayments()) {
+                                    $method_data[$result['code']] = $method;
+                                }
+                            } else {
                                 $method_data[$result['code']] = $method;
                             }
-                        } else {
-                            $method_data[$result['code']] = $method;
                         }
                     }
                 }
-            }
-            $sort_order = [];
+                $sort_order = [];
 
-            foreach ($method_data as $key => $value) {
-                $sort_order[$key] = $value['sort_order'];
-            }
+                foreach ($method_data as $key => $value) {
+                    $sort_order[$key] = $value['sort_order'];
+                }
 
-            array_multisort($sort_order, SORT_ASC, $method_data);
-            //   echo "<pre>";print_r($method_data);die;
-            $log->write($method_data);
+                array_multisort($sort_order, SORT_ASC, $method_data);
+                //   echo "<pre>";print_r($method_data);die;
+                $log->write($method_data);
 
+                $this->session->data['payment_methods'] = $method_data;
 
-            $this->session->data['payment_methods'] = $method_data;
+                //   echo "<pre>";print_r(empty($this->session->data['payment_methods']));die;
 
-            //   echo "<pre>";print_r(empty($this->session->data['payment_methods']));die;
+                if (empty($this->session->data['payment_methods'])) {
+                    $data['error_warning'] = 'No payment methods available.Please contact kwikbasket team';
+                    $log->write('method_data is empty or not');
+                } else {
+                    $data['error_warning'] = '';
+                }
+                if (isset($this->session->data['payment_methods'])) {
+                    $data['payment_methods'] = $this->session->data['payment_methods'];
+                } else {
+                    $data['payment_methods'] = [];
+                }
 
-            if (empty($this->session->data['payment_methods'])) {
-                $data['error_warning'] = 'No payment methods available.Please contact kwikbasket team';
-             $log->write('method_data is empty or not');
+                $log->write('getPaymentTerms');
+                $log->write($this->customer->getPaymentTerms());
+                // unset($this->session->data['pezesha_amount_limit']);
+                // unset($this->session->data['pezesha_customer_amount_limit']);
+                // //get the pezesha amount limit 
+                // // $a= $this->load->controller('api/customer/getPezeshaLoanOffers');
+                // $a = $this->getPezeshaLoanOffers();
+                // echo "<pre>";print_r($this->session->data['pezesha_customer_amount_limit']);die;
+                // echo "<pre>";print_r($data);die;
+                $log->write('pezesha data Start ');
 
+                $log->write($this->customer->getCustomerPezeshauuId());
+                $log->write($this->customer->getCustomerPezeshaId());
+                $log->write($this->getPezeshaCustomerCreditLimit() . 'PEZESHA LIMIT');
+                $log->write($pezesha_customer_credit_limit . 'PEZESHA LIMIT');
+
+                /* $log->write($this->session->data['pezesha_customer_amount_limit']);
+                  $log->write($this->session->data['pezesha_amount_limit']); */
+                $log->write('pezesha data');
+                $log->write('pezesha data  getting or not');
+
+                if (($this->customer->getPaymentTerms() == 'Payment On Delivery' && $this->customer->getCustomerPezeshaId() == NULL && $this->customer->getCustomerPezeshauuId() == NULL) || ($this->customer->getPaymentTerms() == 'Payment On Delivery' && $this->customer->getCustomerPezeshaId() != NULL && $this->customer->getCustomerPezeshauuId() != NULL && $pezesha_customer_credit_limit == 0)) {
+                    foreach ($data['payment_methods'] as $payment_method) {
+                        if ($payment_method['code'] == 'wallet') {
+                            $data['payment_wallet_methods'] = $payment_method;
+                        }
+                        if (/* $payment_method['code'] != 'wallet' && */ $payment_method['code'] != 'mod' && $payment_method['code'] != 'pesapal' && $payment_method['code'] != 'interswitch' && $payment_method['code'] != 'mpesa') {
+                            unset($data['payment_methods'][$payment_method['code']]);
+                        }
+                    }
+                } if ((($this->customer->getPaymentTerms() == '7 Days Credit' || $this->customer->getPaymentTerms() == '15 Days Credit' || $this->customer->getPaymentTerms() == '30 Days Credit') && ($this->customer->getCustomerPezeshaId() == NULL && $this->customer->getCustomerPezeshauuId() == NULL)) || (($this->customer->getPaymentTerms() == '7 Days Credit' || $this->customer->getPaymentTerms() == '15 Days Credit' || $this->customer->getPaymentTerms() == '30 Days Credit') && ($this->customer->getCustomerPezeshaId() != NULL && $this->customer->getCustomerPezeshauuId() != NULL && $pezesha_customer_credit_limit == 0))) {
+                    foreach ($data['payment_methods'] as $payment_method) {
+                        if ($payment_method['code'] == 'wallet') {
+                            $data['payment_wallet_methods'] = $payment_method;
+                        }
+                        if ($payment_method['code'] != 'cod') {
+                            unset($data['payment_methods'][$payment_method['code']]);
+                        }
+                    }
+                } if ($this->customer->getCustomerPezeshaId() != NULL && $this->customer->getCustomerPezeshauuId() != NULL && $this->config->get('pezesha_status') && $pezesha_customer_credit_limit > 0) {
+                    foreach ($data['payment_methods'] as $payment_method) {
+                        if ($payment_method['code'] == 'wallet') {
+                            $data['payment_wallet_methods'] = $payment_method;
+                        }
+                        if ($payment_method['code'] != 'pezesha' && $payment_method['code'] != 'mpesa') {//&& $payment_method['code'] != 'pesapal'
+                            unset($data['payment_methods'][$payment_method['code']]);
+                        }
+                    }
+                }
+                $log->write('getPaymentTerms');
+
+                //}
+                $json['data'] = $data;
+                $log->write($data);
+
+                if (empty($data['payment_methods']) && empty($data['payment_wallet_methods'])) {
+                    $data['error_warning'] = 'No payment methods available.Please contact kwikbasket team';
+                    $log->write('No payment methods available.Please contact kwikbasket team');
+                } else {
+                    $data['error_warning'] = '';
+                }
             } else {
-                $data['error_warning'] = '';
+                $json['status'] = 10013;
+
+                $json['message'][] = ['type' => '', 'body' => 'Order total is required.'];
+
+                http_response_code(400);
+                $log = new Log('error.log');
+                $log->write('total received is 0 and unable to get payment methods');
             }
-            if (isset($this->session->data['payment_methods'])) {
-                $data['payment_methods'] = $this->session->data['payment_methods'];
-            } else {
-                $data['payment_methods'] = [];
-            }
-
-            $log->write('getPaymentTerms');
-            $log->write($this->customer->getPaymentTerms());
-            // unset($this->session->data['pezesha_amount_limit']);
-            // unset($this->session->data['pezesha_customer_amount_limit']);
-            // //get the pezesha amount limit 
-            // // $a= $this->load->controller('api/customer/getPezeshaLoanOffers');
-            // $a = $this->getPezeshaLoanOffers();
-            // echo "<pre>";print_r($this->session->data['pezesha_customer_amount_limit']);die;
-            // echo "<pre>";print_r($data);die;
-            $log->write('pezesha data Start ');
-
-            $log->write($this->customer->getCustomerPezeshauuId());
-            $log->write($this->customer->getCustomerPezeshaId());
-            $log->write($this->getPezeshaCustomerCreditLimit() . 'PEZESHA LIMIT');
-            $log->write($pezesha_customer_credit_limit . 'PEZESHA LIMIT');
-            
-            /* $log->write($this->session->data['pezesha_customer_amount_limit']);
-              $log->write($this->session->data['pezesha_amount_limit']); */
-            $log->write('pezesha data');
-            $log->write('pezesha data  getting or not');
-
-            if (($this->customer->getPaymentTerms() == 'Payment On Delivery' && $this->customer->getCustomerPezeshaId() == NULL && $this->customer->getCustomerPezeshauuId() == NULL) || ($this->customer->getPaymentTerms() == 'Payment On Delivery' && $this->customer->getCustomerPezeshaId() != NULL && $this->customer->getCustomerPezeshauuId() != NULL && $pezesha_customer_credit_limit == 0)) {
-                foreach ($data['payment_methods'] as $payment_method) {
-                    if ($payment_method['code'] == 'wallet') {
-                        $data['payment_wallet_methods'] = $payment_method;
-                    }
-                    if (/* $payment_method['code'] != 'wallet' && */ $payment_method['code'] != 'mod' && $payment_method['code'] != 'pesapal' && $payment_method['code'] != 'interswitch' && $payment_method['code'] != 'mpesa') {
-                        unset($data['payment_methods'][$payment_method['code']]);
-                    }
-                }
-             } if ((($this->customer->getPaymentTerms() == '7 Days Credit' || $this->customer->getPaymentTerms() == '15 Days Credit' || $this->customer->getPaymentTerms() == '30 Days Credit') && ($this->customer->getCustomerPezeshaId() == NULL && $this->customer->getCustomerPezeshauuId() == NULL)) /* || (($this->customer->getPaymentTerms() == '7 Days Credit' || $this->customer->getPaymentTerms() == '15 Days Credit' || $this->customer->getPaymentTerms() == '30 Days Credit') && ($this->customer->getCustomerPezeshaId() != NULL && $this->customer->getCustomerPezeshauuId() != NULL && $this->session->data['pezesha_customer_amount_limit'] == 0)) */) {
-        //   } if ((($this->customer->getPaymentTerms() == '7 Days Credit' || $this->customer->getPaymentTerms() == '15 Days Credit' || $this->customer->getPaymentTerms() == '30 Days Credit') && ($this->customer->getCustomerPezeshaId() == NULL && $this->customer->getCustomerPezeshauuId() == NULL)) || (($this->customer->getPaymentTerms() == '7 Days Credit' || $this->customer->getPaymentTerms() == '15 Days Credit' || $this->customer->getPaymentTerms() == '30 Days Credit') && ($this->customer->getCustomerPezeshaId() != NULL && $this->customer->getCustomerPezeshauuId() != NULL && $pezesha_customer_credit_limit == 0))) {
-                foreach ($data['payment_methods'] as $payment_method) {
-                    if ($payment_method['code'] == 'wallet') {
-                        $data['payment_wallet_methods'] = $payment_method;
-                    }
-                    if ($payment_method['code'] != 'cod') {
-                        unset($data['payment_methods'][$payment_method['code']]);
-                    }
-                }
-            }if ((($this->customer->getPaymentTerms() == 'Pre-Paid' ) && ($this->customer->getCustomerPezeshaId() == NULL && $this->customer->getCustomerPezeshauuId() == NULL)) /* || (($this->customer->getPaymentTerms() == '7 Days Credit' || $this->customer->getPaymentTerms() == '15 Days Credit' || $this->customer->getPaymentTerms() == '30 Days Credit') && ($this->customer->getCustomerPezeshaId() != NULL && $this->customer->getCustomerPezeshauuId() != NULL && $this->session->data['pezesha_customer_amount_limit'] == 0)) */) {
-                foreach ($data['payment_methods'] as $payment_method) {
-                    if ($payment_method['code'] == 'wallet') {
-                        $data['payment_wallet_methods'] = $payment_method;
-                    }
-                    if ($payment_method['code'] != 'mpesa') {
-                        unset($data['payment_methods'][$payment_method['code']]);
-                    }
-                }
-            } if ($this->customer->getCustomerPezeshaId() != NULL && $this->customer->getCustomerPezeshauuId() != NULL && $this->config->get('pezesha_status')/*  && $pezesha_customer_credit_limit > 0 */) {
-                foreach ($data['payment_methods'] as $payment_method) {
-                    if ($payment_method['code'] == 'wallet') {
-                        $data['payment_wallet_methods'] = $payment_method;
-                    }
-                    if ($payment_method['code'] != 'pezesha' && $payment_method['code'] != 'mpesa') {//&& $payment_method['code'] != 'pesapal'
-                        unset($data['payment_methods'][$payment_method['code']]);
-                    }
-                }
-            }
-            $log->write('getPaymentTerms');
-
-            //}
-            $json['data'] = $data;
-            $log->write($data);
-
-            if (empty($data['payment_methods']) && empty($data['payment_wallet_methods'])) {
-                $data['error_warning'] = 'No payment methods available.Please contact kwikbasket team';
-             $log->write('No payment methods available.Please contact kwikbasket team');
-
-            } else {
-                $data['error_warning'] = '';
-            }
-
-        } else {
-            $json['status'] = 10013;
-
-            $json['message'][] = ['type' => '', 'body' => 'Order total is required.'];
-
-            http_response_code(400);
+        } catch (exception $ex) {
             $log = new Log('error.log');
-            $log->write('total received is 0 and unable to get payment methods');
-
-
+            $log->write('get Mixed payment methods--ERROR');
+            $log->write($ex->getMessage());
+        } finally {
+            $log->write('PAYMENT METHODS RESPONSE');
+            $log->write($json);
+            $log->write('PAYMENT METHODS RESPONSE');
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($json));
         }
-    }
-    catch(exception $ex)
-    {
-        $log = new Log('error.log');
-        $log->write('get Mixed payment methods--ERROR');
-        $log->write($ex->getMessage());
-
-
-    }
-    finally
-    {
-        $log->write('PAYMENT METHODS RESPONSE');
-        $log->write($json);
-        $log->write('PAYMENT METHODS RESPONSE');
-        $this->response->addHeader('Content-Type: application/json');
-        $this->response->setOutput(json_encode($json));
-    }
-    }
-
-    public function getPezeshaLoanOffers() {
-
-        $log = new Log('error.log');
-        if ($this->customer->getCustomerPezeshaId() != NULL && $this->customer->getCustomerPezeshauuId() != NULL && $this->config->get('pezesha_status')) {
-
-            $this->load->model('account/customer');
-
-            $customer_id = $this->customer->getId();
-
-            $customer_device_info = $this->model_account_customer->getCustomer($customer_id);
-            $customer_pezesha_info = $this->model_account_customer->getPezeshaCustomer($customer_id);
-
-            $auth_response = $this->auth();
-            $log->write('auth_response');
-            $log->write($auth_response);
-            $log->write($customer_device_info);
-            $log->write('auth_response');
-            $body = array('identifier' => $customer_pezesha_info['prefix'] . '' . $customer_pezesha_info['customer_id'], 'channel' => $this->config->get('pezesha_channel'));
-            //$body = http_build_query($body);
-            $body = json_encode($body);
-            $log->write($body);
-            $curl = curl_init();
-            if ($this->config->get('pezesha_environment') == 'live') {
-                curl_setopt($curl, CURLOPT_URL, 'https://api.pezesha.com/mfi/v1/borrowers/options');
-                curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type:application/json', 'Authorization:Bearer ' . $auth_response]);
-            } else {
-                curl_setopt($curl, CURLOPT_URL, 'https://staging.api.pezesha.com/mfi/v1/borrowers/options');
-                curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type:application/json', 'Authorization:Bearer ' . $auth_response]);
-            }
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($curl, CURLOPT_POST, 1);
-            curl_setopt($curl, CURLOPT_POSTFIELDS, $body); //Setting post data as xml
-            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
-            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
-            $result = curl_exec($curl);
-
-            $log->write($result);
-            curl_close($curl);
-            $result = json_decode($result, true);
-            $log->write($result);
-            $json = $result;
-            if ($result['status'] == 200 && $result['response_code'] == 0 && $result['error'] == false) {
-                $this->session->data['pezesha_amount_limit'] = $this->currency->format($result['data']['amount'], $this->config->get('config_currency'));
-                $this->session->data['pezesha_customer_amount_limit'] = $result['data']['amount'];
-                $log->write('pezesha_amount_limit');
-                $log->write($result['data']['amount']);
-                $log->write('pezesha_amount_limit');
-            }
-        } else {
-            $result['message'] = 'Please Check Your Pezesha Details!';
-        }
-        $this->response->addHeader('Content-Type: application/json');
-        $this->response->setOutput(json_encode($result));
-    }
-
-    public function getPezeshaCustomerCreditLimit() {
-
-        $log = new Log('error.log');
-        if ($this->customer->getCustomerPezeshaId() != NULL && $this->customer->getCustomerPezeshauuId() != NULL && $this->config->get('pezesha_status')) {
-
-            $this->load->model('account/customer');
-
-            $customer_id = $this->customer->getId();
-
-            $customer_device_info = $this->model_account_customer->getCustomer($customer_id);
-            $customer_pezesha_info = $this->model_account_customer->getPezeshaCustomer($customer_id);
-
-            $auth_response = $this->auth();
-            $log->write('auth_response');
-            $log->write($auth_response);
-            $log->write($customer_device_info);
-            $log->write('auth_response');
-            $body = array('identifier' => $customer_pezesha_info['prefix'] . '' . $customer_pezesha_info['customer_id'], 'channel' => $this->config->get('pezesha_channel'));
-            //$body = http_build_query($body);
-            $body = json_encode($body);
-            $log->write($body);
-            $curl = curl_init();
-            if ($this->config->get('pezesha_environment') == 'live') {
-                curl_setopt($curl, CURLOPT_URL, 'https://api.pezesha.com/mfi/v1/borrowers/options');
-                curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type:application/json', 'Authorization:Bearer ' . $auth_response]);
-            } else {
-                curl_setopt($curl, CURLOPT_URL, 'https://staging.api.pezesha.com/mfi/v1/borrowers/options');
-                curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type:application/json', 'Authorization:Bearer ' . $auth_response]);
-            }
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($curl, CURLOPT_POST, 1);
-            curl_setopt($curl, CURLOPT_POSTFIELDS, $body); //Setting post data as xml
-            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
-            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
-            $result = curl_exec($curl);
-
-            $log->write($result);
-            curl_close($curl);
-            $result = json_decode($result, true);
-            $log->write($result);
-            $json = $result;
-            if ($result['status'] == 200 && $result['response_code'] == 0 && !$result['error'] && array_key_exists('data', $result) && array_key_exists('amount', $result['data'])) {
-                return $result['data']['amount'];
-            } else {
-                return 0;
-            }
-        } else {
-            return 0;
-        }
-    }
-
-    public function auth() {
-
-        $log = new Log('error.log');
-
-        $body = array('grant_type' => 'client_credentials', 'provider' => 'users', 'client_secret' => $this->config->get('pezesha_client_secret'), 'client_id' => $this->config->get('pezesha_client_id'), 'merchant _key' => $this->config->get('pezesha_merchant_key'));
-        $body = http_build_query($body);
-        $curl = curl_init();
-        if ($this->config->get('pezesha_environment') == 'live') {
-            curl_setopt($curl, CURLOPT_URL, 'https://api.pezesha.com/oauth/token');
-            curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type:application/x-www-form-urlencoded'));
-        } else {
-            curl_setopt($curl, CURLOPT_URL, 'https://staging.api.pezesha.com/oauth/token');
-            curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type:application/x-www-form-urlencoded'));
-        }
-
-        //$log->write($body);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($curl, CURLOPT_POST, 1);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, $body); //Setting post data as xml
-        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
-        $result = curl_exec($curl);
-
-        //$log->write($result);
-        curl_close($curl);
-        $result = json_decode($result, true);
-        return $result['access_token'];
-        /* $json['status'] = true;
-          $json['data'] = $result;
-
-          $this->response->addHeader('Content-Type: application/json');
-          $this->response->setOutput(json_encode($json)); */
-    }
-
-    public function addApplyCoupon() {
-        //echo "<pre>";print_r('addApplyCoupon');die;
-        $json = [];
-
-        $this->load->language('information/locations');
-
-        $json['status'] = 200;
-        $json['data'] = [];
-        $json['message'] = [];
-
-        $this->load->language('api/general');
-
-        $this->load->model('assets/category');
-
-        $this->load->model('assets/product');
-
-        $this->load->model('tool/image');
-
-        if (isset($this->request->post['coupon']) && isset($this->request->post['store_id']) && isset($this->request->post['total']) && isset($this->request->post['sub_total'])) {
-            $this->load->language('checkout/coupon');
-
-            $this->load->model('checkout/coupon');
-
-            if (isset($this->request->post['coupon'])) {
-                $coupon = $this->request->post['coupon'];
-            } else {
-                $coupon = '';
-            }
-
-            $coupon_info = $this->model_checkout_coupon->apiGetCoupon($coupon, $this->request->post['sub_total']);
-
-            $detail = $this->getCouponDiscountAmount($value = '', $coupon, $this->request->post['store_id'], $this->request->post['sub_total'], $this->request->post['sub_total']);
-
-            //echo "<pre>";print_r($detail);die;
-
-            if (empty($this->request->post['coupon'])) {
-                $json['message'][] = ['type' => '', 'body' => $this->language->get('error_empty')];
-            } elseif ($coupon_info && count($detail) > 0) {
-                $json['data'] = $coupon_info;
-
-                $json['data']['discount_amount'] = isset($detail[0]['value']) ? -$detail[0]['value'] : 0;
-                $json['data']['coupon_type'] = isset($detail[0]['coupon_type']) ? $detail[0]['coupon_type'] : '';
-
-                $json['message'][] = ['type' => '', 'body' => $this->language->get('text_success')];
-            } else {
-                $json['status'] = 10021;
-
-                $json['message'][] = ['type' => '', 'body' => $this->language->get('error_coupon')];
-            }
-        } else {
-            $json['status'] = 10013;
-
-            $json['message'][] = ['type' => '', 'body' => $this->language->get('text_not_loggedin')];
-
-            http_response_code(400);
-        }
-
-        $this->response->addHeader('Content-Type: application/json');
-        $this->response->setOutput(json_encode($json));
-    }
-
-    public function addApplyReward() {
-        //echo "<pre>";print_r('addApplyCoupon');die;
-        $json = [];
-
-        $this->load->language('information/locations');
-
-        $json['status'] = 200;
-        $json['data'] = [];
-        $json['message'] = [];
-
-        $this->load->language('api/general');
-        $this->load->language('checkout/reward');
-
-        if (isset($this->request->post['reward']) && $this->request->post['reward'] > 0) {
-            $this->load->model('checkout/coupon');
-
-            $points = $this->customer->getRewardPoints();
-
-            //echo "<pre>";print_r($points);die;
-            if ($this->request->post['reward'] > $points) {
-                $json['status'] = 10024;
-
-                $json['message'][] = ['type' => '', 'body' => sprintf($this->language->get('error_points'), $this->request->post['reward'])];
-            } else {
-                $json['data']['discount_amount'] = $this->request->post['reward'] * $this->config->get('config_reward_value');
-
-                $json['message'][] = ['type' => '', 'body' => sprintf($this->language->get('text_success'), $this->request->post['reward'], $this->customer->getRewardPoints())];
-            }
-        } else {
-            $json['status'] = 10025;
-
-            $json['message'][] = ['type' => '', 'body' => $this->language->get('error_reward')];
-
-            http_response_code(400);
-        }
-
-        $this->response->addHeader('Content-Type: application/json');
-        $this->response->setOutput(json_encode($json));
     }
 
     public function getApiNextTimeSlot($args) {
@@ -1646,30 +1391,6 @@ class ControllerApiCustomerCheckout extends Controller {
         }
     }
 
-    //save deliery date / timeslot
-    public function save() {
-        if (isset($this->request->post['store_id'])) {
-            $store_id = $this->request->post['store_id'];
-        } else {
-            $store_id;
-        }
-        if (isset($this->request->post['date'])) {
-            $delivery_date = $this->request->post['date'];
-            $this->session->data['dates'][$store_id] = $delivery_date;
-        } else {
-            $delivery_date = '';
-        }
-
-        if (isset($this->request->post['timeslot'])) {
-            $delivery_timeslot = $this->request->post['timeslot'];
-            $this->session->data['timeslot'][$store_id] = $delivery_timeslot;
-        } else {
-            $delivery_timeslot = '';
-        }
-        $this->load->controller('checkout/confirm');
-        exit;
-    }
-
     //NEW METHOD TO CHECK EACH DAYS TIMESLOTS
     public function checkDateTs($store_id, $method, $day) {
         $shipping_method = explode('.', $method);
@@ -1833,100 +1554,6 @@ class ControllerApiCustomerCheckout extends Controller {
         }
 
         return $data;
-    }
-
-    public function getCouponDiscountAmount($value = '', $coupon, $store_id, $sub_total, $total) {
-        $total_data = [];
-
-        if ($store_id) {
-            if (isset($coupon)) {
-                $this->load->language('total/coupon');
-
-                $this->load->model('checkout/coupon');
-
-                $coupon_info = $this->model_checkout_coupon->apiGetCoupon($coupon, $total);
-
-                if ($coupon_info && $sub_total) {
-                    $discount_total = 0;
-
-                    if (!$coupon_info['product']) {
-                        //$sub_total = $this->cart->getSubTotal($store_id);
-                    } else {
-                        //$sub_total = 0;
-
-                        /* foreach ($this->cart->getProducts() as $product) {
-
-                          if ($product['store_id'] == $store_id) {
-                          if (in_array($product['product_id'], $coupon_info['product'])) {
-                          $sub_total += $product['total'];
-                          }
-                          }else{
-                          if (in_array($product['product_id'], $coupon_info['product'])) {
-                          $sub_total += $product['total'];
-                          }
-                          }
-
-
-                          } */
-                    }
-                    //$main_total  = $this->cart->getSubTotal();
-
-                    $main_total = $sub_total;
-
-                    $weightage = ($sub_total * 100) / $main_total;
-                    if ('F' == $coupon_info['type']) {
-                        $store_discount = ($coupon_info['discount'] * $weightage) / 100;
-
-                        $discount_total = min($store_discount, $sub_total);
-                    } elseif ('P' == $coupon_info['type']) {
-                        $discount_total = $sub_total / 100 * $coupon_info['discount'];
-                    }
-
-                    //echo "<pre>";print_r($discount_total);die;
-
-                    /* if ($coupon_info['shipping'] && isset($this->session->data['shipping_method'][$store_id])) {
-
-                      $cost = $this->session->data['shipping_method'][$store_id]['shipping_method']['cost'];
-
-                      $discount_total += $cost;
-                      } */
-
-                    if ($coupon_info['shipping'] && isset($this->session->data['shipping_method'][$store_id])) {
-                        if (!empty($this->session->data['shipping_method'][$store_id]['shipping_method']['tax_class_id'])) {
-                            $tax_rates = $this->tax->getRates($this->session->data['shipping_method'][$store_id]['shipping_method']['cost'], $this->session->data['shipping_method'][$store_id]['shipping_method']['tax_class_id']);
-
-                            foreach ($tax_rates as $tax_rate) {
-                                if ('P' == $tax_rate['type']) {
-                                    $taxes[$tax_rate['tax_rate_id']] -= $tax_rate['amount'];
-                                }
-                            }
-                        }
-
-                        $discount_total += $this->session->data['shipping_method'][$store_id]['shipping_method']['cost'];
-                    }
-
-                    if ($discount_total > $total) {
-                        $discount_total = $total;
-                    }
-
-                    /* if($coupon_info['coupon_type'] == 'c') {
-                      $discount_total = -0;
-                      } */
-
-                    $total_data[] = [
-                        'code' => 'coupon',
-                        'coupon_type' => $coupon_info['coupon_type'],
-                        'title' => sprintf($this->language->get('text_coupon'), $coupon),
-                        'value' => -$discount_total,
-                        'sort_order' => $this->config->get('coupon_sort_order'),
-                    ];
-
-                    $total -= $discount_total;
-                }
-            }
-        }
-
-        return $total_data;
     }
 
     public function getSetDeliveryTimeSlot() {
@@ -2161,6 +1788,714 @@ class ControllerApiCustomerCheckout extends Controller {
               $log->write('SLOTS'); */
         }
 
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function addCheckout($args = []) {
+
+        $log = new Log('error.log');
+        $json = [];
+        $json['status'] = 200;
+        $json['data'] = [];
+        $json['message'] = '';
+
+        if ($this->validatenewly($args)) {
+            $log->write('addMpesaCheckOutNew');
+            $log->write($args);
+            $log->write('addMpesaCheckOutNew');
+            $stores = array_keys($args['stores']);
+
+            $active_Store_exsists = in_array("75", $stores);
+            $shipping_added = 0;
+
+            //print_r($stores);
+            foreach ($stores as $store_id) {
+                $order_data[$store_id] = [];
+                $order_data[$store_id]['totals'] = [];
+
+                $total = 0;
+                $taxes = $this->cart->getTaxes();
+                $taxes_by_store = $this->cart->getTaxesByStore($store_id);
+                $log->write('taxes_by_store mobile');
+                $log->write($store_id);
+                $log->write($taxes_by_store);
+                $log->write('taxes_by_store mobile');
+
+                $this->load->model('extension/extension');
+
+                $sort_order = [];
+
+                $results = $this->model_extension_extension->getExtensions('total');
+
+                foreach ($results as $key => $value) {
+                    $sort_order[$key] = $this->config->get($value['code'] . '_sort_order');
+                }
+                array_multisort($sort_order, SORT_ASC, $results);
+
+                foreach ($results as $result) {
+                    if ($this->config->get($result['code'] . '_status')) {
+                        $log->write($result['code']);
+                        $this->load->model('total/' . $result['code']);
+
+                        /* $log->write("in multiStoreIndex".$result['code']);
+                          $log->write("in loop".$total); */
+
+                        //$this->{'model_total_' . $result['code']}->getApiTotal( $order_data[$store_id]['totals'], $total, $taxes,$store_id ,$args['stores'][$store_id]);
+
+                        if ($result['code'] == 'shipping') {
+                            if ($active_Store_exsists == 1) {
+                                $this->{'model_total_' . $result['code']}->getTotal($order_data[$store_id]['totals'], $total, $taxes_by_store, $store_id);
+                            } else if ($result['code'] == 'shipping' && $active_Store_exsists == 0 && $shipping_added == 0) {
+                                $this->{'model_total_' . $result['code']}->getTotal($order_data[$store_id]['totals'], $total, $taxes_by_store, -1);
+                            }
+                            $shipping_added = 1; //shipping charge added to one of the stores
+                        } else {
+                            $this->{'model_total_' . $result['code']}->getApiTotal($order_data[$store_id]['totals'], $total, $taxes_by_store, $store_id, $args);
+                        }
+                    }
+                }
+
+                $log->write('addOrder b total end');
+
+                $sort_order = [];
+
+                foreach ($order_data[$store_id]['totals'] as $key => $value) {
+                    $sort_order[$key] = $value['sort_order'];
+                }
+
+                array_multisort($sort_order, SORT_ASC, $order_data[$store_id]['totals']);
+
+                $this->load->model('sale/order');
+                $store_info = $this->model_sale_order->getStoreInfo($store_id);
+
+                $this->load->language('checkout/checkout');
+                $order_data[$store_id]['invoice_prefix'] = $this->config->get('config_invoice_prefix');
+                $order_data[$store_id]['store_id'] = $store_id;
+                $order_data[$store_id]['store_name'] = $store_info['name'];
+
+                $order_data[$store_id]['commission'] = ($store_info['commision'] > 0) ? $store_info['commision'] : $store_info['vendor_commision'];
+
+                $order_data[$store_id]['fixed_commission'] = ($store_info['fixed_commision'] > 0) ? $store_info['fixed_commision'] : $store_info['vendor_fixed_commision'];
+
+                if ($this->request->server['HTTPS']) {
+                    $server = $this->config->get('config_ssl');
+                } else {
+                    $server = $this->config->get('config_url');
+                }
+
+                if ($order_data[$store_id]['store_id']) {
+                    $order_data[$store_id]['store_url'] = $this->config->get('config_url');
+                } else {
+                    $order_data[$store_id]['store_url'] = $server;
+                }
+
+                if (!trim($order_data[$store_id]['store_url'])) {
+                    $order_data[$store_id]['store_url'] = $server;
+                }
+
+                if ($this->customer->isLogged()) {
+                    $this->load->model('account/customer');
+
+                    $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
+
+                    $order_data[$store_id]['customer_id'] = $this->customer->getId();
+                    $order_data[$store_id]['customer_group_id'] = $customer_info['customer_group_id'];
+                    $order_data[$store_id]['firstname'] = $customer_info['firstname'];
+                    $order_data[$store_id]['lastname'] = $customer_info['lastname'];
+                    $order_data[$store_id]['email'] = $customer_info['email'];
+                    $order_data[$store_id]['telephone'] = $customer_info['telephone'];
+                    $order_data[$store_id]['fax'] = $customer_info['fax'];
+                    $order_data[$store_id]['custom_field'] = unserialize($customer_info['custom_field']);
+                } elseif (isset($this->session->data['guest'])) {
+                    $order_data[$store_id]['customer_id'] = 0;
+                    $order_data[$store_id]['customer_group_id'] = $this->session->data['guest']['customer_group_id'];
+                    $order_data[$store_id]['firstname'] = $this->session->data['guest']['firstname'];
+                    $order_data[$store_id]['lastname'] = $this->session->data['guest']['lastname'];
+                    $order_data[$store_id]['email'] = $this->session->data['guest']['email'];
+                    $order_data[$store_id]['telephone'] = $this->session->data['guest']['telephone'];
+                    $order_data[$store_id]['fax'] = $this->session->data['guest']['fax'];
+                    $order_data[$store_id]['custom_field'] = $this->session->data['guest']['custom_field'];
+                }
+
+                if (isset($args['payment_method'])) {
+                    $order_data[$store_id]['payment_method'] = $args['payment_method'];
+                } else {
+                    $order_data[$store_id]['payment_method'] = '';
+                }
+
+                if (isset($args['mpesa_phonenumber']) && $args['mpesa_phonenumber'] != NULL) {
+                    $order_data[$store_id]['mpesa_phonenumber'] = $args['mpesa_mobile_number'];
+                } else {
+                    $order_data[$store_id]['mpesa_phonenumber'] = $this->customer->getTelephone();
+                }
+
+                if (isset($args['payment_method_code'])) {
+                    $order_data[$store_id]['payment_code'] = $args['payment_method_code'];
+
+                    $c = $this->getPaymentName($args['payment_method_code']);
+                    if (!empty($c)) {
+                        $order_data[$store_id]['payment_method'] = $c;
+                    }
+                } else {
+                    $order_data[$store_id]['payment_code'] = '';
+                }
+
+                if (isset($args['stores'][$store_id]['shipping_method']) && isset($args['stores'][$store_id]['shipping_code'])) {
+                    if (isset($args['stores'][$store_id]['shipping_method'])) {
+                        $order_data[$store_id]['shipping_method'] = $args['stores'][$store_id]['shipping_method'];
+                    } else {
+                        $order_data[$store_id]['shipping_method'] = '';
+                    }
+
+                    if (isset($args['stores'][$store_id]['shipping_code'])) {
+                        $order_data[$store_id]['shipping_code'] = $args['stores'][$store_id]['shipping_code'];
+
+                        $c = $this->getShippingName($args['stores'][$store_id]['shipping_code'], $store_id);
+                        if (!empty($c)) {
+                            $order_data[$store_id]['shipping_method'] = $c;
+                        }
+                    } else {
+                        $order_data[$store_id]['shipping_code'] = '';
+                    }
+                } else {
+                    $order_data[$store_id]['shipping_method'] = '';
+                    $order_data[$store_id]['shipping_code'] = '';
+                }
+
+                if (isset($args['shipping_city_id'])) {
+                    $shipping_city_id = $args['shipping_city_id'];
+                    $order_data[$store_id]['shipping_city_id'] = $shipping_city_id;
+                } else {
+                    $order_data[$store_id]['shipping_city_id'] = '';
+                }
+
+                if (isset($args['shipping_address_id'])) {
+                    $shipping_address_id = $args['shipping_address_id'];
+                    $this->load->model('account/address');
+                    $shipping_address_data = $this->model_account_address->getAddress($shipping_address_id);
+
+                    $order_data[$store_id]['shipping_address'] = $shipping_address_data['address'];
+                    $order_data[$store_id]['shipping_name'] = $shipping_address_data['name'];
+
+                    $order_data[$store_id]['shipping_flat_number'] = $shipping_address_data['flat_number'];
+                    $order_data[$store_id]['shipping_landmark'] = $shipping_address_data['landmark'];
+                    $order_data[$store_id]['shipping_building_name'] = $shipping_address_data['building_name'];
+                    $order_data[$store_id]['shipping_zipcode'] = $shipping_address_data['zipcode'];
+
+                    $order_data[$store_id]['latitude'] = $shipping_address_data['latitude'];
+                    $order_data[$store_id]['longitude'] = $shipping_address_data['longitude'];
+
+                    if (isset($args['shipping_contact_no'])) {
+                        $shipping_contact_no = $args['shipping_contact_no'];
+                        $order_data[$store_id]['shipping_contact_no'] = $shipping_contact_no;
+                    } elseif (isset($shipping_address_data['contact_no'])) {
+                        $order_data[$store_id]['shipping_contact_no'] = $shipping_address_data['contact_no'];
+                    } else {
+                        $order_data[$store_id]['shipping_contact_no'] = '';
+                    }
+                } else {
+                    $order_data[$store_id]['shipping_address'] = '';
+                    $order_data[$store_id]['shipping_name'] = '';
+                    $order_data[$store_id]['shipping_contact_no'] = '';
+                    $order_data[$store_id]['shipping_zipcode'] = '';
+                    $order_data[$store_id]['shipping_flat_number'] = '';
+                    $order_data[$store_id]['shipping_landmark'] = '';
+                    $order_data[$store_id]['shipping_building_name'] = '';
+                }
+
+                $order_data[$store_id]['products'] = [];
+
+                $this->load->model('assets/product');
+
+                foreach ($args['products'] as $product) {
+                    $option_data = [];
+
+                    $vendor_id = $this->model_extension_extension->getVendorId($product['store_id']);
+
+                    $db_product_detail = $this->model_assets_product->getProductForPopupByApi($product['store_id'], $product['product_store_id']);
+
+                    if ($store_id == $product['store_id']) {
+
+                        if (is_null($db_product_detail['special_price']) || !($db_product_detail['special_price'] + 0)) {
+                            $db_product_detail['special_price'] = $db_product_detail['price'];
+                        }
+
+                        $order_data[$store_id]['products'][] = [
+                            'product_store_id' => $product['product_store_id'],
+                            'product_id' => isset($db_product_detail['product_id']) ? $db_product_detail['product_id'] : '',
+                            'store_product_variation_id' => $product['store_product_variation_id'],
+                            'store_id' => $product['store_id'],
+                            'vendor_id' => $vendor_id,
+                            'name' => $db_product_detail['pd_name'],
+                            'unit' => $db_product_detail['unit'],
+                            'product_type' => trim($product['product_type']),
+                            'product_note' => trim($product['product_note']),
+                            'produce_type' => trim($product['produce_type']),
+                            'model' => $db_product_detail['model'],
+                            'option' => $option_data,
+                            'download' => $product['download'],
+                            'quantity' => $product['quantity'],
+                            'subtract' => $db_product_detail['subtract_quantity'],
+                            // 'price' => $db_product_detail['special_price'],
+                            'price' => $product['price'], //check
+                            // 'total' => ($product['quantity'] * $db_product_detail['special_price']),
+                            'total' => ($product['price'] * $product['quantity']),
+                            'tax' => $this->tax->getTax($product['price'], $db_product_detail['tax_class_id']),
+                            // 'tax' => $this->tax->getTax($db_product_detail['special_price'], $db_product_detail['tax_class_id']),
+                            'reward' => $product['reward'],
+                        ];
+                    }
+                }
+                $order_data[$store_id]['vouchers'] = [];
+
+                /* if(isset($args['dropoff_notes']) && strlen($args['dropoff_notes']) > 0 ) {
+                  $order_data[$store_id]['comment'] = $args['dropoff_notes'];
+                  } else {
+                  $order_data[$store_id]['comment'] = '';
+                  } */
+
+                if (isset($args['stores'][$store_id]['comment']) && strlen($args['stores'][$store_id]['comment']) > 0) {
+                    $order_data[$store_id]['comment'] = $args['stores'][$store_id]['comment'];
+                } else {
+                    $order_data[$store_id]['comment'] = '';
+                }
+
+                $order_data[$store_id]['total'] = $total;
+
+                $order_data[$store_id]['affiliate_id'] = 0;
+                $order_data[$store_id]['marketing_id'] = 0;
+                $order_data[$store_id]['tracking'] = '';
+                $order_data[$store_id]['language_id'] = $this->config->get('config_language_id');
+                $order_data[$store_id]['currency_id'] = $this->currency->getId();
+                $order_data[$store_id]['currency_code'] = $this->currency->getCode();
+                $order_data[$store_id]['currency_value'] = $this->currency->getValue($this->currency->getCode());
+                $order_data[$store_id]['ip'] = $this->request->server['REMOTE_ADDR'];
+                $order_data[$store_id]['customer_id'] = $this->customer->getId();
+
+                if (!empty($this->request->server['HTTP_X_FORWARDED_FOR'])) {
+                    $order_data[$store_id]['forwarded_ip'] = $this->request->server['HTTP_X_FORWARDED_FOR'];
+                } elseif (!empty($this->request->server['HTTP_CLIENT_IP'])) {
+                    $order_data[$store_id]['forwarded_ip'] = $this->request->server['HTTP_CLIENT_IP'];
+                } else {
+                    $order_data[$store_id]['forwarded_ip'] = '';
+                }
+
+                /* if (isset($args['order_reference_number'])) {
+                  $order_data[$store_id]['order_reference_number'] = $args['order_reference_number'];
+                  } else {
+                  $order_data[$store_id]['order_reference_number'] = '';
+                  } */
+
+                if (isset($args['stores'][$store_id]['order_reference_number']) && strlen($args['stores'][$store_id]['order_reference_number']) > 0) {
+                    $order_data[$store_id]['order_reference_number'] = $args['stores'][$store_id]['order_reference_number'];
+                } else {
+                    $order_data[$store_id]['order_reference_number'] = '';
+                }
+
+                if (isset($this->request->server['HTTP_USER_AGENT'])) {
+                    $order_data[$store_id]['user_agent'] = $this->request->server['HTTP_USER_AGENT'];
+                } else {
+                    $order_data[$store_id]['user_agent'] = '';
+                }
+
+                if (isset($this->request->server['HTTP_USER_AGENT'])) {
+                    $order_data[$store_id]['user_agent'] = $this->request->server['HTTP_USER_AGENT'];
+                } else {
+                    $order_data[$store_id]['user_agent'] = '';
+                }
+
+                $order_data[$store_id]['accept_language'] = '';
+
+                $this->load->model('api/checkout');
+                if ($store_id == 75) {
+                    if (isset($args['stores'][$store_id]['dates'])) {
+                        $order_data[$store_id]['delivery_date'] = $args['stores'][$store_id]['dates'];
+                    } else {
+                        $order_data[$store_id]['delivery_date'] = date('d-m-Y');
+                    }
+
+                    //$log->write("shipin code".$order_data[$store_id]['shipping_code']);die;
+
+                    if (isset($order_data[$store_id]['shipping_code']) && 'express.express' == trim($order_data[$store_id]['shipping_code'])) {
+                        $order_data[$store_id]['delivery_date'] = date('d-m-Y');
+
+                        $settings = $this->getSettings('express', 0);
+                        $timeDiff = $settings['express_how_much_time'];
+
+                        $min = 0;
+                        if ($timeDiff) {
+                            $i = explode(':', $timeDiff);
+                            $min = $min + $i[0] * 60 + $i[1]; //add difference minut to current time
+                        }
+                        $to = date('h:ia', strtotime('+' . $min . ' minutes', strtotime(date('h:ia'))));
+
+                        $delivery_timeslot = date('h:ia') . ' - ' . $to;
+
+                        $order_data[$store_id]['delivery_timeslot'] = $delivery_timeslot;
+                    } else {
+                        if (isset($args['stores'][$store_id]['dates'])) {
+                            $order_data[$store_id]['delivery_date'] = $args['stores'][$store_id]['dates'];
+                        } else {
+                            $order_data[$store_id]['delivery_date'] = date('d-m-Y');
+                        }
+
+                        if (isset($args['stores'][$store_id]['timeslot'])) {
+                            $order_data[$store_id]['delivery_timeslot'] = $args['stores'][$store_id]['timeslot'];
+                        } else {
+                            $settings = $this->getSettings('express', 0);
+                            $timeDiff = $settings['express_how_much_time'];
+
+                            $min = 0;
+                            if ($timeDiff) {
+                                $i = explode(':', $timeDiff);
+                                $min = $min + $i[0] * 60 + $i[1]; //add difference minut to current time
+                            }
+                            $to = date('h:ia', strtotime('+' . $min . ' minutes', strtotime(date('h:ia'))));
+
+                            $delivery_timeslot = date('h:ia') . ' - ' . $to;
+
+                            $order_data[$store_id]['delivery_timeslot'] = $delivery_timeslot;
+                        }
+                    }
+                }
+                if ($store_id != 75) {
+                    $other_vendor_delivery_time = $this->load->controller('api/delivery_time/getothervendordeliverytime', $store_id);
+                    $log = new Log('error.log');
+                    $log->write('other_vendor_delivery_time');
+                    $log->write($other_vendor_delivery_time);
+                    $log->write('other_vendor_delivery_time');
+                    //$other_vendor_delivery_time = $this->getothervendordeliverytime($store_id);
+
+                    if ($other_vendor_delivery_time != null && $other_vendor_delivery_time['selected_time_slot_date'] != null && $other_vendor_delivery_time['selected_time_slot_date'] != '') {
+                        $order_data[$store_id]['delivery_date'] = $other_vendor_delivery_time['selected_time_slot_date'];
+                        $order_data[$store_id]['delivery_timeslot'] = $other_vendor_delivery_time['selected_time_slot_time'];
+                    } else {
+                        if (isset($args['stores'][$store_id]['dates'])) {
+                            $order_data[$store_id]['delivery_date'] = $args['stores'][$store_id]['dates'];
+                        } else {
+                            $order_data[$store_id]['delivery_date'] = date('d-m-Y');
+                        }
+
+                        if (isset($args['stores'][$store_id]['timeslot'])) {
+                            $order_data[$store_id]['delivery_timeslot'] = $args['stores'][$store_id]['timeslot'];
+                        }
+                    }
+                }
+            }
+            $order_data[$store_id]['login_latitude'] = $args['login_latitude'];
+            $order_data[$store_id]['login_longitude'] = $args['login_longitude'];
+            $order_data[$store_id]['login_mode'] = $args['login_mode'];
+
+            $log->write('addMultiOrder call');
+
+            /* $order_ids = [];
+
+              $order_ids = $this->model_api_checkout->addMultiOrder($order_data); */
+
+            $tot = 0;
+
+            foreach ($stores as $store_id) {
+                $data['totals'] = [];
+                foreach ($order_data[$store_id]['totals'] as $total) {
+                    $data['totals'][] = [
+                        'title' => $total['title'],
+                        'text' => $this->currency->format($total['value']),
+                    ];
+                    $tot += $total['value'];
+                }
+            }
+
+            $transactionData = [
+                'no_of_products' => count($args['products']),
+                'total' => $args['total'],
+            ];
+
+            //$log->write($transactionData);
+            //$this->model_api_checkout->apiAddTransaction($transactionData, $order_ids);
+
+            if (('mpesa' == $args['payment_method_code']) || ('mpesa' == $args['payment_method_code'] && 'wallet' == $args['payment_wallet_method_code'])) {
+                //save for refrence id correct order id
+                $mpesa_result = NULL;
+                if (('mpesa' == $args['payment_method_code']) && (!isset($args['payment_wallet_method_code']))) {
+                    $mpesa_result = $this->SendPaymentRequestToMpesa($this->cart->getTotalWithShipping(), $args['mpesa_mobile_number'], base64_encode($this->customer->getId() . '_' . $this->cart->getTotalWithShipping() . '_' . date("Y-m-d h:i:s")));
+                }
+
+                if (('mpesa' == $args['payment_method_code']) && isset($args['payment_wallet_method_code']) && 'wallet' == $args['payment_wallet_method_code']) {
+                    $mpesa_result = $this->SendPaymentRequestToMpesa($this->cart->getTotalWithShipping(), $args['mpesa_mobile_number'], base64_encode($this->customer->getId() . '_' . $this->cart->getTotalWithShipping() . '_' . date("Y-m-d h:i:s")));
+                }
+                $log->write('mpesa_result');
+                $log->write($mpesa_result);
+                $log->write('mpesa_result');
+                $cache_pre_fix = '_' . $mpesa_result['CheckoutRequestID'];
+                if (isset($mpesa_result) && isset($mpesa_result['ResponseCode']) && $mpesa_result['ResponseCode'] == 0) {
+                    $this->load->model('payment/mpesa');
+
+                    $mpesa_request_ids = $this->model_payment_mpesa->insertMobileMpesaRequest($this->customer->getId(), $mpesa_result['MerchantRequestID'], $mpesa_result['CheckoutRequestID'], $this->cart->getTotalWithShipping());
+
+                    $log->write('mpesa_request_ids');
+                    $log->write($mpesa_request_ids);
+                    $log->write('mpesa_request_ids');
+
+                    $this->cache->delete('customer_order_data' . $cache_pre_fix);
+                    $this->cache->set('customer_order_data' . $cache_pre_fix, $order_data);
+
+                    $json['status'] = 200;
+                    $json['message_from_mpesa'] = $mpesa_result['ResponseDescription'];
+                    $json['message'] = 'A payment request has been sent on your above number. Please make the payment by entering mpesa PIN.';
+                    $json['data']['merchant_request_id'] = $mpesa_result['MerchantRequestID'];
+                    $json['data']['checkout_request_id'] = $mpesa_result['CheckoutRequestID'];
+                } elseif (isset($mpesa_result) && isset($mpesa_result['errorCode']) && $mpesa_result['errorCode'] > 0) {
+                    $this->cache->delete('customer_order_data' . $cache_pre_fix);
+
+                    $json['status'] = 400;
+                    $json['message'] = $mpesa_result['errorMessage'];
+                }
+            }
+        } else {
+            $json['status'] = 10014;
+
+            foreach ($this->error as $key => $value) {
+                $json['message'][] = ['type' => $key, 'body' => $value];
+            }
+
+            http_response_code(400);
+        }
+
+        $log->write('ordernew json');
+        $log->write($json);
+        $log->write('ordernew json');
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    protected function validatenewly($args) {
+        if (empty($args['customer_id']) || (isset($args['customer_id']) && !is_numeric($args['customer_id']))) {
+            $this->error['customer_id'] = 'Customer ID Required!';
+        }
+
+        $args['customer_id'] = isset($args['customer_id']) && $args['customer_id'] > 0 ? $args['customer_id'] : 0;
+        if (empty($args['payment_method'])) {
+            $this->error['payment_method'] = $this->language->get('error_payment_method');
+        }
+
+        if (empty($args['payment_method_code'])) {
+            $this->error['payment_method_code'] = $this->language->get('error_payment_method_code');
+        }
+
+        if (empty($args['shipping_address_id'])) {
+            $this->error['shipping_address_id'] = $this->language->get('error_shipping_address_id');
+        }
+
+        if (empty($args['stores']) || !is_array($args['stores'])) {
+            $this->error['error_stores'] = $this->language->get('error_stores');
+        }
+
+        if (empty($args['products']) || !is_array($args['products'])) {
+            $this->error['error_products'] = $this->language->get('error_products');
+        }
+
+        if (!empty($args['products']) && is_array($args['products'])) {
+            foreach ($args['products'] as $product) {
+                if (!array_key_exists('product_store_id', $product)) {
+                    $this->error['product_store_id'] = 'Product Store ID Required!';
+                }
+
+                if (!array_key_exists('store_id', $product)) {
+                    $this->error['store_id'] = 'Store ID Required!';
+                }
+
+                if (!array_key_exists('store_product_variation_id', $product)) {
+                    $this->error['store_product_variation_id'] = 'Product Store Variation ID Required!';
+                }
+
+                if (!array_key_exists('product_type', $product)) {
+                    $this->error['product_type'] = 'Product Type Required!';
+                }
+
+                if (!array_key_exists('product_note', $product)) {
+                    $this->error['product_note'] = 'Product Note Required!';
+                }
+
+                if (!array_key_exists('quantity', $product)) {
+                    $this->error['quantity'] = 'Product Quantity Required!';
+                }
+
+                if (!array_key_exists('price', $product)) {
+                    $this->error['price'] = 'Product Price Required!';
+                }
+            }
+        }
+
+        if (!empty($args['stores']) && is_array($args['stores'])) {
+            foreach ($args['stores'] as $store) {
+                if (!array_key_exists('store_id', $store)) {
+                    $this->error['store_id'] = 'Store ID Required!';
+                }
+
+                if (!array_key_exists('timeslot', $store)) {
+                    $this->error['timeslot'] = 'Store TimeSlot Required!';
+                }
+
+                if (!array_key_exists('timeslot_selected', $store)) {
+                    $this->error['timeslot_selected'] = 'Store TimeSlot Selected Required!';
+                }
+
+                if (!array_key_exists('dates', $store)) {
+                    $this->error['dates'] = 'Store TimeSlot Selected Required!';
+                }
+
+                if (!array_key_exists('delivery_date', $store)) {
+                    $this->error['delivery_date'] = 'Store Delivery Date Required!';
+                }
+
+                if (!array_key_exists('comment', $store)) {
+                    $this->error['comment'] = 'Store Comment Required!';
+                }
+
+                if (!array_key_exists('shipping_code', $store)) {
+                    $this->error['shipping_code'] = 'Store Shipping Code Required!';
+                }
+
+                if (!array_key_exists('shipping_method', $store)) {
+                    $this->error['shipping_method'] = 'Store Shipping Method Required!';
+                }
+
+                if (!array_key_exists('sub_total', $store)) {
+                    $this->error['sub_total'] = 'Store Sub Total Required!';
+                }
+
+                if (!array_key_exists('total', $store)) {
+                    $this->error['total'] = 'Store Total Required!';
+                }
+
+                if (!array_key_exists('weight', $store)) {
+                    $this->error['weight'] = 'Store Weight Required!';
+                }
+
+                if (!array_key_exists('order_reference_number', $store)) {
+                    $this->error['order_reference_number'] = 'Store Order Reference Number Required!';
+                }
+            }
+        }
+
+        $vendor_terms = json_decode($this->getCheckOtherVendorOrderExist($args), true);
+        if ($vendor_terms['modal_open'] == TRUE) {
+            $this->error['vendor_terms'] = 'Please accept vendor terms!';
+        }
+
+        $pending_orders_count = $this->getunpaidorderscount($args['customer_id']);
+        if (isset($pending_orders_count) && count($pending_orders_count) > 0 && $pending_orders_count['unpaid_orders_count'] > 0) {
+            $this->error['unpaid_orders'] = 'Your Order(s) Payment Is Pending!';
+        }
+
+        return !$this->error;
+    }
+
+    public function getCheckOtherVendorOrderExist($args) {
+
+        $json = [];
+        $json['status'] = 200;
+        $json['data'] = [];
+        $json['message'] = [];
+        $log = new Log('error.log');
+        $json['modal_open'] = FALSE;
+
+        $this->load->model('account/customer');
+        $customer_info = $this->model_account_customer->getCustomer($args['customer_id']);
+
+        if (isset($args['products']) && count($args['products']) > 0) {
+            foreach ($args['products'] as $store_products) {
+                /* FOR KWIKBASKET ORDERS */
+                $log->write('CheckOtherVendorOrderExists');
+                $log->write($store_products['store_id']);
+                $log->write('CheckOtherVendorOrderExists');
+                if ($store_products['store_id'] > 75 && $customer_info['payment_terms'] != 'Payment On Delivery') {
+                    $json['modal_open'] = TRUE;
+                }
+            }
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function getunpaidorderscount($customer_id) {
+        $json = [];
+        $data = [];
+        $log = new Log('error.log');
+
+        $this->load->model('account/customer');
+        $customer_info = $this->model_account_customer->getCustomer($customer_id);
+
+        if (isset($customer_info) && is_array($customer_info) && count($customer_info) > 0) {
+            $log->write($customer_info['payment_terms']);
+            $log->write($customer_info['customer_id']);
+
+            $data['pending_order_id'] = NULL;
+
+            if ($customer_info['payment_terms'] == 'Payment On Delivery') {
+                $this->load->model('account/order');
+                $this->load->model('sale/order');
+                $page = 1;
+                $results_orders = $this->model_account_order->getOrdersNew(($page - 1) * 10, 10, $NoLimit = true);
+                $PaymentFilter = ['mPesa On Delivery', 'Cash On Delivery', 'mPesa Online', 'Corporate Account/ Cheque Payment', 'PesaPal', 'Interswitch', 'Pezesha'];
+                if (count($results_orders) > 0) {
+                    foreach ($results_orders as $order) {
+                        if (in_array($order['payment_method'], $PaymentFilter) && ($order['order_status_id'] == 4 || $order['order_status_id'] == 5)) {
+                            $order['transcation_id'] = $this->model_sale_order->getOrderTransactionId($order['order_id']);
+                            if (empty($order['transcation_id']) || $order['paid'] == 'P') {
+                                $data['pending_order_id'][] = $order['order_id'];
+                            }
+                        }
+                    }
+                }
+            }
+
+            $data['unpaid_orders_count'] = count($data['pending_order_id']);
+            $data['message'] = count($data['pending_order_id']) > 0 ? 'Your Order(s) Payment Is Pending!' : '';
+        }
+        return $data;
+    }
+
+    public function getunpaidorderscounts($customer_id) {
+        $json = [];
+        $log = new Log('error.log');
+
+        $this->load->model('account/customer');
+        $customer_info = $this->model_account_customer->getCustomer($customer_id);
+
+        if (isset($customer_info) && is_array($customer_info) && count($customer_info) > 0) {
+
+            $log->write($customer_info['payment_terms']);
+            $log->write($customer_info['customer_id']);
+
+            $data['pending_order_id'] = NULL;
+
+            if ($customer_info['payment_terms'] == 'Payment On Delivery') {
+                $this->load->model('account/order');
+                $this->load->model('sale/order');
+                $page = 1;
+                $results_orders = $this->model_account_order->getOrdersNew(($page - 1) * 10, 10, $NoLimit = true);
+                $PaymentFilter = ['mPesa On Delivery', 'Cash On Delivery', 'mPesa Online', 'Corporate Account/ Cheque Payment', 'PesaPal', 'Interswitch', 'Pezesha'];
+                if (count($results_orders) > 0) {
+                    foreach ($results_orders as $order) {
+                        if (in_array($order['payment_method'], $PaymentFilter) && ($order['order_status_id'] == 4 || $order['order_status_id'] == 5)) {
+                            $order['transcation_id'] = $this->model_sale_order->getOrderTransactionId($order['order_id']);
+                            if (empty($order['transcation_id']) || $order['paid'] == 'P') {
+                                $data['pending_order_id'][] = $order['order_id'];
+                            }
+                        }
+                    }
+                }
+            }
+
+            $data['unpaid_orders_count'] = count($data['pending_order_id']);
+            $data['message'] = count($data['pending_order_id']) > 0 ? 'Your Order(s) Payment Is Pending!' : '';
+            //return $data;
+            $json['status'] = 200;
+            $json['data'] = $data;
+        }
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }

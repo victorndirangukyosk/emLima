@@ -1474,6 +1474,14 @@ class ModelSaleOrder extends Model {
             $sql .= " AND DATE(o.date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
         }
 
+        if (!empty($data['filter_delivery_date_start']) && empty($data['filter_delivery_date_end'])) {
+            $sql .= " AND DATE(o.delivery_date) = DATE('" . $this->db->escape($data['filter_delivery_date_start']) . "')";
+        }
+
+        if (!empty($data['filter_delivery_date_start']) && !empty($data['filter_delivery_date_end'])) {
+            $sql .= " AND DATE(o.delivery_date) BETWEEN DATE('" . $this->db->escape($data['filter_delivery_date_start']) . "') AND DATE('" . $this->db->escape($data['filter_delivery_date_end']) . "')";
+        }
+
         if (!empty($data['filter_monthyear_added'])) {
             $sql .= " AND DATE_FORMAT(o.date_added, '%Y-%m') = '" . $this->db->escape($data['filter_monthyear_added']) . "'";
         }

@@ -180,6 +180,15 @@ class ControllerCheckoutPaymentMethod extends Controller {
                     unset($data['payment_methods'][$payment_method['code']]);
                 }
             }
+                        }if ((($this->customer->getPaymentTerms() == 'Pre-Paid' ) && ($this->customer->getCustomerPezeshaId() == NULL && $this->customer->getCustomerPezeshauuId() == NULL)) /* || (($this->customer->getPaymentTerms() == '7 Days Credit' || $this->customer->getPaymentTerms() == '15 Days Credit' || $this->customer->getPaymentTerms() == '30 Days Credit') && ($this->customer->getCustomerPezeshaId() != NULL && $this->customer->getCustomerPezeshauuId() != NULL && $this->session->data['pezesha_customer_amount_limit'] == 0)) */) {
+            foreach ($data['payment_methods'] as $payment_method) {
+                if ($payment_method['code'] == 'wallet') {
+                    $data['payment_wallet_methods'] = $payment_method;
+                }
+                if ($payment_method['code'] != 'mpesa') {
+                    unset($data['payment_methods'][$payment_method['code']]);
+                }
+            }
         } if ($this->customer->getCustomerPezeshaId() != NULL && $this->customer->getCustomerPezeshauuId() != NULL && $this->config->get('pezesha_status') /* && $this->session->data['pezesha_customer_amount_limit'] > 0 */) {
             foreach ($data['payment_methods'] as $payment_method) {
                 if ($payment_method['code'] == 'wallet') {
@@ -189,7 +198,7 @@ class ControllerCheckoutPaymentMethod extends Controller {
                     unset($data['payment_methods'][$payment_method['code']]);
                 }
             }
-        }
+        }        
         $log->write('getPaymentTerms');
         //}
 

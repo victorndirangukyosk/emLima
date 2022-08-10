@@ -308,8 +308,8 @@
                                  
                                 <td class="text-right">
                                     <?php if(isset($product['category_price_status']) && $product['category_price_status'] == NULL) { ?>
-                                     <button type="button" onclick="enableinallpricecategories('<?php echo $product['product_store_id'];?>','<?php echo $product['product_id'];?>','<?php echo $product['name']; ?>', 0, '<?php echo $price_cat['price_category']; ?>')" data-toggle="tooltip" title="" class="btn btn-default" data-original-title="Enable In All Price Categories"><i class="fa fa-check-circle text-success"></i></button>
-                                     <button type="button" onclick="disableinallpricecategories('<?php echo $product['product_store_id'];?>','<?php echo $product['product_id'];?>','<?php echo $product['name']; ?>', 0, '<?php echo $price_cat['price_category']; ?>')" data-toggle="tooltip" title="" class="btn btn-default" data-original-title="Disable In All Price Categories"><i class="fa fa-times-circle text-danger"></i></button>
+                                     <button type="button" onclick="enableinallpricecategories('<?php echo $product['product_store_id'];?>','<?php echo $product['product_id'];?>','<?php echo $product['name']; ?>', 1)" data-toggle="tooltip" title="" class="btn btn-default" data-original-title="Enable In All Price Categories"><i class="fa fa-check-circle text-success"></i></button>
+                                     <button type="button" onclick="enableinallpricecategories('<?php echo $product['product_store_id'];?>','<?php echo $product['product_id'];?>','<?php echo $product['name']; ?>', 0)" data-toggle="tooltip" title="" class="btn btn-default" data-original-title="Disable In All Price Categories"><i class="fa fa-times-circle text-danger"></i></button>
                                      <?php } ?> 
                                     <?php if($this->user->hasPermission('modify', 'category/prices')){ ?>
 
@@ -1223,6 +1223,23 @@ function excel_item() {
 }
 
 
+function enableinallpricecategories(product_store_id,product_id,product_name,status, price_category){
+	
+        $.ajax({
+                url: 'index.php?path=catalog/vendor_product/enableinallpricecategories&token=<?= $token ?>',
+                dataType: 'json',
+                data: { product_store_id :product_store_id, product_id : product_id, product_name : product_name, status : status },
+                success: function(json) {
+                    if (json) {
+                        $('.panel.panel-default').before('<div class="alert alert-success"><i class="fa fa-check"></i> ' + json.warning + '<button type="button" class="close" data-dismiss="alert">×</button></div>');
+                    setTimeout(function(){ location.reload(); }, 1500);
+                                                        
+                }
+                }
+        });
+
+
+}
 //--></script>
 
 <?php echo $footer; ?>

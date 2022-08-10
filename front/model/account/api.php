@@ -47,7 +47,6 @@ class ModelAccountApi extends Model {
                 $data['parent'] = $user_query->row['parent'];
                 //dont add phone number here
                 //$data['customer_phone'] = $user_query->row['telephone'];
-                
             } else {
                 $data['status'] = false;
                 $data['not_verified'] = true;
@@ -75,7 +74,60 @@ class ModelAccountApi extends Model {
                 $data['parent'] = $user_query->row['parent'];
                 $data['order_approval_access'] = $user_query->row['order_approval_access'];
                 $data['order_approval_access_role'] = $user_query->row['order_approval_access_role'];
+            } else {
+                $data['status'] = false;
+                $data['not_verified'] = true;
+            }
+        } else {
+            $data['status'] = false;
+        }
 
+        return $data;
+    }
+
+    public function customerLoginByEmail($email) {
+        $data['status'] = true;
+        $data['not_verified'] = false;
+
+        $user_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer WHERE email = '" . $this->db->escape($email) . "' AND status = '1'");
+
+        //print_r($user_query);
+        if ($user_query->num_rows) {
+            if ($user_query->row['approved']) {
+                $data['customer_id'] = $user_query->row['customer_id'];
+
+                $data['customer_phone'] = $user_query->row['telephone'];
+                $data['customer_email'] = $user_query->row['email'];
+                $data['parent'] = $user_query->row['parent'];
+                $data['order_approval_access'] = $user_query->row['order_approval_access'];
+                $data['order_approval_access_role'] = $user_query->row['order_approval_access_role'];
+            } else {
+                $data['status'] = false;
+                $data['not_verified'] = true;
+            }
+        } else {
+            $data['status'] = false;
+        }
+
+        return $data;
+    }
+
+    public function customerLoginByTelephone($telephone) {
+        $data['status'] = true;
+        $data['not_verified'] = false;
+
+        $user_query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer WHERE telephone = '" . $this->db->escape($telephone) . "' AND status = '1'");
+
+        //print_r($user_query);
+        if ($user_query->num_rows) {
+            if ($user_query->row['approved']) {
+                $data['customer_id'] = $user_query->row['customer_id'];
+
+                $data['customer_phone'] = $user_query->row['telephone'];
+                $data['customer_email'] = $user_query->row['email'];
+                $data['parent'] = $user_query->row['parent'];
+                $data['order_approval_access'] = $user_query->row['order_approval_access'];
+                $data['order_approval_access_role'] = $user_query->row['order_approval_access_role'];
             } else {
                 $data['status'] = false;
                 $data['not_verified'] = true;
@@ -267,10 +319,8 @@ class ModelAccountApi extends Model {
                 // add activity and all
 
                 if ($this->customer->loginByPhone($customer_id)) {
-                    if($this->customer->getEmail() !="")
-                    {
+                    if ($this->customer->getEmail() != "") {
                         $this->model_account_customer->addLoginAttempt($this->customer->getEmail());
-
                     }
 
                     if ('shipping' == $this->config->get('config_tax_customer')) {
@@ -318,12 +368,11 @@ class ModelAccountApi extends Model {
         /* if ((utf8_strlen($this->request->post['email']) > 96) || !filter_var($this->request->post['email'], FILTER_VALIDATE_EMAIL)) {
           $this->error['email'] = $this->language->get('error_email');
           } */
-            if(isset($this->request->post['email']) && !empty($this->request->post['email']))
-            {
-        if ($this->model_account_customer->getTotalCustomersByEmail($this->request->post['email'])) {
-            $this->error['warning'] = $this->language->get('error_exists');
+        if (isset($this->request->post['email']) && !empty($this->request->post['email'])) {
+            if ($this->model_account_customer->getTotalCustomersByEmail($this->request->post['email'])) {
+                $this->error['warning'] = $this->language->get('error_exists');
+            }
         }
-    }
 
         /* if (false !== strpos($this->request->post['telephone'], '#') || empty($this->request->post['telephone'])) {
           $this->error['telephone'] = $this->language->get('error_telephone');
@@ -482,9 +531,8 @@ class ModelAccountApi extends Model {
                     } else {
                         $this->request->post['dob'] = null;
                     }
-                    if(empty($this->request->post['source']))
-                    {
-                    $this->request->post['source'] = 'MOBILE';
+                    if (empty($this->request->post['source'])) {
+                        $this->request->post['source'] = 'MOBILE';
                     }
                     //$this->request->post['password'] = mt_rand(1000,9999);
                     // echo "<pre>";print_r($this->request->post);die;
@@ -498,7 +546,7 @@ class ModelAccountApi extends Model {
                     $this->model_account_customer->deleteLoginAttempts($this->request->post['email']);
 
                     $logged_in = $this->customer->loginByPhone($customer_id);
- 
+
                     unset($this->session->data['guest']);
 
                     // Add to activity log
@@ -599,8 +647,7 @@ class ModelAccountApi extends Model {
 
                     $data['success_message'] = $this->language->get('text_valid_otp');
                     $data['customer_id'] = $customer_id;
-                $data['status'] = true;
-
+                    $data['status'] = true;
                 }
             } else {
                 // enter valid number throw error

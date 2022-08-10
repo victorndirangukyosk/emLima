@@ -36,7 +36,8 @@
           <div class="profile-number"><?= $DashboardData['customer_name'] ?> </div>
           <div class="profile-number"><?= $DashboardData['email'] ?> </div>
           <div class="profile-number">+254- <?= $DashboardData['telephone'] ?> </div>
-          <div class="profile-number" hidden><a  href="index.php?path=account/dashboard/customerStatement&pdf=1"  data-toggle="tooltip" title="Statement"
+          <div class="profile-number"  >
+          <a  href="#" onclick="statementPDF();" data-toggle="tooltip" title="Statement"
                             class="btn-link text_green" style="color:green !important">
                              <b>Download Statement</b></a> </div>
         </div>
@@ -763,7 +764,34 @@
     location = url;
   }
 
+  function statementPDF() {
+    
+    var optionvalue = $('.company-name option:selected').val();
+    url = 'index.php?path=account/dashboard/customerStatement&pdf=1&start=' + start_date + '&end=' + end_date + '&customer_id='+ optionvalue;
 
+    //
+
+    $.ajax({
+      type: 'get',
+      url: 'index.php?path=account/dashboard/customerStatementrecords&start=' + start_date + '&end=' + end_date + '&selectedcustomer_id=' + optionvalue,
+
+      dataType: 'json',
+      success: function (json) { 
+        if(json['value']==1)
+        {
+        location = url;
+        }
+        else{
+        alert("no records available");
+
+        }
+      },
+      error: function (xhr, ajaxOptions, thrownError) {
+        alert("please try after sometime");
+      }
+    });
+
+  }
 
 
 

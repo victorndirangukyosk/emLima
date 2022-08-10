@@ -768,7 +768,7 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label" for="input-account-manager">Customer Experience</label>
                         <div class="col-sm-10">
-                            <select name="customer_experience" id="input-customer-experience" class="form-control">
+                            <select name="customer_experience" id="input-customer-experience" class="form-control" <?php echo $customer_category_disabled; ?> >
                             <option value="">Select Customer Experience</option>
                             <?php foreach ($customer_experience_list as $customer_experience_lis) { ?>
                              <?php if(isset($customer_experience) && ($customer_experience == $customer_experience_lis['user_id'])){ ?>
@@ -784,12 +784,13 @@
                     <div class="form-group">
                                 <label class="col-sm-2 control-label" for="input-payment-terms">Payment Terms</label>
                         <div class="col-sm-10">
-                            <select name="payment_terms" id="input-payment-terms" class="form-control">
+                            <select name="payment_terms" id="input-payment-terms" class="form-control" <?php echo $customer_category_disabled; ?> >
                             <option value="">Payment Terms</option>
                             <option <?php if($payment_terms == "Payment On Delivery") { ?> selected="selected" <?php } ?> value="Payment On Delivery">Payment On Delivery</option>
                             <option <?php if($payment_terms == "7 Days Credit") { ?>  selected="selected" <?php } ?> value="7 Days Credit">7 Days Credit</option>
                             <option <?php if($payment_terms == "15 Days Credit") { ?>  selected="selected" <?php } ?> value="15 Days Credit">15 Days Credit</option>
                             <option <?php if($payment_terms == "30 Days Credit") { ?>  selected="selected" <?php } ?> value="30 Days Credit">30 Days Credit</option>
+                            <option <?php if($payment_terms == "Pre-Paid") { ?>  selected="selected" <?php } ?> value="Pre-Paid">Pre-Paid</option>
                             </select>
                         </div>
                     </div>
@@ -797,7 +798,7 @@
                     <div class="form-group">
                                 <label class="col-sm-2 control-label" for="input-statement_duration">Statement Duration</label>
                         <div class="col-sm-10">
-                            <select name="statement_duration" id="input-statement_duration" class="form-control">
+                            <select name="statement_duration" id="input-statement_duration" class="form-control" <?php echo $customer_category_disabled; ?> >
                             
                             <option <?php if($statement_duration == "7") { ?> selected="selected" <?php } ?> value="7">Weekly</option>
                             <option <?php if($statement_duration == "15") { ?>  selected="selected" <?php } ?> value="15">Bi-Weekly</option>
