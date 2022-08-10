@@ -842,12 +842,12 @@ padding: 10px;
 
 function loadPriceDrop() {
    
-<?php 
+<!--<?php 
 if (($this->customer->getCustomerCategory()=="" || $this->customer->getCustomerCategory()==NULL) && $this->session->data['price_drop_seen']=="false") { ?>
    
     $('#mdlPriceDrop').modal('show');
 
- <?php } ?>
+ <?php } ?>-->
 }
 
 $(document).delegate('#selectedCategory', 'change', function () {
