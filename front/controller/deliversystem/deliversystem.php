@@ -1725,6 +1725,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
             $json['message'] = 'Loan Details Saved Successfull!';
         } else {
             $log->write('ERROR');
+            $this->model_pezesha_pezeshaloanreceivables->savecallbackrequests($raw_postData, $order_id);
             $json['status'] = 400;
             $json['success'] = 0;
 
