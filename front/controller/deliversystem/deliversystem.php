@@ -1707,17 +1707,17 @@ class ControllerDeliversystemDeliversystem extends Controller {
             fwrite('Error: no data written');
         }
         fclose($file);
+        $raw_postData = $postData;
         $postData = json_decode($postData, true);
         $log = new Log('error.log');
         $log->write($postData);
-
-        $this->model_pezesha_pezeshaloanreceivables->savecallbackrequests($postData, $order_id);
 
         if ($this->validate($postData)) {
             $orders = $postData['order_id'];
             foreach ($orders as $order) {
                 $postData['order'] = $order;
                 $order_id = $order;
+                $this->model_pezesha_pezeshaloanreceivables->savecallbackrequests($raw_postData, $order_id);
                 $this->model_pezesha_pezeshaloanreceivables->loanmpesadetails($postData);
             }
             $json['status'] = 200;
