@@ -118,9 +118,9 @@ padding: 10px;
 </marquee>
 </div>
 <br>
-<?php } ?>-->
+<?php } ?> onload="loadPriceDrop()"-->
 
-<body  onload="loadPriceDrop()" data-wrapper-optimized="" id="homenew" class="new-homepage-image-format drawer drawer--top">
+<body   data-wrapper-optimized="" id="homenew" class="new-homepage-image-format drawer drawer--top">
   <br> 
   <?php if ($error_warning) { ?>
   <div class="alert alert-danger">
