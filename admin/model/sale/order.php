@@ -5490,6 +5490,10 @@ class ModelSaleOrder extends Model {
             $sql .= " AND o.order_status_id NOT IN (" . $data['filter_order_status_id_not_in'] . ")";
         }
 
+        if (!empty($data['filter_paid'])) {
+            $sql .= " AND o.paid = '" . $data['filter_paid'] . "'";
+        }
+
         $sql .= ' ORDER BY o.order_id';
 
         if (isset($data['order']) && ('DESC' == $data['order'])) {
@@ -6834,6 +6838,273 @@ class ModelSaleOrder extends Model {
         }
 
         $sql .= ' ORDER BY cust.company_name,cust.firstname,o.order_id';
+
+        if (isset($data['order']) && ('DESC' == $data['order'])) {
+            $sql .= ' DESC';
+        } else {
+            $sql .= ' ASC';
+        }
+
+        if (isset($data['start']) || isset($data['limit'])) {
+            if ($data['start'] < 0) {
+                $data['start'] = 0;
+            }
+
+            if ($data['limit'] < 1) {
+                $data['limit'] = 20;
+            }
+
+            $sql .= ' LIMIT ' . (int) $data['start'] . ',' . (int) $data['limit'];
+        }
+
+        //   echo "<pre>";print_r($sql);die;
+        $query = $this->db->query($sql);
+
+        return $query->rows;
+    }
+
+    public function TotalRevenuePendingDashBoard($data = []) {
+        $all_orders = $this->getOrdersForRevenue($data);
+        $log = new Log('error.log');
+        if (is_array($all_orders) && count($all_orders) > 0) {
+            $order_grand_total = 0;
+            foreach ($all_orders as $all_order) {
+                //$log->write($all_order['order_id']);
+                if ($all_order['paid']=='N' || $all_order['paid']=='P') {
+                     
+                        if ($all_order['paid']=='N') {
+                            $order_grand_total += $all_order['value'];
+                            //$log->write($order_total);
+                        }
+                        else if($all_order['paid']=='P')
+                        {
+                            $order_grand_total += ($all_order['value']-$all_order['amount_partialy_paid']);
+                        }
+                }
+            }
+        }
+        return $order_grand_total;
+    }
+
+
+    public function TotalRevenueCollectedDashBoard($data = []) {
+        $all_orders = $this->getOrdersForRevenue($data);
+        $log = new Log('error.log');
+        if (is_array($all_orders) && count($all_orders) > 0) {
+            $order_grand_total = 0;
+            foreach ($all_orders as $all_order) {
+                //$log->write($all_order['order_id']);
+                if ($all_order['paid']=='Y' || $all_order['paid']=='P') {
+                     
+                        if ($all_order['paid']=='Y') {
+                            $order_grand_total += $all_order['value'];
+                            //$log->write($order_total);
+                        }
+                        else if($all_order['paid']=='P')
+                        {
+                            $order_grand_total += ($all_order['amount_partialy_paid']);
+                        }
+                }
+            }
+        }
+        return $order_grand_total;
+    }
+
+    public function getOrdersForRevenue($data = []) {
+        $sql = "SELECT o.paid,o.amount_partialy_paid,ot.value FROM `" . DB_PREFIX . 'order` o ';
+        //$sql = "SELECT c.name as city, o.firstname,o.lastname,o.comment, (SELECT cust.company_name FROM hf7_customer cust WHERE o.customer_id = cust.customer_id ) AS company_name,o.order_id, o.delivery_date, o.delivery_timeslot, o.shipping_method, o.shipping_address, o.payment_method, CONCAT(o.firstname, ' ', o.lastname) AS customer, (SELECT os.name FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS status,(SELECT os.color FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS color, o.shipping_code, o.order_status_id,o.store_name,  o.total, o.currency_code, o.currency_value, o.date_added, o.date_modified,o.po_number FROM `" . DB_PREFIX . "order` o ";
+
+        $sql .= 'left join `' . DB_PREFIX . 'city` c on c.city_id = o.shipping_city_id';
+        $sql .= ' LEFT JOIN ' . DB_PREFIX . 'store on(' . DB_PREFIX . 'store.store_id = o.store_id) ';
+        $sql .= ' LEFT JOIN ' . DB_PREFIX . 'customer cust on (cust.customer_id = o.customer_id) ';
+        $sql .= ' LEFT JOIN ' . DB_PREFIX . 'order_total ot on (ot.order_id = o.order_id) and ot.code="total" ';
+
+        if (isset($data['filter_order_status'])) {
+            $implode = [];
+
+            $order_statuses = explode(',', $data['filter_order_status']);
+
+            foreach ($order_statuses as $order_status_id) {
+                $implode[] = "o.order_status_id = '" . (int) $order_status_id . "'";
+            }
+
+            if ($implode) {
+                $sql .= ' WHERE (' . implode(' OR ', $implode) . ')';
+            } else {
+                
+            }
+        } else {
+            $sql .= " WHERE o.order_status_id > '0'";
+        }
+
+
+        if (!empty($data['filter_customer_group'])) {
+            $sql .= ' AND cust.customer_group_id="' . $data['filter_customer_group'] . '"';
+        }
+
+        //   echo "<pre>";print_r($data['filter_order_type']);die; 
+
+        if (isset($data['filter_order_placed_from'])) {
+
+            if ($data['filter_order_placed_from'] == "Mobile") {
+                $sql .= ' AND user_agent not like "%Mozilla%"';
+            } else {
+                $sql .= ' AND user_agent  like "%Mozilla%"';
+            }
+        }
+        if (isset($data['filter_order_type'])) {
+
+            $sql .= ' AND isadmin_login= ' . $data['filter_order_type'] . '';
+        }
+
+        //below if condition added for fast orders used in fast order sreen 
+        if (!empty($data['filter_order_day'])) {
+            $current_date = date('Y-m-d');
+            if ('today' == $data['filter_order_day']) {
+                $delivery_date = date('Y-m-d');
+            } else {
+                $delivery_date = date('Y-m-d', strtotime('+1 day'));
+            }
+
+            //$sql .= " AND DATE(o.delivery_date) = " . $delivery_date;
+            $sql .= " AND DATE(o.delivery_date) = DATE('" . $this->db->escape($delivery_date) . "')";
+
+            // fast orders means, ordered placed on current dadte
+            $sql .= " AND DATE(o.date_added) = DATE('" . $this->db->escape($current_date) . "')";
+
+            //echo "<pre>";print_r($delivery_date);die;
+        }
+
+        if (isset($data['filter_orders'])) {
+            $sql .= ' AND  o.order_id in (' . $data['filter_orders'] . ')';
+        }
+
+        if ($this->user->isVendor()) {
+            $sql .= ' AND ' . DB_PREFIX . 'store.vendor_id="' . $this->user->getId() . '"';
+        }
+
+        if (!empty($data['filter_city'])) {
+            $sql .= " AND c.name LIKE '" . $data['filter_city'] . "%'";
+        }
+
+        if (!empty($data['filter_order_id'])) {
+            $sql .= " AND o.order_id = '" . (int) $data['filter_order_id'] . "'";
+        }
+
+        if (!empty($data['filter_order_from_id'])) {
+            $sql .= " AND o.order_id >= '" . (int) $data['filter_order_from_id'] . "'";
+        }
+
+        if (!empty($data['filter_order_to_id'])) {
+            $sql .= " AND o.order_id <= '" . (int) $data['filter_order_to_id'] . "'";
+        }
+
+
+        if (!empty($data['filter_company'])) {
+            $sql .= " AND cust.company_name LIKE '%" . $this->db->escape($data['filter_company']) . "%'";
+        }
+
+        if (!empty($data['filter_customer'])) {
+            $sql .= " AND CONCAT(o.firstname, ' ', o.lastname) LIKE '%" . $this->db->escape($data['filter_customer']) . "%'";
+        }
+
+        if (!empty($data['filter_customer_id'])) {
+            $sql .= " AND o.customer_id = '" . $data['filter_customer_id'] . "'";
+        }
+
+        if (isset($data['filter_customer_id_array']) && !is_null($data['filter_customer_id_array'])) {
+            $sql .= "AND o.customer_id IN (" . $data['filter_customer_id_array'] . ")";
+        }
+
+        if (!empty($data['filter_paid'])) {
+            $sql .= " AND o.paid = '" . $data['filter_paid'] . "'";
+        }
+
+
+        if (isset($data['filter_paid_dashboard'])) {
+            $implode_paid = [];
+
+            $paid_statuses = explode(',', $data['filter_paid_dashboard']);
+
+            foreach ($paid_statuses as $paid_id) {
+                $implode_paid[] = "o.paid = '" .  $paid_id . "'";
+            }
+
+            if ($implode_paid) {
+                $sql .= ' and (' . implode(' OR ', $implode_paid) . ')';
+            }  
+        } 
+
+        if (!empty($data['filter_vendor'])) {
+            $sql .= ' AND vendor_id="' . $data['filter_vendor'] . '"';
+        }
+        if (!empty($data['filter_store_name'])) {
+            $sql .= " AND o.store_name = '" . $data['filter_store_name'] . "'";
+        }
+
+        if (!empty($data['filter_payment'])) {
+            $sql .= " AND o.payment_method LIKE '%" . $data['filter_payment'] . "%'";
+        }
+
+        if (!empty($data['filter_delivery_method']) && $data['filter_delivery_method'] != 'undefined') {
+            $sql .= " AND o.shipping_method LIKE '%" . $data['filter_delivery_method'] . "%'";
+        }
+
+        if (!empty($data['filter_delivery_date'])) {
+            $sql .= " AND DATE(o.delivery_date) = DATE('" . $this->db->escape($data['filter_delivery_date']) . "')";
+        }
+
+        if (!empty($data['filter_delivery_time_slot']) && $data['filter_delivery_time_slot'] != 'undefined') {
+            $sql .= " AND o.delivery_timeslot = '" . $this->db->escape($data['filter_delivery_time_slot']) . "'";
+        }
+
+        if (!empty($data['filter_date_added']) && empty($data['filter_date_added_end'])) {
+            $sql .= " AND DATE(o.date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
+        }
+
+        if (!empty($data['filter_delivery_date_start']) && empty($data['filter_delivery_date_end'])) {
+            $sql .= " AND DATE(o.delivery_date) = DATE('" . $this->db->escape($data['filter_delivery_date_start']) . "')";
+        }
+
+        if (!empty($data['filter_delivery_date_start']) && !empty($data['filter_delivery_date_end'])) {
+            $sql .= " AND DATE(o.delivery_date) BETWEEN DATE('" . $this->db->escape($data['filter_delivery_date_start']) . "') AND DATE('" . $this->db->escape($data['filter_delivery_date_end']) . "')";
+        }
+
+        if (!empty($data['filter_monthyear_added'])) {
+            $sql .= " AND DATE_FORMAT(o.date_added, '%Y-%m') = '" . $this->db->escape($data['filter_monthyear_added']) . "'";
+        }
+
+        if (!empty($data['filter_date_added']) && !empty($data['filter_date_added_end'])) {
+            $sql .= " AND DATE(o.date_added) BETWEEN DATE('" . $this->db->escape($data['filter_date_added']) . "') AND DATE('" . $this->db->escape($data['filter_date_added_end']) . "')";
+        }
+
+        if (!empty($data['filter_date_modified'])) {
+            $sql .= " AND DATE(o.date_modified) = DATE('" . $this->db->escape($data['filter_date_modified']) . "')";
+        }
+
+        if (!empty($data['filter_total']) && $data['filter_total'] > 0) {
+            $sql .= " AND o.total = '" . (float) $data['filter_total'] . "'";
+        }
+
+        if (isset($data['filter_order_status_id_not_in'])) {
+            $sql .= " AND o.order_status_id NOT IN (" . $data['filter_order_status_id_not_in'] . ")";
+        }
+
+        $sort_data = [
+            'o.order_id',
+            'customer',
+            'status',
+            'o.date_added',
+            'o.date_modified',
+            'o.total',
+            'c.name',
+        ];
+
+        if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
+            $sql .= ' ORDER BY ' . $data['sort'];
+        } else {
+            $sql .= ' ORDER BY o.order_id';
+        }
 
         if (isset($data['order']) && ('DESC' == $data['order'])) {
             $sql .= ' DESC';
