@@ -10246,9 +10246,10 @@ class ControllerSaleOrder extends Controller {
         $order_info = $this->model_checkout_order->getOrder($order_id);
         if (is_array($order_info) && $order_info != NULL) {
 
-            if ($delivery_charge > 0) {
+            // if ($delivery_charge > 0) {
                 $this->model_sale_order->UpdateOrderDeliveryCharges($order_id, $delivery_charge);
-            }
+            // }
+
         }
 
         $json['status'] = 'success';

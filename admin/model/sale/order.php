@@ -4355,8 +4355,10 @@ class ModelSaleOrder extends Model {
         $log = new Log('error.log');
         $log->write($order_total_without_delivery_charges);
         //insert into order_total
+        if($delivery_charge>0)
+        {
         $this->db->query('UPDATE `' . DB_PREFIX . 'order` SET delivery_charges="' . $delivery_charge . '", date_modified = NOW() WHERE order_id="' . $order_id . '"');
-
+        }
         $exists = $this->db->query('select * from ' . DB_PREFIX . 'order_total  WHERE order_id="' . $order_id . '" and code="shipping"');
         // echo "<pre>";print_r($exists);
         //  echo "<pre>";print_r('UPDATE `' . DB_PREFIX . 'order_total` SET value=value+ '.$delivery_charge.'  WHERE order_id="' . $order_id . '" and code="shipping"');die;
