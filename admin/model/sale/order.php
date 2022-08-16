@@ -5490,6 +5490,10 @@ class ModelSaleOrder extends Model {
             $sql .= " AND o.order_status_id NOT IN (" . $data['filter_order_status_id_not_in'] . ")";
         }
 
+        if (!empty($data['filter_paid'])) {
+            $sql .= " AND o.paid = '" . $data['filter_paid'] . "'";
+        }
+
         $sql .= ' ORDER BY o.order_id';
 
         if (isset($data['order']) && ('DESC' == $data['order'])) {
