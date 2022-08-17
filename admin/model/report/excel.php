@@ -2608,14 +2608,14 @@ class ModelReportExcel extends Model {
 
                 ++$row;
 
-                if (date('Y-m-d') >= $result['date_added']) {
-                    //echo "cef";print_r($result['date_added']);
-                    $data['filter_date_start'] = $result['date_added'];
-                }
+                // if (date('Y-m-d') >= $result['date_added']) {
+                //     //echo "cef";print_r($result['date_added']);
+                //     $data['filter_date_start'] = $result['date_added'];
+                // }
 
-                if ($data['filter_date_end'] <= $result['date_added']) {
-                    $data['filter_date_end'] = $result['date_added'];
-                }
+                // if ($data['filter_date_end'] <= $result['date_added']) {
+                //     $data['filter_date_end'] = $result['date_added'];
+                // }
             }
 
             //echo "<pre>";print_r($data['filter_date_end']."erxx".$data['filter_date_start']);die;
