@@ -749,10 +749,16 @@ class ControllerApiCustomerMpesa extends Controller {
 
     public function addMpesaregisterurl() {
 
+        $json = [];
+
         $log = new Log('error.log');
         $access_token = $this->auth();
 
         $log->write($access_token);
+
+        $json['data'] = $access_token;
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
     }
 
 }
