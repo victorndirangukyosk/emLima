@@ -182,23 +182,20 @@ class ControllerApiForgetPassword extends Controller
     {
         $json = [];
         $json['success'] = 'Something went wrong!';
-
         // if (!isset($this->session->data['api_id'])) {
         //     $json['error'] = $this->language->get('error_permission');
         // } else 
-        {
-
-         
+        {         
         $this->load->language('account/changepass');
         $this->load->model('account/changepass');       
 
         if (isset($this->error['warning'])) {
-            $data['error_warning'] = $this->language->get('error_warning_message');
+            $json['error_warning'] = $this->language->get('error_warning_message');
         } else {
-            $data['error_warning'] = '';
+            $json['error_warning'] = '';
         }
 
-        if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validatepasword()) {
+        if (('POST' == $this->request->server['REQUEST_METHOD']) && $this->validatePaswordNew()) {
             // echo "<pre>";print_r($this->request->post['newpassword']);die;
             $this->load->model('account/changepass');
 
@@ -213,7 +210,7 @@ class ControllerApiForgetPassword extends Controller
                 // $this->response->redirect($this->url->link('account/changepass/success'));
                  // Add to activity log
                  $this->load->model('account/customer');
-                 $customer_info = $this->model_account_customer->getCustomer($this->request->post['customerid']);
+                 $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
                  
                 $this->load->model('account/activity');
 
@@ -257,6 +254,7 @@ class ControllerApiForgetPassword extends Controller
         //     $this->error['current'] = $this->language->get('error_current');
         // }
 
+        
         if ((utf8_strlen(trim($this->request->post['newpassword'])) < 1) || (utf8_strlen(trim($this->request->post['newpassword'])) > 32)) {
             $this->error['new'] = $this->language->get('error_new');
         }
@@ -279,5 +277,41 @@ class ControllerApiForgetPassword extends Controller
         return !$this->error;
     }
 
+    public function validatePaswordNew() {
+        // if ((utf8_strlen(trim($this->request->post['currentpassword'])) < 1) || (utf8_strlen(trim($this->request->post['currentpassword'])) > 32)) {
+        //     $this->error['current'] = $this->language->get('error_current');
+        // }
+            // echo "<pre>";print_r(isset($this->request->post));die;
+
+        if ((utf8_strlen(trim($this->request->post['newpassword'])) < 6) || (utf8_strlen(trim($this->request->post['newpassword'])) > 32)) {
+            $this->error['new'] = $this->language->get('error_new');
+        }
+
+        if (!preg_match('/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/', $this->request->post['newpassword'])) {
+            $this->error['new'] = 'Password must contain 6 characters 1 capital(A-Z) 1 numeric(0-9) 1 special(@$!%*#?&)';
+        }
+
+        if ((utf8_strlen($this->request->post['retypepassword']) > 96) || ($this->request->post['newpassword'] !== $this->request->post['retypepassword'])) {
+            $this->error['retype'] = $this->language->get('error_retype');
+        }
+
+        $this->load->model('account/changepass');
+        $change_pass_count = $this->model_account_changepass->check_customer_previous_password($this->customer->getId(), $this->request->post['newpassword']);
+        $change_current_pass_count = $this->model_account_changepass->check_customer_current_password($this->customer->getId(), $this->request->post['newpassword']);
+
+        if ($change_pass_count > 0 || $change_current_pass_count > 0) {
+            $this->error['new'] = 'New password must not match previous 3 passwords';
+        }
+        // if (empty($this->request->post['currentpassword'])) {
+        //     $this->error['current'] = $this->language->get('error_check');
+        // }
+        // if (empty($this->request->post['newpassword'])) {
+        //     $this->error['new'] = $this->language->get('error_new');
+        // }
+        // if (empty($this->request->post['retypepassword'])) {
+        //     $this->error['retype'] = $this->language->get('error_retype');
+        // }
+        return !$this->error;
+    }
 
 }
