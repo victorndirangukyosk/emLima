@@ -1085,7 +1085,7 @@
 
 			<?php if(!$this->user->isVendor()) { ?>
 
-			<?php if ( !in_array( $order_status_id, $this->config->get( 'config_complete_status' ) ) && !in_array( $order_status_id, $this->config->get( 'config_refund_status' ) )  ) { ?>
+			<?php if ( !in_array( $order_status_id, $this->config->get( 'config_complete_status' ) ) && !in_array( $order_status_id, $this->config->get( 'config_refund_status' ) )  || $this->user->hasPermission('modify', 'sale/orderhistory') ) { ?>
 
 				<fieldset>
 				  <legend><?php echo $text_history; ?></legend>
@@ -1120,7 +1120,7 @@
 					</div>
 				  </form>
 				  <div class="text-right">
-					<button id="button-history" data-loading-text="<?php echo $text_loading; ?>" class="btn btn-primary" <?php if($order_status_id == 5 || !$this->user->hasPermission('modify', 'sale/order')) { ?> disabled <?php } ?>><i class="fa fa-plus-circle"></i> <?php echo $button_history_add; ?></button>
+					<button id="button-history" data-loading-text="<?php echo $text_loading; ?>" class="btn btn-primary" <?php if(($order_status_id == 5 && !$this->user->hasPermission('modify', 'sale/orderhistory')) || !$this->user->hasPermission('modify', 'sale/order')) { ?> disabled <?php } ?>><i class="fa fa-plus-circle"></i> <?php echo $button_history_add; ?></button>
 				  </div>
 				</fieldset>
 				<?php } ?>
