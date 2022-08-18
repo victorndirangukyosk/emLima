@@ -709,17 +709,17 @@ class ControllerApiCustomerMpesa extends Controller {
 
         $log = new Log('error.log');
 
-        $BusinessShortCode = $this->config->get('mpesa_business_short_code');
-        $LipaNaMpesaPasskey = $this->config->get('mpesa_lipanampesapasskey');
+        $mpesa_customer_key = $this->config->get('mpesa_customer_key');
+        $mpesa_customer_secret = $this->config->get('mpesa_customer_secret');
         $timestamp = '20' . date('ymdhis');
 
-        $password = 'Basic ' . base64_encode($BusinessShortCode . $LipaNaMpesaPasskey . $timestamp);
-        $password_new = 'Basic ' . base64_encode($BusinessShortCode . $LipaNaMpesaPasskey);
+        $password = 'Basic ' . base64_encode($mpesa_customer_key . ':' . $mpesa_customer_secret . $timestamp);
+        $password_new = 'Basic ' . base64_encode($mpesa_customer_key . ':' . $mpesa_customer_secret);
 
         $log->write($password);
         $log->write($password_new);
-        $log->write($BusinessShortCode);
-        $log->write($LipaNaMpesaPasskey);
+        $log->write($mpesa_customer_key);
+        $log->write($mpesa_customer_secret);
         $log->write($timestamp);
 
         $curl = curl_init();
@@ -727,7 +727,7 @@ class ControllerApiCustomerMpesa extends Controller {
             $log->write('MPESA_PRODUCTION');
             $log->write($this->config->get('mpesa_environment'));
             curl_setopt($curl, CURLOPT_URL, 'https://api.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials');
-            curl_setopt($curl, CURLOPT_HTTPHEADER, array('Authorization:' . $password));
+            curl_setopt($curl, CURLOPT_HTTPHEADER, array('Authorization:' . $password_new));
         } else {
             $log->write('MPESA_PRODUCTION');
             $log->write($this->config->get('mpesa_environment'));
