@@ -747,7 +747,7 @@ class ControllerApiCustomerMpesa extends Controller {
           $this->response->setOutput(json_encode($json)); */
     }
 
-    public function addMpesaregisterurl($data = []) {
+    public function addRegisterUrl($data = []) {
 
         $json['status'] = false;
 
