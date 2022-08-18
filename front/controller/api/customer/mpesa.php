@@ -721,12 +721,12 @@ class ControllerApiCustomerMpesa extends Controller {
             $log->write('MPESA_PRODUCTION');
             $log->write($this->config->get('mpesa_environment'));
             curl_setopt($curl, CURLOPT_URL, 'https://api.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials');
-            curl_setopt($curl, CURLOPT_HTTPHEADER, array('Authorization:' . $password_new));
+            curl_setopt($curl, CURLOPT_HTTPHEADER, array('Authorization:' . $password));
         } else {
             $log->write('MPESA_PRODUCTION');
             $log->write($this->config->get('mpesa_environment'));
             curl_setopt($curl, CURLOPT_URL, 'https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials');
-            curl_setopt($curl, CURLOPT_HTTPHEADER, array('Authorization:' . $password_new));
+            curl_setopt($curl, CURLOPT_HTTPHEADER, array('Authorization:' . $password));
         }
 
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
