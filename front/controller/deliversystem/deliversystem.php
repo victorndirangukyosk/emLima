@@ -2749,4 +2749,34 @@ class ControllerDeliversystemDeliversystem extends Controller {
         return $response;
     }
 
+    public function mpesapaymentsconfirmation() {
+
+        $postData = file_get_contents('php://input');
+
+        $log = new Log('error.log');
+        $log->write('mpesa_track_payments_confirmation');
+        $log->write($postData);
+
+        $file = fopen('system/log/mpesa_track_payments_confirmation.txt', 'w+'); //url fopen should be allowed for this to occur
+        if (false === fwrite($file, $postData)) {
+            fwrite('Error: no data written');
+        }
+        fclose($file);
+    }
+
+    public function mpesapaymentsvalidation() {
+
+        $postData = file_get_contents('php://input');
+
+        $log = new Log('error.log');
+        $log->write('mpesa_track_payments_validation');
+        $log->write($postData);
+
+        $file = fopen('system/log/mpesa_track_payments_validation.txt', 'w+'); //url fopen should be allowed for this to occur
+        if (false === fwrite($file, $postData)) {
+            fwrite('Error: no data written');
+        }
+        fclose($file);
+    }
+
 }
