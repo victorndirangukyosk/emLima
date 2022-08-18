@@ -716,6 +716,12 @@ class ControllerApiCustomerMpesa extends Controller {
         $password = 'Basic ' . base64_encode($BusinessShortCode . $LipaNaMpesaPasskey . $timestamp);
         $password_new = 'Basic ' . base64_encode($BusinessShortCode . $LipaNaMpesaPasskey);
 
+        $log->write($password);
+        $log->write($password_new);
+        $log->write($BusinessShortCode);
+        $log->write($LipaNaMpesaPasskey);
+        $log->write($timestamp);
+
         $curl = curl_init();
         if ($this->config->get('mpesa_environment') == 'live') {
             $log->write('MPESA_PRODUCTION');
