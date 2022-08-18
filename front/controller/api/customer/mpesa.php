@@ -736,7 +736,7 @@ class ControllerApiCustomerMpesa extends Controller {
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
         $result = curl_exec($curl);
 
-        //$log->write($result);
+        $log->write($result);
         curl_close($curl);
         $result = json_decode($result, true);
         return $result['access_token'];
