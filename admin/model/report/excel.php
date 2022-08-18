@@ -2501,7 +2501,6 @@ class ModelReportExcel extends Model {
         $this->load->model('report/sale');
         $this->load->model('sale/order');
         $rows = $this->model_report_sale->getReportVendorOrders($data);
-
         //echo "<pre>";print_r($rows);
         try {
             // set appropriate timeout limit
@@ -2569,6 +2568,9 @@ class ModelReportExcel extends Model {
 
             // Fetching the table data
             $row = 7;
+            $count=count($rows);
+            $count=$count+10;
+            $objPHPExcel->getActiveSheet()->getStyle('B7:B'.$count)->getNumberFormat()->setFormatCode('dd/mm/yyyy');
 
             //echo "<pre>";print_r($data['filter_date_end']."er".$data['filter_date_start']);
 
@@ -2599,20 +2601,21 @@ class ModelReportExcel extends Model {
                 }
 
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $result['order_id']);
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, date($this->language->get('date_format_short'), strtotime($result['delivery_date'])));
+                // $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, date($this->language->get('date_format_short'), strtotime($result['delivery_date'])));
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row,  $result['delivery_date']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $products_qty);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, round($total, 2));
 
                 ++$row;
 
-                if (date('Y-m-d') >= $result['date_added']) {
-                    //echo "cef";print_r($result['date_added']);
-                    $data['filter_date_start'] = $result['date_added'];
-                }
+                // if (date('Y-m-d') >= $result['date_added']) {
+                //     //echo "cef";print_r($result['date_added']);
+                //     $data['filter_date_start'] = $result['date_added'];
+                // }
 
-                if ($data['filter_date_end'] <= $result['date_added']) {
-                    $data['filter_date_end'] = $result['date_added'];
-                }
+                // if ($data['filter_date_end'] <= $result['date_added']) {
+                //     $data['filter_date_end'] = $result['date_added'];
+                // }
             }
 
             //echo "<pre>";print_r($data['filter_date_end']."erxx".$data['filter_date_start']);die;

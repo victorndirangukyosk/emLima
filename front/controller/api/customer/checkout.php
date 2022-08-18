@@ -685,23 +685,23 @@ class ControllerApiCustomerCheckout extends Controller {
 
 
         }
-    }
-    catch(exception $ex)
-    {
-        $log = new Log('error.log');
-        $log->write('get Mixed payment methods--ERROR');
-        $log->write($ex->getMessage());
+        }
+        catch(exception $ex)
+        {
+            $log = new Log('error.log');
+            $log->write('get Mixed payment methods--ERROR');
+            $log->write($ex->getMessage());
 
 
-    }
-    finally
-    {
-        $log->write('PAYMENT METHODS RESPONSE');
-        $log->write($json);
-        $log->write('PAYMENT METHODS RESPONSE');
-        $this->response->addHeader('Content-Type: application/json');
-        $this->response->setOutput(json_encode($json));
-    }
+        }
+        finally
+        {
+            $log->write('PAYMENT METHODS RESPONSE');
+            $log->write($json);
+            $log->write('PAYMENT METHODS RESPONSE');
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($json));
+        }
     }
 
     public function getPezeshaLoanOffers() {
@@ -1280,9 +1280,6 @@ class ControllerApiCustomerCheckout extends Controller {
         $log->write('getDates');
         //CREATING ARRAY FOR THE AVAILABLE DAYS OF THE WEEK.
 
-        $storeDetail = $this->getStoreDetail($store_id);
-        $number_of_days_front = $storeDetail['number_of_days_front'];
-
         foreach ($getActiveDays as $ad) {
             $avalday[] = $ad['day'];
         }
@@ -1307,16 +1304,14 @@ class ControllerApiCustomerCheckout extends Controller {
 
         $shipping_method = explode('.', $shipping_method);
 
-        $forwardDays = 7;
-
         if ('normal' == $shipping_method[0] || 'express' == $shipping_method[0]) {
             if ($this->config->get('normal_number_of_days')) {
                 $forwardDays = $this->config->get('normal_number_of_days');
+            } else {
+                $forwardDays = 7;
             }
-        } elseif ('store_delivery' == $shipping_method[0] || 'pickup' == $shipping_method[0]) {
-            if ($number_of_days_front) {
-                $forwardDays = $number_of_days_front;
-            }
+        } else {
+            $forwardDays = 7;
         }
 
         if (count($nextBusinessDay) < $forwardDays) {
@@ -1335,8 +1330,10 @@ class ControllerApiCustomerCheckout extends Controller {
 
                     //$daycheck = $this->futurecheckDateTs($this->session->data['store_id_for_timeslot'],$this->session->data['shipping_method_for_timeslot'],$day);
 
-                    $daycheck = $this->get_all_time_slot($this->session->data['store_id_for_timeslot'], $this->session->data['shipping_method_for_timeslot'], $tmp_date);
+                    $log->write('daycheck');
+                    $log->write($daycheck);
 
+                    //echo "<pre>";print_r($daycheck);
                     if (!empty($daycheck)) {
                         $nextBusinessDay[] = $tmp_date;
                     }
@@ -1351,9 +1348,10 @@ class ControllerApiCustomerCheckout extends Controller {
 
                     $day = date('w', strtotime($tmp_date));
 
-                    //$daycheck = $this->futurecheckDateTs($this->session->data['store_id_for_timeslot'],$this->session->data['shipping_method_for_timeslot'],$day);
+                    $shipping_method_for_timeslot = isset($this->session->data['shipping_method_for_timeslot']) && $this->session->data['shipping_method_for_timeslot'] != NULL ? $this->session->data['shipping_method_for_timeslot'] : 'store_delivery.store_delivery';
+                    $store_id_for_timeslot = isset($this->session->data['store_id_for_timeslot']) && $this->session->data['store_id_for_timeslot'] != NULL ? $this->session->data['store_id_for_timeslot'] : 75;
 
-                    $daycheck = $this->get_all_time_slot($this->session->data['store_id_for_timeslot'], $this->session->data['shipping_method_for_timeslot'], $tmp_date);
+                    $daycheck = $this->futurecheckDateTs($store_id_for_timeslot, $shipping_method_for_timeslot, $day);
 
                     if (!empty($daycheck)) {
                         $nextBusinessDay[] = $tmp_date;
@@ -1974,59 +1972,14 @@ class ControllerApiCustomerCheckout extends Controller {
             $same_day = date('Y-m-d');
             $next_day = date('d-m-Y', strtotime($same_day . "+1 days"));
 
-            if (time() >= strtotime($rangeonestart) && time() <= strtotime($rangeoneend)) {
-                $pre_defined_slots = array('06:00am - 08:00am');
-                $selected_slot = $pre_defined_slots[0];
-                $data['selected_slot'] = $selected_slot;
-                $data['selected_date_slot'] = $next_day;
-                $data['disabled_slot'] = array();
-                $log->write($selected_slot);
-                $log->write('RANGE ONE');
-            }
-
-            if (time() >= strtotime($rangetwostart) && time() <= strtotime($rangetwoend)) {
-                $pre_defined_slots = array('08:00am - 10:00am');
-                $selected_slot = $pre_defined_slots[0];
-                $data['selected_slot'] = $selected_slot;
-                $data['disabled_slot'] = array('06:00am - 08:00am');
-                $data['selected_date_slot'] = $next_day;
-                $log->write('RANGE TWO');
-            }
-
-            if (time() >= strtotime($rangethreestart) && time() <= strtotime($rangethreeend)) {
-                $pre_defined_slots = array('10:00am - 12:00pm');
-                $selected_slot = $pre_defined_slots[0];
-                $data['selected_slot'] = $selected_slot;
-                $data['selected_date_slot'] = $next_day;
-                $data['disabled_slot'] = array('06:00am - 08:00am', '08:00am - 10:00am');
-                $log->write('RANGE THREE');
-            }
-
-            if (time() >= strtotime($rangefourstart) && time() <= strtotime($rangefourend)) {
-                $pre_defined_slots = array('02:00pm - 04:00pm');
-                $selected_slot = $pre_defined_slots[0];
-                $data['selected_slot'] = $selected_slot;
-                $data['selected_date_slot'] = date('d-m-Y');
-                $data['disabled_slot'] = array('06:00am - 08:00am', '08:00am - 10:00am', '10:00am - 12:00pm');
-                $log->write('RANGE FOUR');
-            }
-
-            /* if (time() >= strtotime($rangefivestart) && time() <= strtotime($rangefiveend)) {
-              $pre_defined_slots = array('04:00pm - 06:00pm');
-              $selected_slot = $pre_defined_slots[0];
-              $data['selected_slot'] = $selected_slot;
-              $data['selected_date_slot'] = date('d-m-Y');
-              $data['disabled_slot'] = array('06:00am - 08:00am', '08:00am - 10:00am', '10:00am - 12:00pm', '02:00pm - 04:00pm');
-              $log->write('RANGE FIVE');
-              } */
-
             $this->language->load('checkout/delivery_time');
 
             $data['text_no_timeslot'] = $this->language->get('text_no_timeslot');
 
-            $store_id = 75;
-            $shipping_method = 75;
-
+            // $store_id = 75;
+            // $shipping_method = 75;
+            $store_id = $this->request->get['store_id']??75;
+            $shipping_method = $this->request->get['shipping_method']??75;
             //TO STORE STORE ID AND SHIPPING METHOD IN SESSION
             $this->session->data['store_id_for_timeslot'] = $store_id;
             $this->session->data['shipping_method_for_timeslot'] = $shipping_method;
@@ -2042,6 +1995,63 @@ class ControllerApiCustomerCheckout extends Controller {
 
             $data['formatted_dates'] = [];
             $log->write($data['dates']);
+
+
+            if (time() >= strtotime($rangeonestart) && time() <= strtotime($rangeoneend)) {
+                $pre_defined_slots = array('06:00am - 08:00am');
+                $selected_slot = $pre_defined_slots[0];
+                $data['selected_slot'] = $selected_slot;
+                $data['selected_date_slot'] = $next_day;
+                $data['selected_date_slot'] = $data['dates'][1];
+                $data['selected_day_name'] = date('l', strtotime($data['selected_date_slot']));
+                $data['disabled_slot'] = array();
+                $log->write($selected_slot);
+                $log->write('RANGE ONE');
+            }
+
+            if (time() >= strtotime($rangetwostart) && time() <= strtotime($rangetwoend)) {
+                $pre_defined_slots = array('08:00am - 10:00am');
+                $selected_slot = $pre_defined_slots[0];
+                $data['selected_slot'] = $selected_slot;
+                $data['selected_date_slot'] = $next_day;
+                $data['selected_date_slot'] = $data['dates'][1];
+                $data['selected_day_name'] = date('l', strtotime($data['selected_date_slot']));
+                $data['disabled_slot'] = array('06:00am - 08:00am');
+                $log->write('RANGE TWO');
+            }
+
+            if (time() >= strtotime($rangethreestart) && time() <= strtotime($rangethreeend)) {
+                $pre_defined_slots = array('10:00am - 12:00pm');
+                $selected_slot = $pre_defined_slots[0];
+                $data['selected_slot'] = $selected_slot;
+                $data['selected_date_slot'] = $next_day;
+                $data['selected_date_slot'] = $data['dates'][1];
+                $data['selected_day_name'] = date('l', strtotime($data['selected_date_slot']));
+                $data['disabled_slot'] = array('06:00am - 08:00am', '08:00am - 10:00am');
+                $log->write('RANGE THREE');
+            }
+
+            if (time() >= strtotime($rangefourstart) && time() <= strtotime($rangefourend)) {
+                $pre_defined_slots = array('02:00pm - 04:00pm');
+                $selected_slot = $pre_defined_slots[0];
+                $data['selected_slot'] = $selected_slot;
+                $data['selected_date_slot'] = date('d-m-Y');
+                $data['selected_date_slot'] = $data['dates'][0];
+                $data['selected_day_name'] = date('l', strtotime($data['selected_date_slot']));
+                $data['disabled_slot'] = array('06:00am - 08:00am', '08:00am - 10:00am', '10:00am - 12:00pm');
+                $log->write('RANGE FOUR');
+            }
+
+            /* if (time() >= strtotime($rangefivestart) && time() <= strtotime($rangefiveend)) {
+              $pre_defined_slots = array('04:00pm - 06:00pm');
+              $selected_slot = $pre_defined_slots[0];
+              $data['selected_slot'] = $selected_slot;
+              $data['selected_date_slot'] = date('d-m-Y');
+              $data['disabled_slot'] = array('06:00am - 08:00am', '08:00am - 10:00am', '10:00am - 12:00pm', '02:00pm - 04:00pm');
+              $log->write('RANGE FIVE');
+              } */
+
+          
             foreach ($data['dates'] as $date) {
                 $amTimeslot = [];
                 $pmTimeslot = [];
@@ -2087,7 +2097,6 @@ class ControllerApiCustomerCheckout extends Controller {
             $log->write($data['dates']);
             $log->write($data['timeslots']);
             $data['store'] = $this->getStoreDetail($store_id);
-
             if (isset($this->request->get['shipping_address_id']) && $this->request->get['shipping_address_id'] != NULL && $this->request->get['shipping_address_id'] > 0) {
                 $log->write('shipping_address_id');
                 $log->write($this->request->get['shipping_address_id']);
@@ -2095,7 +2104,7 @@ class ControllerApiCustomerCheckout extends Controller {
                 /* REMOVE DAYS BASED ON CITY OR REGION */
                 $order_delivery_days = NULL;
                 $city_details = NULL;
-                $selected_address_id = $this->request->get['shipping_address_id'];
+                $selected_address_id = $this->request->get['shipping_address_id'];//$this->session->data['shipping_address_id'];
                 $this->load->model('account/address');
                 $customer_selected_address = $this->model_account_address->getAddress($selected_address_id);
                 $log->write($customer_selected_address);
@@ -2103,6 +2112,8 @@ class ControllerApiCustomerCheckout extends Controller {
                     $city_details = $this->model_account_address->getCityDetails($customer_selected_address['city_id']);
                     $order_delivery_days = $this->model_account_address->getRegion($city_details['region_id']);
                 }
+        // echo "<pre>";print_r($order_delivery_days);die;
+
 
                 if ($order_delivery_days != NULL && is_array($order_delivery_days)) {
                     $log->write($city_details);
@@ -2134,7 +2145,7 @@ class ControllerApiCustomerCheckout extends Controller {
                         $data['selected_date_slot'] = reset($data['dates']);
                     }
                 }
-                $data['dates'] = array_values($data['dates']);
+                // $data['dates'] = array_values($data['dates']);
                 $log->write('dates');
                 $log->write($data['dates']);
                 $log->write('dates');
@@ -2144,8 +2155,11 @@ class ControllerApiCustomerCheckout extends Controller {
 
             $json['data']['dates'] = $data['dates'];
             $json['data']['timeslots'] = $data['timeslots'];
+            $json['data']['selected_slot'] = $data['selected_slot'];
             $json['data']['selected_time_slot'] = $data['selected_slot'];
             $json['data']['selected_date_slot'] = $data['selected_date_slot'];
+            $json['data']['selected_day_name'] = $data['selected_day_name'];
+
             $json['data']['disabled_slot'] = $data['disabled_slot'];
             $json['message'] = 'Please Pre Populate These Date And Time Slots!';
 
@@ -2153,6 +2167,14 @@ class ControllerApiCustomerCheckout extends Controller {
             foreach ($stores as $store_id) {
                 $this->session->data['timeslot'][$store_id] = $data['selected_slot'];
                 $this->session->data['dates'][$store_id] = $data['selected_date_slot'];
+
+                $this->load->model('user/user');    
+                $store_details = $this->model_user_user->getVendor($store_id);
+                $vendor_details = $this->model_user_user->getUser($store_details['vendor_id']);
+                if ($store_id > 75 && $vendor_details['delivery_time'] != NULL && $vendor_details['delivery_time'] > 0) {
+                    $this->getothervendordeliverytime($store_id);
+                }
+
             }
             /* $log = new Log('error.log');
               $log->write('SLOTS');
@@ -2163,6 +2185,142 @@ class ControllerApiCustomerCheckout extends Controller {
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
+    }
+
+
+    public function getothervendordeliverytime($store_id) {
+
+        $data = [];
+        $log = new Log('error.log');
+        $log->write('getothervendordeliverytime');
+        $new_time = NULL;
+        $this->load->model('user/user');
+        $store_details = $this->model_user_user->getVendor($store_id);
+        $vendor_details = $this->model_user_user->getUser($store_details['vendor_id']);
+
+        $log->write($store_details);
+        $log->write($vendor_details);
+
+        if ($vendor_details['delivery_time'] != NULL && $vendor_details['delivery_time'] > 0) {
+            $new_time = date("d-m-Y H:i:s", strtotime('+' . $vendor_details['delivery_time'] . ' hours'));
+            $new_time_array = explode(' ', $new_time);
+            $new_time_date = $new_time_array[0];
+            $new_time_datetime = $new_time_array[1];
+
+            $this->language->load('checkout/delivery_time');
+
+            $data['text_no_timeslot'] = $this->language->get('text_no_timeslot');
+
+            $parent_store_id = 75;
+            $shipping_method = 'Standard Delivery';
+
+            $getActiveDays = $this->getActiveDays($parent_store_id, $shipping_method);
+
+            $data['dates'] = $this->getDates($getActiveDays, $parent_store_id, $shipping_method);
+            $data['timeslots'] = [];
+
+            $data['formatted_dates'] = [];
+            foreach ($data['dates'] as $date) {
+                $amTimeslot = [];
+                $pmTimeslot = [];
+                $inPmfirstTimeslot = [];
+
+                $temp = $this->get_all_time_slot($parent_store_id, $shipping_method, $date);
+
+                foreach ($temp as $temp1) {
+                    $temp2 = explode('-', $temp1['timeslot']);
+
+                    if (false !== strpos($temp2[0], 'am')) {
+                        array_push($amTimeslot, $temp1);
+                    } else {
+                        if ('12' == substr($temp2[0], 0, 2)) {
+                            array_push($inPmfirstTimeslot, $temp1);
+                        } else {
+                            array_push($pmTimeslot, $temp1);
+                        }
+                    }
+                }
+
+                foreach ($inPmfirstTimeslot as $te) {
+                    array_push($amTimeslot, $te);
+                }
+
+                foreach ($pmTimeslot as $te) {
+                    array_push($amTimeslot, $te);
+                }
+
+                //echo "<pre>";print_r($temp);print_r($amTimeslot);
+
+                if (count($amTimeslot) > 0) {
+                    $data['timeslots'][$date] = $amTimeslot;
+                    $data['formatted_dates'][] = $date;
+                }
+
+                //$data['timeslots'][$date] = $temp;
+            }
+
+            $data['dates'] = $data['formatted_dates'];
+
+            $data['store'] = $this->getStoreDetail($parent_store_id);
+            $data['new_time'] = $new_time;
+            $data['new_time_date'] = $new_time_date;
+            $data['new_time_datetime'] = $new_time_datetime;
+            $data['new_time_slots'] = $data['timeslots'][$new_time_date];
+            $selected_time_slot = NULL;
+            foreach ($data['timeslots'] as $d_slot => $t_slot) {
+                $log->write('timeslots2');
+                $log->write($d_slot);
+                $log->write($t_slot);
+                $log->write('timeslots2');
+                foreach ($t_slot as $t_slo) {
+                    $log->write('timeslots3');
+                    $log->write($t_slo['timeslot']);
+                    $t_slo_array = explode(' - ', $t_slo['timeslot']);
+                    $new_time2 = strtotime($new_time);
+                    $new_slot_start2 = strtotime($d_slot . ' ' . $t_slo_array[0]);
+                    $new_slot_end2 = strtotime($d_slot . ' ' . $t_slo_array[1]);
+
+                    $log->write($new_time2);
+                    $log->write($new_time);
+                    $log->write(date('d-m-Y H:i', $new_time2));
+
+                    $log->write($new_slot_start2);
+                    $log->write($d_slot . ' ' . $t_slo_array[0]);
+                    $log->write(date('d-m-Y H:i', $new_slot_start2));
+
+                    $log->write($new_slot_end2);
+                    $log->write($d_slot . ' ' . $t_slo_array[1]);
+                    $log->write(date('d-m-Y H:i', $new_slot_end2));
+
+                    if ($new_time2 > $new_slot_start2 && $new_time2 < $new_slot_end2 && $selected_time_slot == NULL) {
+                        $log->write('selected2');
+                        $selected_time_slot = $d_slot . ' ' . $t_slo['timeslot'];
+                        $data['selected_time_slot'] = $selected_time_slot;
+                        $log->write($d_slot);
+                        $log->write($t_slo['timeslot']);
+                        $log->write('selected2');
+                    } elseif ($new_time2 < $new_slot_start2 && $new_time2 < $new_slot_end2 && $selected_time_slot == NULL) {
+                        $log->write('selected21');
+                        $selected_time_slot = $d_slot . ' ' . $t_slo['timeslot'];
+                        $data['selected_time_slot'] = $selected_time_slot;
+                        $log->write($d_slot);
+                        $log->write($t_slo['timeslot']);
+                        $log->write('selected21');
+                    }
+                    $log->write('timeslots3');
+                }
+            }
+        }
+        $log->write($data);
+        $log->write('getothervendordeliverytime');
+
+        if ($data['selected_time_slot'] != NULL) {
+            $selected_time_slot = explode(' ', $data['selected_time_slot']);
+            $this->session->data['timeslot'][$store_id] = $selected_time_slot[1] . ' - ' . $selected_time_slot[3];
+            $this->session->data['dates'][$store_id] = $selected_time_slot[0];
+        }
+
+        return $data;
     }
 
 }

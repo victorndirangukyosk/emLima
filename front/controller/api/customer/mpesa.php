@@ -705,4 +705,60 @@ class ControllerApiCustomerMpesa extends Controller {
         return $json;
     }
 
+    public function auth() {
+
+        $log = new Log('error.log');
+
+        $BusinessShortCode = $this->config->get('mpesa_business_short_code');
+        $LipaNaMpesaPasskey = $this->config->get('mpesa_lipanampesapasskey');
+        $timestamp = '20' . date('ymdhis');
+
+        $password = 'Basic ' . base64_encode($BusinessShortCode . $LipaNaMpesaPasskey . $timestamp);
+        $password_new = 'Basic ' . base64_encode($BusinessShortCode . $LipaNaMpesaPasskey);
+
+        $curl = curl_init();
+        if ($this->config->get('mpesa_environment') == 'live') {
+            $log->write('MPESA_PRODUCTION');
+            $log->write($this->config->get('mpesa_environment'));
+            curl_setopt($curl, CURLOPT_URL, 'https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials');
+            curl_setopt($curl, CURLOPT_HTTPHEADER, array('Authorization:' . $password_new));
+        } else {
+            $log->write('MPESA_PRODUCTION');
+            $log->write($this->config->get('mpesa_environment'));
+            curl_setopt($curl, CURLOPT_URL, 'https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials');
+            curl_setopt($curl, CURLOPT_HTTPHEADER, array('Authorization:' . $password_new));
+        }
+
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_POST, 0);
+        //curl_setopt($curl, CURLOPT_POSTFIELDS, $body); //Setting post data as xml
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+        $result = curl_exec($curl);
+
+        $log->write($result);
+        curl_close($curl);
+        $result = json_decode($result, true);
+        return $result['access_token'];
+        /* $json['status'] = true;
+          $json['data'] = $result;
+
+          $this->response->addHeader('Content-Type: application/json');
+          $this->response->setOutput(json_encode($json)); */
+    }
+
+    public function addRegisterUrl($data = []) {
+
+        $json['status'] = false;
+
+        $log = new Log('error.log');
+        $access_token = $this->auth();
+
+        $log->write($access_token);
+
+        $json['data'] = $access_token;
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
 }
