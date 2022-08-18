@@ -780,13 +780,13 @@ class ControllerApiCustomerMpesa extends Controller {
             $curl_post_data = array(
                 'ShortCode' => $this->config->get('mpesa_business_short_code'),
                 'ResponseType' => "[Completed/Cancelled]",
-                'ConfirmationURL' => $this->url->link('deliversystem/deliversystem/mpesapaymentsconfirmation', '', 'SSL'),
-                'ValidationURL' => $this->url->link('deliversystem/deliversystem/mpesapaymentsvalidation', '', 'SSL'),
+                'ConfirmationURL' => $this->url->link('deliversystem/deliversystem/paymentsconfirmation', '', 'SSL'),
+                'ValidationURL' => $this->url->link('deliversystem/deliversystem/paymentsvalidation', '', 'SSL'),
             );
 
             $log->write('curl_post_data');
-            $log->write($this->url->link('deliversystem/deliversystem/mpesapaymentsconfirmation', '', 'SSL'));
-            $log->write($this->url->link('deliversystem/deliversystem/mpesapaymentsvalidation', '', 'SSL'));
+            $log->write($this->url->link('deliversystem/deliversystem/paymentsconfirmation', '', 'SSL'));
+            $log->write($this->url->link('deliversystem/deliversystem/paymentsvalidation', '', 'SSL'));
             $log->write($curl_post_data);
             $log->write('curl_post_data');
 
