@@ -8023,7 +8023,7 @@ class ControllerSaleOrder extends Controller {
 
             //$log->write($order_info);
             //die;
-            if (isset($this->request->get['api']) && $order_info && $order_info['order_status_id'] != $this->request->post['order_status_id'] && !in_array($order_info['order_status_id'], $this->config->get('config_complete_status'))) {
+            if ((isset($this->request->get['api']) && $order_info && $order_info['order_status_id'] != $this->request->post['order_status_id'] && !in_array($order_info['order_status_id'], $this->config->get('config_complete_status'))) || $this->user->hasPermission('modify', 'sale/orderhistory')) {
                 // Include any URL perameters
 
                 $url_data = [];
