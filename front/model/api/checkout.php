@@ -172,6 +172,19 @@ class ModelApiCheckout extends Model {
                         //$this->db->query( "INSERT INTO " . DB_PREFIX . "order_total SET order_id = '" . (int) $order_id . "', code = '" . $this->db->escape( $total['code'] ) . "', title = '" . $this->db->escape( $total['title'] ) . "', `value` = '" . (float) $total['value'] . "', sort_order = '" . (int) $total['sort_order'] . "'" );
                     }
                 }
+                    //insert order id and category pricing for testing purpose
+                try
+                {
+                    $category1=$this->session->data['customer_category'];
+                    $category2=$this->customer->getCustomerCategory();
+                    $this->db->query('INSERT INTO `' . DB_PREFIX . "order_price_category` SET order_id = '" . (int) $order_id . "', category1='" . $category1 . "', category2='" . $category2 . "'");
+
+                }
+                catch(exception $e)
+                {
+            $log->write('exception in saving order id and price category');
+            //as this code has no effect on flow, error not throwing
+                }
             }
         }
 
