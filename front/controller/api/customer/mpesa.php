@@ -792,6 +792,10 @@ class ControllerApiCustomerMpesa extends Controller {
 
             $data_string = json_encode($curl_post_data);
 
+            $log->write('curl_post_data_2');
+            $log->write($curl_post_data);
+            $log->write('curl_post_data_2');
+
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($curl, CURLOPT_POST, 1);
             curl_setopt($curl, CURLOPT_POSTFIELDS, $data_string);
