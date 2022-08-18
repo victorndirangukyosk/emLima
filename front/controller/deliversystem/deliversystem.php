@@ -2749,7 +2749,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
         return $response;
     }
 
-    public function mpesapaymentsconfirmation() {
+    public function paymentsconfirmation() {
 
         $postData = file_get_contents('php://input');
 
@@ -2764,7 +2764,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
         fclose($file);
     }
 
-    public function mpesapaymentsvalidation() {
+    public function paymentsvalidation() {
 
         $postData = file_get_contents('php://input');
 
