@@ -768,7 +768,8 @@ class ControllerApiCustomerMpesa extends Controller {
             if ($this->config->get('mpesa_environment') == 'live') {
                 $log->write('MPESA_PRODUCTION');
                 $log->write($this->config->get('mpesa_environment'));
-                curl_setopt($curl, CURLOPT_URL, 'https://api.safaricom.co.ke/mpesa/c2b/v1/registerurl');
+                //curl_setopt($curl, CURLOPT_URL, 'https://api.safaricom.co.ke/mpesa/c2b/v1/registerurl');
+                curl_setopt($curl, CURLOPT_URL, 'https://api.safaricom.co.ke/mpesa/c2b/v2/registerurl');
                 curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type:application/json', 'Authorization:' . $token));
             } else {
                 $log->write('MPESA_PRODUCTION');
