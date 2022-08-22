@@ -2762,6 +2762,10 @@ class ControllerDeliversystemDeliversystem extends Controller {
             fwrite('Error: no data written');
         }
         fclose($file);
+
+        $postData = json_decode($postData);
+        $this->load->model('payment/mpesa');
+        $this->model_payment_mpesa->insertMpesapaymentsconfirmation($postData);
     }
 
     public function paymentsvalidation() {
