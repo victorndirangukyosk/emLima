@@ -385,7 +385,7 @@ class ModelPaymentMpesa extends Model {
         $log = new Log('error.log');
         $log->write('insertMpesapaymentsconfirmation');
         $log->write($data);
-        $this->db->query('INSERT INTO `' . DB_PREFIX . "mpesa_track_payments_confirmation` SET `transaction_type` = '" . $data['TransactionType'] . "', `transaction_id` = '" . $data['TransID'] . "', `transaction_time` = '" . $data['TransTime'] . "', `transaction_amount` = '" . $data['TransAmount'] . "', `business_short_code` = '" . $data['BusinessShortCode'] . "', `bill_reference_number` = '" . $data['BillRefNumber'] . "', `invoice_number` = '" . $data['InvoiceNumber'] . "', `org_account_balance` = '" . $data['OrgAccountBalance'] . "', `third_party_trans_id` = '" . $data['ThirdPartyTransID'] . "', `msisdn` = '" . $data['MSISDN'] . "', `firstname` = '" . $data['FirstName'] . "'");
+        $this->db->query('INSERT INTO `' . DB_PREFIX . "mpesa_track_payments_confirmation` SET `transaction_type` = '" . $data->TransactionType . "', `transaction_id` = '" . $data->TransID . "', `transaction_time` = '" . $data->TransTime . "', `transaction_amount` = '" . $data->TransAmount . "', `business_short_code` = '" . $data->BusinessShortCode . "', `bill_reference_number` = '" . $data->BillRefNumber . "', `invoice_number` = '" . $data->InvoiceNumber . "', `org_account_balance` = '" . $data->OrgAccountBalance . "', `third_party_trans_id` = '" . $data->ThirdPartyTransID . "', `msisdn` = '" . $data->MSISDN . "', `firstname` = '" . $data->FirstName . "'");
         return $this->db->getLastId();
     }
 
