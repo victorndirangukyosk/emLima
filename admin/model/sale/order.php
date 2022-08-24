@@ -3032,6 +3032,11 @@ class ModelSaleOrder extends Model {
         }
     }
 
+    public function deleteCreditNoteOrderProducts($order_id) {
+        $sql = 'Delete FROM ' . DB_PREFIX . "credit_note_products WHERE order_id = '" . (int) $order_id . "'";
+        $query = $this->db->query($sql);
+    }
+
     public function updateCreditNoteProduct($order_id, $product_id, $data, $tax = NULL) {
         $total = $data['price'] * $data['quantity'];
 
@@ -3110,7 +3115,7 @@ class ModelSaleOrder extends Model {
 
         return $query->rows;
     }
-    
+
     public function getCreditNoteTotals($order_id) {
         $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "credit_note_total WHERE order_id = '" . (int) $order_id . "' ORDER BY sort_order");
 
@@ -4355,9 +4360,8 @@ class ModelSaleOrder extends Model {
         $log = new Log('error.log');
         $log->write($order_total_without_delivery_charges);
         //insert into order_total
-        if($delivery_charge>0)
-        {
-        $this->db->query('UPDATE `' . DB_PREFIX . 'order` SET delivery_charges="' . $delivery_charge . '", date_modified = NOW() WHERE order_id="' . $order_id . '"');
+        if ($delivery_charge > 0) {
+            $this->db->query('UPDATE `' . DB_PREFIX . 'order` SET delivery_charges="' . $delivery_charge . '", date_modified = NOW() WHERE order_id="' . $order_id . '"');
         }
         $exists = $this->db->query('select * from ' . DB_PREFIX . 'order_total  WHERE order_id="' . $order_id . '" and code="shipping"');
         // echo "<pre>";print_r($exists);
@@ -6150,7 +6154,7 @@ class ModelSaleOrder extends Model {
     public function getUnpaidOrders($data = []) {
         // $sql = "SELECT c.name as city, o.firstname,o.lastname,o.comment, o.delivery_id, o.vendor_order_status_id,    cust.company_name AS company_name,o.order_id, o.delivery_date, o.delivery_timeslot, o.shipping_method, o.shipping_address, o.payment_method, o.commission, CONCAT(o.firstname, ' ', o.lastname) AS customer, (SELECT os.name FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS status, o.shipping_code, o.order_status_id,o.store_name,o.store_id,  o.total, o.currency_code, o.currency_value, o.date_added, o.date_modified,o.po_number,o.SAP_customer_no,o.SAP_doc_no,o.paid,o.amount_partialy_paid,o.delivery_charges,ot.value as order_total,cgd.name as customer_group FROM `" . DB_PREFIX . 'order` o ';
         $sql = "SELECT  o.firstname,o.lastname,    cust.company_name AS company_name,o.order_id, o.delivery_date, o.payment_method,  CONCAT(o.firstname, ' ', o.lastname) AS customer, (SELECT os.name FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int) $this->config->get('config_language_id') . "') AS status,  o.order_status_id,o.store_name,o.store_id,  o.total, o.currency_code, o.currency_value, o.date_added, o.date_modified,o.po_number,o.SAP_customer_no,o.SAP_doc_no,o.paid,o.delivery_charges,ot.value as order_total,tran.transaction_id,tran.created_at,o.paid_to,o.amount_partialy_paid,cgd.name as customer_group FROM `" . DB_PREFIX . 'order` o ';
-        
+
         //    ('SELECT o.customer_id, o.parent_approval, o.head_chef, o.procurement, o.delivery_date,o.delivery_timeslot,o.shipping_zipcode,o.shipping_city_id,o.payment_method,o.payment_code,o.shipping_address,o.shipping_flat_number,o.shipping_method,o.shipping_building_name,o.store_name,o.store_id,o.shipping_name, o.order_id, o.firstname, o.lastname, os.name as status , os.color as order_status_color ,o.order_status_id, o.date_modified , o.date_added, o.total, o.currency_code, o.currency_value, ot.value,o.amount_partialy_paid,o.paid FROM `' . DB_PREFIX . 'order` o LEFT JOIN ' . DB_PREFIX . 'order_status os ON (o.order_status_id = os.order_status_id) LEFT JOIN ' . DB_PREFIX . 'order_total ot ON (o.order_id = ot.order_id) WHERE o.customer_id IN (' . $sub_users_od . ") AND o.order_status_id IN (4,5) AND o.paid IN ('N', 'P') AND os.language_id = '" . (int) $this->config->get('config_language_id') . "' AND ot.code = 'total' AND ot.title = 'Total' ORDER BY o.order_id DESC LIMIT " . (int) $start . ',' . (int) $limit);
 
         $sql .= 'left join `' . DB_PREFIX . 'city` c on c.city_id = o.shipping_city_id';
@@ -6757,7 +6761,6 @@ class ModelSaleOrder extends Model {
         return $query->rows;
     }
 
-  
     //pezesha
 
     public function getUnpaidOrders_Pezesha($data = []) {
@@ -6872,22 +6875,19 @@ class ModelSaleOrder extends Model {
             $order_grand_total = 0;
             foreach ($all_orders as $all_order) {
                 //$log->write($all_order['order_id']);
-                if ($all_order['paid']=='N' || $all_order['paid']=='P') {
-                     
-                        if ($all_order['paid']=='N') {
-                            $order_grand_total += $all_order['value'];
-                            //$log->write($order_total);
-                        }
-                        else if($all_order['paid']=='P')
-                        {
-                            $order_grand_total += ($all_order['value']-$all_order['amount_partialy_paid']);
-                        }
+                if ($all_order['paid'] == 'N' || $all_order['paid'] == 'P') {
+
+                    if ($all_order['paid'] == 'N') {
+                        $order_grand_total += $all_order['value'];
+                        //$log->write($order_total);
+                    } else if ($all_order['paid'] == 'P') {
+                        $order_grand_total += ($all_order['value'] - $all_order['amount_partialy_paid']);
+                    }
                 }
             }
         }
         return $order_grand_total;
     }
-
 
     public function TotalRevenueCollectedDashBoard($data = []) {
         $all_orders = $this->getOrdersForRevenue($data);
@@ -6896,16 +6896,14 @@ class ModelSaleOrder extends Model {
             $order_grand_total = 0;
             foreach ($all_orders as $all_order) {
                 //$log->write($all_order['order_id']);
-                if ($all_order['paid']=='Y' || $all_order['paid']=='P') {
-                     
-                        if ($all_order['paid']=='Y') {
-                            $order_grand_total += $all_order['value'];
-                            //$log->write($order_total);
-                        }
-                        else if($all_order['paid']=='P')
-                        {
-                            $order_grand_total += ($all_order['amount_partialy_paid']);
-                        }
+                if ($all_order['paid'] == 'Y' || $all_order['paid'] == 'P') {
+
+                    if ($all_order['paid'] == 'Y') {
+                        $order_grand_total += $all_order['value'];
+                        //$log->write($order_total);
+                    } else if ($all_order['paid'] == 'P') {
+                        $order_grand_total += ($all_order['amount_partialy_paid']);
+                    }
                 }
             }
         }
@@ -7029,13 +7027,13 @@ class ModelSaleOrder extends Model {
             $paid_statuses = explode(',', $data['filter_paid_dashboard']);
 
             foreach ($paid_statuses as $paid_id) {
-                $implode_paid[] = "o.paid = '" .  $paid_id . "'";
+                $implode_paid[] = "o.paid = '" . $paid_id . "'";
             }
 
             if ($implode_paid) {
                 $sql .= ' and (' . implode(' OR ', $implode_paid) . ')';
-            }  
-        } 
+            }
+        }
 
         if (!empty($data['filter_vendor'])) {
             $sql .= ' AND vendor_id="' . $data['filter_vendor'] . '"';
@@ -7131,4 +7129,5 @@ class ModelSaleOrder extends Model {
 
         return $query->rows;
     }
+
 }
