@@ -1181,7 +1181,7 @@ class ControllerCheckoutConfirm extends Controller {
                 } else {
                     $other_vendor_delivery_time = $this->load->controller('checkout/delivery_time/getothervendordeliverytime', $store_id);
 
-                    if ($other_vendor_delivery_time != NULL && $other_vendor_delivery_time['selected_time_slot'] != NULL && $other_vendor_delivery_time['selected_time_slot'] != '') {
+                    if ($other_vendor_delivery_time != NULL && array_key_exists('selected_time_slot', $other_vendor_delivery_time) && $other_vendor_delivery_time['selected_time_slot'] != NULL && $other_vendor_delivery_time['selected_time_slot'] != '') {
 
                         $log->write('other_vendor_delivery_time');
                         $log->write($other_vendor_delivery_time['selected_time_slot']);
@@ -1190,8 +1190,15 @@ class ControllerCheckoutConfirm extends Controller {
                         $order_data[$store_id]['delivery_date'] = $this->session->data['dates'][$store_id];
                         $order_data[$store_id]['delivery_timeslot'] = $this->session->data['timeslot'][$store_id];
                     } else {
-                        $order_data[$store_id]['delivery_date'] = $this->session->data['dates'][75];
-                        $order_data[$store_id]['delivery_timeslot'] = $this->session->data['timeslot'][75];
+
+                        $log->write('other_vendor_delivery_time_empty');
+                        $log->write($other_vendor_delivery_time);
+                        $log->write($this->session->data['dates']);
+                        $log->write($this->session->data['timeslot']);
+                        $log->write('other_vendor_delivery_time_empty');
+
+                        $order_data[$store_id]['delivery_date'] = $this->session->data['dates'][75] != NULL ? $this->session->data['dates'][75] : $this->session->data['dates'][$store_id];
+                        $order_data[$store_id]['delivery_timeslot'] = $this->session->data['timeslot'][75] != NULL ? $this->session->data['timeslot'][75] : $this->session->data['timeslot'][$store_id];
                     }
                 }
 
