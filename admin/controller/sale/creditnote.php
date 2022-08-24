@@ -412,6 +412,7 @@ class ControllerSaleCreditnote extends Controller {
                 }
 
                 //echo "<pre>";print_r($datas['products']);die;
+                $this->model_sale_order->deleteCreditNoteOrderProducts($order_id);
                 foreach ($datas['products'] as $p_id_key => $updateProduct) {
 
                     $product_details = $this->model_catalog_vendor_product->getProduct($p_id_key);
@@ -608,11 +609,11 @@ class ControllerSaleCreditnote extends Controller {
                 'user_group_id' => $this->user->getGroupId(),
                 'order_id' => $order_id,
             ];
-            $log->write('user update_invoice');
+            $log->write('user update_credit_note');
 
-            $this->model_user_user_activity->addActivity('update_invoice', $activity_data);
+            $this->model_user_user_activity->addActivity('update_credit_note', $activity_data);
 
-            $log->write('user update_invoice');
+            $log->write('user update_credit_note');
         } else {
             $json = $data_valid;
             $json = json_encode($json);
