@@ -64,8 +64,10 @@
 
 		  <?php } ?>
 
-
+                  <?php if(!$this->user->isVendor()) { ?>
 		  <li><a href="#tab-history" data-toggle="tab"><?php echo $tab_history; ?></a></li>
+                  <?php } ?>
+                  
 		  <?php if ($settlement_tab) { ?>
 		  <li><a href="#tab-settlement" data-toggle="tab"><?php echo $tab_settlement; ?></a></li>
 		  <?php } ?>
