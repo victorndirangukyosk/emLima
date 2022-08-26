@@ -186,10 +186,22 @@ class ControllerReportReceivablesAgeing extends Controller
               
             }
 
+
+            $payment_terms=$res_cust['payment_terms'];
+            $isPezesha_customer=false;
+            $isPezesha_customer = $this->model_sale_order->isPezeshaCustomer($res_cust['customer_id']);
+
+            if($isPezesha_customer==true)
+            {
+                $payment_terms='Pezesha';
+            }
+
             $data['orders'][] = [
                 'company' => $res_cust['company_name'],               
                 'customer' => $res_cust['customer'],
-                'payment_terms' => $res_cust['payment_terms'],
+                // 'payment_terms' => $res_cust['payment_terms'],
+                'payment_terms' => $payment_terms,
+                'region' => $res_cust['region'],
                 'total' => $total,
                 // 'order_total' => round(($result['order_total']-$result['partialy_paid']),2),
                 'not_due' => $not_due,
