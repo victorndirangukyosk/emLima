@@ -127,6 +127,7 @@ class ControllerReportReceivablesSummary extends Controller
                 'company' => $result['company_name'],               
                 'customer' => $result['customer'],
                 'payment_terms' => $payment_terms,
+                'region' => $result['region'],
                 'total' => $this->currency->format($result['total'], $this->config->get('config_currency')),
                 'order_total' => round(($result['order_total']-$result['partialy_paid']),2),
                 // 'updated_total' => number_format($result['updated_total'],2),
