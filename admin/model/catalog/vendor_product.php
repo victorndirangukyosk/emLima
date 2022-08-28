@@ -815,6 +815,7 @@ class ModelCatalogVendorProduct extends Model {
         $this->trigger->fire('pre.admin.product.edit', $data);
 
         $log = new Log('error.log');
+        $log->write($data);
         $log->write($data['rejected_qty']);
         $log->write($data['procured_qty']);
         if (!isset($data['rejected_qty']) || $data['rejected_qty'] < 0 || $data['rejected_qty'] == NULL || $data['rejected_qty'] == '') {
