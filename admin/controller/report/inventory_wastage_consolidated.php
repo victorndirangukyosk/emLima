@@ -7,15 +7,12 @@ class ControllerReportInventoryWastageConsolidated extends Controller {
     public function index() {
         $this->load->language('inventory/wastage');
 
-
         $this->document->setTitle($this->language->get('heading_title'));
 
         $this->load->model('inventory/inventory_wastage');
 
         $this->getList();
     }
-
-
 
     protected function getList() {
 
@@ -24,8 +21,8 @@ class ControllerReportInventoryWastageConsolidated extends Controller {
         } else {
             $filter_name = null;
         }
- 
-   
+
+
         if (isset($this->request->get['filter_date_added'])) {
             $filter_date_added = $this->request->get['filter_date_added'];
         } else {
@@ -45,7 +42,7 @@ class ControllerReportInventoryWastageConsolidated extends Controller {
         //     $filter_group_by_date = null;
         // }
 
-        $filter_group_by_date=0;
+        $filter_group_by_date = 0;
         if (isset($this->request->get['sort'])) {
             $sort = $this->request->get['sort'];
         } else {
@@ -70,7 +67,7 @@ class ControllerReportInventoryWastageConsolidated extends Controller {
             $url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
         }
 
-       
+
         if (isset($this->request->get['filter_date_added'])) {
             $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
         }
@@ -80,12 +77,10 @@ class ControllerReportInventoryWastageConsolidated extends Controller {
         }
 
         // echo '<pre>';print_r($this->request->get['filter_group_by_date']);die;
-      
-
         // if (isset($this->request->get['filter_group_by_date'])) {
         //     $url .= '&filter_group_by_date=' . urlencode(html_entity_decode($this->request->get['filter_group_by_date'], ENT_QUOTES, 'UTF-8'));
         // }
- 
+
         if (isset($this->request->get['sort'])) {
             $url .= '&sort=' . $this->request->get['sort'];
         }
@@ -107,17 +102,15 @@ class ControllerReportInventoryWastageConsolidated extends Controller {
 
         //echo $prices;exit;
         $data['breadcrumbs'][] = [
-            'text' => $this->language->get('heading_title') ,
+            'text' => $this->language->get('heading_title'),
             'href' => $this->url->link('report/inventory_wastage_consolidated', 'token=' . $this->session->data['token'] . $url, 'SSL'),
         ];
-
 
         $data['products'] = [];
         $this->load->model('inventory/inventory_wastage');
 
-
         $filter_data = [
-            'filter_name' => $filter_name,           
+            'filter_name' => $filter_name,
             'filter_group_by_date' => $filter_group_by_date,
             'filter_date_added' => $filter_date_added,
             'filter_date_added_to' => $filter_date_added_to,
@@ -129,33 +122,41 @@ class ControllerReportInventoryWastageConsolidated extends Controller {
 
         $this->load->model('tool/image');
 
-
         $product_total = $this->model_inventory_inventory_wastage->getTotalProductsByGroup($filter_data);
 
         $results = $this->model_inventory_inventory_wastage->getProductsByGroup($filter_data);
         // echo '<pre>';print_r($results);die;
 
-        
+
         foreach ($results as $result) {
 
- 
 
-                $data['products'][] = [
+            $new_data['filter_product_store_id'] = $result['product_store_id'];
+            $new_data['filter_date_added'] = $filter_date_added;
+            $new_data['filter_date_added_end'] = $filter_date_added_to;
 
-                    'product_store_id' => $result['product_store_id'],
-                    'product_id' => $result['product_id'],
-                    'wastage_qty' => $result['wastage_qty'],
-                    'name' => $result['name'],//product_name
-                    'unit' => $result['unit'],
-                    'avg_buying_price' => ($result['avg_buying_price']==null?'NA':round($result['avg_buying_price'],2)),
+            $this->load->model('inventory/inventory_wastage');
+            $average_buying_price = $this->model_inventory_inventory_wastage->getProductAverageBuyingPrice($new_data);
 
+            $data['products'][] = [
+                'product_store_id' => $result['product_store_id'],
+                'product_id' => $result['product_id'],
+                'wastage_qty' => $result['wastage_qty'],
+                'name' => $result['name'], //product_name
+                'unit' => $result['unit'],
+                'avg_buying_price' => ($result['avg_buying_price'] == NULL || $result['avg_buying_price'] == 0 ? round($average_buying_price['average_buying_price'], 2) : round($result['avg_buying_price'], 2)),
+                'new_average_buying_price' => $average_buying_price,
                     // 'date_added' => $result['date_added'],
                     // 'added_by_user' => $result['added_by_user'],
                     // 'cumulative_wastage' => $result['cumulative_wastage'],
                     // 'date_added' => $result['date_added'],
+            ];
+        }
 
-                ];
-            }
+        $log = new Log('error.log');
+        $log->write('DATA_PRODUCTS');
+        $log->write($data['products']);
+        $log->write('DATA_PRODUCTS');
 
         if ($this->user->isVendor()) {
             $data['is_vendor'] = 1;
@@ -163,12 +164,11 @@ class ControllerReportInventoryWastageConsolidated extends Controller {
             $data['is_vendor'] = 0;
         }
 
-        $data['heading_title'] =  $this->language->get('heading_title') ;
+        $data['heading_title'] = $this->language->get('heading_title');
 
         $data['text_list'] = $this->language->get('text_list');
         $data['text_no_results'] = $this->language->get('text_no_results');
         $data['text_confirm'] = $this->language->get('text_confirm');
-
 
         $data['column_unit'] = $this->language->get('column_unit');
 
@@ -178,7 +178,6 @@ class ControllerReportInventoryWastageConsolidated extends Controller {
         $data['column_quantity'] = $this->language->get('column_quantity');
 
         $data['entry_name'] = $this->language->get('entry_name');
-
 
         $data['button_filter'] = $this->language->get('button_filter');
         $data['button_show_filter'] = $this->language->get('button_show_filter');
@@ -216,7 +215,7 @@ class ControllerReportInventoryWastageConsolidated extends Controller {
             $url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
         }
 
-        
+
         if (isset($this->request->get['filter_date_added'])) {
             $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
         }
@@ -224,7 +223,7 @@ class ControllerReportInventoryWastageConsolidated extends Controller {
         if (isset($this->request->get['filter_date_added_to'])) {
             $url .= '&filter_date_added_to=' . $this->request->get['filter_date_added_to'];
         }
- 
+
 
 
         // if (isset($this->request->get['filter_group_by_date'])) {
@@ -242,10 +241,9 @@ class ControllerReportInventoryWastageConsolidated extends Controller {
         }
 
 
-            $data['sort_name'] = $this->url->link('report/inventory_wastage_consolidated', 'token=' . $this->session->data['token'] . '&sort=pd.name' . $url, 'SSL');
-            $data['sort_product_id'] = $this->url->link('report/inventory_wastage_consolidated', 'token=' . $this->session->data['token'] . '&sort=p.product_id' . $url, 'SSL');
-            $data['sort_vproduct_id'] = $this->url->link('report/inventory_wastage_consolidated', 'token=' . $this->session->data['token'] . '&sort=ps.product_store_id' . $url, 'SSL');
-
+        $data['sort_name'] = $this->url->link('report/inventory_wastage_consolidated', 'token=' . $this->session->data['token'] . '&sort=pd.name' . $url, 'SSL');
+        $data['sort_product_id'] = $this->url->link('report/inventory_wastage_consolidated', 'token=' . $this->session->data['token'] . '&sort=p.product_id' . $url, 'SSL');
+        $data['sort_vproduct_id'] = $this->url->link('report/inventory_wastage_consolidated', 'token=' . $this->session->data['token'] . '&sort=ps.product_store_id' . $url, 'SSL');
 
         $url = '';
 
@@ -253,7 +251,7 @@ class ControllerReportInventoryWastageConsolidated extends Controller {
             $url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
         }
 
-         
+
 
         if (isset($this->request->get['filter_date_added'])) {
             $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
@@ -281,15 +279,13 @@ class ControllerReportInventoryWastageConsolidated extends Controller {
         $pagination->page = $page;
         $pagination->limit = $this->config->get('config_limit_admin');
 
-
-            $pagination->url = $this->url->link('report/inventory_wastage_consolidated', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
-
+        $pagination->url = $this->url->link('report/inventory_wastage_consolidated', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 
         $data['results'] = sprintf($this->language->get('text_pagination'), ($product_total) ? (($page - 1) * $this->config->get('config_limit_admin')) + 1 : 0, ((($page - 1) * $this->config->get('config_limit_admin')) > ($product_total - $this->config->get('config_limit_admin'))) ? $product_total : ((($page - 1) * $this->config->get('config_limit_admin')) + $this->config->get('config_limit_admin')), $product_total, ceil($product_total / $this->config->get('config_limit_admin')));
 
-        $data['filter_name'] = $filter_name;        
+        $data['filter_name'] = $filter_name;
         $data['filter_date_added'] = $filter_date_added;
         $data['filter_date_added_to'] = $filter_date_added_to;
         // $data['filter_group_by_date'] = $filter_group_by_date;
@@ -308,13 +304,8 @@ class ControllerReportInventoryWastageConsolidated extends Controller {
         /* PREVIOUS CODE */
 
         //echo '<pre>';print_r($cachePrice_data);exit;
-            $this->response->setOutput($this->load->view('report/vendor_product_wastage_consolidated.tpl', $data));
-
+        $this->response->setOutput($this->load->view('report/vendor_product_wastage_consolidated.tpl', $data));
     }
-
-
-  
-
 
     public function getUserByName($name) {
         if ($name) {
@@ -323,17 +314,15 @@ class ControllerReportInventoryWastageConsolidated extends Controller {
             return $query->row['user_id'];
         }
     }
- 
 
-    public function excel()
-    {
+    public function excel() {
         if (isset($this->request->get['filter_name'])) {
             $filter_name = $this->request->get['filter_name'];
         } else {
             $filter_name = null;
         }
- 
-   
+
+
         if (isset($this->request->get['filter_date_added'])) {
             $filter_date_added = $this->request->get['filter_date_added'];
         } else {
@@ -353,21 +342,21 @@ class ControllerReportInventoryWastageConsolidated extends Controller {
         //     $filter_group_by_date = null;
         // }
 
-        $filter_group_by_date =0;
+        $filter_group_by_date = 0;
 
         $filter_data = [
-            'filter_name' => $filter_name,           
+            'filter_name' => $filter_name,
             'filter_group_by_date' => $filter_group_by_date,
             'filter_date_added' => $filter_date_added,
             'filter_date_added_to' => $filter_date_added_to,
             'sort' => $sort,
             'order' => $order,
-            // 'start' => ($page - 1) * $this->config->get('config_limit_admin'),
-            // 'limit' => $this->config->get('config_limit_admin'),
+                // 'start' => ($page - 1) * $this->config->get('config_limit_admin'),
+                // 'limit' => $this->config->get('config_limit_admin'),
         ];
-
 
         $this->load->model('report/excel');
         $this->model_report_excel->download_product_wastage_excel_consolidated($filter_data);
     }
+
 }
