@@ -277,7 +277,7 @@ class ControllerCatalogProduct extends Controller {
         $log->write($this->request->post);
         $log->write($this->request->get);
 
-        if ($this->request->get['vendor_product_id'] != NULL && $this->request->get['vendor_product_uom'] != NULL && $this->request->get['buying_price'] != NULL && $this->request->get['procured_quantity'] != NULL && $this->request->get['rejected_quantity'] != NULL) {
+        if ($this->request->get['vendor_product_id'] != NULL && $this->request->get['vendor_product_uom'] != NULL && $this->request->get['buying_price'] != NULL && $this->request->get['buying_price'] > 0 && $this->request->get['procured_quantity'] != NULL && $this->request->get['rejected_quantity'] != NULL) {
             $this->load->language('catalog/product');
             $this->load->model('catalog/vendor_product');
             $this->load->model('user/farmer');
@@ -321,6 +321,8 @@ class ControllerCatalogProduct extends Controller {
             $json['message'] = 'Products stocks modified successfully!';
             $this->session->data['success'] = 'Products stocks modified successfully!';
         } else {
+            $log = new Log('error.log');
+            $log->write('ERROR');
             $json['status'] = '400';
             $json['message'] = 'All fields are mandatory!';
             $this->session->data['warning'] = 'All fields are mandatory!';
