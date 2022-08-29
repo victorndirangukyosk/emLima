@@ -389,4 +389,23 @@ class ModelPaymentMpesa extends Model {
         return $this->db->getLastId();
     }
 
+    public function UpdateDeliveredOrders($data) {
+        $log = new Log('error.log');
+        $log->write('UpdateDeliveredOrders');
+
+        $result = $this->db->query('SELECT * FROM `' . DB_PREFIX . "order` WHERE `order_id` = '" . (int) $data->BillRefNumber . "' AND `order_status_id` = 5 AND `payment_method` != 'Pezesha' order by order_id desc")->row;
+
+        if (isset($result) && $result != NULL && $result['total'] == $data->TransAmount) {
+            $log->write('TOTAL MATCHED');
+        }
+
+        if (isset($result) && $result != NULL && $data->TransAmount < $result['total']) {
+            $log->write('TOTAL IS GREATER THAN TRANSACTION AMOUNT');
+        }
+
+        if (isset($result) && $result != NULL && $data->TransAmount > $result['total']) {
+            $log->write('TOTAL IS LESS THAN TRANSACTION AMOUNT');
+        }
+    }
+
 }
