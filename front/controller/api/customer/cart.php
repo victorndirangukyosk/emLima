@@ -409,7 +409,7 @@ class ControllerApiCustomerCart extends Controller {
         }
         $json['status'] = 200;
         $json['session_id'] = $this->session->getId();
-        $json['data'] = [];
+        $json['data'] = $this->cart->getProducts();
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }

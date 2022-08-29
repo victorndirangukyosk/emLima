@@ -391,12 +391,14 @@ class ModelPaymentMpesa extends Model {
 
     public function UpdateDeliveredOrders($data) {
         $log = new Log('error.log');
-        $log->write('UpdateDeliveredOrders');
+        $log->write('UpdateDeliveredOrders_MODEL');
+        $log->write($data->BillRefNumber);
+        $log->write('UpdateDeliveredOrders_MODEL');
 
         $result = $this->db->query('SELECT * FROM `' . DB_PREFIX . "order` WHERE `order_id` = '" . (int) $data->BillRefNumber . "'")->row;
-        $log->write('RESULT');
+        $log->write('RESULT_UpdateDeliveredOrders');
         $log->write($result);
-        $log->write('RESULT');
+        $log->write('RESULT_UpdateDeliveredOrders');
 
         if (isset($result) && $result != NULL && $result['total'] == $data->TransAmount) {
             $log->write('TOTAL MATCHED');
