@@ -312,6 +312,25 @@ class ControllerCatalogProduct extends Controller {
             $product['product_id'] = $product_details['product_id'];
 
             $result = $this->model_catalog_vendor_product->updateProductInventory($vendor_product_id, $product);
+
+            // Add to activity log
+            $log = new Log('error.log');
+            $this->load->model('user/user_activity');
+
+            $activity_data = [
+                'user_id' => $this->user->getId(),
+                'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+                'user_group_id' => $this->user->getGroupId(),
+                'product_store_id' => $product_details['product_store_id'],
+                'product_name' => $product_details['name'],
+            ];
+            $log->write('Inventory Update');
+
+            $this->model_user_user_activity->addActivity('inventory_update', $activity_data);
+
+            $log->write('Inventory Update');
+            // Add to activity log
+            
             //$ret = $this->emailtemplate->sendmessage($get_farmer_phone['mobile'], $sms_message);
             $log->write('RESULT');
             $log->write($result);

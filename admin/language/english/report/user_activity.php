@@ -66,6 +66,7 @@ $_['text_vendor_product_disabled'] = '<a href="user_id=%d">%s</a> disabled  <a h
 
 $_['text_new_vendor_product_enabled'] = '<a href="user_id=%d">%s</a> enabled   <a href="product_store_id=%d">vendor product(%s)</a>.';
 $_['text_new_vendor_product_disabled'] = '<a href="user_id=%d">%s</a> disabled  <a href="product_store_id=%d">vendor product(%s)</a>.';
+$_['text_inventory_update'] = '<a href="user_id=%d">%s</a> Inventory Updated <a href="product_store_id=%d">vendor product(%s)</a>.';
 
 
 $_['text_Issue_Accepted'] = '<a href="user_id=%d">%s</a> accepted  <a href="feedback_id=%d">Issue</a>.';
