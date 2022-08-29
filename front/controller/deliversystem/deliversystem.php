@@ -2766,6 +2766,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
         $postData = json_decode($postData);
         $this->load->model('payment/mpesa');
         $this->model_payment_mpesa->insertMpesapaymentsconfirmation($postData);
+        $this->model_payment_mpesa->UpdateDeliveredOrders($postData);
     }
 
     public function paymentsvalidation() {
