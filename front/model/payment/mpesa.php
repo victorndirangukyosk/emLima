@@ -418,7 +418,7 @@ class ModelPaymentMpesa extends Model {
             ];
             $log->write('PAYBILL');
 
-            $this->model_account_activity->addActivity('PAYBILL', $activity_data);
+            $this->addActivity('PAYBILL', $activity_data);
 
             $log->write('PAYBILL');
         }
@@ -453,7 +453,7 @@ class ModelPaymentMpesa extends Model {
             ];
             $log->write('PAYBILL');
 
-            $this->model_account_activity->addActivity('PAYBILL', $activity_data);
+            $this->addActivity('PAYBILL', $activity_data);
 
             $log->write('PAYBILL');
         }
@@ -476,7 +476,7 @@ class ModelPaymentMpesa extends Model {
             ];
             $log->write('PAYBILL');
 
-            $this->model_account_activity->addActivity('PAYBILL', $activity_data);
+            $this->addActivity('PAYBILL', $activity_data);
 
             $log->write('PAYBILL');
         }
@@ -499,10 +499,26 @@ class ModelPaymentMpesa extends Model {
             ];
             $log->write('PAYBILL');
 
-            $this->model_account_activity->addActivity('PAYBILL', $activity_data);
+            $this->addActivity('PAYBILL', $activity_data);
 
             $log->write('PAYBILL');
         }
+    }
+
+    public function addActivity($key, $data) {
+        if (isset($data['customer_id'])) {
+            $customer_id = $data['customer_id'];
+        } else {
+            $customer_id = 0;
+        }
+
+        if (isset($data['order_id'])) {
+            $order_id = $data['order_id'];
+        } else {
+            $order_id = 0;
+        }
+
+        $this->db->query('INSERT INTO `' . DB_PREFIX . "customer_activity` SET `customer_id` = '" . (int) $customer_id . "', `key` = '" . $this->db->escape($key) . "', `data` = '" . $this->db->escape(serialize($data)) . "', `ip` = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "', `date_added` = NOW(), `order_id` = '" . (int) $order_id . "'");
     }
 
 }
