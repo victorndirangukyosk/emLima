@@ -400,16 +400,52 @@ class ModelPaymentMpesa extends Model {
         $log->write($result);
         $log->write('RESULT_UpdateDeliveredOrders');
 
-        if (isset($result) && $result != NULL && $result['total'] == $data->TransAmount) {
-            $log->write('TOTAL MATCHED');
+        if (isset($result) && $result != NULL && $result['total'] == $data->TransAmount && $result['paid'] == 'N') {
+            $log->write('TOTAL MATCHED FOR PAID STATUS N');
+
+            $sql = 'INSERT into ' . DB_PREFIX . "order_transaction_id SET order_id = '" . (int) $result['order_id'] . "', transaction_id = '" . $this->db->escape($data->TransID) . "', amount = '" . (int) $data->TransAmount . "', customer_id = '" . $result['customer_id'] . "', created_at = NOW()";
+            $query = $this->db->query($sql);
+
+            $this->db->query('UPDATE `' . DB_PREFIX . "order` SET payment_method = 'mPesa On Delivery', payment_code = 'mod', paid = 'Y', date_modified = NOW() WHERE order_id = '" . (int) $result['order_id'] . "'");
         }
 
-        if (isset($result) && $result != NULL && $data->TransAmount < $result['total']) {
+        if (isset($result) && $result != NULL && $result['paid'] == 'P') {
+            $log->write('TOTAL MATCHED FOR PAID STATUS P');
+
+            $pending_amount = $result['total'] - $result['amount_partialy_paid'];
+
+            $sql = 'INSERT into ' . DB_PREFIX . "order_transaction_id SET order_id = '" . (int) $result['order_id'] . "', transaction_id = '" . $this->db->escape($data->TransID) . "', amount = '" . (int) $data->TransAmount . "', customer_id = '" . $result['customer_id'] . "', created_at = NOW()";
+            $query = $this->db->query($sql);
+
+            if ($pending_amount == $data->TransAmount) {
+                $this->db->query('UPDATE `' . DB_PREFIX . "order` SET payment_method = 'mPesa On Delivery', payment_code = 'mod', paid = 'Y', amount_partialy_paid = 0, date_modified = NOW() WHERE order_id = '" . (int) $result['order_id'] . "'");
+            }
+
+            if ($pending_amount > $data->TransAmount) {
+                $this->db->query('UPDATE `' . DB_PREFIX . "order` SET payment_method = 'mPesa On Delivery', payment_code = 'mod', paid = 'P', amount_partialy_paid = '" . $result['amount_partialy_paid'] + $data->TransAmount . "', date_modified = NOW() WHERE order_id = '" . (int) $result['order_id'] . "'");
+            }
+
+            if ($pending_amount < $data->TransAmount) {
+                $this->db->query('UPDATE `' . DB_PREFIX . "order` SET payment_method = 'mPesa On Delivery', payment_code = 'mod', paid = 'Y', amount_partialy_paid = 0, date_modified = NOW() WHERE order_id = '" . (int) $result['order_id'] . "'");
+            }
+        }
+
+        if (isset($result) && $result != NULL && $data->TransAmount < $result['total'] && $result['paid'] == 'N') {
             $log->write('TOTAL IS GREATER THAN TRANSACTION AMOUNT');
+
+            $sql = 'INSERT into ' . DB_PREFIX . "order_transaction_id SET order_id = '" . (int) $result['order_id'] . "', transaction_id = '" . $this->db->escape($data->TransID) . "', amount = '" . (int) $data->TransAmount . "', customer_id = '" . $result['customer_id'] . "', created_at = NOW()";
+            $query = $this->db->query($sql);
+
+            $this->db->query('UPDATE `' . DB_PREFIX . "order` SET payment_method = 'mPesa On Delivery', payment_code = 'mod', paid = 'P', amount_partialy_paid = 0, date_modified = NOW() WHERE order_id = '" . (int) $result['order_id'] . "'");
         }
 
-        if (isset($result) && $result != NULL && $data->TransAmount > $result['total']) {
+        if (isset($result) && $result != NULL && $data->TransAmount > $result['total'] && $result['paid'] == 'N') {
             $log->write('TOTAL IS LESS THAN TRANSACTION AMOUNT');
+
+            $sql = 'INSERT into ' . DB_PREFIX . "order_transaction_id SET order_id = '" . $result['order_id'] . "', transaction_id = '" . $this->db->escape($data->TransID) . "', amount = '" . (int) $data->TransAmount . "', customer_id = '" . $result['customer_id'] . "', created_at = NOW()";
+            $query = $this->db->query($sql);
+
+            $this->db->query('UPDATE `' . DB_PREFIX . "order` SET payment_method = 'mPesa On Delivery', payment_code = 'mod', paid = 'Y', amount_partialy_paid = 0, date_modified = NOW() WHERE order_id = '" . (int) $result['order_id'] . "'");
         }
     }
 
