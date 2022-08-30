@@ -407,6 +407,20 @@ class ModelPaymentMpesa extends Model {
             $query = $this->db->query($sql);
 
             $this->db->query('UPDATE `' . DB_PREFIX . "order` SET payment_method = 'mPesa On Delivery', payment_code = 'mod', paid = 'Y', date_modified = NOW() WHERE order_id = '" . (int) $result['order_id'] . "'");
+
+            // Add to activity log
+            $this->load->model('account/activity');
+
+            $activity_data = [
+                'customer_id' => $result['customer_id'],
+                'name' => $result['firstname'] . ' ' . $result['lastname'],
+                'order_id' => $result['order_id']
+            ];
+            $log->write('PAYBILL');
+
+            $this->model_account_activity->addActivity('PAYBILL', $activity_data);
+
+            $log->write('PAYBILL');
         }
 
         if (isset($result) && $result != NULL && $result['paid'] == 'P') {
@@ -428,6 +442,20 @@ class ModelPaymentMpesa extends Model {
             if ($pending_amount < $data->TransAmount) {
                 $this->db->query('UPDATE `' . DB_PREFIX . "order` SET payment_method = 'mPesa On Delivery', payment_code = 'mod', paid = 'Y', amount_partialy_paid = 0, date_modified = NOW() WHERE order_id = '" . (int) $result['order_id'] . "'");
             }
+
+            // Add to activity log
+            $this->load->model('account/activity');
+
+            $activity_data = [
+                'customer_id' => $result['customer_id'],
+                'name' => $result['firstname'] . ' ' . $result['lastname'],
+                'order_id' => $result['order_id']
+            ];
+            $log->write('PAYBILL');
+
+            $this->model_account_activity->addActivity('PAYBILL', $activity_data);
+
+            $log->write('PAYBILL');
         }
 
         if (isset($result) && $result != NULL && $data->TransAmount < $result['total'] && $result['paid'] == 'N') {
@@ -437,6 +465,20 @@ class ModelPaymentMpesa extends Model {
             $query = $this->db->query($sql);
 
             $this->db->query('UPDATE `' . DB_PREFIX . "order` SET payment_method = 'mPesa On Delivery', payment_code = 'mod', paid = 'P', amount_partialy_paid = 0, date_modified = NOW() WHERE order_id = '" . (int) $result['order_id'] . "'");
+
+            // Add to activity log
+            $this->load->model('account/activity');
+
+            $activity_data = [
+                'customer_id' => $result['customer_id'],
+                'name' => $result['firstname'] . ' ' . $result['lastname'],
+                'order_id' => $result['order_id']
+            ];
+            $log->write('PAYBILL');
+
+            $this->model_account_activity->addActivity('PAYBILL', $activity_data);
+
+            $log->write('PAYBILL');
         }
 
         if (isset($result) && $result != NULL && $data->TransAmount > $result['total'] && $result['paid'] == 'N') {
@@ -446,6 +488,20 @@ class ModelPaymentMpesa extends Model {
             $query = $this->db->query($sql);
 
             $this->db->query('UPDATE `' . DB_PREFIX . "order` SET payment_method = 'mPesa On Delivery', payment_code = 'mod', paid = 'Y', amount_partialy_paid = 0, date_modified = NOW() WHERE order_id = '" . (int) $result['order_id'] . "'");
+
+            // Add to activity log
+            $this->load->model('account/activity');
+
+            $activity_data = [
+                'customer_id' => $result['customer_id'],
+                'name' => $result['firstname'] . ' ' . $result['lastname'],
+                'order_id' => $result['order_id']
+            ];
+            $log->write('PAYBILL');
+
+            $this->model_account_activity->addActivity('PAYBILL', $activity_data);
+
+            $log->write('PAYBILL');
         }
     }
 
