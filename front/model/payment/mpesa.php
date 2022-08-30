@@ -395,13 +395,13 @@ class ModelPaymentMpesa extends Model {
         $log->write($data->BillRefNumber);
         $log->write('UpdateDeliveredOrders_MODEL');
 
-        $result = $this->db->query('SELECT * FROM `' . DB_PREFIX . "order` WHERE `order_id` = '" . (int) $data->BillRefNumber . "'")->row;
+        $result = $this->db->query('SELECT * FROM `' . DB_PREFIX . "order` WHERE `order_id` = '" . (int) $data->BillRefNumber . "' AND `payment_method` != 'Pezesha'")->row;
         $log->write('RESULT_UpdateDeliveredOrders');
         $log->write($result);
         $log->write('RESULT_UpdateDeliveredOrders');
 
         if (isset($result) && $result != NULL && $result['total'] == $data->TransAmount && $result['paid'] == 'N') {
-            $log->write('TOTAL MATCHED FOR PAID STATUS N');
+            $log->write('TOTAL MATCHED FOR PAID STATUS N' . $result['order_id']);
 
             $sql = 'INSERT into ' . DB_PREFIX . "order_transaction_id SET order_id = '" . (int) $result['order_id'] . "', transaction_id = '" . $this->db->escape($data->TransID) . "', amount = '" . (int) $data->TransAmount . "', customer_id = '" . $result['customer_id'] . "', created_at = NOW()";
             $query = $this->db->query($sql);
@@ -424,7 +424,7 @@ class ModelPaymentMpesa extends Model {
         }
 
         if (isset($result) && $result != NULL && $result['paid'] == 'P') {
-            $log->write('TOTAL MATCHED FOR PAID STATUS P');
+            $log->write('TOTAL MATCHED FOR PAID STATUS P' . $result['order_id']);
 
             $pending_amount = $result['total'] - $result['amount_partialy_paid'];
 
@@ -459,7 +459,7 @@ class ModelPaymentMpesa extends Model {
         }
 
         if (isset($result) && $result != NULL && $data->TransAmount < $result['total'] && $result['paid'] == 'N') {
-            $log->write('TOTAL IS GREATER THAN TRANSACTION AMOUNT');
+            $log->write('TOTAL IS GREATER THAN TRANSACTION AMOUNT' . $result['order_id']);
 
             $sql = 'INSERT into ' . DB_PREFIX . "order_transaction_id SET order_id = '" . (int) $result['order_id'] . "', transaction_id = '" . $this->db->escape($data->TransID) . "', amount = '" . (int) $data->TransAmount . "', customer_id = '" . $result['customer_id'] . "', created_at = NOW()";
             $query = $this->db->query($sql);
@@ -482,7 +482,7 @@ class ModelPaymentMpesa extends Model {
         }
 
         if (isset($result) && $result != NULL && $data->TransAmount > $result['total'] && $result['paid'] == 'N') {
-            $log->write('TOTAL IS LESS THAN TRANSACTION AMOUNT');
+            $log->write('TOTAL IS LESS THAN TRANSACTION AMOUNT' . $result['order_id']);
 
             $sql = 'INSERT into ' . DB_PREFIX . "order_transaction_id SET order_id = '" . $result['order_id'] . "', transaction_id = '" . $this->db->escape($data->TransID) . "', amount = '" . (int) $data->TransAmount . "', customer_id = '" . $result['customer_id'] . "', created_at = NOW()";
             $query = $this->db->query($sql);
