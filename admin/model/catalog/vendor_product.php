@@ -850,7 +850,7 @@ class ModelCatalogVendorProduct extends Model {
             $data['source'] = $data['source'];
         }
 
-        $query = 'UPDATE ' . DB_PREFIX . "product_to_store SET quantity = '" . $qty . "', buying_price = '" . $data['current_buying_price'] . "', source = '" . $data['source'] . "' WHERE product_store_id = '" . (int) $store_product_id . "'";
+        $query = 'UPDATE ' . DB_PREFIX . "product_to_store SET quantity = '" . $qty . "', buying_price = '" . $data['current_buying_price'] . "', source = '" . $this->db->escape($data['source']) . "' WHERE product_store_id = '" . (int) $store_product_id . "'";
         //echo $query;
         $this->db->query($query);
 
