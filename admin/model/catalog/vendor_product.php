@@ -850,6 +850,9 @@ class ModelCatalogVendorProduct extends Model {
             $data['source'] = $data['source'];
         }
 
+        $data['source'] = preg_replace('/[^A-Za-z0-9\-]/', '', $data['source']);
+        $previous_source = preg_replace('/[^A-Za-z0-9\-]/', '', $previous_source);
+
         $query = 'UPDATE ' . DB_PREFIX . "product_to_store SET quantity = '" . $qty . "', buying_price = '" . $data['current_buying_price'] . "', source = '" . $this->db->escape($data['source']) . "' WHERE product_store_id = '" . (int) $store_product_id . "'";
         //echo $query;
         $this->db->query($query);
