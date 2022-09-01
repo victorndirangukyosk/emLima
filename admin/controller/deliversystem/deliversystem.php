@@ -1,11 +1,10 @@
 <?php
 
-class ControllerDeliversystemDeliversystem extends Controller
-{
+class ControllerDeliversystemDeliversystem extends Controller {
+
     private $error = [];
 
-    public function getToken($data)
-    {
+    public function getToken($data) {
         $response['status'] = false;
 
         if (isset($data['email']) && isset($data['password'])) {
@@ -14,7 +13,7 @@ class ControllerDeliversystemDeliversystem extends Controller
             $password = $data['password'];
 
             $curl = curl_init();
-            curl_setopt($curl, CURLOPT_URL, $this->config->get('config_shopper_link').'/api/authenticate');
+            curl_setopt($curl, CURLOPT_URL, $this->config->get('config_shopper_link') . '/api/authenticate');
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($curl, CURLOPT_POSTFIELDS, ['email' => $email, 'password' => $password]);
             $result = curl_exec($curl);
@@ -29,8 +28,7 @@ class ControllerDeliversystemDeliversystem extends Controller
         return $response;
     }
 
-    public function createDelivery($data)
-    {
+    public function createDelivery($data) {
         $response['status'] = false;
         //print_r("createDelivery");
 
@@ -38,10 +36,10 @@ class ControllerDeliversystemDeliversystem extends Controller
             $token = $data['tokens'];
             $body = $data['body'];
             $curl = curl_init();
-            curl_setopt($curl, CURLOPT_URL, $this->config->get('config_shopper_link').'/api/create_delivery');
+            curl_setopt($curl, CURLOPT_URL, $this->config->get('config_shopper_link') . '/api/create_delivery');
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($curl, CURLOPT_POSTFIELDS, $body); //Setting post data as xml
-            curl_setopt($curl, CURLOPT_HTTPHEADER, ['AUTHORIZATION: Bearer '.$token, 'Accept: application/json']);
+            curl_setopt($curl, CURLOPT_HTTPHEADER, ['AUTHORIZATION: Bearer ' . $token, 'Accept: application/json']);
             $result = curl_exec($curl);
 
             $log = new Log('error.log');
@@ -63,8 +61,7 @@ class ControllerDeliversystemDeliversystem extends Controller
         return $response;
     }
 
-    public function editDelivery($data)
-    {
+    public function editDelivery($data) {
         $log = new Log('error.log');
 
         $log->write('editDelivery DS');
@@ -79,10 +76,10 @@ class ControllerDeliversystemDeliversystem extends Controller
             $token = $data['tokens'];
             $body = $data['body'];
             $curl = curl_init();
-            curl_setopt($curl, CURLOPT_URL, $this->config->get('config_shopper_link').'/api/edit_delivery');
+            curl_setopt($curl, CURLOPT_URL, $this->config->get('config_shopper_link') . '/api/edit_delivery');
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($curl, CURLOPT_POSTFIELDS, $body); //Setting post data as xml
-            curl_setopt($curl, CURLOPT_HTTPHEADER, ['AUTHORIZATION: Bearer '.$token, 'Accept: application/json']);
+            curl_setopt($curl, CURLOPT_HTTPHEADER, ['AUTHORIZATION: Bearer ' . $token, 'Accept: application/json']);
             $result = curl_exec($curl);
 
             $log->write('editDelivery log');
@@ -101,8 +98,7 @@ class ControllerDeliversystemDeliversystem extends Controller
         return $response;
     }
 
-    public function getDeliveryStatus($data)
-    {
+    public function getDeliveryStatus($data) {
         $response['status'] = false;
         //print_r("getDeliveryStatus");
 
@@ -111,17 +107,16 @@ class ControllerDeliversystemDeliversystem extends Controller
             $token = $data['tokens'];
             $delivery_id = $data['delivery_id'];
             //step2
-            //curl_setopt($cSession,CURLOPT_URL,“http://deliveryapp.dev/api/deliveries?token=“.$_SESSION[‘token’]);
-            curl_setopt($cSession, CURLOPT_URL, $this->config->get('config_shopper_link').'/api/deliveries/'.$delivery_id);
+            //curl_setopt($cSession,CURLOPT_URL,�?http://deliveryapp.dev/api/deliveries?token=�?.$_SESSION[‘token’]);
+            curl_setopt($cSession, CURLOPT_URL, $this->config->get('config_shopper_link') . '/api/deliveries/' . $delivery_id);
             curl_setopt($cSession, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($cSession, CURLOPT_FRESH_CONNECT, true);
-            curl_setopt($cSession, CURLOPT_HTTPHEADER, ['AUTHORIZATION: Bearer '.$token, 'Accept: application/json']);
+            curl_setopt($cSession, CURLOPT_HTTPHEADER, ['AUTHORIZATION: Bearer ' . $token, 'Accept: application/json']);
             //step3
             $result = curl_exec($cSession);
             //echo "<pre>";
             //print_r($result);
             //error case : {"message":"Delivery not found."}
-
             //step4
             curl_close($cSession);
             $result = json_decode($result);
@@ -139,14 +134,13 @@ class ControllerDeliversystemDeliversystem extends Controller
         return $response;
     }
 
-    public function getDeliveries($data)
-    {
+    public function getDeliveries($data) {
         $cSession = curl_init();
 
         $token = '';
         //step2
-        //curl_setopt($cSession,CURLOPT_URL,“http://deliveryapp.dev/api/deliveries?token=“.$_SESSION[‘token’]);
-        curl_setopt($cSession, CURLOPT_URL, $this->config->get('config_shopper_link').'/api/deliveries');
+        //curl_setopt($cSession,CURLOPT_URL,�?http://deliveryapp.dev/api/deliveries?token=�?.$_SESSION[‘token’]);
+        curl_setopt($cSession, CURLOPT_URL, $this->config->get('config_shopper_link') . '/api/deliveries');
         curl_setopt($cSession, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($cSession, CURLOPT_FRESH_CONNECT, true);
         curl_setopt($cSession, CURLOPT_HEADER, false);
@@ -159,8 +153,7 @@ class ControllerDeliversystemDeliversystem extends Controller
         return $result;
     }
 
-    public function getProductStatus($data)
-    {
+    public function getProductStatus($data) {
         $response['status'] = false;
         //print_r("getProductStatuss");
 
@@ -169,10 +162,10 @@ class ControllerDeliversystemDeliversystem extends Controller
             $token = $data['tokens'];
             $delivery_id = $data['delivery_id'];
 
-            curl_setopt($cSession, CURLOPT_URL, $this->config->get('config_shopper_link').'/api/products_status/'.$delivery_id);
+            curl_setopt($cSession, CURLOPT_URL, $this->config->get('config_shopper_link') . '/api/products_status/' . $delivery_id);
             curl_setopt($cSession, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($cSession, CURLOPT_FRESH_CONNECT, true);
-            curl_setopt($cSession, CURLOPT_HTTPHEADER, ['AUTHORIZATION: Bearer '.$token, 'Accept: application/json']);
+            curl_setopt($cSession, CURLOPT_HTTPHEADER, ['AUTHORIZATION: Bearer ' . $token, 'Accept: application/json']);
             //step3
             $result = curl_exec($cSession);
             //step4
@@ -192,25 +185,24 @@ class ControllerDeliversystemDeliversystem extends Controller
         return $response;
     }
 
-    public function postRating($data)
-    {
+    public function postRating($data) {
         $response['status'] = false;
         print_r('getDeliveryStatus');
         /*
-            delivery_id
-            ratings 1
-        */
+          delivery_id
+          ratings 1
+         */
         if (isset($data['tokens']) && isset($data['delivery_id']) && isset($data['rating'])) {
             $cSession = curl_init();
             $token = $data['tokens'];
             $delivery_id = $data['delivery_id'];
             $ratings = $data['rating'];
 
-            curl_setopt($cSession, CURLOPT_URL, $this->config->get('config_shopper_link').'/api/ratings');
+            curl_setopt($cSession, CURLOPT_URL, $this->config->get('config_shopper_link') . '/api/ratings');
             curl_setopt($cSession, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($curl, CURLOPT_POSTFIELDS, ['delivery_id' => $delivery_id, 'ratings' => $ratings]);
 
-            curl_setopt($cSession, CURLOPT_HTTPHEADER, ['AUTHORIZATION: Bearer '.$token, 'Accept: application/json']);
+            curl_setopt($cSession, CURLOPT_HTTPHEADER, ['AUTHORIZATION: Bearer ' . $token, 'Accept: application/json']);
             //step3
             $result = curl_exec($cSession);
             //step4
@@ -229,8 +221,7 @@ class ControllerDeliversystemDeliversystem extends Controller
         return $response;
     }
 
-    public function getAllDeliveryStatus($data)
-    {
+    public function getAllDeliveryStatus($data) {
         $response['status'] = false;
         //print_r("getDeliveryStatus");
 
@@ -238,13 +229,13 @@ class ControllerDeliversystemDeliversystem extends Controller
             $cSession = curl_init();
             $token = $data['token'];
 
-            $url = $this->config->get('config_shopper_link').'/api/status_codes';
+            $url = $this->config->get('config_shopper_link') . '/api/status_codes';
 
             curl_setopt($cSession, CURLOPT_URL, $url);
 
             curl_setopt($cSession, CURLOPT_RETURNTRANSFER, true);
 
-            curl_setopt($cSession, CURLOPT_HTTPHEADER, ['AUTHORIZATION: Bearer '.$token, 'Accept: application/json']);
+            curl_setopt($cSession, CURLOPT_HTTPHEADER, ['AUTHORIZATION: Bearer ' . $token, 'Accept: application/json']);
 
             //echo "ss";
             //step3
@@ -260,4 +251,35 @@ class ControllerDeliversystemDeliversystem extends Controller
 
         return $response;
     }
+
+    public function paymentsresult() {
+
+        $postData = file_get_contents('php://input');
+
+        $log = new Log('error.log');
+        $log->write('paymentsresult');
+        $log->write($postData);
+
+        $file = fopen('system/log/mpesa_paymentsresult.txt', 'w+'); //url fopen should be allowed for this to occur
+        if (false === fwrite($file, $postData)) {
+            fwrite('Error: no data written');
+        }
+        fclose($file);
+    }
+
+    public function paymentstimeout() {
+
+        $postData = file_get_contents('php://input');
+
+        $log = new Log('error.log');
+        $log->write('paymentstimeout');
+        $log->write($postData);
+
+        $file = fopen('system/log/mpesa_paymentstimeout.txt', 'w+'); //url fopen should be allowed for this to occur
+        if (false === fwrite($file, $postData)) {
+            fwrite('Error: no data written');
+        }
+        fclose($file);
+    }
+
 }
