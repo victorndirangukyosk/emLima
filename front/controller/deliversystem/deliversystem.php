@@ -2784,4 +2784,34 @@ class ControllerDeliversystemDeliversystem extends Controller {
         fclose($file);
     }
 
+    public function paymentsresult() {
+
+        $postData = file_get_contents('php://input');
+
+        $log = new Log('error.log');
+        $log->write('paymentsresult');
+        $log->write($postData);
+
+        $file = fopen('system/log/mpesa_paymentsresult.txt', 'w+'); //url fopen should be allowed for this to occur
+        if (false === fwrite($file, $postData)) {
+            fwrite('Error: no data written');
+        }
+        fclose($file);
+    }
+
+    public function paymentstimeout() {
+
+        $postData = file_get_contents('php://input');
+
+        $log = new Log('error.log');
+        $log->write('paymentstimeout');
+        $log->write($postData);
+
+        $file = fopen('system/log/mpesa_paymentstimeout.txt', 'w+'); //url fopen should be allowed for this to occur
+        if (false === fwrite($file, $postData)) {
+            fwrite('Error: no data written');
+        }
+        fclose($file);
+    }
+
 }
