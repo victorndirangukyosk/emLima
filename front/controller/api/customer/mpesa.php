@@ -857,15 +857,15 @@ class ControllerApiCustomerMpesa extends Controller {
             }
 
             $curl_post_data = array(
-                'Initiator' => 'KWIKBASKET',
-                'SecurityCredential' => $password_new,
                 'CommandID' => 'TransactionStatusQuery',
+                'PartyA' => $this->config->get('mpesa_business_short_code'),
+                'IdentifierType' => 4,
+                'Remarks' => $data['Remarks'],
+                'Initiator' => $data['PartyA'],
+                'SecurityCredential' => 1,
+                'QueueTimeOutURL' => $this->url->link('deliversystem/deliversystem/paymentsresult', '', 'SSL'),
+                'ResultURL' => $this->url->link('deliversystem/deliversystem/paymentstimeout', '', 'SSL'),
                 'TransactionID' => $data['TransactionID'],
-                'PartyA' => $data['PartyA'],
-                'IdentifierType' => 1,
-                'ResultURL' => $this->url->link('deliversystem/deliversystem/paymentsresult', '', 'SSL'),
-                'QueueTimeOutURL' => $this->url->link('deliversystem/deliversystem/paymentstimeout', '', 'SSL'),
-                'Remarks' => 'OK',
                 'Occasion' => 'OK',
             );
 
