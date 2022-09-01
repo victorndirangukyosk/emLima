@@ -819,7 +819,7 @@ class ControllerApiCustomerMpesa extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
-    public function addValidatetransactiondetails($data = []) {
+    public function addValidatetransactiondetail($data = []) {
         $json['status'] = false;
 
         $log = new Log('error.log');
