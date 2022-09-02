@@ -1055,9 +1055,9 @@ class ControllerApiCustomerProducts extends Controller {
         $log->write('data');
         $json = [];
 
-        if ($this->request->get['parent'] != NULL && $this->request->get['parent'] > 0) {
+        if (isset($this->request->get['parent']) && $this->request->get['parent'] != NULL && $this->request->get['parent'] > 0) {
             $customer_details = $this->db->query('SELECT customer_category FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $this->request->get['parent'] . "' AND status = '1'");
-        } else {
+        } else if (isset($this->request->get['customer_id']) && $this->request->get['customer_id'] != NULL && $this->request->get['customer_id'] > 0) {
             $customer_details = $this->db->query('SELECT customer_category FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $this->request->get['customer_id'] . "' AND status = '1'");
         }
         $this->session->data['customer_category'] = isset($customer_details->row['customer_category']) ? $customer_details->row['customer_category'] : null;
