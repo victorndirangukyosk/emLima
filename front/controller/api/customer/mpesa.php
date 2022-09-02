@@ -819,4 +819,86 @@ class ControllerApiCustomerMpesa extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
+    public function addValidatetransactiondetail($data = []) {
+        $json['status'] = false;
+
+        $log = new Log('error.log');
+        $access_token = $this->auth();
+
+        $log->write($access_token);
+
+        $mpesa_customer_key = $this->config->get('mpesa_customer_key');
+        $mpesa_customer_secret = $this->config->get('mpesa_customer_secret');
+        $timestamp = '20' . date('ymdhis');
+
+        $password = 'Basic ' . base64_encode($mpesa_customer_key . ':' . $mpesa_customer_secret . $timestamp);
+        $password_new = 'Basic ' . base64_encode($mpesa_customer_key . ':' . $mpesa_customer_secret);
+
+        $log->write($password);
+        $log->write($password_new);
+        $log->write($mpesa_customer_key);
+        $log->write($mpesa_customer_secret);
+        $log->write($timestamp);
+
+        if (isset($access_token) && isset($access_token['access_token']) && $access_token['access_token'] != NULL) {
+            $token = 'Bearer ' . $access_token['access_token'];
+            $curl = curl_init();
+            if ($this->config->get('mpesa_environment') == 'live') {
+                $log->write('MPESA_PRODUCTION');
+                $log->write($this->config->get('mpesa_environment'));
+                //curl_setopt($curl, CURLOPT_URL, 'https://api.safaricom.co.ke/mpesa/transactionstatus/v1/query');
+                curl_setopt($curl, CURLOPT_URL, 'https://api.safaricom.co.ke/mpesa/transactionstatus/v1/query');
+                curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type:application/json', 'Authorization:' . $token));
+            } else {
+                $log->write('MPESA_PRODUCTION');
+                $log->write($this->config->get('mpesa_environment'));
+                curl_setopt($curl, CURLOPT_URL, 'https://sandbox.safaricom.co.ke/mpesa/transactionstatus/v1/query');
+                curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type:application/json', 'Authorization:' . $token));
+            }
+
+            $curl_post_data = array(
+                'CommandID' => 'TransactionStatusQuery',
+                'PartyA' => '600995',
+                'IdentifierType' => 4,
+                'Remarks' => $data['Remarks'],
+                'Initiator' => 'testapi',
+                'SecurityCredential' => 'J2v+4MoovbxsyERibFVe/QW/PMxj0Tj8kw+GTaQIn0b58NqHTex4qBjCuaI0WV0cFii5az0aWfIC3QSz/h3lqQll1JNCgsKxA8uptZX80Mb8m111ftvLJ+LUR37yX6d7m7h4DLpLnMvCiG9fTRhWsPKpxRb67U40ikKtRI0USs1i7T/vbW5VrPaer6pd5bKIq51rsxIcsaSQYGHVE1YEFLlNXo2KuhZ4g+gFycFy7ww1TVhnt8OWvBAN0M1NkHBB6OJVcp9sQ7GO4JRGgmmQpsClWRywOEdox8/xNKN1T/LkgspTEnKXOGxZBomQJ2vAm+FkHvOoORUsCCF31pKzbg==',
+                'QueueTimeOutURL' => $this->url->link('deliversystem/deliversystem/paymentsresult', '', 'SSL'),
+                'ResultURL' => $this->url->link('deliversystem/deliversystem/paymentstimeout', '', 'SSL'),
+                'TransactionID' => $data['TransactionID'],
+                'Occasion' => 'OK',
+            );
+
+            $log->write('curl_post_data');
+            $log->write($curl_post_data);
+            $log->write('curl_post_data');
+
+            $data_string = json_encode($curl_post_data);
+
+            $log->write('curl_post_data_2');
+            $log->write($curl_post_data);
+            $log->write('curl_post_data_2');
+
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($curl, CURLOPT_POST, 1);
+            curl_setopt($curl, CURLOPT_POSTFIELDS, $data_string);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+            $result = curl_exec($curl);
+
+            $log->write($result);
+            curl_close($curl);
+            $result = json_decode($result, true);
+            $json['data'] = $result;
+            $json['status'] = true;
+            $json['status_code'] = 200;
+        } else {
+            $json['status_code'] = 400;
+            $json['data'] = NULL;
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
 }
