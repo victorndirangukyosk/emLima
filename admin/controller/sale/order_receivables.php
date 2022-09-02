@@ -890,7 +890,7 @@ class ControllerSaleOrderReceivables extends Controller {
           $this->response->setOutput(json_encode($json)); */
     }
 
-    public function validatetransactiondetails() {
+    public function validatetransactiondetails($data) {
         $json['status'] = false;
 
         $log = new Log('error.log');
@@ -915,15 +915,15 @@ class ControllerSaleOrderReceivables extends Controller {
             }
 
             $curl_post_data = array(
-                'Initiator' => '',
-                'SecurityCredential' => '',
                 'CommandID' => 'TransactionStatusQuery',
-                'TransactionID' => '',
-                'PartyA' => '',
-                'IdentifierType' => 1,
-                'ResultURL' => $this->url->link('deliversystem/deliversystem/paymentsresult', '', 'SSL'),
-                'QueueTimeOutURL' => $this->url->link('deliversystem/deliversystem/paymentstimeout', '', 'SSL'),
-                'Remarks' => 'OK',
+                'PartyA' => '600995',
+                'IdentifierType' => 4,
+                'Remarks' => $data['Remarks'],
+                'Initiator' => 'testapi',
+                'SecurityCredential' => 'J2v+4MoovbxsyERibFVe/QW/PMxj0Tj8kw+GTaQIn0b58NqHTex4qBjCuaI0WV0cFii5az0aWfIC3QSz/h3lqQll1JNCgsKxA8uptZX80Mb8m111ftvLJ+LUR37yX6d7m7h4DLpLnMvCiG9fTRhWsPKpxRb67U40ikKtRI0USs1i7T/vbW5VrPaer6pd5bKIq51rsxIcsaSQYGHVE1YEFLlNXo2KuhZ4g+gFycFy7ww1TVhnt8OWvBAN0M1NkHBB6OJVcp9sQ7GO4JRGgmmQpsClWRywOEdox8/xNKN1T/LkgspTEnKXOGxZBomQJ2vAm+FkHvOoORUsCCF31pKzbg==',
+                'QueueTimeOutURL' => $this->url->link('deliversystem/deliversystem/paymentsresult', '', 'SSL'),
+                'ResultURL' => $this->url->link('deliversystem/deliversystem/paymentstimeout', '', 'SSL'),
+                'TransactionID' => $data['TransactionID'],
                 'Occasion' => 'OK',
             );
 
