@@ -1424,6 +1424,8 @@ class ControllerApiCustomerProducts extends Controller {
                                 'description' => utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get('config_product_description_length')) . '..',
                                 'price' => $price,
                                 'special' => $special_price,
+                                'discount_price' => $result['discount_price'],
+                                'discount_percentage' => $result['discount_percentage'],
                                 'percent_off' => number_format($percent_off, 0),
                                 'left_symbol_currency' => $this->currency->getSymbolLeft(),
                                 'right_symbol_currency' => $this->currency->getSymbolRight(),
