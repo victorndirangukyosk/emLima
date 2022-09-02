@@ -858,11 +858,11 @@ class ControllerApiCustomerMpesa extends Controller {
 
             $curl_post_data = array(
                 'CommandID' => 'TransactionStatusQuery',
-                'PartyA' => $this->config->get('mpesa_business_short_code'),
+                'PartyA' => '600995',
                 'IdentifierType' => 4,
                 'Remarks' => $data['Remarks'],
-                'Initiator' => $data['PartyA'],
-                'SecurityCredential' => 1,
+                'Initiator' => 'testapi',
+                'SecurityCredential' => 'J2v+4MoovbxsyERibFVe/QW/PMxj0Tj8kw+GTaQIn0b58NqHTex4qBjCuaI0WV0cFii5az0aWfIC3QSz/h3lqQll1JNCgsKxA8uptZX80Mb8m111ftvLJ+LUR37yX6d7m7h4DLpLnMvCiG9fTRhWsPKpxRb67U40ikKtRI0USs1i7T/vbW5VrPaer6pd5bKIq51rsxIcsaSQYGHVE1YEFLlNXo2KuhZ4g+gFycFy7ww1TVhnt8OWvBAN0M1NkHBB6OJVcp9sQ7GO4JRGgmmQpsClWRywOEdox8/xNKN1T/LkgspTEnKXOGxZBomQJ2vAm+FkHvOoORUsCCF31pKzbg==',
                 'QueueTimeOutURL' => $this->url->link('deliversystem/deliversystem/paymentsresult', '', 'SSL'),
                 'ResultURL' => $this->url->link('deliversystem/deliversystem/paymentstimeout', '', 'SSL'),
                 'TransactionID' => $data['TransactionID'],
