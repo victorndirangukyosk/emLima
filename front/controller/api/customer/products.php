@@ -16,6 +16,8 @@ class ControllerApiCustomerProducts extends Controller {
         $log = new Log('error.log');
         $log->write('Session category check');
         $log->write($this->session->data['customer_category']);
+        $log->write($this->customer->getCustomerCategory());
+        $log->write($this->customer->getCustomerDiscountCategory());
         $log->write('Session category check');
 
         //  echo "<pre>";print_r($_SESSION['customer_category']);die;
