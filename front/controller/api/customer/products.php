@@ -7,9 +7,9 @@ class ControllerApiCustomerProducts extends Controller {
     public function getProducts() {
         $json = [];
 
-        if ($this->request->get['parent'] != NULL && $this->request->get['parent'] > 0) {
+        if (isset($this->request->get['parent']) && $this->request->get['parent'] != NULL && $this->request->get['parent'] > 0) {
             $customer_details = $this->db->query('SELECT customer_category FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $this->request->get['parent'] . "' AND status = '1'");
-        } else {
+        } else if ($this->request->get['customer_id']) {
             $customer_details = $this->db->query('SELECT customer_category FROM ' . DB_PREFIX . "customer WHERE customer_id = '" . $this->request->get['customer_id'] . "' AND status = '1'");
         }
         $this->session->data['customer_category'] = isset($customer_details->row['customer_category']) ? $customer_details->row['customer_category'] : null;
@@ -1816,6 +1816,19 @@ class ControllerApiCustomerProducts extends Controller {
                         $result['special_price'] = $category_s_price;
                     }
                 }
+                //FOR CATEGORY DISCOUNT
+                $category_discount_response = NULL;
+                $result['discount_price'] = 0;
+                $result['discount_percentage'] = 0;
+                if ($this->customer->getCustomerCategory() == NULL && $this->customer->getCustomerDiscountCategory() != NULL) {
+                    $category_discount_response = $this->load->controller('common/customercategorydiscount', $result);
+                    if (isset($category_discount_response) && is_array($category_discount_response)) {
+
+                        $result['discount_price'] = $category_discount_response['discount_price'];
+                        $result['discount_percentage'] = $category_discount_response['discount_percentage'];
+                    }
+                }
+                //FOR CATEGORY DISCOUNT
                 //get price html
                 if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
                     $price = $this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax'));
@@ -1855,6 +1868,20 @@ class ControllerApiCustomerProducts extends Controller {
                     $special_price = $this->currency->format($s_price);
                     $price = $this->currency->format($o_price);
                 }
+
+                //FOR CATEGORY DISCOUNT
+                $category_discount_response = NULL;
+                $result['discount_price'] = 0;
+                $result['discount_percentage'] = 0;
+                if ($this->customer->getCustomerCategory() == NULL && $this->customer->getCustomerDiscountCategory() != NULL) {
+                    $category_discount_response = $this->load->controller('common/customercategorydiscount', $result);
+                    if (isset($category_discount_response) && is_array($category_discount_response)) {
+
+                        $result['discount_price'] = $category_discount_response['discount_price'];
+                        $result['discount_percentage'] = $category_discount_response['discount_percentage'];
+                    }
+                }
+                //FOR CATEGORY DISCOUNT
             }
 
             //get qty in cart
@@ -1941,6 +1968,8 @@ class ControllerApiCustomerProducts extends Controller {
                 'description' => utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get('config_product_description_length')) . '..',
                 'price' => $price,
                 'special' => $special_price,
+                'discount_price' => $result['discount_price'],
+                'discount_percentage' => $result['discount_percentage'],
                 'percent_off' => number_format($percent_off, 0),
                 'left_symbol_currency' => $this->currency->getSymbolLeft(),
                 'right_symbol_currency' => $this->currency->getSymbolRight(),
