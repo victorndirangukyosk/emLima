@@ -502,6 +502,19 @@ class ModelAssetsProduct extends Model {
                             $r['special_price'] = $category_s_price;
                         }
                     }
+                    //FOR CATEGORY DISCOUNT
+                    $this->load->model('discount/discount');
+                    $category_discount_response = NULL;
+                    $r['discount_price'] = 0;
+                    $r['discount_percentage'] = 0;
+                    if ($this->customer->getCustomerCategory() == NULL && $this->customer->getCustomerDiscountCategory() != NULL) {
+                        $category_discount_response = $this->model_discount_discount->getCategoryDiscount($r);
+                        if (isset($category_discount_response) && is_array($category_discount_response)) {
+                            $r['discount_price'] = $category_discount_response['discount_price'];
+                            $r['discount_percentage'] = $category_discount_response['discount_percentage'];
+                        }
+                    }
+                    //FOR CATEGORY DISCOUNT
                     //get price html
                     if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
                         $r['price'] = $this->tax->calculate($r['price'], $r['tax_class_id'], $this->config->get('config_tax'));
@@ -543,6 +556,19 @@ class ModelAssetsProduct extends Model {
                             $r['special_price'] = $category_s_price;
                         }
                     }
+                    //FOR CATEGORY DISCOUNT
+                    $this->load->model('discount/discount');
+                    $category_discount_response = NULL;
+                    $r['discount_price'] = 0;
+                    $r['discount_percentage'] = 0;
+                    if ($this->customer->getCustomerCategory() == NULL && $this->customer->getCustomerDiscountCategory() != NULL) {
+                        $category_discount_response = $this->model_discount_discount->getCategoryDiscount($r);
+                        if (isset($category_discount_response) && is_array($category_discount_response)) {
+                            $r['discount_price'] = $category_discount_response['discount_price'];
+                            $r['discount_percentage'] = $category_discount_response['discount_percentage'];
+                        }
+                    }
+                    //FOR CATEGORY DISCOUNT
                 }
 
                 $percent_off = null;
