@@ -624,14 +624,18 @@ class ControllerSaleOrderReceivables extends Controller {
             } else {
 
 
-                //  #region insert the given amount ,selected orders and order total ,to maintain history
-                //  try{
-                //     $this->model_sale_order_receivables->insertPaymentReceivedEntery($this->request->post['paid_order_id'], $transaction_id,$amount_received,$grand_total,$this->user->getId());
-                // }
-                // catch(exception $ex)
-                // {
-                // }
-                // #endregion
+                 #region insert the given amount ,selected orders and order total ,to maintain history
+                 try{
+                    //grand total and amount received are same, in case of individual confirm payment
+                    $this->model_sale_order_receivables->insertPaymentReceivedEntery($this->request->post['paid_order_id'], $this->request->post['transaction_id'],$this->request->post['amount_received'],$this->request->post['amount_received'],$this->user->getId());
+                }
+                catch(exception $ex)
+                {
+                    $log = new Log('error.log');
+                    $log->write('Payment received log entry -Error');
+
+                }
+                #endregion
 
 
 
@@ -811,6 +815,20 @@ class ControllerSaleOrderReceivables extends Controller {
                 $data['status'] = false;
             } else {
 
+
+                 #region insert the given amount ,selected orders and order total ,to maintain history
+                 try{
+                    //grand total and amount received are same, in case of individual confirm payment
+                    $this->model_sale_order_receivables->insertPaymentReceivedEntery($this->request->post['paid_order_id'], $this->request->post['transaction_id'],$this->request->post['amount_partialy_paid'],$this->request->post['amount_partialy_paid'],NULL,$this->user->getId());
+                }
+                catch(exception $ex)
+                {
+                    $log = new Log('error.log');
+                    $log->write('Payment received log entry -Error');
+
+                }
+                #endregion
+
                 $this->model_sale_order_receivables->reversePaymentReceived($this->request->post['paid_order_id'], $this->request->post['transaction_id']);
 
                 $data['success'] = 'Reversed Successfully';
@@ -823,7 +841,7 @@ class ControllerSaleOrderReceivables extends Controller {
                     'user_group_id' => $this->user->getGroupId(),
                     'order_id' => $this->request->post['paid_order_id'],
                     'transaction_id' => $this->request->post['transaction_id'],
-                    'Partial_amount' => $this->request->post['Partial_amount'],
+                    'Partial_amount' => $this->request->post['amount_partialy_paid'],
                 ];
 
                 $this->model_user_user_activity->addActivity('order_transaction_id_reversed', $activity_data);
