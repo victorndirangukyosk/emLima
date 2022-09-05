@@ -3,6 +3,7 @@
 class ControllerApiCustomerTotals extends Controller {
 
     public function getTotals($args = []) {
+        $log = new Log('error.log');
         $this->load->language('checkout/cart');
 
         if (isset($this->request->get['city_id']) && $this->request->get['city_id'] > 0) {
@@ -33,6 +34,11 @@ class ControllerApiCustomerTotals extends Controller {
             array_multisort($sort_order, SORT_ASC, $results);
 
             foreach ($results as $result) {
+
+                $log->write('code');
+                $log->write($result['code']);
+                $log->write('code');
+
                 if ($this->config->get($result['code'] . '_status')) {
                     $this->load->model('total/' . $result['code']);
 
@@ -63,7 +69,6 @@ class ControllerApiCustomerTotals extends Controller {
                 'text' => $this->currency->format($total['value']),
             ];
         }
-        $log = new Log('error.log');
         $log->write('totals');
         $log->write($data['totals']);
         $log->write('totals');
