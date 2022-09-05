@@ -15,9 +15,9 @@ class ControllerApiCustomerProducts extends Controller {
         $this->session->data['customer_category'] = isset($customer_details->row['customer_category']) ? $customer_details->row['customer_category'] : null;
         $log = new Log('error.log');
         $log->write('Session category check');
-        $log->write($this->session->data['customer_category']);
-        $log->write($this->customer->getCustomerCategory());
-        $log->write($this->customer->getCustomerDiscountCategory());
+        $log->write($this->session->data['customer_category'].'CUSTOMER PRICE CATEGORY');
+        $log->write($this->customer->getCustomerCategory().'CUSTOMER PRICE CATEGORY');
+        $log->write($this->customer->getCustomerDiscountCategory().'CUSTOMER DISCOUNT PRICE CATEGORY');
         $log->write('Session category check');
 
         //  echo "<pre>";print_r($_SESSION['customer_category']);die;

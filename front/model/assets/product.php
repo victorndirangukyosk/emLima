@@ -636,6 +636,8 @@ class ModelAssetsProduct extends Model {
                     'weight' => floatval($r['weight']),
                     'price' => $r['price'],
                     'special' => $r['special_price'],
+                    'discount_price' => $r['discount_price'],
+                    'discount_percentage' => $r['discount_percentage'],
                     'percent_off' => number_format($percent_off, 0),
                     'max_qty' => $r['min_quantity'] > 0 ? $r['min_quantity'] : $r['quantity'],
                     'category_pricing_variant_status' => is_array($category_price_data) && array_key_exists('status', $category_price_data) ? $category_price_data['status'] : 1
