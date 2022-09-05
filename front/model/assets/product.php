@@ -427,6 +427,8 @@ class ModelAssetsProduct extends Model {
                     $res['special_price'] = $res['price'];
                 }
 
+                $res['customer_discount_category'] = $this->customer->getCustomerDiscountCategory();
+
                 $res['max_qty'] = $res['min_quantity'] > 0 ? $res['min_quantity'] : $res['quantity'];
 
                 $res['percent_off'] = number_format($percent_off, 0);
