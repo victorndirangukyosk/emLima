@@ -967,10 +967,16 @@ function showConfirmPopup($order_id,$order_value) {
                 console.log(json); 
                 if (json['status']) 
                 {
+                    if (json['error_code']==111) {
+                             $('#paidModal-message').html('This Transaction ID is already applied.');
+        $('#paid-button').removeClass('disabled');
+                            }
+                            else{
                     $('#paidModal-success-message').html(' Saved Successfully');
                     setTimeout(function() {
                             location=location;
                         }, 500);
+                        }
                             
                 }
                 else    {
@@ -1002,11 +1008,18 @@ function showConfirmPopup($order_id,$order_value) {
             async: true,
             success: function(json) {
                 console.log(json); 
+                
                     if (json['status']) {
+                         if (json['error_code']==111) {
+                             $('#paidModal-message').html('This Transaction ID is already applied.');
+        $('#paid-button').removeClass('disabled');
+                            }
+                            else{
                         $('#paidModal-success-message').html(' Saved Successfully');
                             setTimeout(function() {
                             location=location;
                             }, 500);
+                             }
                             
                         }
                         else {
