@@ -639,7 +639,7 @@ class ControllerSaleOrderReceivables extends Controller {
 
 
 
-                $this->model_sale_order_receivables->confirmPaymentReceived($this->request->post['paid_order_id'], $this->request->post['transaction_id'], 0, $this->request->post['paid_to']);
+                $this->model_sale_order_receivables->confirmPaymentReceived($this->request->post['paid_order_id'], $this->request->post['transaction_id'], $this->request->post['amount_received'],0, $this->request->post['paid_to'],$this->request->post['amount_received'],$this->request->post['amount_received']);
 
                 $data['success'] = 'Updated Successfully';
                 // Add to activity log
@@ -715,7 +715,16 @@ class ControllerSaleOrderReceivables extends Controller {
                     foreach ($orders as $order) {
                         if ($order != 'on') {
                             $order_any_selected = $order; //any order in the selection can be tken, to get customer
-                            $this->model_sale_order_receivables->confirmPaymentReceived($order, $transaction_id, 0, $paid_to);
+                            
+                            $amount_partialy_paid = 0;
+                            $ordertotal_array = $this->model_sale_order_receivables->getOrderTotal($order);
+                            $ordertotal = $ordertotal_array[order_total];
+                            $amount_partialy_paid = $ordertotal_array[amount_partialy_paid];
+                            $ordertotal_needtopay = $ordertotal - $amount_partialy_paid;
+                            
+                            // $this->model_sale_order_receivables->confirmPaymentReceived($order, $transaction_id, 0, $paid_to);
+                            $this->model_sale_order_receivables->confirmPaymentReceived($order, $transaction_id, $amount_received,0, $paid_to,$grand_total,$ordertotal_needtopay);
+                            
                             // Add to activity log
                             $log = new Log('error.log');
                             $this->load->model('user/user_activity');
@@ -738,7 +747,11 @@ class ControllerSaleOrderReceivables extends Controller {
                     $customer_id = $this->model_sale_customer->getParentCutomerFromOrder($order_any_selected);
 
                     if ($wallet_amount > 0) {//add to customer wallet
-                        $v = $this->model_sale_customer->addOnlyCredit($customer_id, 'Advance Received # Transaction ID - ' . $transaction_id, $wallet_amount);
+                        $v = $this->model_sale_customer->addOnlyCreditNew($customer_id, 'Advance Received # Transaction ID - ' . $transaction_id, $wallet_amount);
+                        $log = new Log('error.log');
+                        $log->write('check for payment receivables Credit');
+                        $this->model_sale_order_receivables->confirmPaymentReceived_credit($customer_id, $transaction_id, $amount_received,0, $paid_to,$grand_total,$wallet_amount,$v);
+    
                     }
                 } else {
                     $log = new Log('error.log');
@@ -763,11 +776,15 @@ class ControllerSaleOrderReceivables extends Controller {
                         $log->write($order_amount_sufficient);
                         //    exit;
                         if ($order_amount_sufficient >= 0) {
-                            $this->model_sale_order_receivables->confirmPaymentReceived($order, $transaction_id, 0, $paid_to);
-                        } else {
+                            // $this->model_sale_order_receivables->confirmPaymentReceived($order, $transaction_id, 0, $paid_to);
+                            $this->model_sale_order_receivables->confirmPaymentReceived($order, $transaction_id, $amount_received,0, $paid_to,$grand_total,$ordertotal_needtopay);
 
+                        } else {
+                            
                             $amount_partialy_paid = $amount_partialy_paid + $grand_amount_availble;
-                            $this->model_sale_order_receivables->confirmPartialPaymentReceived($order, $transaction_id, '', $amount_partialy_paid, $paid_to);
+                            // $this->model_sale_order_receivables->confirmPartialPaymentReceived($order, $transaction_id, '', $amount_partialy_paid, $paid_to);
+                            $this->model_sale_order_receivables->confirmPartialPaymentReceived($order, $transaction_id, $amount_received,$amount_partialy_paid, $paid_to,$grand_total,$grand_amount_availble);
+
                         }
                         $grand_amount_availble = $grand_amount_availble - $ordertotal_needtopay;
 

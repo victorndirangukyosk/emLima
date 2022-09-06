@@ -148,7 +148,7 @@ class ModelSaleOrderReceivables extends Model
     }
 
 
-    public function confirmPaymentReceived($paid_order_id, $transaction_id, $amount_received = 0,$paid_to = '') {
+    public function confirmPaymentReceived($paid_order_id, $transaction_id, $amount_received = 0,$amount_partialy_paid=0,$paid_to = '',$grand_total=0,$partial_amount_applied=0) {
   
 
             $this->db->query('update `' . DB_PREFIX . 'order` SET paid="Y" , amount_partialy_paid = 0,paid_to="'.$paid_to.'" WHERE order_id="' . $paid_order_id . '"');
@@ -158,6 +158,12 @@ class ModelSaleOrderReceivables extends Model
 
             $query = $this->db->query($sql);
     
+             //insert  payments history
+            $sql = 'INSERT into ' . DB_PREFIX . "payment_history SET order_id = '" . $paid_order_id . "', transaction_id = '" . $transaction_id . "', partial_amount = '" . $amount_partialy_paid . "',amount_received='".$amount_received."',grand_total='".$grand_total."', added_by = '" . $this->user->getId() . "',ip='".$this->db->escape($this->request->server['REMOTE_ADDR'])."',patial_amount_applied='".$partial_amount_applied."'" ;
+
+            $query = $this->db->query($sql);
+
+    
             $sql = 'INSERT into ' . DB_PREFIX . "order_transaction_id SET order_id = '" . $paid_order_id . "', transaction_id = '" . $transaction_id . "'";
     
             $query = $this->db->query($sql);
@@ -165,7 +171,18 @@ class ModelSaleOrderReceivables extends Model
     }
 
 
-    public function confirmPartialPaymentReceived($paid_order_id, $transaction_id='', $amount_received = '',$amount_partialy_paid=0,$paid_to='') {
+    public function confirmPaymentReceived_credit($customer_id, $transaction_id, $amount_received = 0,$amount_partialy_paid=0,$paid_to = '',$grand_total=0,$partial_amount_applied=0,$credit_id=0) {
+       
+
+         //insert  payments history
+        $sql = 'INSERT into ' . DB_PREFIX . "payment_history SET customer_id = '" . $customer_id . "', transaction_id = '" . $transaction_id . "', partial_amount = '" . $amount_partialy_paid . "',amount_received='".$amount_received."',grand_total='".$grand_total."', added_by = '" . $this->user->getId() . "',ip='".$this->db->escape($this->request->server['REMOTE_ADDR'])."',credit_id='".$credit_id."',patial_amount_applied='".$partial_amount_applied."'" ;
+
+        $query = $this->db->query($sql);
+
+ 
+
+}
+    public function confirmPartialPaymentReceived($paid_order_id, $transaction_id='', $amount_received = '',$amount_partialy_paid=0,$paid_to='',$grand_total=0,$partial_amount_applied=0) {
   
         // $this->db->query('update `' . DB_PREFIX . 'order` SET amount_partialy_paid='" .  $amount_partialy_paid . "'  WHERE order_id="' . $paid_order_id . '"');
         
@@ -177,9 +194,12 @@ class ModelSaleOrderReceivables extends Model
 
         $query = $this->db->query($sql);
 
-         //insert partial payments history
-         $sql = 'INSERT into ' . DB_PREFIX . "payment_history SET order_id = '" . $paid_order_id . "', transaction_id = '" . $transaction_id . "', partial_amount = '" . $amount_partialy_paid . "'";
+         //insert  payments history
+        //  $sql = 'INSERT into ' . DB_PREFIX . "payment_history SET order_id = '" . $paid_order_id . "', transaction_id = '" . $transaction_id . "', partial_amount = '" . $amount_partialy_paid . "'";
+         $sql = 'INSERT into ' . DB_PREFIX . "payment_history SET order_id = '" . $paid_order_id . "', transaction_id = '" . $transaction_id . "', partial_amount = '" . $amount_partialy_paid . "',amount_received='".$amount_received."',grand_total='".$grand_total."', added_by = '" . $this->user->getId() . "',ip='".$this->db->escape($this->request->server['REMOTE_ADDR'])."',patial_amount_applied='".$partial_amount_applied."'" ;
 
+            // echo $sql;die;
+         
          $query = $this->db->query($sql);
 
 
@@ -393,9 +413,9 @@ class ModelSaleOrderReceivables extends Model
     }
 
 
-    public function insertPaymentReceivedEntery($selected, $transaction_id, $amount_received,$grand_total,$added_by) {
+    public function insertPaymentReceivedEntery($selected, $transaction_id, $amount_received,$grand_total,$added_by,$reversed_by=NULL) {
   
-        $sql = 'INSERT into ' . DB_PREFIX . "payment_received SET order_ids = '" . $selected . "', transaction_id = '" . $transaction_id . "', amount_received = '" . $amount_received . "', grand_total = '" . $grand_total . "', added_by = '" . $added_by . "'";
+        $sql = 'INSERT into ' . DB_PREFIX . "payment_received SET order_ids = '" . $selected . "', transaction_id = '" . $transaction_id . "', amount_received = '" . $amount_received . "', grand_total = '" . $grand_total . "', added_by = '" . $added_by . "',reversed_by='".$reversed_by."'";
 
         $query = $this->db->query($sql);
 
