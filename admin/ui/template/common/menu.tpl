@@ -218,6 +218,9 @@
             <?php if($preturn_order_receivables) { ?>
             <li><a href="<?php echo $order_receivables; ?>">Payment Receivables</a></li>
             <?php } ?>
+            <?php if($preturn_paybill) { ?>
+            <li><a href="<?php echo $paybill; ?>">Paybill Payments</a></li>
+            <?php } ?>
         </ul>
     </li>
     <?php } ?>
