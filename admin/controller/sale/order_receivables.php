@@ -622,7 +622,16 @@ class ControllerSaleOrderReceivables extends Controller {
                 $data['error'] = $this->language->get('error_permission');
                 $data['status'] = false;
             } else {
-
+                    // check for duplicate transaction
+                    $valid="true";
+                   $valid= $this->model_sale_order_receivables->checkPaymentReceivedEntery($this->request->post['transaction_id']);
+                    if($valid=="false")
+                    {
+                        $data['error'] = "Duplicate Transaction ID Found";
+                        $data['error_code'] = "111";
+                        $data['status'] = true;
+                        return;
+                    }
 
                  #region insert the given amount ,selected orders and order total ,to maintain history
                  try{
@@ -698,6 +707,18 @@ class ControllerSaleOrderReceivables extends Controller {
                 $data['error'] = $this->language->get('error_permission');
                 $data['status'] = false;
             } else {
+
+
+                   // check for duplicate transaction
+                   $valid="true";
+                   $valid= $this->model_sale_order_receivables->checkPaymentReceivedEntery($transaction_id);
+                    if($valid=="false")
+                    {
+                        $data['error'] = "Duplicate Transaction ID Found";
+                        $data['error_code'] = "111";
+                        $data['status'] = true;
+                        return;
+                    }
 
                 #region insert the given amount ,selected orders and order total ,to maintain history
                 try {

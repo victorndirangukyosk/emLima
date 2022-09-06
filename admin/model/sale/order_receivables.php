@@ -422,4 +422,21 @@ class ModelSaleOrderReceivables extends Model
 }
 
  
+    public function checkPaymentReceivedEntery($transaction_id) {
+  
+    $sql = 'Select transaction_id from ' . DB_PREFIX . "payment_received where transaction_id = '" . $transaction_id . "'";
+
+    $query = $this->db->query($sql);
+    $status=$query->rows;
+    if(count($status)>0)
+    {
+        return "false";
+    }
+    else
+    {
+        return "true";
+    }
+
+    }
+
 }
