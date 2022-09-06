@@ -862,7 +862,7 @@ class ControllerApiCustomerMpesa extends Controller {
                 'IdentifierType' => 1,
                 'Remarks' => $data['Remarks'],
                 'Initiator' => 'testapi',
-                'SecurityCredential' => 'SvSrhnnoli6mkU6m/apM6Gikvez8iH6cW9pHMX4P0mUO+mAQbxkMCNHh35LafUVx/fcdDerNkHy38LucUbTCHaaMM2TuflauUufuW9/hylAwpcXTiOlrX2pzsO8n2WwZv2A2U0rRZz3jWMTwlLoIZlv3VI2Q8aWRG5sTL6eO8OUedMJ/p74jitKR3Uqim84TbjbBm5yrrP54/RfjHp22OVzuxxK/QXGHazTDuUbl3G1D0IZcXLNBqyjN2ECxruzqukpmp3/pZY3nA6Ra9JwUcdONqpul7mWfyGCrUK4peH1lLAu2wsWDxP25Uaj+zmbkabebG6LDuMNdrkMFRIiw2A==',
+                'SecurityCredential' => 'VJcmoCOiZLyk+YtBVwj6aKcoqy6ho/BsLki3l19hjMeasysWWUc8YB96VvvBMWNfiYVjcfV9JJPt1OVIRLnXIFN3VBhX9h0Ocp0TSxs0u6E5xSbKNLulV2Yp0XM+RmNQQgx4w0Ql8GCcELHNnc/1RVBMX7SBgjfTt6/E4E6yUTvBzK3WsjabXg4NUXm7c0uYw7yS43GDku1nFZJkeNXvW148tCF+FticKC1MesD1Dm7+T+syS+SmbqMc37t8I4CciMMwbRszmbPUwPuAeGVlC9S8iZn1DEztfcLbU9j5zglVMrFw25o0OtEhaaX0jTYJ0plyobicURGIoLXe2fIc1w==',
                 'QueueTimeOutURL' => $this->url->link('deliversystem/deliversystem/paymentsresult', '', 'SSL'),
                 'ResultURL' => $this->url->link('deliversystem/deliversystem/paymentstimeout', '', 'SSL'),
                 'TransactionID' => $data['TransactionID'],
