@@ -859,7 +859,7 @@ class ControllerApiCustomerMpesa extends Controller {
             $curl_post_data = array(
                 'CommandID' => 'TransactionStatusQuery',
                 'PartyA' => 600997,
-                'IdentifierType' => 1,
+                'IdentifierType' => 4,
                 'Remarks' => $data['Remarks'],
                 'Initiator' => 'testapi',
                 'SecurityCredential' => 'VJcmoCOiZLyk+YtBVwj6aKcoqy6ho/BsLki3l19hjMeasysWWUc8YB96VvvBMWNfiYVjcfV9JJPt1OVIRLnXIFN3VBhX9h0Ocp0TSxs0u6E5xSbKNLulV2Yp0XM+RmNQQgx4w0Ql8GCcELHNnc/1RVBMX7SBgjfTt6/E4E6yUTvBzK3WsjabXg4NUXm7c0uYw7yS43GDku1nFZJkeNXvW148tCF+FticKC1MesD1Dm7+T+syS+SmbqMc37t8I4CciMMwbRszmbPUwPuAeGVlC9S8iZn1DEztfcLbU9j5zglVMrFw25o0OtEhaaX0jTYJ0plyobicURGIoLXe2fIc1w==',
