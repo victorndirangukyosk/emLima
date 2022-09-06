@@ -308,27 +308,6 @@
 
                                     <?php endif ?> 
 
-                                    
-                                    <!-- <td class="text-left">
-                                        <?php if ($sort == 'city') { ?>
-                                        <a href="<?php echo $sort_city; ?>" class="<?php echo strtolower($order); ?>">City</a>
-                                        <?php } else { ?>
-                                        <a href="<?php echo $sort_city; ?>"><?= $column_city ?></a>
-                                        <?php } ?>
-                                    </td> -->
-                                    <td class="text-left">
-                                        <?php if ($sort == 'status') { ?>
-                                        <a href="<?php echo $sort_status; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_status; ?></a>
-                                        <?php } else { ?>
-                                        <a href="<?php echo $sort_status; ?>"><?php echo $column_status; ?></a>
-                                        <?php } ?>
-                                    </td>
-                                    
-                                    <?php if ($this->user->isVendor()) { ?>
-                                    <td class="text-left">Vendor Order Status</td>
-                                    <?php } ?>
-                                    
-
                                     <!-- <td class="text-right"><?php if ($sort == 'o.total') { ?>
                                         <a href="<?php echo $sort_total; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_total; ?></a>
                                         <?php } else { ?>
@@ -361,8 +340,6 @@
                                         <?php } ?>
                                     </td>
 
-
-                                    <td class="text-left">Delivery Timeslot</td>
                                 </tr>
                             </thead>
                             <tbody>
@@ -388,44 +365,7 @@
                                             <?php echo $order['shipping_address']  ; ?>
                                         </td>
 
-                                    <?php endif ?> 
-                                    <!-- <td class="text-left"><?php echo $order['city']; ?></td> -->
-                                    <!-- <td class="text-left"><?php echo $order['status']; ?></td> -->
-                                    <?php if (!$this->user->isVendor()) { ?>
-                                    <td class="text-left">
-                                                <?php 
-                                                $disabled = NULL;
-                                                if($order['order_status_id'] == 5 || $order['order_status_id'] == 6) {
-                                                $disabled = 'disabled';
-                                                } ?>
-                                                <select name="order_status_id" id="input-order-status<?php echo $order['order_id']; ?>" class="form-control" <?php echo $disabled; ?> >
-						  <?php foreach ($order['all_order_statuses'] as $order_statuses) { ?>
-						  <?php if ($order_statuses['order_status_id'] == $order['order_status_id']) { ?>
-						  <option value="<?php echo $order_statuses['order_status_id']; ?>" selected="selected"><?php echo $order_statuses['name']; ?></option>
-						  <?php } else { ?>
-						  <option value="<?php echo $order_statuses['order_status_id']; ?>"><?php echo $order_statuses['name']; ?></option>
-						  <?php } ?>
-						  <?php } ?>
-						</select>
-                                    <!--<h3 class="my-order-title label" style="background-color: #<?= $order['order_status_color']; ?>;display: block;line-height: 2;" id="order-status" ><?php echo $order['status']; ?></h3>-->
-                                    </td>
-                                   <?php } ?>
-                                   <?php if($this->user->isVendor()) { ?>
-                                   <td class="text-left"><?php echo $order['status']; ?></td>
-                                   <?php } ?>
-                                   <?php if($this->user->isVendor()) { ?>
-                                   <td class="text-left">
-                                       <select name="vendor_order_status_id" id="input-vendor-order-status<?php echo $order['order_id']; ?>" class="form-control">
-                                           <option>Vendor Order Status</option>
-                                          <?php foreach ($vendor_order_statuses as $vendor_order_status) { ?>
-				          <?php if ($vendor_order_status['order_status_id'] == $order['vendor_order_status_id']) { ?>
-				          <option value="<?php echo $vendor_order_status['order_status_id']; ?>" selected="selected"><?php echo $vendor_order_status['name']; ?></option>
-				          <?php } else { ?>
-                                          <option value="<?php echo $vendor_order_status['order_status_id']; ?>"><?php echo $vendor_order_status['name']; ?></option>
-				          <?php } } ?> 
-				       </select>
-                                   </td>
-                                   <?php } ?>
+                                    <?php endif ?>                                    
                                     <?php if($this->user->isVendor()) { ?>
                                     <td class="text-right"><?php echo $order['vendor_total']; /*echo $order['total'];*/ ?></td>
                                     <?php } else { ?>
@@ -433,7 +373,6 @@
                                     <?php } ?>
                                     <td class="text-left"><?php echo $order['date_added']; ?></td>
                                     <td class="text-right"><?php echo $order['delivery_date']; ?></td>
-                                    <td class="text-left"><?php echo $order['delivery_timeslot']; ?></td>
                                 </tr>
                                 <?php } ?>
                                 <?php } else { ?>
