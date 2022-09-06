@@ -3,27 +3,6 @@
 <div id="content">
     <div class="page-header">
         <div class="container-fluid">
-            <div class="pull-right">
-                 <?php if($this->user->hasPermission('modify', 'sale/order')){ ?>
-
-                <button type="" id="button-status-update" form="form-order" data-toggle="tooltip" title="<?php echo $button_status_update; ?>" class="btn btn-default"><i class="fa fa-refresh"></i></button>
-                <button type="" id="button-status-update-transit" form="form-order" data-toggle="tooltip" title="<?php echo $button_status_update_transit; ?>" class="btn btn-default"><i class="fa fa-cubes"></i></button>
-                <?php if (!$this->user->isVendor()): ?>
-                        <button type="" id="button-shipping" form="form-order" formaction="<?php echo $shipping; ?>" data-toggle="tooltip" title="<?php echo $button_shipping_print; ?>" class="btn btn-default"><i class="fa fa-truck"></i></button>
-                <?php endif ?>  
-
-                <button type="" id="button-invoice" form="form-order" formaction="<?php echo $invoice; ?>" data-toggle="tooltip" title="<?php echo $button_invoice_print; ?>" class="btn btn-default"><i class="fa fa-print"></i></button>
-                <button type="" id="button-invoice-pdf" form="form-order" formaction="<?php echo $invoicepdf; ?>" data-toggle="tooltip" title="Download Invoice" class="btn btn-default"><i class="fa fa-print"></i></button>
-                <button type="button" onclick="downloadOrderStickers();" data-toggle="tooltip" title="" class="btn btn-success" data-original-title="Orders List"><i class="fa fa-download"></i></button>
-                <button type="button" onclick="downloadOrders();" data-toggle="tooltip" title="" class="btn btn-success" data-original-title="Orders Excel"><i class="fa fa-download"></i></button>
-                <button type="button" onclick="downloadOrdersonsolidated();" data-toggle="tooltip" title="" class="btn btn-success" data-original-title="Consolidated Excel"><i class="fa fa-download"></i></button>
-                <button type="button" onclick="downloadOrdersCalculationSheet();" data-toggle="tooltip" title="" class="btn btn-warning" data-original-title="Products with Prices Excel"><i class="fa fa-download"></i></button>
-               
-                 <?php } ?>  
-               <?php if (!$this->user->isVendor()): ?>
-                        <!-- <a href="<?php echo $add; ?>" data-toggle="tooltip" title="<?php echo $button_add; ?>" class="btn btn-success"><i class="fa fa-plus"></i></a> -->
-                <?php endif ?>  
-            </div>
             <h1><?php echo $heading_title; ?></h1>
             <ul class="breadcrumb">
                 <?php foreach ($breadcrumbs as $breadcrumb) { ?>
@@ -300,20 +279,6 @@
                 </div>
                 <form method="post" enctype="multipart/form-data" target="_blank" id="form-order">
                     <div class="table-responsive">
-
-                       <?php if ($this->user->hasPermission('access', 'amitruck/amitruckquotes'))    { ?>
-                     <div class="btn-group" >                            
-                         <div class="row">
-                             <div class="col-sm-8">
-                                        <input disabled type="text" name="order_delivery_count" value="" placeholder="No Order Selected" id="input-grand-total" class="form-control" />
-                             </div>  
-                             <div class="col-sm-2">
-                                    <button type="button" id="button-bulkdeliveryrequest" class="btn btn-primary" onclick="createDeliveryRequest()"  data-toggle="modal" data-dismiss="modal" data-target="" title="Request Delivery">  Request Bulk Delivery</button>
-                             </div>    
-                         </div>                             
-                            
-                      </div>
-                       <?php } ?>
                       <br>
                       <br>
 
@@ -568,9 +533,7 @@
                                        </a> 
                                        <?php } ?>
                                        
-                                        <a href="#" target="_blank" data-toggle="tooltip" title="Products List" data-orderid="<?= $order['order_id'] ?>" data-order-product-list="<?php echo $order['products_list']; ?>" id="download_product_list">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#51AB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg>
-                                        </a>
+                                        
                                         <?php } ?>
                                         
                                         <?php if(!$this->user->isVendor() && $order['order_status_id'] == 5) { ?>
@@ -1102,46 +1065,6 @@
                                     </div>  
                                       </br>
                                     <!-- Text input-->
-                                    <div class="store-form">
-                                        <form id="driverModal-new-form" action="" method="post" enctype="multipart/form-data">
-                                            <div class="form-row">
-                                                 <div class="form-row">
-                                                <div class="form-group">
-                                                    <label> Vehicle Number </label>
-                                                    <div class="col-md-12" >
-                                                        <div class="pull-right">
-                                                        <button type="button" id="dispatchplanning" data-url="<?php echo $dispatchplanning; ?>" data-toggle="tooltip" title="" class="btn btn-primary" data-original-title="Dispatch Planning"><i class="fa fa-random"></i></button>
-                                                        </div>
-                                                    <div style="width:88%;margin-right:10px;">
-                                                        <select  name="order_vehicle_numbers_two" id="order_vehicle_numbers_two" class="form-control" required="">
-                                                        </select> 
-                                                    </div>
-                                                       
-                                                    <br/> </div>
-                                                </div>
-                                            </div>
-
-                                                 <div class="form-row">
-                                                <div class="form-group" id="div_deliverycharge">
-                                                    <label> Delivery Charge </label>
-
-                                                    <div class="col-md-12">
-                                                        <input id="order_delivery_charge_two" maxlength="10" required style="max-width:100% ;" name="order_delivery_charge_two" type="number" placeholder="Delivery Charge" class="form-control input-md" required>
-                                                    <br/> </div>
-                                                </div>
-
-                                                <div class="form-group">
-                                                    <div class="col-md-6"> 
-                                                        <button type="button" class="btn btn-grey" data-dismiss="modal" style="width:30%; float: left; margin-top: 10px; height: 45px;border-radius:20px">Close</button>
-                                                    </div>
-                                                    <div class="col-md-6"> 
-                                                        <button id="driver-new-button" name="driver-new-button" onclick="savedriverdetails_new_two()" type="button" class="btn btn-lg btn-success"  style="width:65%; float:right;  margin-top: 10px; height: 45px;border-radius:20px">Save</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>  
-                                </div>
                             </div>
                            
                             <!-- next div code -->
@@ -1199,53 +1122,6 @@
                                     </div>  
                                       </br>
                                     <!-- Text input-->
-                                    <div class="store-form">
-                                        <form id="driverModal-form" action="" method="post" enctype="multipart/form-data">
-                                            <div class="form-row">
-                                                 <div class="form-row">
-                                                <div class="form-group">
-                                                    <label> Vehicle Number </label>
-                                                    <div class="col-md-12" >
-                                                        <!--<div class="pull-right">
-                                                        <button id="new-vehicle-button" name="new-vehicle-button" type="button" data-toggle="modal" data-dismiss="modal" title="add new vehicle" data-target="#vehicleModal" class="btn btn-lg btn-success"><i class="fa fa-plus"></i></button>
-                                                        </div>-->
-                                                        <div class="pull-right">
-                                                        <button type="button" id="dispatchplanning_new" data-url="<?php echo $dispatchplanning; ?>" data-toggle="tooltip" title="" class="btn btn-primary" data-original-title="Dispatch Planning"><i class="fa fa-random"></i></button>
-                                                        </div>
-                                                        <!--<input id="order_vehicle_number" maxlength="10" required style="max-width:100% ;" name="order_vehicle_number" type="text" placeholder="Vehicle Number" class="form-control input-md" required>-->
-                                                    <div style="width:88%;margin-right:10px;" >
-                                                        <input id="order_id"   name="order_id" type="hidden"  class="form-control input-md" required>
-                                                        <input id="order_delivery_date"   name="order_delivery_date" type="hidden"  class="form-control input-md" required>
-                                                        <input id="updateDeliveryDate"   name="updateDeliveryDate" type="hidden" value=0 class="form-control input-md" required>
-                                                        <select  name="order_vehicle_numbers" id="order_vehicle_numbers" class="form-control" required="">
-                                                        </select> 
-                                                    </div>
-                                                       
-                                                    <br/> </div>
-                                                </div>
-                                            </div>
-
-                                                 <div class="form-row">
-                                                <div class="form-group" id="div_deliverycharge">
-                                                    <label> Delivery Charge </label>
-
-                                                    <div class="col-md-12">
-                                                        <input id="order_delivery_charge" maxlength="10" required style="max-width:100% ;" name="order_delivery_charge" type="number" placeholder="Delivery Charge" class="form-control input-md" required>
-                                                    <br/> </div>
-                                                </div>
-
-                                                <div class="form-group">
-                                                    <div class="col-md-6"> 
-                                                        <button type="button" id="driver-buttons" name="driver-buttons" onclick="savedriverdetail_new()" class="btn btn-lg btn-success" data-dismiss="modal" style="width:50%; float: left;  margin-top: 10px; height: 45px;border-radius:20px">Save & Close</button>
-                                                    </div>
-                                                    <div class="col-md-6"> 
-                                                        <button id="driver-button" name="driver-button" onclick="savedriverdetails_new()" type="button" class="btn btn-lg btn-success"  style="width:65%; float:right;  margin-top: 10px; height: 45px;border-radius:20px">Save & Print Invoice</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>  
-                                </div>
                             </div>
                            
                             <!-- next div code -->
@@ -1450,136 +1326,6 @@
                     </div> <!-- /.modal -->
 
 
- <!---modal popup--->
-                    <div class="phoneModal-popup">
-        <div class="modal fade" id="vehicleModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content"  >
-                    <div class="modal-body"  style="height:525px;">
-                        <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
-                        <div class="store-find-block">
-                            <div class="mydivsss">
-                                <div class="store-find">
-                                    <div class="store-head">
-                                        <h2>  Save Vehicle     </h2>
-                                          </br> 
-                                    </div>
-                                    <div id="vehicleModal-message" style="color: red;text-align:center; font-size: 15px;" >
-                                    </div>
-                                    <div id="vehicleModal-success-message" style="color: green; ; text-align:center; font-size: 15px;">
-                                    </div>  
-                                      </br>
-                                    <!-- Text input-->
-                                    <div class="store-form">
-                                        <form id="vehicleModal-form" action="" method="post" enctype="multipart/form-data">
- 
-
-                                            
-                                            
-
-                                             <div class="form-group required col-md-12">
-                        <label class="col-sm-4 control-label" for="input-make"><?php echo $entry_make; ?></label>
-                        <div class="col-sm-8">
-                          <input type="text" name="make" value="<?php echo $make; ?>" placeholder="<?php echo $entry_make; ?>" id="input-make" class="form-control" />
-                          <?php if ($error_make) { ?>
-                          <div class="text-danger"><?php echo $error_make; ?></div>
-                          <?php } ?>
-                        </div>
-                      </div>
-                      <br>
-
-                      <div class="form-group required col-md-12">
-                        <label class="col-sm-4 control-label" for="input-model"><?php echo $entry_model; ?></label>
-                        <div class="col-sm-8">
-                          <input type="text" name="model" value="<?php echo $model; ?>" placeholder="<?php echo $entry_model; ?>" id="input-model" class="form-control" />
-                          <?php if ($error_model) { ?>
-                          <div class="text-danger"><?php echo $error_model; ?></div>
-                          <?php } ?>
-                        </div>
-                      </div>
-                      <br>
-
-                      <div class="form-group required col-md-12">
-                        <label class="col-sm-4 control-label" for="input-registration-number"><?php echo $entry_registration_number; ?></label>
-                        <div class="col-sm-8">
-                          <input type="text" name="registration_number" value="<?php echo $registration_number; ?>" placeholder="<?php echo $entry_registration_number; ?>" id="input-registration-number" class="form-control" />
-                          <?php if ($error_registration_number) { ?>
-                          <div class="text-danger"><?php echo $error_registration_number; ?></div>
-                          <?php  } ?>
-                        </div>
-                      </div>
-                      <br>
-
-                      <div class="form-group required col-md-12">
-                        <label class="col-sm-4 control-label" for="input-registration-date"><?php echo $entry_registration_date; ?></label>
-                        <div class="col-sm-8">
-                          <div class="input-group date">  
-                          <input type="text" name="registration_date" value="<?php echo $registration_date; ?>" placeholder="<?php echo $entry_registration_date; ?>" id="input-registration-date" data-date-format="YYYY-MM-DD" class="form-control" />
-                          <span class="input-group-btn">
-                                    <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
-                                </span></div>
-                          <?php if ($error_registration_date) { ?>
-                          <div class="text-danger"><?php echo $error_registration_date; ?></div>
-                          <?php  } ?>
-                        </div>
-                      </div>
-                      <br>
-
-                      <div class="form-group required col-md-12">
-                        <label class="col-sm-4 control-label" for="input-registration-validity-upto"><?php echo $entry_registration_validity_upto; ?></label>
-                        <div class="col-sm-8">
-                            <div class="input-group date">
-                                <input type="text" name="registration_validity_upto" value="<?php echo $registration_validity_upto; ?>" placeholder="<?php echo $entry_registration_validity_upto; ?>" data-date-format="YYYY-MM-DD" id="registration_validity_upto" class="form-control" />
-                                <span class="input-group-btn">
-                                    <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
-                                </span></div>
-                        <?php if ($error_registration_validity_upto) { ?>
-                          <div class="text-danger"><?php echo $error_registration_validity_upto; ?></div>
-                        <?php  } ?>
-                        </div>
-                      </div>
-                      <!-- start -->
-                      
-
-                      <!-- end -->
-                      <div class="form-group col-md-12">
-                        <label class="col-sm-4 control-label" for="input-status"><?php echo $entry_status; ?></label>
-                        <div class="col-md-8" style="max-width: 250px">
-                          <select name="status" id="input-status" class="form-control">
-                            <?php if (!($status)) { ?>
-                            <option value="1" selected="selected">Enabled</option>
-                            <option value="0">Disabled</option>
-                            <?php } else { ?>
-                            <option value="1">Enabled</option>
-                            <option value="0" selected="selected">Disabled</option>
-                            <?php } ?>
-                          </select>
-                        </div>
-                      </div>
-
-                       <div class="form-group">
-                                                    <div class="col-md-6"> 
-                                                        <button type="button" id="vehicle-buttons" name="vehicle-buttons" onclick="savevehicledetails()" class="btn btn-lg btn-success"  style="width:50%; float: left;  margin-top: 10px; height: 45px;border-radius:20px">Save & Close</button>
-                                                    </div>
-                                                    <div class="col-md-6"> 
-                                                        <button id="vehicle-button" name="vehicle-button" onclick="closevehicledetails()" type="button" class="btn btn-lg btn-success"  style="width:65%; float:right;  margin-top: 10px; height: 45px;border-radius:20px">Close</button>
-                                                    </div>
-                                                </div>
-
-                                        </form>
-                                    </div>  
-                                </div>
-                            </div>
-                           
-                            <!-- next div code -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!--modal popup-->
 <script  type="text/javascript">
 $('a[id^=\'download_product_list\']').on('click', function (e) {
 e.preventDefault();
