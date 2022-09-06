@@ -728,4 +728,12 @@ class ControllerSalePaybill extends Controller {
         $this->response->setOutput($this->load->view('sale/paybill.tpl', $data));
     }
 
+    public function getUserByName($name) {
+        if ($name) {
+            $query = $this->db->query('SELECT * FROM `' . DB_PREFIX . "user` u WHERE CONCAT(u.firstname,' ',u.lastname) LIKE '" . $this->db->escape($name) . "%'");
+
+            return $query->row['user_id'];
+        }
+    }
+
 }
