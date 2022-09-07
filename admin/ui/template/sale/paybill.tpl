@@ -291,6 +291,8 @@
                                         <?php } else { ?>
                                         <a href="<?php echo $sort_total; ?>"><?php echo $column_total; ?></a>
                                         <?php } ?></td> -->
+                                    <td class="text-center">Transaction ID</td>
+                                    <td class="text-center">Transaction Amount</td>
                                     <td class="text-center"><?php if ($sort == 'o.total') { ?>
                                         <a href="<?php echo $sort_total; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_total; ?></a>
                                         <?php } else { ?>
@@ -342,7 +344,9 @@
                                             <?php echo $order['shipping_address']  ; ?>
                                         </td>
 
-                                    <?php endif ?>                                    
+                                    <?php endif ?>
+                                    <td class="text-center"><?php echo $order['transaction_id']; ?></td>
+                                    <td class="text-center"><?php echo $order['transaction_amount']; ?></td>
                                     <?php if($this->user->isVendor()) { ?>
                                     <td class="text-center"><?php echo $order['vendor_total']; /*echo $order['total'];*/ ?></td>
                                     <?php } else { ?>

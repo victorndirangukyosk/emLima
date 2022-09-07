@@ -380,6 +380,8 @@ class ControllerSalePaybill extends Controller {
                 'paid' => $result['paid'],
                 'amount_partialy_paid' => $result['amount_partialy_paid'],
                 'delivery_charges' => $result['delivery_charges'],
+                'transaction_id' => $result['transaction_id'],
+                'transaction_amount' => $result['transaction_amount'],
             ];
         }
 
