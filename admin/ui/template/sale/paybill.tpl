@@ -52,18 +52,6 @@
                                 </div>
                             <?php endif ?> 
                             
-                            
-                            
-                            <!--<div class="form-group">
-                                <label class="control-label" for="input-customer"><?= $entry_city ?></label>
-                                <input type="text" name="filter_city" value="<?php echo $filter_city; ?>" class="form-control" />
-                            </div>-->
-
-                             <!--<div class="form-group">
-                                <label class="control-label" for="input-name"><?= $column_delivery_method ?></label>
-                                <input type="text" name="filter_delivery_method" value="<?php echo $filter_delivery_method; ?>" placeholder="<?php echo $column_delivery_method; ?>" id="input-name" class="form-control" />
-                            </div>-->
-                            
                              <div class="form-group">
                              
                                 <label class="control-label" for="input-order-type">Order Type</label>
@@ -136,15 +124,6 @@
                                     <?php } ?>
                                 </select>
                             </div>
-                            <!--<div class="form-group">
-                                <label class="control-label" for="input-total"><?php echo $entry_total; ?></label>
-                                <input type="text" name="filter_total" value="<?php echo $filter_total; ?>" placeholder="<?php echo $entry_total; ?>" id="input-total" class="form-control" />
-                            </div>-->
-
-                            <!--<div class="form-group">
-                                <label class="control-label" for="input-name"><?= $entry_store_name ?></label>
-                                <input type="text" name="filter_store_name" value="<?php echo $filter_store_name; ?>" placeholder="<?php echo $entry_store_name; ?>" id="input-name" class="form-control" />
-                            </div>-->
 
                             <?php if (!$this->user->isVendor()): ?>
                                 <div class="form-group">
@@ -288,17 +267,16 @@
                                     <td style="width: 1px;" class="text-center">
                                         <input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);"  name="selected[]"/>
                                     </td>
-                                    <td class="text-right"><?php if ($sort == 'o.order_id') { ?>
+                                    <td class="text-center"><?php if ($sort == 'o.order_id') { ?>
                                         <a href="<?php echo $sort_order; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_order_id; ?></a>
                                         <?php } else { ?>
                                         <a href="<?php echo $sort_order; ?>"><?php echo $column_order_id; ?></a>
                                         <?php } ?></td>
 
                                     <?php if (!$this->user->isVendor()): ?>
-                                    <td class="text-center">Vendor</td>
 
 
-                                        <td style="width: 3px;" class="text-left">
+                                        <td style="width: 3px;" class="text-center">
                                             <?php if ($sort == 'customer') { ?>
                                             <a href="<?php echo $sort_customer; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_customer; ?></a>
                                             <?php } else { ?>
@@ -313,12 +291,12 @@
                                         <?php } else { ?>
                                         <a href="<?php echo $sort_total; ?>"><?php echo $column_total; ?></a>
                                         <?php } ?></td> -->
-                                    <td class="text-right"><?php if ($sort == 'o.total') { ?>
+                                    <td class="text-center"><?php if ($sort == 'o.total') { ?>
                                         <a href="<?php echo $sort_total; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_total; ?></a>
                                         <?php } else { ?>
                                         <a href="<?php echo $sort_total; ?>"><?php echo $column_total; ?></a>
                                         <?php } ?></td>
-                                    <td class="text-left">
+                                    <td class="text-center">
                                         <?php if ($sort == 'o.date_added') { ?>
                                         <a href="<?php echo $sort_date_added; ?>" class="<?php echo strtolower($order); ?>">Order Date</a>
                                         <?php } else { ?>
@@ -332,7 +310,7 @@
                                         <?php } ?></td> -->
 
 
-                                     <td class="text-left">
+                                     <td class="text-center">
                                         <?php if ($sort == 'o.delivery_date') { ?>
                                         <a href="<?php echo $sort_delivery_date; ?>" class="<?php echo strtolower($order); ?>">Delivery Date</a>
                                         <?php } else { ?>
@@ -355,9 +333,8 @@
                                         <input type="hidden" name="order_status1[]" value="<?php echo $order['order_status_id']; ?>" />
                                         <input type="hidden" name="order_delivery_ids[]" value="<?php echo $order['delivery_id']; ?>" />
                                     </td>
-                                    <td class="text-left"><?php echo $order['order_prefix'].''.$order['order_id']; ?></td>
+                                    <td class="text-center"><?php echo $order['order_prefix'].''.$order['order_id']; ?></td>
                                     <?php if (!$this->user->isVendor()): ?>
-                                    <td class="text-left"><?php echo $order['vendor_name']; ?></td>
 
                                         <td class="text-left" style="width:200px">
                                             <?php echo $order['customer']; ?>  <br/>
@@ -367,12 +344,12 @@
 
                                     <?php endif ?>                                    
                                     <?php if($this->user->isVendor()) { ?>
-                                    <td class="text-right"><?php echo $order['vendor_total']; /*echo $order['total'];*/ ?></td>
+                                    <td class="text-center"><?php echo $order['vendor_total']; /*echo $order['total'];*/ ?></td>
                                     <?php } else { ?>
-                                    <td class="text-right"><?php /*echo $order['sub_total'];*/ echo $order['total']; ?></td>
+                                    <td class="text-center"><?php /*echo $order['sub_total'];*/ echo $order['total']; ?></td>
                                     <?php } ?>
-                                    <td class="text-left"><?php echo $order['date_added']; ?></td>
-                                    <td class="text-right"><?php echo $order['delivery_date']; ?></td>
+                                    <td class="text-center"><?php echo $order['date_added']; ?></td>
+                                    <td class="text-center"><?php echo $order['delivery_date']; ?></td>
                                 </tr>
                                 <?php } ?>
                                 <?php } else { ?>
