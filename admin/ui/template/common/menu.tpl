@@ -820,6 +820,15 @@
 
             </ul>
 
+                 <ul>  
+
+            <?php if($preturn_report_payment_transaction_history) { ?>
+                    <li><a href="<?php echo $report_payment_transaction_history; ?>">Payment Trans History</a></li>
+                    <?php } ?>
+
+            </ul>
+                    
+
             </li>
             <?php } ?>
 
