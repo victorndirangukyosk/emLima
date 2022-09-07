@@ -186,6 +186,7 @@ class ControllerCommonMenu extends Controller {
         $data['report_customer_credit'] = $this->url->link('report/customer_credit', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_customer_statement'] = $this->url->link('report/customer_order/statement', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_customer_financial_statement'] = $this->url->link('report/customer_financial_statement', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_payment_transaction_history'] = $this->url->link('report/payment_transaction_history', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_customer_boughtproducts'] = $this->url->link('report/customer_boughtproducts', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_products_consumption'] = $this->url->link('report/products_consumption', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_customer_order_pattern'] = $this->url->link('report/customer_order_pattern', 'token=' . $this->session->data['token'], 'SSL');
@@ -346,6 +347,7 @@ class ControllerCommonMenu extends Controller {
         $data['preturn_report_order_product_missing_products'] = $this->user->hasPermission('access', 'report/order_product_missing_products');
         $data['preturn_report_missing_products_revenue'] = $this->user->hasPermission('access', 'report/missing_products_revenue');
         $data['preturn_report_product_received_sold'] = $this->user->hasPermission('access', 'report/product_received_sold');
+        $data['preturn_report_payment_transaction_history'] = $this->user->hasPermission('access', 'report/payment_transaction_history');
         $data['preturn_report_receivables_summary'] = $this->user->hasPermission('access', 'report/receivables_summary');
         $data['preturn_report_receivables_ageing'] = $this->user->hasPermission('access', 'report/receivables_ageing');
         $data['preturn_report_payment_receivables'] = $this->user->hasPermission('access', 'report/payment_receivables');
@@ -631,6 +633,7 @@ class ControllerCommonMenu extends Controller {
         $data['report_customer_credit'] = $this->url->link('report/customer_credit', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_customer_statement'] = $this->url->link('report/customer_order/statement', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_customer_financial_statement'] = $this->url->link('report/customer_financial_statement', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_payment_transaction_history'] = $this->url->link('report/payment_transaction_history', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_customer_boughtproducts'] = $this->url->link('report/customer_boughtproducts', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_customer_order_pattern'] = $this->url->link('report/customer_order_pattern', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_customer_order_count'] = $this->url->link('report/customer_order_count', 'token=' . $this->session->data['token'], 'SSL');
@@ -728,6 +731,7 @@ class ControllerCommonMenu extends Controller {
         $data['preturn_customer_credit'] = $this->user->hasPermission('access', 'report/customer_credit');
         $data['preturn_customer_statement'] = $this->user->hasPermission('access', 'report/customer_statement');
         $data['preturn_customer_financial_statement'] = $this->user->hasPermission('access', 'report/customer_financial_statement');
+        $data['preturn_payment_transaction_history'] = $this->user->hasPermission('access', 'report/payment_transaction_history');
         $data['preturn_customer_boughtproducts'] = $this->user->hasPermission('access', 'report/customer_boughtproducts');
         $data['preturn_customer_order_pattern'] = $this->user->hasPermission('access', 'report/customer_order_pattern');
         $data['preturn_customer_order_count'] = $this->user->hasPermission('access', 'report/customer_order_count');

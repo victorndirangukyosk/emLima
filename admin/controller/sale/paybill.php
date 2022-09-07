@@ -307,15 +307,14 @@ class ControllerSalePaybill extends Controller {
             'limit' => $this->config->get('config_limit_admin'),
         ];
 
-        $order_total = $this->model_sale_order->getTotalOrders($filter_data);
+        $order_total = $this->model_sale_order->getPayBillTotalOrders($filter_data);
 
-        $results = $this->model_sale_order->getOrders($filter_data);
+        $results = $this->model_sale_order->getPayBillOrders($filter_data);
 
         foreach ($results as $result) {
             $sub_total = 0;
 
             $totals = $this->model_sale_order->getOrderTotals($result['order_id']);
-            $missing_products = $this->model_sale_order->getMissingProductsByOrderId($result['order_id']);
             $store_details = $this->model_vendor_vendor->getVendorByStoreId($result['store_id']);
             $vendor_details = $this->model_vendor_vendor->getVendorDetails($store_details['vendor_id']);
 
@@ -381,7 +380,8 @@ class ControllerSalePaybill extends Controller {
                 'paid' => $result['paid'],
                 'amount_partialy_paid' => $result['amount_partialy_paid'],
                 'delivery_charges' => $result['delivery_charges'],
-                'missing_products_count' => count($missing_products),
+                'transaction_id' => $result['transaction_id'],
+                'transaction_amount' => $result['transaction_amount'],
             ];
         }
 
