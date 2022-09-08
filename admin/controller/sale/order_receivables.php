@@ -285,6 +285,7 @@ class ControllerSaleOrderReceivables extends Controller {
             } else {
                 // $result_success['company_name'] = "(NA)";
             }
+            $result_success['transaction_id'] = $this->model_sale_order->getOrderTransactionId($result_success['order_id']);
             $data['orders_success'][] = [
                 'order_id' => $result_success['order_id'],
                 'customer_id' => $result_success['customer_id'],
