@@ -10354,6 +10354,7 @@ class ModelReportExcel extends Model {
         foreach ($results as $result) {
             // $amount=$amount+$result['total'];
             $totals = $this->model_sale_order->getOrderTotals($result['order_id']);
+            $result['transaction_id'] = $this->model_sale_order->getOrderTransactionId($result['order_id']);
 
             // echo "<pre>";print_r($totals);die;
             foreach ($totals as $total) {
