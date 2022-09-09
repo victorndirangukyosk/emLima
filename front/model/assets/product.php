@@ -708,8 +708,6 @@ class ModelAssetsProduct extends Model {
             }
         }
 
-
-
         $log = new Log('error.log');
         $log->write($store_id);
         $this->db->select('product_to_store.*,product_description.*,product.unit,product.model,product.image,product.produce_type,store.name as store_name', false);
