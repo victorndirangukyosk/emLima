@@ -625,11 +625,18 @@ class ControllerSaleOrderReceivables extends Controller {
             } else {
                     // check for duplicate transaction
                     $valid="true";
-                   $valid= $this->model_sale_order_receivables->checkPaymentReceivedEntery($this->request->post['transaction_id']);
-                    if($valid=="false")
+                   $valid= $this->model_sale_order_receivables->checkPaymentReceivedEntery($this->request->post['transaction_id'],$this->request->post['paid_to']);
+                    if($valid=="111")
                     {
                         $data['error'] = "Duplicate Transaction ID Found";
                         $data['error_code'] = "111";
+                        $data['status'] = true;
+                        return;
+                    }
+                    else if ($valid=="222")
+                    {
+                        $data['error'] = "Transaction ID not found in the received statement";
+                        $data['error_code'] = "222";
                         $data['status'] = true;
                         return;
                     }
@@ -712,11 +719,18 @@ class ControllerSaleOrderReceivables extends Controller {
 
                    // check for duplicate transaction
                    $valid="true";
-                   $valid= $this->model_sale_order_receivables->checkPaymentReceivedEntery($transaction_id);
-                    if($valid=="false")
+                   $valid= $this->model_sale_order_receivables->checkPaymentReceivedEntery($transaction_id,$paid_to);
+                    if($valid=="111")
                     {
                         $data['error'] = "Duplicate Transaction ID Found";
                         $data['error_code'] = "111";
+                        $data['status'] = true;
+                        return;
+                    }
+                    else if ($valid=="222")
+                    {
+                        $data['error'] = "Transaction ID not found in the received statement";
+                        $data['error_code'] = "222";
                         $data['status'] = true;
                         return;
                     }

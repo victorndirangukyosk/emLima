@@ -56,10 +56,7 @@
                                 <input type="text" name="filter_customer" value="<?php echo $filter_customer; ?>" placeholder="<?php echo $entry_customer; ?>" id="input-customer" class="form-control" />
                             </div>
 
-                            <div class="form-group">
-                                <label class="control-label" for="input-order-id"><?php echo $entry_transaction_id; ?></label>
-                                <input type="text" name="filter_transaction_id" value="<?php echo $filter_transaction_id; ?>" placeholder="<?php echo $entry_transaction_id; ?>" id="input-order-id" class="form-control" />
-                            </div>
+                            
 <div class="form-group">
                                 <label class="control-label" for="input-date-order">Order Date</label>
                                 <div class="input-group date">
@@ -284,11 +281,7 @@
                 url += '&filter_order_id=' + encodeURIComponent(filter_order_id);
             }
 
-            var filter_transaction_id = $('input[name=\'filter_transaction_id\']').val();
-
-            if (filter_transaction_id) {
-                url += '&filter_transaction_id=' + encodeURIComponent(filter_transaction_id);
-            }
+            
 
 
             var filter_customer = $('input[name=\'filter_customer\']').val();
@@ -348,7 +341,7 @@ var filter_date_delivery = $('input[name=\'filter_date_delivery\']').val();
                 url += '&filter_date_modified=' + encodeURIComponent(filter_date_modified);
             }
 
-    if(filter_date_order=='' && filter_date_delivery=='' && filter_order_id=='' && filter_transaction_id=='')
+    if(filter_date_order=='' && filter_date_delivery=='' && filter_order_id==''  )
     {
              if((filter_date_modified=='' || filter_date_added==''))
             {
@@ -478,11 +471,7 @@ function excel() {
             url += '&filter_order_id=' + encodeURIComponent(filter_order_id);
         }
 
-        var filter_transaction_id = $('input[name=\'filter_transaction_id\']').val();
-
-        if (filter_transaction_id) {
-            url += '&filter_transaction_id=' + encodeURIComponent(filter_transaction_id);
-        }
+       
 
 
         var filter_customer = $('input[name=\'filter_customer\']').val();
@@ -539,7 +528,7 @@ var filter_date_delivery = $('input[name=\'filter_date_delivery\']').val();
             url += '&filter_date_modified=' + encodeURIComponent(filter_date_modified);
         }
    
-   if(filter_date_order=='' && filter_date_delivery=='' && filter_order_id=='' && filter_transaction_id=='')
+   if(filter_date_order=='' && filter_date_delivery=='' && filter_order_id==''  )
     {
              if((filter_date_modified=='' || filter_date_added==''))
             {

@@ -499,12 +499,12 @@ class ModelReportSaleDaily extends Model
 
     public function getOrders($data = [])
     {
-        $sql = "SELECT c.name as city,cus.company_name as company, oti.transaction_id, o.order_id, o.shipping_method, o.payment_method, CONCAT(o.firstname, ' ', o.lastname) AS customer, (SELECT os.name FROM ".DB_PREFIX."order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '".(int) $this->config->get('config_language_id')."') AS status,(SELECT os.color FROM ".DB_PREFIX."order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '".(int) $this->config->get('config_language_id')."') AS color, o.shipping_code, o.order_status_id,o.store_name,  o.total, o.currency_code, o.currency_value, o.date_added, o.date_modified,o.delivery_date FROM `".DB_PREFIX.'order` o ';
+        $sql = "SELECT c.name as city,cus.company_name as company,  o.order_id, o.shipping_method, o.payment_method, CONCAT(o.firstname, ' ', o.lastname) AS customer, (SELECT os.name FROM ".DB_PREFIX."order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '".(int) $this->config->get('config_language_id')."') AS status,(SELECT os.color FROM ".DB_PREFIX."order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '".(int) $this->config->get('config_language_id')."') AS color, o.shipping_code, o.order_status_id,o.store_name,  o.total, o.currency_code, o.currency_value, o.date_added, o.date_modified,o.delivery_date FROM `".DB_PREFIX.'order` o ';
 
         $sql .= 'left join `'.DB_PREFIX.'city` c on c.city_id = o.shipping_city_id';
         $sql .= ' left join `'.DB_PREFIX.'customer` cus on cus.customer_id = o.customer_id';
         $sql .= ' LEFT JOIN '.DB_PREFIX.'store on('.DB_PREFIX.'store.store_id = o.store_id) ';
-        $sql .= ' LEFT JOIN '.DB_PREFIX.'order_transaction_id oti on oti.order_id = o.order_id';
+        // $sql .= ' LEFT JOIN '.DB_PREFIX.'order_transaction_id oti on oti.order_id = o.order_id';
 
         if (isset($data['filter_order_status'])) {
             $implode = [];
@@ -536,9 +536,9 @@ class ModelReportSaleDaily extends Model
             $sql .= " AND o.order_id = '".(int) $data['filter_order_id']."'";
         }
 
-        if (!empty($data['filter_transaction_id'])) {
-            $sql .= " AND oti.transaction_id = '".$data['filter_transaction_id']."'";
-        }
+        // if (!empty($data['filter_transaction_id'])) {
+        //     $sql .= " AND oti.transaction_id = '".$data['filter_transaction_id']."'";
+        // }
 
         if (!empty($data['filter_customer'])) {
             $sql .= " AND CONCAT(o.firstname, ' ', o.lastname) LIKE '%".$this->db->escape($data['filter_customer'])."%'";
@@ -625,12 +625,12 @@ class ModelReportSaleDaily extends Model
 
     public function getOrdersNew($data = [])
     {
-        $sql = "SELECT cus.company_name as company, oti.transaction_id, o.order_id,  o.payment_method, CONCAT(o.firstname, ' ', o.lastname) AS customer, (SELECT os.name FROM ".DB_PREFIX."order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '".(int) $this->config->get('config_language_id')."') AS status,  o.order_status_id,o.store_name,  o.total, o.amount_partialy_paid,o.paid,o.date_added, o.date_modified,o.delivery_date,ot.value as amount FROM `".DB_PREFIX."order` o  join hf7_order_total ot on o.order_id =ot.order_id and ot.code='total'";
+        $sql = "SELECT cus.company_name as company,   o.order_id,  o.payment_method, CONCAT(o.firstname, ' ', o.lastname) AS customer, (SELECT os.name FROM ".DB_PREFIX."order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '".(int) $this->config->get('config_language_id')."') AS status,  o.order_status_id,o.store_name,  o.total, o.amount_partialy_paid,o.paid,o.date_added, o.date_modified,o.delivery_date,ot.value as amount FROM `".DB_PREFIX."order` o  join hf7_order_total ot on o.order_id =ot.order_id and ot.code='total'";
 
         // $sql .= 'left join `'.DB_PREFIX.'city` c on c.city_id = o.shipping_city_id';
         $sql .= ' left join `'.DB_PREFIX.'customer` cus on cus.customer_id = o.customer_id';
         $sql .= ' LEFT JOIN '.DB_PREFIX.'store on('.DB_PREFIX.'store.store_id = o.store_id) ';
-        $sql .= ' LEFT JOIN '.DB_PREFIX.'order_transaction_id oti on oti.order_id = o.order_id';
+        // $sql .= ' LEFT JOIN '.DB_PREFIX.'order_transaction_id oti on oti.order_id = o.order_id';
 
         if (isset($data['filter_order_status'])) {
             $implode = [];
@@ -662,9 +662,9 @@ class ModelReportSaleDaily extends Model
             $sql .= " AND o.order_id = '".(int) $data['filter_order_id']."'";
         }
 
-        if (!empty($data['filter_transaction_id'])) {
-            $sql .= " AND oti.transaction_id = '".$data['filter_transaction_id']."'";
-        }
+        // if (!empty($data['filter_transaction_id'])) {
+        //     $sql .= " AND oti.transaction_id = '".$data['filter_transaction_id']."'";
+        // }
 
         if (!empty($data['filter_customer'])) {
             $sql .= " AND CONCAT(o.firstname, ' ', o.lastname) LIKE '%".$this->db->escape($data['filter_customer'])."%'";
@@ -794,11 +794,11 @@ class ModelReportSaleDaily extends Model
 
     public function getOrderTransactionId($order_id)
     {
-        $sql = 'SELECT transaction_id FROM '.DB_PREFIX."order_transaction_id WHERE order_id = '".(int) $order_id."'";
+        $sql = 'SELECT transaction_id FROM '.DB_PREFIX."order_transaction_id WHERE order_id = '".(int) $order_id."' order by id desc limit 0,1";
 
         $query = $this->db->query($sql);
 
-        return $query->row;
+        return $query->row; 
     }
 
     public function deleteOrderTotal($order_id)
@@ -904,7 +904,7 @@ class ModelReportSaleDaily extends Model
         $sql .= 'left join `'.DB_PREFIX.'city` c on c.city_id = o.shipping_city_id ';
         $sql .= ' left join `'.DB_PREFIX.'customer` cus on cus.customer_id = o.customer_id';
         $sql .= ' LEFT JOIN '.DB_PREFIX.'store on('.DB_PREFIX.'store.store_id = o.store_id)';
-        $sql .= ' LEFT JOIN '.DB_PREFIX.'order_transaction_id oti on oti.order_id = o.order_id';
+        // $sql .= ' LEFT JOIN '.DB_PREFIX.'order_transaction_id oti on oti.order_id = o.order_id';
 
         if (!empty($data['filter_order_status'])) {
             $implode = [];
@@ -932,9 +932,9 @@ class ModelReportSaleDaily extends Model
             $sql .= " AND o.order_id = '".(int) $data['filter_order_id']."'";
         }
 
-        if (!empty($data['filter_transaction_id'])) {
-            $sql .= " AND oti.transaction_id = '".$data['filter_transaction_id']."'";
-        }
+        // if (!empty($data['filter_transaction_id'])) {
+        //     $sql .= " AND oti.transaction_id = '".$data['filter_transaction_id']."'";
+        // }
 
         if (!empty($data['filter_vendor'])) {
             $sql .= ' AND vendor_id="'.$data['filter_vendor'].'"';
