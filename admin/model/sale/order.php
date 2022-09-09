@@ -3015,7 +3015,7 @@ class ModelSaleOrder extends Model {
     }   
 
     public function getOrderTransactionIdandDate($order_id) {
-        $sql = 'SELECT transaction_id,created_at FROM ' . DB_PREFIX . "order_transaction_id WHERE order_id = '" . (int) $order_id . "'";
+        $sql = 'SELECT transaction_id,created_at FROM ' . DB_PREFIX . "order_transaction_id WHERE order_id = '" . (int) $order_id . "' order by id desc Limit 0,1";
 
         $query = $this->db->query($sql);
 
@@ -3023,7 +3023,7 @@ class ModelSaleOrder extends Model {
     }
 
     public function getOrderTransactionIdExists($order_id) {
-        $sql = 'SELECT transaction_id FROM ' . DB_PREFIX . "order_transaction_id WHERE order_id = '" . (int) $order_id . "'";
+        $sql = 'SELECT transaction_id FROM ' . DB_PREFIX . "order_transaction_id WHERE order_id = '" . (int) $order_id . "' order by id desc Limit 0,1";
 
         $query = $this->db->query($sql);
         if (isset($query->row)) {
