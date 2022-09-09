@@ -708,8 +708,6 @@ class ModelAssetsProduct extends Model {
             }
         }
 
-
-
         $log = new Log('error.log');
         $log->write($store_id);
         $this->db->select('product_to_store.*,product_description.*,product.unit,product.model,product.image,product.produce_type,store.name as store_name', false);
@@ -737,6 +735,47 @@ class ModelAssetsProduct extends Model {
 
         $ret['price'] = strval($ret['price']);
         $ret['special_price'] = strval($ret['special_price']);
+
+        return $ret;
+    }
+
+    public function getProductWithCategoryDiscountPricing($product_store_id, $is_admin = false, $store_id = null) {
+        if ($store_id == NULL) {
+            if (isset($this->session->data['config_store_id'])) {
+                $store_id = $this->session->data['config_store_id'];
+            } else {
+                $store_id = ACTIVE_STORE_ID;
+            }
+        }
+
+        $log = new Log('error.log');
+        $log->write('getProductWithCategoryDiscountPricing');
+        $log->write($store_id);
+        $this->db->select('product_to_store.*,product_description.*,product.unit,product.model,product.image,product.produce_type,store.name as store_name', false);
+        $this->db->join('product', 'product.product_id = product_to_store.product_id', 'left');
+        $this->db->join('product_description', 'product_description.product_id = product_to_store.product_id', 'left');
+        $this->db->join('product_to_category', 'product_to_category.product_id = product_to_store.product_id', 'left');
+        $this->db->join('store', 'product_to_store.store_id = store.store_id', 'left');
+        $this->db->group_by('product_to_store.product_store_id');
+        //$this->db->where('product_to_store.store_id', $store_id);
+        $this->db->where('product_to_store.status', 1);
+        //$this->db->where('product.status',1);
+        $this->db->where('product_to_store.product_store_id', $product_store_id);
+        $ret = $this->db->get('product_to_store')->row;
+
+        //FOR CATEGORY DISCOUNT
+        $this->load->model('discount/discount');
+        $category_discount_response = NULL;
+        $ret['discount_price'] = 0;
+        $ret['discount_percentage'] = 0;
+        if ($this->customer->getCustomerCategory() == NULL && $this->customer->getCustomerDiscountCategory() != NULL) {
+            $category_discount_response = $this->model_discount_discount->getCategoryDiscount($ret);
+            if (isset($category_discount_response) && is_array($category_discount_response)) {
+                $ret['discount_price'] = $category_discount_response['discount_price'];
+                $ret['discount_percentage'] = $category_discount_response['discount_percentage'];
+            }
+        }
+        //FOR CATEGORY DISCOUNT
 
         return $ret;
     }
