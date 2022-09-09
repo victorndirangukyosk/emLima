@@ -766,13 +766,13 @@ class ModelAssetsProduct extends Model {
         //FOR CATEGORY DISCOUNT
         $this->load->model('discount/discount');
         $category_discount_response = NULL;
-        $res['discount_price'] = 0;
-        $res['discount_percentage'] = 0;
+        $ret['discount_price'] = 0;
+        $ret['discount_percentage'] = 0;
         if ($this->customer->getCustomerCategory() == NULL && $this->customer->getCustomerDiscountCategory() != NULL) {
-            $category_discount_response = $this->model_discount_discount->getCategoryDiscount($res);
+            $category_discount_response = $this->model_discount_discount->getCategoryDiscount($ret);
             if (isset($category_discount_response) && is_array($category_discount_response)) {
-                $res['discount_price'] = $category_discount_response['discount_price'];
-                $res['discount_percentage'] = $category_discount_response['discount_percentage'];
+                $ret['discount_price'] = $category_discount_response['discount_price'];
+                $ret['discount_percentage'] = $category_discount_response['discount_percentage'];
             }
         }
         //FOR CATEGORY DISCOUNT
