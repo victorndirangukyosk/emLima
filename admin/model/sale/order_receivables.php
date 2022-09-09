@@ -422,7 +422,7 @@ class ModelSaleOrderReceivables extends Model
 }
 
  
-    public function checkPaymentReceivedEntery($transaction_id) {
+    public function checkPaymentReceivedEntery($transaction_id,$paid_to) {
   
     $sql = 'Select transaction_id from ' . DB_PREFIX . "payment_received where transaction_id = '" . $transaction_id . "'";
 
@@ -430,11 +430,27 @@ class ModelSaleOrderReceivables extends Model
     $status=$query->rows;
     if(count($status)>0)
     {
-        return "false";
+        return "111";      
     }
     else
     {
-        return "true";
+        if($paid_to=="Mpesa")
+        {
+            $sql1 = 'Select transaction_id from ' . DB_PREFIX . "mpesa_track_payments_confirmation where transaction_id = '" . $transaction_id . "'";
+
+            $query1 = $this->db->query($sql1);
+            $status1=$query1->rows;
+            if(count($status1)>0)
+            {
+            return "0";                  
+            }
+            else{
+                return "222";
+            }
+        }
+        else{
+            return "0"; 
+        }
     }
 
     }
