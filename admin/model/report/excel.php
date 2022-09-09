@@ -14344,12 +14344,18 @@ class ModelReportExcel extends Model {
         $this->load->language('report/income');
         $this->load->model('report/sale_daily');
         $this->load->model('report/product');
+        $this->load->model('report/sale_transaction');
 
         $results = $this->model_report_sale_daily->getOrdersNew($data);
 
         foreach ($results as $result) {
 
+            $transaction_id ='';
+            $order_transaction_data = $this->model_report_sale_transaction->getOrderTransactionId($result['order_id']);
 
+            if (count($order_transaction_data) > 0) {
+                $transaction_id = trim($order_transaction_data['transaction_id']);
+            }
             $data['orders'][] = [
                 'order_id' => $result['order_id'],
                 // 'customer' => $result['customer'],
@@ -14366,8 +14372,8 @@ class ModelReportExcel extends Model {
                 // 'order_status_id' => $result['order_status_id'],
                 // 'order_status_color' => $result['color'],
                 // 'city' => $result['city'],
-                //'transaction_id' => $transaction_id,
-                'transaction_id' => $result['transaction_id'],
+                'transaction_id' => $transaction_id,
+                // 'transaction_id' => $result['transaction_id'],
                 // 'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
                 //'order_date' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
                 'delivery_date' => date($this->language->get('date_format_short'), strtotime($result['delivery_date'])),
