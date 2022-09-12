@@ -189,6 +189,19 @@ class ModelAssetsProduct extends Model {
                             $res['special_price'] = $category_s_price;
                         }
                     }
+                    //FOR CATEGORY DISCOUNT
+                    $this->load->model('discount/discount');
+                    $category_discount_response = NULL;
+                    $res['discount_price'] = 0;
+                    $res['discount_percentage'] = 0;
+                    if ($this->customer->getCustomerCategory() == NULL && $this->customer->getCustomerDiscountCategory() != NULL) {
+                        $category_discount_response = $this->model_discount_discount->getCategoryDiscount($res);
+                        if (isset($category_discount_response) && is_array($category_discount_response)) {
+                            $res['discount_price'] = $category_discount_response['discount_price'];
+                            $res['discount_percentage'] = $category_discount_response['discount_percentage'];
+                        }
+                    }
+                    //FOR CATEGORY DISCOUNT
                     //get price html
                     if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
                         $res['price'] = $this->tax->calculate($res['price'], $res['tax_class_id'], $this->config->get('config_tax'));
@@ -230,6 +243,19 @@ class ModelAssetsProduct extends Model {
                             $res['special_price'] = $category_s_price;
                         }
                     }
+                    //FOR CATEGORY DISCOUNT
+                    $this->load->model('discount/discount');
+                    $category_discount_response = NULL;
+                    $res['discount_price'] = 0;
+                    $res['discount_percentage'] = 0;
+                    if ($this->customer->getCustomerCategory() == NULL && $this->customer->getCustomerDiscountCategory() != NULL) {
+                        $category_discount_response = $this->model_discount_discount->getCategoryDiscount($res);
+                        if (isset($category_discount_response) && is_array($category_discount_response)) {
+                            $res['discount_price'] = $category_discount_response['discount_price'];
+                            $res['discount_percentage'] = $category_discount_response['discount_percentage'];
+                        }
+                    }
+                    //FOR CATEGORY DISCOUNT
                 }
 
                 if ($res['name'] && isset($res['pd_name'])) {
@@ -341,6 +367,19 @@ class ModelAssetsProduct extends Model {
                             $res['special_price'] = $category_s_price;
                         }
                     }
+                    //FOR CATEGORY DISCOUNT
+                    $this->load->model('discount/discount');
+                    $category_discount_response = NULL;
+                    $res['discount_price'] = 0;
+                    $res['discount_percentage'] = 0;
+                    if ($this->customer->getCustomerCategory() == NULL && $this->customer->getCustomerDiscountCategory() != NULL) {
+                        $category_discount_response = $this->model_discount_discount->getCategoryDiscount($res);
+                        if (isset($category_discount_response) && is_array($category_discount_response)) {
+                            $res['discount_price'] = $category_discount_response['discount_price'];
+                            $res['discount_percentage'] = $category_discount_response['discount_percentage'];
+                        }
+                    }
+                    //FOR CATEGORY DISCOUNT
                     //get price html
                     if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
                         $res['price'] = $this->tax->calculate($res['price'], $res['tax_class_id'], $this->config->get('config_tax'));
@@ -382,6 +421,20 @@ class ModelAssetsProduct extends Model {
                             $res['special_price'] = $category_s_price;
                         }
                     }
+
+                    //FOR CATEGORY DISCOUNT
+                    $this->load->model('discount/discount');
+                    $category_discount_response = NULL;
+                    $res['discount_price'] = 0;
+                    $res['discount_percentage'] = 0;
+                    if ($this->customer->getCustomerCategory() == NULL && $this->customer->getCustomerDiscountCategory() != NULL) {
+                        $category_discount_response = $this->model_discount_discount->getCategoryDiscount($res);
+                        if (isset($category_discount_response) && is_array($category_discount_response)) {
+                            $res['discount_price'] = $category_discount_response['discount_price'];
+                            $res['discount_percentage'] = $category_discount_response['discount_percentage'];
+                        }
+                    }
+                    //FOR CATEGORY DISCOUNT
                 }
 
                 if ($res['name'] && isset($res['pd_name'])) {
@@ -399,6 +452,8 @@ class ModelAssetsProduct extends Model {
                 if (is_null($res['special_price']) || !($res['special_price'] + 0)) {
                     $res['special_price'] = $res['price'];
                 }
+
+                $res['customer_discount_category'] = $this->customer->getCustomerDiscountCategory();
 
                 $res['max_qty'] = $res['min_quantity'] > 0 ? $res['min_quantity'] : $res['quantity'];
 
@@ -475,6 +530,19 @@ class ModelAssetsProduct extends Model {
                             $r['special_price'] = $category_s_price;
                         }
                     }
+                    //FOR CATEGORY DISCOUNT
+                    $this->load->model('discount/discount');
+                    $category_discount_response = NULL;
+                    $r['discount_price'] = 0;
+                    $r['discount_percentage'] = 0;
+                    if ($this->customer->getCustomerCategory() == NULL && $this->customer->getCustomerDiscountCategory() != NULL) {
+                        $category_discount_response = $this->model_discount_discount->getCategoryDiscount($r);
+                        if (isset($category_discount_response) && is_array($category_discount_response)) {
+                            $r['discount_price'] = $category_discount_response['discount_price'];
+                            $r['discount_percentage'] = $category_discount_response['discount_percentage'];
+                        }
+                    }
+                    //FOR CATEGORY DISCOUNT
                     //get price html
                     if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
                         $r['price'] = $this->tax->calculate($r['price'], $r['tax_class_id'], $this->config->get('config_tax'));
@@ -516,6 +584,19 @@ class ModelAssetsProduct extends Model {
                             $r['special_price'] = $category_s_price;
                         }
                     }
+                    //FOR CATEGORY DISCOUNT
+                    $this->load->model('discount/discount');
+                    $category_discount_response = NULL;
+                    $r['discount_price'] = 0;
+                    $r['discount_percentage'] = 0;
+                    if ($this->customer->getCustomerCategory() == NULL && $this->customer->getCustomerDiscountCategory() != NULL) {
+                        $category_discount_response = $this->model_discount_discount->getCategoryDiscount($r);
+                        if (isset($category_discount_response) && is_array($category_discount_response)) {
+                            $r['discount_price'] = $category_discount_response['discount_price'];
+                            $r['discount_percentage'] = $category_discount_response['discount_percentage'];
+                        }
+                    }
+                    //FOR CATEGORY DISCOUNT
                 }
 
                 $percent_off = null;
@@ -555,6 +636,8 @@ class ModelAssetsProduct extends Model {
                     'weight' => floatval($r['weight']),
                     'price' => $r['price'],
                     'special' => $r['special_price'],
+                    'discount_price' => $r['discount_price'],
+                    'discount_percentage' => $r['discount_percentage'],
                     'percent_off' => number_format($percent_off, 0),
                     'max_qty' => $r['min_quantity'] > 0 ? $r['min_quantity'] : $r['quantity'],
                     'category_pricing_variant_status' => is_array($category_price_data) && array_key_exists('status', $category_price_data) ? $category_price_data['status'] : 1
@@ -625,8 +708,6 @@ class ModelAssetsProduct extends Model {
             }
         }
 
-
-
         $log = new Log('error.log');
         $log->write($store_id);
         $this->db->select('product_to_store.*,product_description.*,product.unit,product.model,product.image,product.produce_type,store.name as store_name', false);
@@ -654,6 +735,47 @@ class ModelAssetsProduct extends Model {
 
         $ret['price'] = strval($ret['price']);
         $ret['special_price'] = strval($ret['special_price']);
+
+        return $ret;
+    }
+
+    public function getProductWithCategoryDiscountPricing($product_store_id, $is_admin = false, $store_id = null) {
+        if ($store_id == NULL) {
+            if (isset($this->session->data['config_store_id'])) {
+                $store_id = $this->session->data['config_store_id'];
+            } else {
+                $store_id = ACTIVE_STORE_ID;
+            }
+        }
+
+        $log = new Log('error.log');
+        $log->write('getProductWithCategoryDiscountPricing');
+        $log->write($store_id);
+        $this->db->select('product_to_store.*,product_description.*,product.unit,product.model,product.image,product.produce_type,store.name as store_name', false);
+        $this->db->join('product', 'product.product_id = product_to_store.product_id', 'left');
+        $this->db->join('product_description', 'product_description.product_id = product_to_store.product_id', 'left');
+        $this->db->join('product_to_category', 'product_to_category.product_id = product_to_store.product_id', 'left');
+        $this->db->join('store', 'product_to_store.store_id = store.store_id', 'left');
+        $this->db->group_by('product_to_store.product_store_id');
+        //$this->db->where('product_to_store.store_id', $store_id);
+        $this->db->where('product_to_store.status', 1);
+        //$this->db->where('product.status',1);
+        $this->db->where('product_to_store.product_store_id', $product_store_id);
+        $ret = $this->db->get('product_to_store')->row;
+
+        //FOR CATEGORY DISCOUNT
+        $this->load->model('discount/discount');
+        $category_discount_response = NULL;
+        $ret['discount_price'] = 0;
+        $ret['discount_percentage'] = 0;
+        if ($this->customer->getCustomerCategory() == NULL && $this->customer->getCustomerDiscountCategory() != NULL) {
+            $category_discount_response = $this->model_discount_discount->getCategoryDiscount($ret);
+            if (isset($category_discount_response) && is_array($category_discount_response)) {
+                $ret['discount_price'] = $category_discount_response['discount_price'];
+                $ret['discount_percentage'] = $category_discount_response['discount_percentage'];
+            }
+        }
+        //FOR CATEGORY DISCOUNT
 
         return $ret;
     }

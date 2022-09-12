@@ -30,6 +30,13 @@ class ModelTotalDiscount extends Model {
     public function getApiTotal(&$total_data, &$total, &$taxes, $args) {
         $status = false;
 
+        $log = new Log('error.log');
+        $log->write('FRONT_MODEL_TOTAL_DISCOUNT');
+        $log->write($total_data);
+        $log->write($total);
+        $log->write($taxes);
+        $log->write($args);
+        $log->write('FRONT_MODEL_TOTAL_DISCOUNT');
         if ($status) {
             $this->load->language('total/discount');
 

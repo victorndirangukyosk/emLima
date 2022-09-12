@@ -218,6 +218,9 @@
             <?php if($preturn_order_receivables) { ?>
             <li><a href="<?php echo $order_receivables; ?>">Payment Receivables</a></li>
             <?php } ?>
+            <?php if($preturn_paybill) { ?>
+            <li><a href="<?php echo $paybill; ?>">Paybill Payments</a></li>
+            <?php } ?>
         </ul>
     </li>
     <?php } ?>
@@ -816,6 +819,15 @@
             <?php } ?>
 
             </ul>
+
+                 <ul>  
+
+            <?php if($preturn_report_payment_transaction_history) { ?>
+                    <li><a href="<?php echo $report_payment_transaction_history; ?>">Payment Trans History</a></li>
+                    <?php } ?>
+
+            </ul>
+                    
 
             </li>
             <?php } ?>

@@ -6,9 +6,7 @@
                 <button type="submit" id="button-shipping" form="form-order" formaction="<?php echo $shipping; ?>" data-toggle="tooltip" title="<?php echo $button_shipping_print; ?>" class="btn btn-default"><i class="fa fa-truck"></i></button>
                 <button type="submit" id="button-invoice" form="form-order" formaction="<?php echo $invoice; ?>" data-toggle="tooltip" title="<?php echo $button_invoice_print; ?>" class="btn btn-default"><i class="fa fa-print"></i></button>
 
-               <?php if (!$this->user->isVendor()): ?>
-                        <a href="<?php echo $add; ?>" data-toggle="tooltip" title="<?php echo $button_add; ?>" class="btn btn-success"><i class="fa fa-plus"></i></a>
-                <?php endif ?>  
+               
             </div> -->
             <h1><?php echo $heading_title; ?></h1>
             <ul class="breadcrumb">
@@ -48,65 +46,34 @@
                     <div class="row">
                         <div class="col-sm-4">
                             <div class="form-group">
-                                <label class="control-label" for="input-order-id"><?php echo $entry_order_id; ?></label>
-                                <input type="text" name="filter_order_id" value="<?php echo $filter_order_id; ?>" placeholder="<?php echo $entry_order_id; ?>" id="input-order-id" class="form-control" />
+                                <label class="control-label" for="input-order-id">Order ID</label>
+                                <input type="number" name="filter_order_id" value="<?php echo $filter_order_id; ?>" placeholder="Order ID" id="input-order-id" class="form-control" />
                             </div>
-                            <div class="form-group">
-                                <label class="control-label" for="input-customer"><?php echo $entry_customer; ?></label>
-                                <input type="text" name="filter_customer" value="<?php echo $filter_customer; ?>" placeholder="<?php echo $entry_customer; ?>" id="input-customer" class="form-control" />
+                            <div class="form-group" hidden>
+                                <label class="control-label" for="input-customer">Customer</label>
+                                <input type="text" name="filter_customer" value="<?php echo $filter_customer; ?>" placeholder="Customer" id="input-customer" class="form-control" />
                             </div>
 
-                            
-<div class="form-group">
-                                <label class="control-label" for="input-date-order">Order Date</label>
-                                <div class="input-group date">
-                                    <input type="text" name="filter_date_order" value="<?php echo $filter_date_order; ?>" placeholder="Order Date" data-date-format="YYYY-MM-DD" id="input-date-order" class="form-control" />
-                                    <span class="input-group-btn">
-                                        <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
-                                    </span>
-                                </div>
+                            <div class="form-group">
+                                <label class="control-label" for="input-transaction-id">Transaction ID</label>
+                                <input type="text" name="filter_transaction_id" value="<?php echo $filter_transaction_id; ?>" placeholder="Transaction ID" id="input-order-id" class="form-control" />
                             </div>
+                        
                                                         
                         </div>
                         <div class="col-sm-4">
-                            <div class="form-group">
-                                <label class="control-label" for="input-order-status"><?php echo $entry_order_status; ?></label>
-                                <select name="filter_order_status" id="input-order-status" class="form-control">
-                                    <option value="*"></option>
-                                    <?php if ($filter_order_status == '0') { ?>
-                                    <option value="0" selected="selected"><?php echo $text_missing; ?></option>
-                                    <?php } else { ?>
-                                    <option value="0"><?php echo $text_missing; ?></option>
-                                    <?php } ?>
-                                    <?php foreach ($order_statuses as $order_status) { ?>
-                                    <?php if ($order_status['order_status_id'] == $filter_order_status) { ?>
-                                    <option value="<?php echo $order_status['order_status_id']; ?>" selected="selected"><?php echo $order_status['name']; ?></option>
-                                    <?php } else { ?>
-                                    <option value="<?php echo $order_status['order_status_id']; ?>"><?php echo $order_status['name']; ?></option>
-                                    <?php } ?>
-                                    <?php } ?>
-                                </select>
-                            </div>
-                           <!--  <div class="form-group">
-                                <label class="control-label" for="input-total"><?php echo $entry_total; ?></label>
-                                <input type="text" name="filter_total" value="<?php echo $filter_total; ?>" placeholder="<?php echo $entry_total; ?>" id="input-total" class="form-control" />
-                            </div>
-
-                            <div class="form-group">
-                                <label class="control-label" for="input-name"><?= $entry_store_name ?></label>
-                                <input type="text" name="filter_store_name" value="<?php echo $filter_store_name; ?>" placeholder="<?php echo $entry_store_name; ?>" id="input-name" class="form-control" />
-                            </div> -->
-
-                            <?php if (!$this->user->isVendor()): ?>
-                                <div class="form-group">
-                                    <label class="control-label" for="input-name"><?= $column_payment ?></label>
-                                    <input type="text" name="filter_payment" value="<?php echo $filter_payment; ?>" placeholder="<?php echo $column_payment; ?>" id="input-name" class="form-control" />
-                                </div>
-                            <?php endif ?> 
- <div class="form-group">
+                             
+                        <div class="form-group" hidden>
                                 <label class="control-label" for="input-company">Company Name</label>
                                 <input type="text" name="filter_company" value="<?php echo $filter_company; ?>" placeholder="Company Name" id="input-company" class="form-control" />
-                            </div>     
+                            </div>    
+
+                            <div class="form-group">
+                                  <label class="control-label" for="input-user">User</label>
+                                <input type="text" name="filter_user" value="<?php echo $filter_user; ?>" placeholder="Added by /User" id="input-user" class="form-control" />
+                                <input type="hidden" name="filter_user_id" />
+                          
+                            </div> 
 
                         </div>
 
@@ -118,32 +85,24 @@
 
 
                             <div class="form-group">
-                                <label class="control-label" for="input-date-added"><?php echo $entry_date_added; ?></label>
+                                <label class="control-label" for="input-date-added">Transaction Date From</label>
                                 <div class="input-group date">
-                                    <input type="text" name="filter_date_added" value="<?php echo $filter_date_added; ?>" placeholder="<?php echo $entry_date_added; ?>" data-date-format="YYYY-MM-DD" id="input-date-added" class="form-control" />
+                                    <input type="text" name="filter_date_added" value="<?php echo $filter_date_added; ?>" placeholder="Date From" data-date-format="YYYY-MM-DD" id="input-date-added" class="form-control" />
                                     <span class="input-group-btn">
                                         <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
                                     </span>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="control-label" for="input-date-modified"><?php echo $entry_date_modified; ?></label>
+                                <label class="control-label" for="input-date-modified">Transaction Date To</label>
                                 <div class="input-group date">
-                                    <input type="text" name="filter_date_modified" value="<?php echo $filter_date_modified; ?>" placeholder="<?php echo $entry_date_modified; ?>" data-date-format="YYYY-MM-DD" id="input-date-modified" class="form-control" />
+                                    <input type="text" name="filter_date_modified" value="<?php echo $filter_date_modified; ?>" placeholder="Date To" data-date-format="YYYY-MM-DD" id="input-date-modified" class="form-control" />
                                     <span class="input-group-btn">
                                         <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
                                     </span>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label class="control-label" for="input-date-delivery">Delivery Date</label>
-                                <div class="input-group date">
-                                    <input type="text" name="filter_date_delivery" value="<?php echo $filter_date_delivery; ?>" placeholder="Delivery Date" data-date-format="YYYY-MM-DD" id="input-date-delivery" class="form-control" />
-                                    <span class="input-group-btn">
-                                        <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
-                                    </span>
-                                </div>
-                            </div>
+                            
                             <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>
 
                         </div>
@@ -158,25 +117,17 @@
                                 <tr>
                                     
 
-                                    <td class="text-right"><?php echo $column_order_id; ?></td>
-                                    <td class="text-left"><?php echo 'Delivery'.'  ' . $column_status; ?></td> 
-
-                                     <td class="text-right">Amount</td>
-
-                                    <!--<td class="text-left">Company Name</td>                                    
-                                    <td class="text-left"><?php echo $column_customer; ?></td>
-                                    <td class="text-right">Order Date</td>-->
-                                    <td class="text-right">Delivery Date</td>                             
-                                    <td class="text-right">Amount Received</td>
-
-                                    <!--<td class="text-right"><?php echo $column_transaction_id; ?></td>-->
-                                    <td class="text-right">Balance</td>
-
-                                     
-
-                                     <!--<?php if (!$this->user->isVendor()): ?>
-                                        <td class="text-right"><?php echo $column_payment; ?></td>
-                                     <?php endif ?> -->
+                                    <td class="text-right">ID</td>
+                                    <td class="text-right">Order ID</td>
+                                    <td class="text-left">Transaction ID</td>
+                                    <td class="text-right">Amount Received</td>                                    
+                                    <td class="text-right">Partial Amount Paid</td>
+                                    <td class="text-right">Amount Applied</td>
+                                    <td class="text-right">Order Total</td>                             
+                                    <td class="text-left">Transaction Date</td>                             
+                                    <td class="text-left">IP</td>                             
+                                    <td class="text-left">Added By</td>                             
+                                    <td class="text-right">Credit ID</td>     
                                      
                                 </tr>
                             </thead>
@@ -185,27 +136,19 @@
                                 <?php foreach ($orders as $order) { ?>
                                 <tr>
                                     
+                                    <td class="text-right"><?php echo $order['id']; ?></td>
                                     <td class="text-right"><?php echo $order['order_id']; ?></td>
-                                   <td class="text-left"><?php echo $order['status']; ?>
-
-                                    <!--<td class="text-left"><?php echo $order['company']; ?></td>
-                                    <td class="text-left"><?php echo $order['customer']; ?></td>
-                                    <td class="text-right"><?php echo $order['date_added']; ?></td>-->
-                                    <td class="text-right"><?php echo $order['amount']; ?></td>
-
-                                    <td class="text-right"><?php echo $order['delivery_date']; ?></td>
+                                    <td class="text-left"><?php echo $order['transaction_id']; ?></td>
+                                    <td class="text-right"><?php echo $order['amount_received']; ?></td>
+                                    <td class="text-right"><?php echo $order['partial_amount']; ?></td>
+                                    <td class="text-right"><?php echo $order['patial_amount_applied']; ?></td>
+                                    <td class="text-right"><?php echo $order['total']; ?></td>
+                                    <td class="text-left"><?php echo $order['date_added']; ?></td>
+                                    <td class="text-left"><?php echo $order['ip']; ?></td>
+                                    <td class="text-left"><?php echo $order['user']; ?></td>
+                                    <td class="text-right"><?php echo $order['credit_id']; ?></td>                             
+                                     
                                     
-                                    
-                                    <!-- <td class="text-right"><?php echo $order['transaction_id']; ?></td>
-
-                                   <h3 class="my-order-title label" style="background-color: #<?= $order['order_status_color']; ?>;display: block;line-height: 2;" id="order-status" ><?php echo $order['status']; ?></h3>
-                                    <?php if (!$this->user->isVendor()): ?>
-                                        <td class="text-right"><?php echo $order['payment_method']; ?></td>
-                                     <?php endif ?>  -->
-                                    <td class="text-right"><?php echo $order['amount_paid']; ?></td>
-                                    <td class="text-right"><?php echo $order['balance']; ?></td>
-
-
                                     
                                 </tr>
                                 <?php } ?>
@@ -250,10 +193,10 @@
     });
 
 
-    $('input[name=\'filter_vendor\']').autocomplete({
+    $('input[name=\'filter_user\']').autocomplete({
     'source': function(request, response) {
         $.ajax({
-            url: 'index.php?path=setting/store/vendor_autocomplete&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request),
+            url: 'index.php?path=report/payment_transaction_history/user_autocomplete&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request),
             dataType: 'json',
             success: function(json) {
                 response($.map(json, function(item) {
@@ -266,74 +209,48 @@
         });
     },
     'select': function(item) {
-        $('input[name=\'filter_vendor\']').val(item['label']);
+        $('input[name=\'filter_user\']').val(item['label']);
+                    $('input[name=\'filter_user_id\']').val(item['value']);
+
     }
     });
 
 
   $('#button-filter').on('click', function () {
-            url = 'index.php?path=report/sale_daily&token=<?php echo $token; ?>';
+            url = 'index.php?path=report/payment_transaction_history&token=<?php echo $token; ?>';
 
             
+
+             var filter_user = $('input[name=\'filter_user\']').val();
+            var filter_user_id = $('input[name=\'filter_user_id\']').val();
+
+            if (filter_user) {
+                    url += '&filter_user=' + encodeURIComponent(filter_user);
+                    url += '&filter_user_id=' + encodeURIComponent(filter_user_id);
+            }
+
             var filter_order_id = $('input[name=\'filter_order_id\']').val();
 
             if (filter_order_id) {
                 url += '&filter_order_id=' + encodeURIComponent(filter_order_id);
             }
 
+            var filter_transaction_id = $('input[name=\'filter_transaction_id\']').val();
+
+            if (filter_transaction_id) {
+                url += '&filter_transaction_id=' + encodeURIComponent(filter_transaction_id);
+            }
+
+
             
 
-
-            var filter_customer = $('input[name=\'filter_customer\']').val();
-
-            if (filter_customer) {
-                url += '&filter_customer=' + encodeURIComponent(filter_customer);
-            }
-
-
-             var filter_company = $('input[name=\'filter_company\']').val();
-
-            if (filter_company) {
-                url += '&filter_company=' + encodeURIComponent(filter_company);
-            }
-
-            
-            var filter_payment = $('input[name=\'filter_payment\']').val();
-
-            if (filter_payment) {
-                url += '&filter_payment=' + encodeURIComponent(filter_payment);
-            }
-
-
-
-            var filter_order_status = $('select[name=\'filter_order_status\']').val();
-
-            if (filter_order_status != '*') {
-                url += '&filter_order_status=' + encodeURIComponent(filter_order_status);
-            }
-
-           
-
+ 
             var filter_date_added = $('input[name=\'filter_date_added\']').val();
 
             if (filter_date_added) {
                 url += '&filter_date_added=' + encodeURIComponent(filter_date_added);
             }
-
-
-var filter_date_order = $('input[name=\'filter_date_order\']').val();
-
-            if (filter_date_order) {
-                url += '&filter_date_order=' + encodeURIComponent(filter_date_order);
-            }
-
-
-var filter_date_delivery = $('input[name=\'filter_date_delivery\']').val();
-
-            if (filter_date_delivery) {
-                url += '&filter_date_delivery=' + encodeURIComponent(filter_date_delivery);
-            }
-
+  
            
             var filter_date_modified = $('input[name=\'filter_date_modified\']').val();
 
@@ -341,7 +258,7 @@ var filter_date_delivery = $('input[name=\'filter_date_delivery\']').val();
                 url += '&filter_date_modified=' + encodeURIComponent(filter_date_modified);
             }
 
-    if(filter_date_order=='' && filter_date_delivery=='' && filter_order_id==''  )
+    if(filter_user=='' && filter_order_id=='' && filter_transaction_id=='' )
     {
              if((filter_date_modified=='' || filter_date_added==''))
             {
@@ -422,37 +339,7 @@ var filter_date_delivery = $('input[name=\'filter_date_delivery\']').val();
 
 
         //--></script> 
-    <script type="text/javascript"><!--
-  $('input[name^=\'selected\']').on('change', function () {
-
-            $('#button-shipping, #button-invoice').prop('disabled', true);
-
-            var selected = $('input[name^=\'selected\']:checked');
-
-            if (selected.length) {
-                $('#button-invoice').prop('disabled', false);
-            }
-
-            for (i = 0; i < selected.length; i++) {
-                if ($(selected[i]).parent().find('input[name^=\'shipping_code\']').val()) {
-                    $('#button-shipping').prop('disabled', false);
-
-                    break;
-                }
-            }
-
-        });
-
-        $('input[name^=\'selected\']:first').trigger('change');
-
-        $('a[id^=\'button-delete\']').on('click', function (e) {
-            e.preventDefault();
-
-            if (confirm('<?php echo $text_confirm; ?>')) {
-                location = $(this).attr('href');
-            }
-        });
-        //--></script> 
+    
     <script src="ui/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
     <link href="ui/javascript/jquery/datetimepicker/bootstrap-datetimepicker.min.css" type="text/css" rel="stylesheet" media="screen" />
     <script type="text/javascript"><!--
@@ -463,18 +350,30 @@ var filter_date_delivery = $('input[name=\'filter_date_delivery\']').val();
         });
 
 function excel() {
-       url = 'index.php?path=report/sale_daily/excel&token=<?php echo $token; ?>';
+       url = 'index.php?path=report/payment_transaction_history/excel&token=<?php echo $token; ?>';
       
+       var filter_user = $('input[name=\'filter_user\']').val();
+            var filter_user_id = $('input[name=\'filter_user_id\']').val();
+
+            if (filter_user) {
+                    url += '&filter_user=' + encodeURIComponent(filter_user);
+                    url += '&filter_user_id=' + encodeURIComponent(filter_user_id);
+            }
+
        var filter_order_id = $('input[name=\'filter_order_id\']').val();
 
         if (filter_order_id) {
             url += '&filter_order_id=' + encodeURIComponent(filter_order_id);
         }
 
-       
+        var filter_transaction_id = $('input[name=\'filter_transaction_id\']').val();
+
+        if (filter_transaction_id) {
+            url += '&filter_transaction_id=' + encodeURIComponent(filter_transaction_id);
+        }
 
 
-        var filter_customer = $('input[name=\'filter_customer\']').val();
+       /* var filter_customer = $('input[name=\'filter_customer\']').val();
 
         if (filter_customer) {
             url += '&filter_customer=' + encodeURIComponent(filter_customer);
@@ -483,23 +382,10 @@ var filter_company = $('input[name=\'filter_company\']').val();
 
         if (filter_company) {
             url += '&filter_company=' + encodeURIComponent(filter_company);
-        }
+        }*/
 
         
-        var filter_payment = $('input[name=\'filter_payment\']').val();
-
-        if (filter_payment) {
-            url += '&filter_payment=' + encodeURIComponent(filter_payment);
-        }
-
-
-
-        var filter_order_status = $('select[name=\'filter_order_status\']').val();
-
-        if (filter_order_status != '*') {
-            url += '&filter_order_status=' + encodeURIComponent(filter_order_status);
-        }
-
+        
        
 
         var filter_date_added = $('input[name=\'filter_date_added\']').val();
@@ -508,27 +394,16 @@ var filter_company = $('input[name=\'filter_company\']').val();
             url += '&filter_date_added=' + encodeURIComponent(filter_date_added);
         }
 
-       
-var filter_date_order = $('input[name=\'filter_date_order\']').val();
+           
+            var filter_date_modified = $('input[name=\'filter_date_modified\']').val();
 
-            if (filter_date_order) {
-                url += '&filter_date_order=' + encodeURIComponent(filter_date_order);
-            }
-
-
-var filter_date_delivery = $('input[name=\'filter_date_delivery\']').val();
-
-            if (filter_date_delivery) {
-                url += '&filter_date_delivery=' + encodeURIComponent(filter_date_delivery);
-            }
-
-        var filter_date_modified = $('input[name=\'filter_date_modified\']').val();
-
+            
         if (filter_date_modified) {
             url += '&filter_date_modified=' + encodeURIComponent(filter_date_modified);
         }
    
-   if(filter_date_order=='' && filter_date_delivery=='' && filter_order_id==''  )
+       if(filter_user=='' && filter_order_id=='' && filter_transaction_id=='' )
+
     {
              if((filter_date_modified=='' || filter_date_added==''))
             {

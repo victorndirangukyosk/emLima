@@ -10354,6 +10354,7 @@ class ModelReportExcel extends Model {
         foreach ($results as $result) {
             // $amount=$amount+$result['total'];
             $totals = $this->model_sale_order->getOrderTotals($result['order_id']);
+            $result['transaction_id'] = $this->model_sale_order->getOrderTransactionId($result['order_id']);
 
             // echo "<pre>";print_r($totals);die;
             foreach ($totals as $total) {
@@ -14343,12 +14344,18 @@ class ModelReportExcel extends Model {
         $this->load->language('report/income');
         $this->load->model('report/sale_daily');
         $this->load->model('report/product');
+        $this->load->model('report/sale_transaction');
 
         $results = $this->model_report_sale_daily->getOrdersNew($data);
 
         foreach ($results as $result) {
 
+            $transaction_id ='';
+            $order_transaction_data = $this->model_report_sale_transaction->getOrderTransactionId($result['order_id']);
 
+            if (count($order_transaction_data) > 0) {
+                $transaction_id = trim($order_transaction_data['transaction_id']);
+            }
             $data['orders'][] = [
                 'order_id' => $result['order_id'],
                 // 'customer' => $result['customer'],
@@ -14365,8 +14372,8 @@ class ModelReportExcel extends Model {
                 // 'order_status_id' => $result['order_status_id'],
                 // 'order_status_color' => $result['color'],
                 // 'city' => $result['city'],
-                //'transaction_id' => $transaction_id,
-                'transaction_id' => $result['transaction_id'],
+                'transaction_id' => $transaction_id,
+                // 'transaction_id' => $result['transaction_id'],
                 // 'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
                 //'order_date' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
                 'delivery_date' => date($this->language->get('date_format_short'), strtotime($result['delivery_date'])),
@@ -15751,6 +15758,158 @@ class ModelReportExcel extends Model {
         // echo "<pre>";print_r($sql);die;
 
         return $query->row;
+    }
+
+
+    public function download_payment_transaction_history_excel($data) {
+        $this->load->library('excel');
+        $this->load->library('iofactory');
+
+        $this->load->language('report/payment_transaction_history');
+        $this->load->model('report/payment_transaction_history');
+
+        $rows = $this->model_report_payment_transaction_history->getPamentTransactionHistory($data);
+
+        $i = 0;
+        foreach ($rows as $result) {
+            $latest_total = 0;
+            $latest_total = $this->model_report_payment_transaction_history->getOrderExactTotal($result['order_id']);
+          
+            $rows[$i]['total'] = round($latest_total, 2);
+            $rows[$i]['date_added'] = date($this->language->get('date_format_short'), strtotime($rows[$i]['date_added']));
+
+            ++$i;
+        }
+
+        // echo "<pre>";print_r($rows);die;
+        try {
+            // set appropriate timeout limit
+            set_time_limit(1800);
+
+            $objPHPExcel = new PHPExcel();
+            $objPHPExcel->getProperties()->setTitle('Sale Transaction Report')->setDescription('none');
+
+            //PHPExcel_Shared_Font::setAutoSizeMethod(PHPExcel_Shared_Font::AUTOSIZE_METHOD_EXACT);
+
+            $objPHPExcel->setActiveSheetIndex(0);
+
+            // Field names in the first row
+            // ID, Photo, Name, Contact no., Reason, Valid from, Valid upto, Intime, Outtime
+            $title = [
+                'font' => [
+                    'bold' => true,
+                    'color' => [
+                        'rgb' => 'FFFFFF',
+                    ],
+                ],
+                'fill' => [
+                    'type' => PHPExcel_Style_Fill::FILL_SOLID,
+                    'startcolor' => [
+                        'rgb' => '4390df',
+                    ],
+                ],
+            ];
+
+            //Company name, address
+            $objPHPExcel->getActiveSheet()->mergeCells('A1:K2');
+            $objPHPExcel->getActiveSheet()->setCellValue('A1', 'Payment Transaction History Report');
+            $objPHPExcel->getActiveSheet()->getStyle('A1:K2')->applyFromArray(['font' => ['bold' => true], 'color' => [
+                    'rgb' => '4390df',
+            ]]);
+
+            
+
+            $objPHPExcel->getActiveSheet()->setCellValue('A3', $html);
+            $objPHPExcel->getActiveSheet()->getStyle('A1:K3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $objPHPExcel->getActiveSheet()->getStyle('C')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
+            $objPHPExcel->getActiveSheet()->getStyle('H')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
+            $objPHPExcel->getActiveSheet()->getStyle('I')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
+            $objPHPExcel->getActiveSheet()->getStyle('J')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
+            $objPHPExcel->getActiveSheet()->getStyle('J')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
+
+            
+
+            foreach (range('A', 'L') as $columnID) {
+                $objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
+                        ->setAutoSize(true);
+            }
+
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, 4, 'ID');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 4, 'Order ID');
+
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, 4, 'Transaction ID');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 4, 'Amount Received');
+
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, 4, ' Partial Amount Paid');
+
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, 4, 'Amount Applied');
+
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, 4, 'Order Total');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, 4, 'Transaction Date');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(8, 4, 'IP');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(9, 4, 'Added By');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(10, 4, 'Credit ID');
+
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(1, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(2, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(3, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(4, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(5, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(6, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(7, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(8, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(9, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(10, 4)->applyFromArray($title);
+
+            // Fetching the table data
+            $row = 5;
+            foreach ($rows as $result) {
+                /* if($result['pt']) {
+                  $amount = $result['pt'];
+                  }else{
+                  $amount = 0;
+                  } */
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $result['id']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['order_id']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['transaction_id']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['amount_received']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, $result['partial_amount']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, $result['patial_amount_applied']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, $result['total']);
+
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, $row, $result['date_added']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(8, $row, $result['ip']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(9, $row, $result['user']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(10, $row, $result['credit_id']);
+
+                ++$row;
+            }
+
+            $objPHPExcel->setActiveSheetIndex(0);
+            //$objWriter = IOFactory::createWriter($objPHPExcel, 'Excel5');
+            // Sending headers to force the user to download the file
+            //header('Content-Type: application/vnd.ms-excel');
+            //header("Content-type: application/octet-stream");
+            $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            header('Content-Disposition: attachment;filename="payment_transaction_history_report.xlsx"');
+            header('Cache-Control: max-age=0');
+
+            $objWriter->save('php://output');
+            exit;
+        } catch (Exception $e) {
+            $errstr = $e->getMessage();
+            $errline = $e->getLine();
+            $errfile = $e->getFile();
+            $errno = $e->getCode();
+            $this->session->data['export_import_error'] = ['errstr' => $errstr, 'errno' => $errno, 'errfile' => $errfile, 'errline' => $errline];
+            if ($this->config->get('config_error_log')) {
+                $this->log->write('PHP ' . get_class($e) . ':  ' . $errstr . ' in ' . $errfile . ' on line ' . $errline);
+            }
+
+            return;
+        }
     }
 
 }

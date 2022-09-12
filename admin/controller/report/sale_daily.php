@@ -352,11 +352,12 @@ class ControllerReportSaleDaily extends Controller
          $order_total = $this->model_report_sale_daily->getTotalOrders($filter_data);
 
         $results = $this->model_report_sale_daily->getOrdersNew($filter_data); 
-        }
+        } 
         else {
             $order_total =0;
             $results =null;
         }
+        $this->load->model('report/sale_transaction');
 
         //echo "<pre>";print_r($results);die;
         foreach ($results as $result) {
@@ -366,12 +367,12 @@ class ControllerReportSaleDaily extends Controller
             // $latest_total =  $this->model_report_sale_daily->getOrderExactTotal($result['order_id']);
 
            
+            $transaction_id ='';
+            $order_transaction_data = $this->model_report_sale_transaction->getOrderTransactionId($result['order_id']);
 
-            // $order_transaction_data = $this->model_report_sale_transaction->getOrderTransactionId($result['order_id']);
-
-            // if (count($order_transaction_data) > 0) {
-            //     $transaction_id = trim($order_transaction_data['transaction_id']);
-            // }
+            if (count($order_transaction_data) > 0) {
+                $transaction_id = trim($order_transaction_data['transaction_id']);
+            }
 
             $data['orders'][] = [
                 'order_id' => $result['order_id'],
@@ -392,8 +393,8 @@ class ControllerReportSaleDaily extends Controller
                 // 'order_status_color' => $result['color'],
                 // 'city' => $result['city'],
 
-                //'transaction_id' => $transaction_id,
-                'transaction_id' => $result['transaction_id'],
+                'transaction_id' => $transaction_id,
+                // 'transaction_id' => $result['transaction_id'],
 
                 // 'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
                 //'order_date' => date($this->language->get('date_format_short'), strtotime($result['date_added'])),

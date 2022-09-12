@@ -750,7 +750,7 @@ function showConfirmPopup($order_id,$order_value) {
             {
              var text ="<span class='col-sm-12 control-label orderlabel super' style='background: #FFE4CB;text-align: center;padding-top: 0px'>Order Id:"+$order_id+" </span><br><br>";
             $("#modal_bodyvalue").html(text);  
-             $("#paid_amount").val($order_value); 
+            $("#paid_amount").val($order_value); 
              $("#paid_amount").prop('disabled',true); 
 
             }
@@ -967,10 +967,21 @@ function showConfirmPopup($order_id,$order_value) {
                 console.log(json); 
                 if (json['status']) 
                 {
+                    if (json['error_code']==111) {
+                             $('#paidModal-message').html('This Transaction ID is already applied.');
+        $('#paid-button').removeClass('disabled');
+                            }
+                             else if (json['error_code']==222) {
+                             $('#paidModal-message').html('This Transaction ID is not found in financial statement.');
+        $('#paid-button').removeClass('disabled');
+                            }
+
+                            else{
                     $('#paidModal-success-message').html(' Saved Successfully');
                     setTimeout(function() {
                             location=location;
                         }, 500);
+                        }
                             
                 }
                 else    {
@@ -992,19 +1003,31 @@ function showConfirmPopup($order_id,$order_value) {
         }
         else if(orde_id>0)
         {  
+
+            
             $.ajax({
             url: 'index.php?path=sale/order_receivables/confirmPaymentReceived&token=<?php echo $token; ?>',
             type: 'post',
             dataType: 'json',
-            data:$('#paidModal-form').serialize(),
+            data:$('#paidModal-form').serialize()+'&amount_received='+amountreceived,
             async: true,
             success: function(json) {
                 console.log(json); 
                     if (json['status']) {
+                         if (json['error_code']==111) {
+                             $('#paidModal-message').html('This Transaction ID is already applied.');
+                             $('#paid-button').removeClass('disabled');
+                            }
+                             else if (json['error_code']==222) {
+                             $('#paidModal-message').html('This Transaction ID is not found in financial statement.');
+                            $('#paid-button').removeClass('disabled');
+                            }
+                            else{
                         $('#paidModal-success-message').html(' Saved Successfully');
                             setTimeout(function() {
                             location=location;
                             }, 500);
+                             }
                             
                         }
                         else {

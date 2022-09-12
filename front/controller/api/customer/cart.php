@@ -424,9 +424,9 @@ class ControllerApiCustomerCart extends Controller {
     }
 
     public function getCartproduct() {
-        
+
         $this->load->model('account/customer');
-        $this->cart->clearcart();
+        //$this->cart->clearcart();
         $this->model_account_customer->getDBCart();
         $totalQuantity = 0;
         $json = [];
@@ -441,17 +441,19 @@ class ControllerApiCustomerCart extends Controller {
             $product_store_id = $product['product_store_id'];
             $this->load->model('assets/product');
             $product_info = $this->model_assets_product->getProductWithCategoryPricing($product_store_id, true);
+
+            if ($this->customer->getCustomerCategory() == NULL && $this->customer->getCustomerDiscountCategory() != NULL) {
+                $product_info = $this->model_assets_product->getProductWithCategoryDiscountPricing($product_store_id, true);
+            }
+
             $tax_info = $this->tax->getRateNameByTaxClassId($product_info['tax_class_id']);
             $tax_name = is_array($tax_info) && $tax_info != NULL && count($tax_info) > 0 ? $tax_info['name'] : NULL;
             $tax_percentage = is_array($tax_info) && $tax_info != NULL && count($tax_info) > 0 ? $tax_info['rate'] : NULL;
             $image = $this->load->controller('api/customer/imagepath', $product_info['image']);
-            if($image!=null && $image!="")
-            {
-                $image=BASE_URL . '/' . $image;
-            }
-            else
-            {
-                $image=BASE_URL . '/' . 'image/cache/placeholder-300x300.png';
+            if ($image != null && $image != "") {
+                $image = BASE_URL . '/' . $image;
+            } else {
+                $image = BASE_URL . '/' . 'image/cache/placeholder-300x300.png';
             }
             if (is_array($product_info) && $product_info['status'] == 1) {
                 $this->data[$keys] = [
@@ -469,7 +471,7 @@ class ControllerApiCustomerCart extends Controller {
                     'model' => $product_info['model'],
                     'shipping' => 0,
                     // 'image' => BASE_URL . '/' . $image,
-                     'image' => $image,
+                    'image' => $image,
                     'orginal_image' => $product_info['image'],
                     'option' => [],
                     'download' => [],
@@ -479,6 +481,8 @@ class ControllerApiCustomerCart extends Controller {
                     'stock' => '',
                     'price' => $product_info['price'],
                     'special_price' => $product_info['special_price'],
+                    'discount_price' => isset($product_info['discount_price']) ? $product_info['discount_price'] : 0,
+                    'discount_percentage' => isset($product_info['discount_percentage']) ? $product_info['discount_percentage'] : 0,
                     'total' => $product_info['special_price'] * $data['quantity'],
                     'percentage_off' => (($product_info['price'] - $product_info['special_price']) / $product_info['price']) * 100,
                     'reward' => 0,

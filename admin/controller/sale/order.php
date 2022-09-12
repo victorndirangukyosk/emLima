@@ -81,8 +81,16 @@ class ControllerSaleOrder extends Controller {
         if (!empty($order_info)) {
             $data['store_id'] = $order_info['store_id'];
             //$json = $this->model_sale_order->getProductDataByStoreFilter($filter_name, $data['store_id']);
-            // $json = $this->model_sale_order->getProductsForEditInvoice($filter_name, $data['store_id'], $this->request->get['order_id']);
+            if($this->user->hasPermission('modify', 'sale/edit_invoice_disabled_products'))
+            {
             $json = $this->model_sale_order->getProductsForEditInvoice_All($filter_name, $data['store_id'], $this->request->get['order_id']);
+            
+            }
+            else
+            {
+            $json = $this->model_sale_order->getProductsForEditInvoice($filter_name, $data['store_id'], $this->request->get['order_id']);
+              
+            }
             $log = new Log('error.log');
             //$log->write('json');
             //$log->write($json);
@@ -517,8 +525,20 @@ class ControllerSaleOrder extends Controller {
         $log = new Log('error.log');
         $log->write($this->request->get['order_id']);
         $log->write($this->request->get['product_store_id']);
+
+        if($this->user->hasPermission('modify', 'sale/edit_invoice_disabled_products'))
+        {
         $product_info = $this->model_sale_order->getProductForPopup_all($this->request->get['product_store_id'], false, $order_info['store_id']);
         $variations = $this->model_sale_order->getProductVariationsDisabled($product_info['name'], $order_info['store_id'], $this->request->get['order_id']);
+        
+        }
+        
+        else{
+
+            $product_info = $this->model_sale_order->getProductForPopup($this->request->get['product_store_id'], false, $order_info['store_id']);
+        $variations = $this->model_sale_order->getProductVariationsNew($product_info['name'], $order_info['store_id'], $this->request->get['order_id']);
+        
+        }
         //$log->write($variations);
         $json = $variations;
         // echo "<pre>";print_r($variations);die;
