@@ -374,18 +374,18 @@
             <div class="modal-body">
                 <form id="inventory_update" name="inventory_update">
                     <div class="form-group required">
-                        <label for="recipient-name" class="col-form-label">Product Name</label>
+                        <label for="recipient-name" class="col control-label">Product Name</label>
                         <input type="text" placeholder="Serach Product" class="form-control" data-vendor-product-id="" data-vendor-product-name="" id="new_vendor_product_name" name="new_vendor_product_name" style="max-width: 568px !important;">
                     </div>
                     <div class="form-group required">
-                        <label for="recipient-name" class="col-form-label">Product UOM</label>
+                        <label for="recipient-name" class="col control-label">Product UOM</label>
                         <select class="form-select" id="new_vendor_product_uom" name="new_vendor_product_uom" style="max-width: 568px !important;">
                         </select>
                     </div>
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="form-group required">
-                                <label for="buying-price" class="col-form-label">Buying Price</label>
+                                <label for="buying-price" class="col control-label">Buying Price</label>
                                 <input type="number" class="form-control" id="new_buying_price" name="new_buying_price" min="1" style="max-width: 568px !important;">
                             </div>   
                         </div>
@@ -399,7 +399,7 @@
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="form-group required">
-                                <label for="procured-quantity" class="col-form-label">Procured Quantity</label>
+                                <label for="procured-quantity" class="col control-label">Procured Quantity</label>
                                 <input type="number" class="form-control" id="new_procured_quantity" name="new_procured_quantity" min="0.01" style="max-width: 568px !important;">
                             </div>   
                         </div>
@@ -410,6 +410,18 @@
                             </div>   
                         </div>
                     </div>
+            <div class="row">
+                    <div class="col-sm-6">
+                            <div class="form-group required">
+                           
+                                <label for="grn" class="col control-label">Goods Receipt Note</label>
+                                <input placeholder="Goods Receipt Note" type="text" class="form-control" id="grn" name="grn" style="max-width: 568px !important;">
+                            </div>   
+                        </div>
+
+                        
+                        </div>
+
                 </form>
             </div>
             <div class="modal-footer">
@@ -993,6 +1005,8 @@ var procured_quantity = $('#new_procured_quantity').val();
 var rejected_quantity = $('#new_rejected_quantity').val();
 var vendor_product_id = $('#new_vendor_product_name').attr('data-vendor-product-id');
 var buying_source_id = $('input[name=\'new_buying_source\']').attr('data-new-buying-source-id');
+var grn = $('#grn').val();
+
 $('.alert.alert-success').html('');
 $('.alert.alert-success.download').html('');
 $('.alert.alert-danger').html(''); 
@@ -1002,7 +1016,7 @@ $('.alert.alert-danger').hide();
 $.ajax({
         url: 'index.php?path=catalog/product/updateInventorysingle&token=<?= $token ?>',
         dataType: 'json',
-        data: { 'vendor_product_uom' : vendor_product_uom, 'buying_price' : buying_price, 'buying_source' : buying_source, 'buying_source_id' : buying_source_id, 'procured_quantity' : procured_quantity, 'rejected_quantity' : rejected_quantity, 'vendor_product_id' : vendor_product_id  },
+        data: { 'vendor_product_uom' : vendor_product_uom, 'buying_price' : buying_price, 'buying_source' : buying_source, 'buying_source_id' : buying_source_id, 'procured_quantity' : procured_quantity, 'rejected_quantity' : rejected_quantity, 'vendor_product_id' : vendor_product_id,'grn':grn  },
         async: true,
         beforeSend: function() {
         $('#update_inventory_form').prop('disabled', true);
