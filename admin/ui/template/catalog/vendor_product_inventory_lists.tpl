@@ -901,7 +901,7 @@ if($('input[name="selected[]"]:checked').length == 0) {
 alert('Please select atleaset one product!');
 return false;
 }
-var data_array = [];
+var data_array = [];var valid=1; 
 $('input[name="selected[]"]:checked').each(function() {
 var data_inventory = {};
 var vendor_product_id = $(this).val();
@@ -911,7 +911,13 @@ var current_qty = $('#current_qty_in_warehouse_'+vendor_product_id).val();
 var total_procured_qty = $('#total_procured_qty_'+vendor_product_id).val(); 
 var rejected_qty = $('#rejected_qty_'+vendor_product_id).val();  
 var total_qty = $('#total_qty_'+vendor_product_id).val(); 
-var grn = $('#grn_'+vendor_product_id).val();  
+var grn = $('#grn_'+vendor_product_id).val();
+if(grn==null || grn=="")
+{
+alert('Please enter the goods receipt note (GRN) in all selected rows!');
+valid=0;
+return false;
+} 
 
 
 var general_product_id = $('#buying_price_'+vendor_product_id).attr('data-general_product_id');
@@ -923,7 +929,7 @@ data_array.push(data_inventory);
 console.log(data_array);
 });
 
-    if(data_array.length  > 0){
+    if(data_array.length  > 0 && valid > 0){
            $.ajax({
                     url: 'index.php?path=catalog/product/updateMultiInventory&token=<?= $token ?>',
                     dataType: 'json',
