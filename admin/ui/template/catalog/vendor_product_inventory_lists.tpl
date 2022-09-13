@@ -219,6 +219,7 @@
                                      <td class="text-left"><?php echo 'Total Procured Qty'; ?></td>
                                      <td class="text-left"><?php echo 'Rejected Qty'; ?></td>
 									 <td class="text-right"><?php echo 'Total Qty'; ?></td>
+                                     <td class="text-left">GRN</td>
                                      <td class="text-right"><?php echo $column_action; ?></td>
                                      
                                     
@@ -288,6 +289,9 @@
 				    <td class="text-left">
                                         <input style="max-width: 75px !important; text-align: right; " name="total_qty" disabled type="number"  id="total_qty_<?php echo $product['product_store_id'];?>" value="">
                                     </td>
+                                    <td class="text-left">
+                                        <input style="max-width: 75px !important;" type="text" class="source" id="grn_<?php echo $product['product_store_id'];?>"   value="<?php echo $product['grn']; ?>">
+                                    </td>
                                     <td class="text-right"><?php if($this->user->getId() == 174) { ?><button type="button" onclick="ChangeProductInventory('<?php echo $product['product_store_id']; ?>');" data-toggle="tooltip" title="" class="btn btn-default" data-original-title="Save"><i class="fa fa-check-circle text-success"></i></button><?php } ?>
 									<button type="button" onclick="getProductInventoryHistory('<?php echo $product['product_store_id']; ?>');" 
 									data-toggle="modal" data-target="#<?php echo $product['product_store_id']; ?>historyModal"
@@ -299,12 +303,14 @@
 									  <div class="modal-dialog">
 
 										<!-- Modal content-->
-										<div class="modal-content" style="min-width: 780px !important;">
+										<div class="modal-content" style="min-width: 880px !important;">
 										  <div style="color: white;background-color: #008db9;" class="modal-header">
                                                                                       	<button type="button" class="close" data-dismiss="modal">&times;</button>
 											<h4 class="modal-title"><strong>Inventory History : <?php echo $product['name']; ?></strong></h4>
 										  </div>
 										  <div class="modal-body">
+                                          <div id="inner-content" class="inner-content">
+                                          </div>
 											
 										  </div>
 										  <div class="modal-footer">
@@ -630,17 +636,17 @@ function changeStatus(status) {
     }
 
 function getProductInventoryHistory(product_store_id){
-	  $('.modal-body').html('');
+	  $('.inner-content').html('');
 	   $.ajax({
                     url: 'index.php?path=catalog/product/getProductInventoryHistory&token=<?= $token ?>',
                     dataType: 'html',
                     data: {product_store_id :product_store_id},
                     success: function(json) {
-					   $('.modal-body').html(json);
+					   $('.inner-content').html(json);
                     },
 					error: function(json) {
 					 console.log('html',json);
-					  $('.modal-body').html(json);
+					  $('.inner-content').html(json);
                     }
          });
 }
@@ -904,12 +910,14 @@ var source = $('#source_'+vendor_product_id).val();
 var current_qty = $('#current_qty_in_warehouse_'+vendor_product_id).val(); 
 var total_procured_qty = $('#total_procured_qty_'+vendor_product_id).val(); 
 var rejected_qty = $('#rejected_qty_'+vendor_product_id).val();  
-var total_qty = $('#total_qty_'+vendor_product_id).val();   
+var total_qty = $('#total_qty_'+vendor_product_id).val(); 
+var grn = $('#grn_'+vendor_product_id).val();  
+
 
 var general_product_id = $('#buying_price_'+vendor_product_id).attr('data-general_product_id');
 var product_name = $('#buying_price_'+vendor_product_id).attr('data-name');
 
-data_inventory[vendor_product_id] = { 'vendor_product_id' : vendor_product_id, 'buying_price' : buying_price, 'source' : source, 'current_qty' : current_qty, 'total_procured_qty' : total_procured_qty, 'rejected_qty' : rejected_qty, 'total_qty' : total_qty, 'product_id' : general_product_id, 'product_name' : product_name};
+data_inventory[vendor_product_id] = { 'vendor_product_id' : vendor_product_id, 'buying_price' : buying_price, 'source' : source, 'current_qty' : current_qty, 'total_procured_qty' : total_procured_qty, 'rejected_qty' : rejected_qty, 'total_qty' : total_qty, 'product_id' : general_product_id, 'product_name' : product_name,'grn':grn};
 console.log(data_inventory);
 data_array.push(data_inventory);
 console.log(data_array);
@@ -922,7 +930,7 @@ console.log(data_array);
                     data: {updated_products :data_array},
                     success: function(json) {
                     if (json) {
-                    $('.panel.panel-default').before('<div class="alert alert-warning"><i class="fa fa-warning"></i> ' + json.warning + '<button type="button" class="close" data-dismiss="alert">×</button></div>');
+                    //$('.panel.panel-default').before('<div class="alert alert-warning"><i class="fa fa-warning"></i> ' + json.warning + '<button type="button" class="close" data-dismiss="alert">×</button></div>');
                     }
                     else {
                     location.reload();

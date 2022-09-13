@@ -366,7 +366,7 @@ class ControllerCatalogProduct extends Controller {
           } */
         foreach ($update_products as $key => $value) {
             foreach ($value as $ke => $val) {
-                $product = array('rejected_qty' => $val['rejected_qty'], 'procured_qty' => $val['total_procured_qty'], 'current_qty' => $val['current_qty'], 'current_buying_price' => $val['buying_price'], 'source' => $val['source'], 'product_id' => $val['product_id'], 'product_name' => $val['product_name']);
+                $product = array('rejected_qty' => $val['rejected_qty'], 'procured_qty' => $val['total_procured_qty'], 'current_qty' => $val['current_qty'], 'current_buying_price' => $val['buying_price'], 'source' => $val['source'], 'product_id' => $val['product_id'], 'product_name' => $val['product_name'], 'grn' => $val['grn']);
                 $data[] = $this->model_catalog_vendor_product->updateProductInventory($ke, $product);
             }
         }
