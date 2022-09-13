@@ -310,9 +310,9 @@ class ModelPaymentMpesa extends Model {
     }
 
     public function deleteCustomerTransactionId($customer_id, $transaction_id) {
-        $sql = 'DELETE FROM ' . DB_PREFIX . "order_transaction_id WHERE order_id = 0 and customer_id= '" . (int) $customer_id . "'and transaction_id = '" . $transaction_id . "'";
+        /*$sql = 'DELETE FROM ' . DB_PREFIX . "order_transaction_id WHERE order_id = 0 and customer_id= '" . (int) $customer_id . "'and transaction_id = '" . $transaction_id . "'";
 
-        $query = $this->db->query($sql);
+        $query = $this->db->query($sql);*/
 
         //after deleteing Failed Transaction, check wallet and delete record if exists
         $sql1 = 'DELETE FROM ' . DB_PREFIX . "customer_credit WHERE order_id = 0 and customer_id= '" . (int) $customer_id . "'and transaction_id = '" . $transaction_id . "'";
