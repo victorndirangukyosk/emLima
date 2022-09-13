@@ -17,7 +17,7 @@
                 <button type="button" data-toggle="tooltip" title="<?php echo $button_disable; ?>" class="btn btn-default" onclick="changeStatus(0)"><i class="fa fa-times-circle text-danger"></i></button>
                 <!--<button type="button" data-toggle="tooltip" title="<?php echo $button_delete; ?>" class="btn btn-danger" onclick="confirm('<?php echo $text_confirm; ?>') ? $('#form-product').submit() : false;"><i class="fa fa-trash-o"></i></button>-->
             <?php } ?>
-		<span style="margin-left: 10px;" onclick="ChangeInventory()" form="form-product" data-toggle="tooltip" title="Change Inventory" class="btn btn-success"><i class="fa fa-check"></i></span>
+		<!--<span style="margin-left: 10px;" onclick="ChangeInventory()" form="form-product" data-toggle="tooltip" title="Change Inventory" class="btn btn-success"><i class="fa fa-check"></i></span>-->
             <?php } ?>
             </div>
             <h1><?php echo $heading_title; ?></h1>
