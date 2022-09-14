@@ -81,15 +81,10 @@ class ControllerSaleOrder extends Controller {
         if (!empty($order_info)) {
             $data['store_id'] = $order_info['store_id'];
             //$json = $this->model_sale_order->getProductDataByStoreFilter($filter_name, $data['store_id']);
-            if($this->user->hasPermission('modify', 'sale/edit_invoice_disabled_products'))
-            {
-            $json = $this->model_sale_order->getProductsForEditInvoice_All($filter_name, $data['store_id'], $this->request->get['order_id']);
-            
-            }
-            else
-            {
-            $json = $this->model_sale_order->getProductsForEditInvoice($filter_name, $data['store_id'], $this->request->get['order_id']);
-              
+            if ($this->user->hasPermission('modify', 'sale/edit_invoice_disabled_products')) {
+                $json = $this->model_sale_order->getProductsForEditInvoice_All($filter_name, $data['store_id'], $this->request->get['order_id']);
+            } else {
+                $json = $this->model_sale_order->getProductsForEditInvoice($filter_name, $data['store_id'], $this->request->get['order_id']);
             }
             $log = new Log('error.log');
             //$log->write('json');
@@ -526,18 +521,13 @@ class ControllerSaleOrder extends Controller {
         $log->write($this->request->get['order_id']);
         $log->write($this->request->get['product_store_id']);
 
-        if($this->user->hasPermission('modify', 'sale/edit_invoice_disabled_products'))
-        {
-        $product_info = $this->model_sale_order->getProductForPopup_all($this->request->get['product_store_id'], false, $order_info['store_id']);
-        $variations = $this->model_sale_order->getProductVariationsDisabled($product_info['name'], $order_info['store_id'], $this->request->get['order_id']);
-        
-        }
-        
-        else{
+        if ($this->user->hasPermission('modify', 'sale/edit_invoice_disabled_products')) {
+            $product_info = $this->model_sale_order->getProductForPopup_all($this->request->get['product_store_id'], false, $order_info['store_id']);
+            $variations = $this->model_sale_order->getProductVariationsDisabled($product_info['name'], $order_info['store_id'], $this->request->get['order_id']);
+        } else {
 
             $product_info = $this->model_sale_order->getProductForPopup($this->request->get['product_store_id'], false, $order_info['store_id']);
-        $variations = $this->model_sale_order->getProductVariationsNew($product_info['name'], $order_info['store_id'], $this->request->get['order_id']);
-        
+            $variations = $this->model_sale_order->getProductVariationsNew($product_info['name'], $order_info['store_id'], $this->request->get['order_id']);
         }
         //$log->write($variations);
         $json = $variations;
@@ -1406,7 +1396,7 @@ class ControllerSaleOrder extends Controller {
             'filter_delivery_time_slot' => $filter_delivery_time_slot,
             'filter_payment' => $filter_payment,
             'filter_order_status' => $filter_order_status,
-            'filter_customer_group' => $filter_customer_group,            
+            'filter_customer_group' => $filter_customer_group,
             'filter_order_type' => $filter_order_type,
             'filter_order_placed_from' => $filter_order_placed_from,
             'filter_paid' => $filter_paid,
@@ -1487,8 +1477,7 @@ class ControllerSaleOrder extends Controller {
                 'shipping_code' => $result['shipping_code'],
                 'view' => $this->url->link('sale/order/info', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'] . $url, 'SSL'),
                 'invoice' => $this->url->link('sale/order/invoice', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'] . $url, 'SSL'),
-                'delivery_note' => $this->url->link('sale/order/delivery_note', 'token=' . $this->session->data['token']. '&order_id=' . $result['order_id'] . $url, 'SSL'),
-
+                'delivery_note' => $this->url->link('sale/order/delivery_note', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'] . $url, 'SSL'),
                 'products_list' => $this->url->link('sale/order/productlist', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'] . $url, 'SSL'),
                 'order_spreadsheet' => $this->url->link('sale/order/orderCalculationSheet', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'] . $url, 'SSL'),
                 'shipping' => $this->url->link('sale/order/shipping', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'] . $url, 'SSL'),
@@ -1734,7 +1723,7 @@ class ControllerSaleOrder extends Controller {
         if (isset($this->request->get['filter_customer_group'])) {
             $url .= '&filter_customer_group=' . $this->request->get['filter_customer_group'];
         }
-        
+
         if (isset($this->request->get['filter_order_type'])) {
             $url .= '&filter_order_type=' . $this->request->get['filter_order_type'];
         }
@@ -1796,7 +1785,7 @@ class ControllerSaleOrder extends Controller {
 
         $data['filter_order_status'] = $filter_order_status;
         $data['filter_customer_group'] = $filter_customer_group;
-        
+
         $data['filter_order_type'] = $filter_order_type;
         $data['filter_order_placed_from'] = $filter_order_placed_from;
         $data['filter_paid'] = $filter_paid;
@@ -2286,10 +2275,11 @@ class ControllerSaleOrder extends Controller {
         $data['order_transaction_id'] = '';
 
         $order_transaction_data = $this->model_sale_order->getOrderTransactionId($order_id);
+        $data['order_transaction_id'] = $order_transaction_data;
 
-        if (count($order_transaction_data) > 0) {
-            $data['order_transaction_id'] = trim($order_transaction_data['transaction_id']);
-        }
+        /* if (count($order_transaction_data) > 0) {
+          $data['order_transaction_id'] = trim($order_transaction_data['transaction_id']);
+          } */
 
         $order_info = $this->model_sale_order->getOrder($order_id);
 
@@ -5201,7 +5191,6 @@ class ControllerSaleOrder extends Controller {
 
         $this->response->setOutput($this->load->view('sale/order_invoice.tpl', $data));
     }
-
 
     public function delivery_note() {
         $this->load->language('sale/order');
@@ -10267,9 +10256,8 @@ class ControllerSaleOrder extends Controller {
         if (is_array($order_info) && $order_info != NULL) {
 
             // if ($delivery_charge > 0) {
-                $this->model_sale_order->UpdateOrderDeliveryCharges($order_id, $delivery_charge);
+            $this->model_sale_order->UpdateOrderDeliveryCharges($order_id, $delivery_charge);
             // }
-
         }
 
         $json['status'] = 'success';
@@ -10812,7 +10800,7 @@ class ControllerSaleOrder extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
-    public function consolidatedCalculationSheetWithFilters() { 
+    public function consolidatedCalculationSheetWithFilters() {
         if (isset($this->request->get['filter_delivery_date'])) {
             $deliveryDate = $this->request->get['filter_delivery_date'];
         } else {//consolidated orders data should not be more , so get delivery date
