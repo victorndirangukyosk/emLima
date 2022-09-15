@@ -8,7 +8,7 @@
                 <!-- <a href="<?php echo $add; ?>" data-toggle="tooltip" title="<?php echo $button_add; ?>" class="btn btn-success"><i class="fa fa-plus"></i></a> -->
                 <!--<button type="button" data-toggle="tooltip" title="<?php echo $button_delete; ?>" class="btn btn-danger" onclick="confirm('<?php echo $text_confirm; ?>') ? $('#form-product').submit() : false;"><i class="fa fa-trash-o"></i></button>-->
             <?php }else{ ?>
-                <button type="button" id="new_update_inventory" data-toggle="tooltip" title="Update Inventory" class="btn btn-primary"><i class="fa fa-plus"></i></button>
+                <button type="button" id="new_update_inventory" data-toggle="tooltip" title="Add Inventory" class="btn btn-primary"><i class="fa fa-plus"></i></button>
                 <?php if($this->user->getGroupName() == 'Administrator') { ?>
                 <button type="button" data-toggle="tooltip" title="Update Inventory" class="btn btn-default" onclick="updateinventory();"><i class="fa fa-floppy-o text-success"></i></button>
                 <!--<a href="<?php echo $add; ?>" data-toggle="tooltip" title="<?php echo $button_add; ?>" class="btn btn-success"><i class="fa fa-plus"></i></a>
@@ -17,7 +17,7 @@
                 <button type="button" data-toggle="tooltip" title="<?php echo $button_disable; ?>" class="btn btn-default" onclick="changeStatus(0)"><i class="fa fa-times-circle text-danger"></i></button>
                 <!--<button type="button" data-toggle="tooltip" title="<?php echo $button_delete; ?>" class="btn btn-danger" onclick="confirm('<?php echo $text_confirm; ?>') ? $('#form-product').submit() : false;"><i class="fa fa-trash-o"></i></button>-->
             <?php } ?>
-		<span style="margin-left: 10px;" onclick="ChangeInventory()" form="form-product" data-toggle="tooltip" title="Change Inventory" class="btn btn-success"><i class="fa fa-check"></i></span>
+		<!--<span style="margin-left: 10px;" onclick="ChangeInventory()" form="form-product" data-toggle="tooltip" title="Change Inventory" class="btn btn-success"><i class="fa fa-check"></i></span>-->
             <?php } ?>
             </div>
             <h1><?php echo $heading_title; ?></h1>
@@ -219,6 +219,7 @@
                                      <td class="text-left"><?php echo 'Total Procured Qty'; ?></td>
                                      <td class="text-left"><?php echo 'Rejected Qty'; ?></td>
 									 <td class="text-right"><?php echo 'Total Qty'; ?></td>
+                                     <td class="text-left">GRN</td>
                                      <td class="text-right"><?php echo $column_action; ?></td>
                                      
                                     
@@ -288,6 +289,9 @@
 				    <td class="text-left">
                                         <input style="max-width: 75px !important; text-align: right; " name="total_qty" disabled type="number"  id="total_qty_<?php echo $product['product_store_id'];?>" value="">
                                     </td>
+                                    <td class="text-left">
+                                        <input style="max-width: 75px !important;" type="text" class="source" id="grn_<?php echo $product['product_store_id'];?>"   value="<?php echo $product['grn']; ?>">
+                                    </td>
                                     <td class="text-right"><?php if($this->user->getId() == 174) { ?><button type="button" onclick="ChangeProductInventory('<?php echo $product['product_store_id']; ?>');" data-toggle="tooltip" title="" class="btn btn-default" data-original-title="Save"><i class="fa fa-check-circle text-success"></i></button><?php } ?>
 									<button type="button" onclick="getProductInventoryHistory('<?php echo $product['product_store_id']; ?>');" 
 									data-toggle="modal" data-target="#<?php echo $product['product_store_id']; ?>historyModal"
@@ -299,12 +303,14 @@
 									  <div class="modal-dialog">
 
 										<!-- Modal content-->
-										<div class="modal-content" style="min-width: 780px !important;">
+										<div class="modal-content" style="min-width: 880px !important;">
 										  <div style="color: white;background-color: #008db9;" class="modal-header">
                                                                                       	<button type="button" class="close" data-dismiss="modal">&times;</button>
 											<h4 class="modal-title"><strong>Inventory History : <?php echo $product['name']; ?></strong></h4>
 										  </div>
 										  <div class="modal-body">
+                                          <div id="inner-content" class="inner-content">
+                                          </div>
 											
 										  </div>
 										  <div class="modal-footer">
@@ -374,18 +380,18 @@
             <div class="modal-body">
                 <form id="inventory_update" name="inventory_update">
                     <div class="form-group required">
-                        <label for="recipient-name" class="col-form-label">Product Name</label>
+                        <label for="recipient-name" class="col control-label">Product Name</label>
                         <input type="text" placeholder="Serach Product" class="form-control" data-vendor-product-id="" data-vendor-product-name="" id="new_vendor_product_name" name="new_vendor_product_name" style="max-width: 568px !important;">
                     </div>
                     <div class="form-group required">
-                        <label for="recipient-name" class="col-form-label">Product UOM</label>
+                        <label for="recipient-name" class="col control-label">Product UOM</label>
                         <select class="form-select" id="new_vendor_product_uom" name="new_vendor_product_uom" style="max-width: 568px !important;">
                         </select>
                     </div>
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="form-group required">
-                                <label for="buying-price" class="col-form-label">Buying Price</label>
+                                <label for="buying-price" class="col control-label">Buying Price</label>
                                 <input type="number" class="form-control" id="new_buying_price" name="new_buying_price" min="1" style="max-width: 568px !important;">
                             </div>   
                         </div>
@@ -399,7 +405,7 @@
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="form-group required">
-                                <label for="procured-quantity" class="col-form-label">Procured Quantity</label>
+                                <label for="procured-quantity" class="col control-label">Procured Quantity</label>
                                 <input type="number" class="form-control" id="new_procured_quantity" name="new_procured_quantity" min="0.01" style="max-width: 568px !important;">
                             </div>   
                         </div>
@@ -410,6 +416,18 @@
                             </div>   
                         </div>
                     </div>
+            <div class="row">
+                    <div class="col-sm-6">
+                            <div class="form-group required">
+                           
+                                <label for="grn" class="col control-label">Goods Receipt Note</label>
+                                <input placeholder="Goods Receipt Note" type="text" class="form-control" id="grn" name="grn" style="max-width: 568px !important;">
+                            </div>   
+                        </div>
+
+                        
+                        </div>
+
                 </form>
             </div>
             <div class="modal-footer">
@@ -618,17 +636,17 @@ function changeStatus(status) {
     }
 
 function getProductInventoryHistory(product_store_id){
-	  $('.modal-body').html('');
+	  $('.inner-content').html('');
 	   $.ajax({
                     url: 'index.php?path=catalog/product/getProductInventoryHistory&token=<?= $token ?>',
                     dataType: 'html',
                     data: {product_store_id :product_store_id},
                     success: function(json) {
-					   $('.modal-body').html(json);
+					   $('.inner-content').html(json);
                     },
 					error: function(json) {
 					 console.log('html',json);
-					  $('.modal-body').html(json);
+					  $('.inner-content').html(json);
                     }
          });
 }
@@ -883,7 +901,7 @@ if($('input[name="selected[]"]:checked').length == 0) {
 alert('Please select atleaset one product!');
 return false;
 }
-var data_array = [];
+var data_array = [];var valid=1; 
 $('input[name="selected[]"]:checked').each(function() {
 var data_inventory = {};
 var vendor_product_id = $(this).val();
@@ -892,25 +910,33 @@ var source = $('#source_'+vendor_product_id).val();
 var current_qty = $('#current_qty_in_warehouse_'+vendor_product_id).val(); 
 var total_procured_qty = $('#total_procured_qty_'+vendor_product_id).val(); 
 var rejected_qty = $('#rejected_qty_'+vendor_product_id).val();  
-var total_qty = $('#total_qty_'+vendor_product_id).val();   
+var total_qty = $('#total_qty_'+vendor_product_id).val(); 
+var grn = $('#grn_'+vendor_product_id).val();
+if(grn==null || grn=="")
+{
+alert('Please enter the goods receipt note (GRN) in all selected rows!');
+valid=0;
+return false;
+} 
+
 
 var general_product_id = $('#buying_price_'+vendor_product_id).attr('data-general_product_id');
 var product_name = $('#buying_price_'+vendor_product_id).attr('data-name');
 
-data_inventory[vendor_product_id] = { 'vendor_product_id' : vendor_product_id, 'buying_price' : buying_price, 'source' : source, 'current_qty' : current_qty, 'total_procured_qty' : total_procured_qty, 'rejected_qty' : rejected_qty, 'total_qty' : total_qty, 'product_id' : general_product_id, 'product_name' : product_name};
+data_inventory[vendor_product_id] = { 'vendor_product_id' : vendor_product_id, 'buying_price' : buying_price, 'source' : source, 'current_qty' : current_qty, 'total_procured_qty' : total_procured_qty, 'rejected_qty' : rejected_qty, 'total_qty' : total_qty, 'product_id' : general_product_id, 'product_name' : product_name,'grn':grn};
 console.log(data_inventory);
 data_array.push(data_inventory);
 console.log(data_array);
 });
 
-    if(data_array.length  > 0){
+    if(data_array.length  > 0 && valid > 0){
            $.ajax({
                     url: 'index.php?path=catalog/product/updateMultiInventory&token=<?= $token ?>',
                     dataType: 'json',
                     data: {updated_products :data_array},
                     success: function(json) {
                     if (json) {
-                    $('.panel.panel-default').before('<div class="alert alert-warning"><i class="fa fa-warning"></i> ' + json.warning + '<button type="button" class="close" data-dismiss="alert">×</button></div>');
+                    //$('.panel.panel-default').before('<div class="alert alert-warning"><i class="fa fa-warning"></i> ' + json.warning + '<button type="button" class="close" data-dismiss="alert">×</button></div>');
                     }
                     else {
                     location.reload();
@@ -993,6 +1019,8 @@ var procured_quantity = $('#new_procured_quantity').val();
 var rejected_quantity = $('#new_rejected_quantity').val();
 var vendor_product_id = $('#new_vendor_product_name').attr('data-vendor-product-id');
 var buying_source_id = $('input[name=\'new_buying_source\']').attr('data-new-buying-source-id');
+var grn = $('#grn').val();
+
 $('.alert.alert-success').html('');
 $('.alert.alert-success.download').html('');
 $('.alert.alert-danger').html(''); 
@@ -1002,7 +1030,7 @@ $('.alert.alert-danger').hide();
 $.ajax({
         url: 'index.php?path=catalog/product/updateInventorysingle&token=<?= $token ?>',
         dataType: 'json',
-        data: { 'vendor_product_uom' : vendor_product_uom, 'buying_price' : buying_price, 'buying_source' : buying_source, 'buying_source_id' : buying_source_id, 'procured_quantity' : procured_quantity, 'rejected_quantity' : rejected_quantity, 'vendor_product_id' : vendor_product_id  },
+        data: { 'vendor_product_uom' : vendor_product_uom, 'buying_price' : buying_price, 'buying_source' : buying_source, 'buying_source_id' : buying_source_id, 'procured_quantity' : procured_quantity, 'rejected_quantity' : rejected_quantity, 'vendor_product_id' : vendor_product_id,'grn':grn  },
         async: true,
         beforeSend: function() {
         $('#update_inventory_form').prop('disabled', true);
