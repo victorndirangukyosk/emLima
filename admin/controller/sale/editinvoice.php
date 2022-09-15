@@ -149,7 +149,7 @@ class ControllerSaleEditinvoice extends Controller {
                 $tax = 0;
                 $new_total = 0;
 
-            // echo "<pre>";print_r($products);die;
+                // echo "<pre>";print_r($products);die;
 
                 foreach ($products as $product) {
                     if ($store_id && $product['store_id'] != $store_id) {
@@ -184,11 +184,9 @@ class ControllerSaleEditinvoice extends Controller {
                     //     $variationsold =$variations;
                     //   } else {
                     //     //echo 'NOT FOUND!';
-                    $variation_disabled = $this->model_sale_order->getProductVariationsDisabled($product['name'], 75, $order_id,$product['product_id'],$product['price']);
+                    $variation_disabled = $this->model_sale_order->getProductVariationsDisabled($product['name'], 75, $order_id, $product['product_id'], $product['price']);
                     // $variationsold =array_merge($variations,$variation_disabled);
-
                     //   }
-
                     // echo "<pre>";print_r($variationsold);
                     $missed_quantity = $this->model_sale_order->getMissingProductQuantityByProductIdOrderId($order_id, $product['product_id'], 0);
                     $required_quantity = isset($missed_quantity) && count($missed_quantity) > 0 ? $missed_quantity['quantity_required'] : 0;
@@ -206,7 +204,7 @@ class ControllerSaleEditinvoice extends Controller {
                         //'total' => $product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0)
                         /* OLD TOTAL WITH TAX */ //'total' => ($product['price'] * $product['quantity']) + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0),
                         'total' => ($product['price'] * ($product['quantity'] - $required_quantity)),
-                        'variations' =>$variation_disabled,// $variations,
+                        'variations' => $variation_disabled, // $variations,
                         'missed_quantity' => isset($missed_quantity) && count($missed_quantity) > 0 ? $missed_quantity['quantity_required'] : 0,
                     ];
                     $sub_total += ($product['price'] * ($product['quantity'] - $required_quantity));
@@ -223,6 +221,11 @@ class ControllerSaleEditinvoice extends Controller {
                 }
 
                 foreach ($totals as $total) {
+                    $log = new Log('error.log');
+                    $log->write('total');
+                    $log->write($total);
+                    $log->write('total');
+
                     if ($total['code'] == 'sub_total') {
                         $total_data[] = [
                             'title' => $total['title'],
@@ -548,32 +551,24 @@ class ControllerSaleEditinvoice extends Controller {
 
                     // if ($subTotal < $free_delivery_amount) {
                     //     $log->write('shipping_price if');
-
                     //     $this->load->model('shipping/' . $tmp[0]);
                     //     $shipping_price = $this->{'model_shipping_' . $tmp[0]}->getPrice($store_id, $subTotal, $subTotal, $order_info['latitude'], $order_info['longitude'], $shipping_city_id);
-
                     //     $log->write($shipping_price);
-
                     //     $value_coming_tmp = 0;
-
                     //     if ((isset($datas['totals']) && array_key_exists('shipping', $datas['totals']))) {
                     //         $value_coming_tmp = $datas['totals']['shipping']['value'];
-
                     //         $datas['totals']['shipping']['value_coming'] = $value_coming_tmp;
                     //     }
                     // } else {
                     //     $value_coming_tmp = 0;
-
                     //     if ((isset($datas['totals']) && array_key_exists('shipping', $datas['totals']))) {
                     //         $value_coming_tmp = $datas['totals']['shipping']['value'];
                     //     }
-
                     //     // $datas['totals']['shipping'] = [];
                     //     // $datas['totals']['shipping']['code'] = 'shipping';
                     //     // $datas['totals']['shipping']['title'] = 'Shipping charge';
                     //     // $datas['totals']['shipping']['value'] = $value_coming_tmp;
                     //     // $datas['totals']['shipping']['actual_value'] = $value_coming_tmp;
-
                     //     // $datas['totals']['shipping']['value_coming'] = $value_coming_tmp;
                     // }
                 }
@@ -607,13 +602,10 @@ class ControllerSaleEditinvoice extends Controller {
                     /* $log->write("updatetotals");
                       $log->write($tot); */
                     $tot['sort'] = $p;
-                    if($subTotal>= $this->config->get('config_active_store_minimum_order_amount') && ($tot['code'] =='shipping'|| $tot['code'] =='delivery_vat') )
-                    {
-                    $orderTotal=$orderTotal-  $tot['value'];  
-                    }
-                    else{
-                    $this->model_sale_order->insertOrderTotal($order_id, $tot, $shipping_price);
-
+                    if ($subTotal >= $this->config->get('config_active_store_minimum_order_amount') && ($tot['code'] == 'shipping' || $tot['code'] == 'delivery_vat')) {
+                        $orderTotal = $orderTotal - $tot['value'];
+                    } else {
+                        $this->model_sale_order->insertOrderTotal($order_id, $tot, $shipping_price);
                     }
                     if ($tot['code'] == "credit") {
                         $wallet_amount_positive = abs($tot['value']);
