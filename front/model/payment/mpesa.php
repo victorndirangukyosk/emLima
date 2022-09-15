@@ -310,9 +310,9 @@ class ModelPaymentMpesa extends Model {
     }
 
     public function deleteCustomerTransactionId($customer_id, $transaction_id) {
-        /*$sql = 'DELETE FROM ' . DB_PREFIX . "order_transaction_id WHERE order_id = 0 and customer_id= '" . (int) $customer_id . "'and transaction_id = '" . $transaction_id . "'";
+        /* $sql = 'DELETE FROM ' . DB_PREFIX . "order_transaction_id WHERE order_id = 0 and customer_id= '" . (int) $customer_id . "'and transaction_id = '" . $transaction_id . "'";
 
-        $query = $this->db->query($sql);*/
+          $query = $this->db->query($sql); */
 
         //after deleteing Failed Transaction, check wallet and delete record if exists
         $sql1 = 'DELETE FROM ' . DB_PREFIX . "customer_credit WHERE order_id = 0 and customer_id= '" . (int) $customer_id . "'and transaction_id = '" . $transaction_id . "'";
@@ -440,10 +440,10 @@ class ModelPaymentMpesa extends Model {
                 }
 
                 if ($pending_amount > $data->TransAmount) {
-                    $sql = 'INSERT into ' . DB_PREFIX . "order_transaction_id SET order_id = '" . (int) $result['order_id'] . "', transaction_id = '" . $this->db->escape($data->TransID) . "', pending_amount = '" . (int) $result['amount_partialy_paid'] - ($data->TransAmount) . "', amount = '" . (int) $data->TransAmount . "', customer_id = '" . $result['customer_id'] . "', created_at = NOW()";
+                    $sql = 'INSERT into ' . DB_PREFIX . "order_transaction_id SET order_id = '" . (int) $result['order_id'] . "', transaction_id = '" . $this->db->escape($data->TransID) . "', pending_amount = '" . (int) ($result['amount_partialy_paid']) - ($data->TransAmount) . "', amount = '" . (int) $data->TransAmount . "', customer_id = '" . $result['customer_id'] . "', created_at = NOW()";
                     $query = $this->db->query($sql);
 
-                    $this->db->query('UPDATE `' . DB_PREFIX . "order` SET payment_method = 'mPesa On Delivery', payment_code = 'mod', paid = 'P', amount_partialy_paid = '" . $result['amount_partialy_paid'] + $data->TransAmount . "', date_modified = NOW() WHERE order_id = '" . (int) $result['order_id'] . "'");
+                    $this->db->query('UPDATE `' . DB_PREFIX . "order` SET payment_method = 'mPesa On Delivery', payment_code = 'mod', paid = 'P', amount_partialy_paid = '" . (int) ($result['amount_partialy_paid']) + ($data->TransAmount) . "', date_modified = NOW() WHERE order_id = '" . (int) $result['order_id'] . "'");
                 }
 
                 if ($pending_amount < $data->TransAmount) {
@@ -474,7 +474,7 @@ class ModelPaymentMpesa extends Model {
                 $sql = 'INSERT into ' . DB_PREFIX . "order_transaction_id SET order_id = '" . (int) $result['order_id'] . "', transaction_id = '" . $this->db->escape($data->TransID) . "', pending_amount = '" . (int) (($result['total']) - ($data->TransAmount)) . "', amount = '" . (int) $data->TransAmount . "', customer_id = '" . $result['customer_id'] . "', created_at = NOW()";
                 $query = $this->db->query($sql);
 
-                $this->db->query('UPDATE `' . DB_PREFIX . "order` SET payment_method = 'mPesa On Delivery', payment_code = 'mod', paid = 'P', amount_partialy_paid = '" . $result['amount_partialy_paid'] + $data->TransAmount . "', date_modified = NOW() WHERE order_id = '" . (int) $result['order_id'] . "'");
+                $this->db->query('UPDATE `' . DB_PREFIX . "order` SET payment_method = 'mPesa On Delivery', payment_code = 'mod', paid = 'P', amount_partialy_paid = '" . (int) ($result['amount_partialy_paid']) + ($data->TransAmount) . "', date_modified = NOW() WHERE order_id = '" . (int) $result['order_id'] . "'");
 
                 // Add to activity log
                 $this->load->model('account/activity');
