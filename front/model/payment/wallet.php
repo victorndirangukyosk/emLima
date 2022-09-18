@@ -62,7 +62,10 @@ class ModelPaymentWallet extends Model {
         $this->db->query('INSERT INTO ' . DB_PREFIX . "customer_credit SET customer_id = '" . (int) $customer_id . "', order_id = '" . (int) $order_id . "', description = '" . $description . "', amount = '" . (float) ($amount * -1) . "', date_added = NOW()");
         $this->db->query('INSERT INTO ' . DB_PREFIX . "order_transaction_id SET customer_id = '" . (int) $customer_id . "', order_id = '" . (int) $order_id . "', amount = '" . (float) $amount . "', transaction_id = 'Paid from wallet amount (T)', created_at = NOW()");
 
+        // $log->write('INSERT INTO ' . DB_PREFIX . "order_transaction_id SET customer_id = '" . (int) $customer_id . "', order_id = '" . (int) $order_id . "', amount = '" . (float) $amount . "', transaction_id = 'Paid from wallet amount (T)', created_at = NOW()");
         $this->db->query('UPDATE ' . DB_PREFIX . "order SET paid='Y', amount_partialy_paid = 0   WHERE order_id='" . (int) $order_id . "'"); //,total='" . (float) $total . "'
+        $log = new Log('error.log');
+        $log->write('Wallet method checking');
     }
 
     public function getOrder($order_id) {
