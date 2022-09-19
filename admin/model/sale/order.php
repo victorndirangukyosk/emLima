@@ -279,29 +279,34 @@ class ModelSaleOrder extends Model {
                 $category_price_data = $this->getCategoryPrices($re['product_store_id'], $store_id, $customer_info['customer_category']);
                 $re['category_price'] = is_array($category_price_data) && count($category_price_data) > 0 && array_key_exists('price', $category_price_data) && $category_price_data['price'] > 0 ? $category_price_data['price'] : 0;
                 $re['discount_percentage'] = is_array($category_price_data) && count($category_price_data) > 0 && array_key_exists('discount', $category_price_data) && $category_price_data['discount'] > 0 ? $category_price_data['discount'] : 0;
+                $re['discount_amount'] = is_array($category_price_data) && count($category_price_data) > 0 && array_key_exists('price', $category_price_data) && $category_price_data['price'] > 0 ? $category_price_data['orginal_price'] - $category_price_data['price'] : 0;
                 //$log = new Log('error.log');
                 //$log->write('category_price');
             } elseif ($parent_customer_info != NULL && isset($parent_customer_info['customer_category']) && $parent_customer_info['customer_category'] != NULL) {
                 $category_price_data = $this->getCategoryPrices($re['product_store_id'], $store_id, $parent_customer_info['customer_category']);
                 $re['category_price'] = is_array($category_price_data) && count($category_price_data) > 0 && array_key_exists('price', $category_price_data) && $category_price_data['price'] > 0 ? $category_price_data['price'] : 0;
                 $re['discount_percentage'] = is_array($category_price_data) && count($category_price_data) > 0 && array_key_exists('discount', $category_price_data) && $category_price_data['discount'] > 0 ? $category_price_data['discount'] : 0;
+                $re['discount_amount'] = is_array($category_price_data) && count($category_price_data) > 0 && array_key_exists('price', $category_price_data) && $category_price_data['price'] > 0 ? $category_price_data['orginal_price'] - $category_price_data['price'] : 0;
                 //$log = new Log('error.log');
                 //$log->write('category_price');
             } elseif ($parent_customer_info == NULL && $customer_info['customer_category'] == NULL && isset($customer_info['customer_discount_category']) && $customer_info['customer_discount_category'] != NULL) {
                 $category_price_data = $this->getDiscountCategoryPrices($re['product_store_id'], $store_id, $customer_info['customer_discount_category']);
                 $re['category_price'] = is_array($category_price_data) && count($category_price_data) > 0 && array_key_exists('price', $category_price_data) && $category_price_data['price'] > 0 ? $category_price_data['price'] : 0;
                 $re['discount_percentage'] = is_array($category_price_data) && count($category_price_data) > 0 && array_key_exists('discount', $category_price_data) && $category_price_data['discount'] > 0 ? $category_price_data['discount'] : 0;
+                $re['discount_amount'] = is_array($category_price_data) && count($category_price_data) > 0 && array_key_exists('price', $category_price_data) && $category_price_data['price'] > 0 ? $category_price_data['orginal_price'] - $category_price_data['price'] : 0;
                 //$log = new Log('error.log');
                 //$log->write('category_price');
             } elseif ($parent_customer_info != NULL && $parent_customer_info['customer_category'] == NULL && isset($parent_customer_info['customer_discount_category']) && $parent_customer_info['customer_discount_category'] != NULL) {
                 $category_price_data = $this->getDiscountCategoryPrices($re['product_store_id'], $store_id, $parent_customer_info['customer_discount_category']);
                 $re['category_price'] = is_array($category_price_data) && count($category_price_data) > 0 && array_key_exists('price', $category_price_data) && $category_price_data['price'] > 0 ? $category_price_data['price'] : 0;
                 $re['discount_percentage'] = is_array($category_price_data) && count($category_price_data) > 0 && array_key_exists('discount', $category_price_data) && $category_price_data['discount'] > 0 ? $category_price_data['discount'] : 0;
+                $re['discount_amount'] = is_array($category_price_data) && count($category_price_data) > 0 && array_key_exists('price', $category_price_data) && $category_price_data['price'] > 0 ? $category_price_data['orginal_price'] - $category_price_data['price'] : 0;
                 //$log = new Log('error.log');
                 //$log->write('category_price');
             } else {
                 $re['category_price'] = 0;
                 $re['discount_percentage'] = 0;
+                $re['discount_amount'] = 0;
                 //$log = new Log('error.log');
                 //$log->write('category_price_2');
             }
@@ -420,29 +425,34 @@ class ModelSaleOrder extends Model {
                 $category_price_data = $this->getCategoryPrices($re['product_store_id'], $store_id, $customer_info['customer_category']);
                 $re['category_price'] = is_array($category_price_data) && count($category_price_data) > 0 && array_key_exists('price', $category_price_data) && $category_price_data['price'] > 0 ? $category_price_data['price'] : 0;
                 $re['discount_percentage'] = is_array($category_price_data) && count($category_price_data) > 0 && array_key_exists('discount', $category_price_data) && $category_price_data['discount'] > 0 ? $category_price_data['discount'] : 0;
+                $re['discount_amount'] = is_array($category_price_data) && count($category_price_data) > 0 && array_key_exists('price', $category_price_data) && $category_price_data['price'] > 0 ? $category_price_data['orginal_price'] - $category_price_data['price'] : 0;
                 //$log = new Log('error.log');
                 //$log->write('category_price');
             } elseif ($parent_customer_info != NULL && isset($parent_customer_info['customer_category']) && $parent_customer_info['customer_category'] != NULL) {
                 $category_price_data = $this->getCategoryPrices($re['product_store_id'], $store_id, $parent_customer_info['customer_category']);
                 $re['category_price'] = is_array($category_price_data) && count($category_price_data) > 0 && array_key_exists('price', $category_price_data) && $category_price_data['price'] > 0 ? $category_price_data['price'] : 0;
                 $re['discount_percentage'] = is_array($category_price_data) && count($category_price_data) > 0 && array_key_exists('discount', $category_price_data) && $category_price_data['discount'] > 0 ? $category_price_data['discount'] : 0;
+                $re['discount_amount'] = is_array($category_price_data) && count($category_price_data) > 0 && array_key_exists('price', $category_price_data) && $category_price_data['price'] > 0 ? $category_price_data['orginal_price'] - $category_price_data['price'] : 0;
                 //$log = new Log('error.log');
                 //$log->write('category_price');
             } elseif ($parent_customer_info == NULL && $customer_info['customer_category'] == NULL && isset($customer_info['customer_discount_category']) && $customer_info['customer_discount_category'] != NULL) {
                 $category_price_data = $this->getDiscountCategoryPrices($re['product_store_id'], $store_id, $customer_info['customer_discount_category']);
                 $re['category_price'] = is_array($category_price_data) && count($category_price_data) > 0 && array_key_exists('price', $category_price_data) && $category_price_data['price'] > 0 ? $category_price_data['price'] : 0;
                 $re['discount_percentage'] = is_array($category_price_data) && count($category_price_data) > 0 && array_key_exists('discount', $category_price_data) && $category_price_data['discount'] > 0 ? $category_price_data['discount'] : 0;
+                $re['discount_amount'] = is_array($category_price_data) && count($category_price_data) > 0 && array_key_exists('price', $category_price_data) && $category_price_data['price'] > 0 ? $category_price_data['orginal_price'] - $category_price_data['price'] : 0;
                 //$log = new Log('error.log');
                 //$log->write('category_price');
             } elseif ($parent_customer_info != NULL && $parent_customer_info['customer_category'] == NULL && isset($parent_customer_info['customer_discount_category']) && $parent_customer_info['customer_discount_category'] != NULL) {
                 $category_price_data = $this->getDiscountCategoryPrices($re['product_store_id'], $store_id, $parent_customer_info['customer_discount_category']);
                 $re['category_price'] = is_array($category_price_data) && count($category_price_data) > 0 && array_key_exists('price', $category_price_data) && $category_price_data['price'] > 0 ? $category_price_data['price'] : 0;
                 $re['discount_percentage'] = is_array($category_price_data) && count($category_price_data) > 0 && array_key_exists('discount', $category_price_data) && $category_price_data['discount'] > 0 ? $category_price_data['discount'] : 0;
+                $re['discount_amount'] = is_array($category_price_data) && count($category_price_data) > 0 && array_key_exists('price', $category_price_data) && $category_price_data['price'] > 0 ? $category_price_data['orginal_price'] - $category_price_data['price'] : 0;
                 //$log = new Log('error.log');
                 //$log->write('category_price');
             } else {
                 $re['category_price'] = 0;
                 $re['discount_percentage'] = 0;
+                $re['discount_amount'] = 0;
                 //$log = new Log('error.log');
                 //$log->write('category_price_2');
             }

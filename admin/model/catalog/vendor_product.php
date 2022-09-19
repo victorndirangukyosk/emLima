@@ -1137,7 +1137,7 @@ class ModelCatalogVendorProduct extends Model {
         $discount_amount = ($discount / 100) * $special_price;
         $new_special_price = $special_price - $discount_amount;
 
-        $query = 'UPDATE ' . DB_PREFIX . "customer_discount SET price = '" . round($new_special_price) . "', discount = '" . $discount . "', status = 1, updated_at = NOW(), updated_by = '" . $this->user->getId() . "' WHERE product_store_id ='" . (int) $product_store_id . "' AND product_id ='" . (int) $product_id . "' AND product_category_price_id ='" . (int) $product_category_price_id . "' AND price_category='$category'";
+        $query = 'UPDATE ' . DB_PREFIX . "customer_discount SET orginal_price = '" . $special_price . "', price = '" . round($new_special_price) . "', discount = '" . $discount . "', status = 1, updated_at = NOW(), updated_by = '" . $this->user->getId() . "' WHERE product_store_id ='" . (int) $product_store_id . "' AND product_id ='" . (int) $product_id . "' AND product_category_price_id ='" . (int) $product_category_price_id . "' AND price_category='$category'";
         $log = new Log('error.log');
         $log->write($query);
         $res = $this->db->query($query);
@@ -1159,7 +1159,7 @@ class ModelCatalogVendorProduct extends Model {
         $discount_amount = ($discount / 100) * $special_price;
         $new_special_price = $special_price - $discount_amount;
 
-        $query = 'INSERT INTO ' . DB_PREFIX . "customer_discount SET  product_id = '" . $product_id . "', product_store_id = '" . $product_store_id . "', product_name = '" . $this->db->escape($product_name) . "', store_id = 75, price_category = '" . $category . "',price = '" . round($new_special_price) . "', discount = '" . $discount . "', status = 1, created_at = NOW(), created_by = '" . $this->user->getId() . "'";
+        $query = 'INSERT INTO ' . DB_PREFIX . "customer_discount SET orginal_price = '" . $special_price . "', product_id = '" . $product_id . "', product_store_id = '" . $product_store_id . "', product_name = '" . $this->db->escape($product_name) . "', store_id = 75, price_category = '" . $category . "',price = '" . round($new_special_price) . "', discount = '" . $discount . "', status = 1, created_at = NOW(), created_by = '" . $this->user->getId() . "'";
         $res = $this->db->query($query);
         return $res;
     }
