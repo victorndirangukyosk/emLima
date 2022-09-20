@@ -163,6 +163,18 @@ class ModelCatalogVendorProduct extends Model {
         return $product;
     }
 
+
+    public function getProductByName($product_name,$product_uom) {
+        $query = $this->db->query('SELECT DISTINCT p.*,pd.name,v.user_id as vendor_id FROM ' . DB_PREFIX . 'product_to_store p LEFT JOIN ' . DB_PREFIX . 'product_description pd ON (p.product_id = pd.product_id) LEFT JOIN ' . DB_PREFIX . 'store st ON (st.store_id = p.store_id) LEFT JOIN ' . DB_PREFIX . "user v ON (v.user_id = st.vendor_id) LEFT JOIN hf7_product gp on (gp.product_id=p.product_id) WHERE pd.name = '" . $product_name . "' AND pd.language_id = '" . (int) $this->config->get('config_language_id') . "' AND gp.unit ='". $product_uom."'");
+
+        $product = $query->row;
+
+        // echo ('SELECT DISTINCT p.*,pd.name,v.user_id as vendor_id FROM ' . DB_PREFIX . 'product_to_store p LEFT JOIN ' . DB_PREFIX . 'product_description pd ON (p.product_id = pd.product_id) LEFT JOIN ' . DB_PREFIX . 'store st ON (st.store_id = p.store_id) LEFT JOIN ' . DB_PREFIX . "user v ON (v.user_id = st.vendor_id) WHERE pd.name = '" . $product_name . "' AND pd.language_id = '" . (int) $this->config->get('config_language_id') . "' AND p.unit ='". $product_uom."'");die;
+
+
+        return $product;
+    }
+
     public function getProductDetail($p_id) {
         $query = $this->db->query('SELECT * from ' . DB_PREFIX . "product WHERE product_id = '" . $p_id . "'");
 
@@ -1137,7 +1149,7 @@ class ModelCatalogVendorProduct extends Model {
         $discount_amount = ($discount / 100) * $special_price;
         $new_special_price = $special_price - $discount_amount;
 
-        $query = 'UPDATE ' . DB_PREFIX . "customer_discount SET price = '" . round($new_special_price) . "', discount = '" . $discount . "', status = 1, updated_at = NOW(), updated_by = '" . $this->user->getId() . "' WHERE product_store_id ='" . (int) $product_store_id . "' AND product_id ='" . (int) $product_id . "' AND product_category_price_id ='" . (int) $product_category_price_id . "' AND price_category='$category'";
+        $query = 'UPDATE ' . DB_PREFIX . "customer_discount SET orginal_price = '" . $special_price . "', price = '" . round($new_special_price) . "', discount = '" . $discount . "', status = 1, updated_at = NOW(), updated_by = '" . $this->user->getId() . "' WHERE product_store_id ='" . (int) $product_store_id . "' AND product_id ='" . (int) $product_id . "' AND product_category_price_id ='" . (int) $product_category_price_id . "' AND price_category='$category'";
         $log = new Log('error.log');
         $log->write($query);
         $res = $this->db->query($query);
@@ -1159,7 +1171,7 @@ class ModelCatalogVendorProduct extends Model {
         $discount_amount = ($discount / 100) * $special_price;
         $new_special_price = $special_price - $discount_amount;
 
-        $query = 'INSERT INTO ' . DB_PREFIX . "customer_discount SET  product_id = '" . $product_id . "', product_store_id = '" . $product_store_id . "', product_name = '" . $this->db->escape($product_name) . "', store_id = 75, price_category = '" . $category . "',price = '" . round($new_special_price) . "', discount = '" . $discount . "', status = 1, created_at = NOW(), created_by = '" . $this->user->getId() . "'";
+        $query = 'INSERT INTO ' . DB_PREFIX . "customer_discount SET orginal_price = '" . $special_price . "', product_id = '" . $product_id . "', product_store_id = '" . $product_store_id . "', product_name = '" . $this->db->escape($product_name) . "', store_id = 75, price_category = '" . $category . "',price = '" . round($new_special_price) . "', discount = '" . $discount . "', status = 1, created_at = NOW(), created_by = '" . $this->user->getId() . "'";
         $res = $this->db->query($query);
         return $res;
     }

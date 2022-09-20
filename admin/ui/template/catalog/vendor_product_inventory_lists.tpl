@@ -956,7 +956,8 @@ $('input[name=\'new_vendor_product_name\']').autocomplete({
                     success: function(json) {
                         response($.map(json, function(item) {
                             return {
-                                label: item['name']+' '+item['unit'],
+                               label: item['name'],
+                                //label: item['name']+' '+item['unit'],
                                 value: item['product_store_id']
                             }
                         }));
@@ -966,8 +967,10 @@ $('input[name=\'new_vendor_product_name\']').autocomplete({
             'select': function(item) {
                 console.log(item['value']);
                 var selected_product_store_id = item['value'];
+                var selected_product_store_name = item['label'];
+
                 $('#new_vendor_product_name').attr('data-vendor-product-id', selected_product_store_id);
-                $('#new_vendor_product_name').attr('data-vendor-product-name', selected_product_store_id);
+                $('#new_vendor_product_name').attr('data-vendor-product-name', selected_product_store_name);
                 $('input[name=\'new_vendor_product_name\']').val(item['label']);
                 $.ajax({
                 url: 'index.php?path=dropdowns/dropdowns/getVendorProductVariantsInfo&product_store_id='+selected_product_store_id+'&token=<?php echo $token; ?>',
@@ -985,16 +988,17 @@ $('input[name=\'new_vendor_product_name\']').autocomplete({
                     if(json != null && json.length > 0) {
                     $select.append(option);
                     }
-                    var $price_input = $('#new_vendor_product_price');
-                    var special_price = json[0].price == null || json[0].price == 0 ? json[0].special_price : json[0].price;
-                    $price_input.val(special_price.replace(/,/g, ""));
-                    $('.selectpicker').selectpicker('refresh');
+                     $('.selectpicker').selectpicker('refresh');
+                     var product_uom = $('#new_vendor_product_uom').val();     
+                    var vendor_product_name = $('#new_vendor_product_name').attr('data-vendor-product-name');
+                  
+                    
                 }
             }
             });
             }
 });                    
-
+ 
                     
 $('button[id^=\'new_update_inventory\']').on('click', function (e) {
 $("form[id^='inventory_update']")[0].reset();
@@ -1017,7 +1021,10 @@ var buying_price = $('#new_buying_price').val();
 var buying_source = $('#new_buying_source').val();
 var procured_quantity = $('#new_procured_quantity').val();
 var rejected_quantity = $('#new_rejected_quantity').val();
-var vendor_product_id = $('#new_vendor_product_name').attr('data-vendor-product-id');
+//var vendor_product_id = $('#new_vendor_product_name').attr('data-vendor-product-id');
+//above ID is not correct to consider, as changing uom dropdown will not update product ID 
+var vendor_product_name = $('#new_vendor_product_name').attr('data-vendor-product-name');
+
 var buying_source_id = $('input[name=\'new_buying_source\']').attr('data-new-buying-source-id');
 var grn = $('#grn').val();
 
@@ -1030,7 +1037,7 @@ $('.alert.alert-danger').hide();
 $.ajax({
         url: 'index.php?path=catalog/product/updateInventorysingle&token=<?= $token ?>',
         dataType: 'json',
-        data: { 'vendor_product_uom' : vendor_product_uom, 'buying_price' : buying_price, 'buying_source' : buying_source, 'buying_source_id' : buying_source_id, 'procured_quantity' : procured_quantity, 'rejected_quantity' : rejected_quantity, 'vendor_product_id' : vendor_product_id,'grn':grn  },
+        data: { 'vendor_product_uom' : vendor_product_uom, 'buying_price' : buying_price, 'buying_source' : buying_source, 'buying_source_id' : buying_source_id, 'procured_quantity' : procured_quantity, 'rejected_quantity' : rejected_quantity, 'vendor_product_name' : vendor_product_name,'grn':grn  },
         async: true,
         beforeSend: function() {
         $('#update_inventory_form').prop('disabled', true);

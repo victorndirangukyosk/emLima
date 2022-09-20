@@ -1764,4 +1764,79 @@ class ControllerSaleSupplier extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
+
+    public function autocompletesupplierfarmer_fromAPI() {
+        $json = [];
+
+
+        if (isset($this->request->get['filter_name']) ) {
+            if (isset($this->request->get['filter_name'])) {
+                $filter_name = $this->request->get['filter_name'];
+            } else {
+                $filter_name = '';
+            }             
+
+            $filter_data = [
+                'filter_name' => $filter_name,
+                'start' => 0,
+                'limit' => 5,
+            ];
+
+            $log = new Log('error.log'); 
+            $body = array('token' => $this->session->data['token'], 'provider' => 'users');
+        $body = http_build_query($body);      
+        $curl = curl_init();
+        // if ($this->config->get('environment') == 'live') {
+            $log->write('Get Farmers and Suppliers');
+            curl_setopt($curl, CURLOPT_URL, 'https://api.farmers.kwikbasket.com/api/suppliers?keyword='.$filter_name);
+            // https://api.farmers.kwikbasket.com/api/suppliers?keyword=patrick&take=20&page=1
+            curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type:application/x-www-form-urlencoded'));
+        // } else {
+        //  }
+
+        //$log->write($body);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_GET, 1);
+        // curl_setopt($curl, CURLOPT_POSTFIELDS, $body); //Setting post data as xml
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+        $result = curl_exec($curl);
+
+        //$log->write($result);
+        curl_close($curl);
+        $results = json_decode($result, true);
+
+        // echo "<pre>";print_r($results);die;
+
+
+            // $results = $this->model_user_user->getFarmerSupplierUsers($filter_data); 
+            foreach ($results['data'] as $result) {
+                if ($this->user->isVendor()) {
+                    $result['name'] = $result['first_name'];
+                }
+
+                $json[] = [
+                    'supplier_id' => $result['supplier_id'],
+                    // 'username' => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8')),
+                    'name' => ($result['first_name']. ' '.$result['last_name']),
+                    // 'firstname' => $result['first_name'],
+                    // 'lastname' => $result['last_name'],
+                    'email' => $result['email'],
+                    'mobile' => $result['mobile']
+                ];
+            }
+        }
+
+        $sort_order = [];
+
+        foreach ($json as $key => $value) {
+            $sort_order[$key] = $value['name'];
+        }
+
+        array_multisort($sort_order, SORT_ASC, $json);
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
 }

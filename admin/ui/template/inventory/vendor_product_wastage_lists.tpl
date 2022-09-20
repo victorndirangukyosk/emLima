@@ -385,7 +385,7 @@ $('input[name=\'filter_store_id\']').autocomplete({
 
 
 $('#new_vendor_product_uom').change(function(){
-  //alert("The text has been changed.");
+    
     var product_uom = $('#new_vendor_product_uom').val();     
     var vendor_product_name = $('#new_vendor_product_name').attr('data-vendor-product-name');
     $.ajax({
@@ -644,7 +644,6 @@ $('input[name=\'new_vendor_product_name\']').autocomplete({
                     }
                     
                     $('.selectpicker').selectpicker('refresh');
-                        alert("The text has been changed.");
 
                      var product_uom = $('#new_vendor_product_uom').val();     
                     var vendor_product_name = $('#new_vendor_product_name').attr('data-vendor-product-name');
