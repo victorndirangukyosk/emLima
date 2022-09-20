@@ -302,7 +302,8 @@ class ControllerCatalogProduct extends Controller {
             $buying_source_id = $this->request->get['buying_source_id'];
             $procured_quantity = $this->request->get['procured_quantity'];
             $rejected_quantity = $this->request->get['rejected_quantity'];
-            $vendor_product_id = $this->request->get['vendor_product_id'];
+            // $vendor_product_id = $this->request->get['vendor_product_id'];
+            $vendor_product_id = $product_details['product_store_id'];
             $grn = $this->request->get['grn'];
 
 
