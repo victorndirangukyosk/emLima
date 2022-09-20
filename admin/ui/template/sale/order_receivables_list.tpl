@@ -328,6 +328,9 @@
                                        Pending Amount 
                                         </td>
 
+                                    <td class="text-right"> 
+                                        Amount Applied
+                                        </td>
                                         <td class="text-left"> 
                                        Transaction ID
                                         </td>
@@ -373,6 +376,7 @@
                                     <td class="text-left"><?php echo $order['paid']; ?></td>
                                    <!-- <td class="text-right"><?php echo $order['amount_partialy_paid']; ?></td>-->
                                     <td class="text-right"><?php echo $order['pending_amount']; ?></td>
+                                    <td class="text-right"><?php echo $order['patial_amount_applied_value']; ?></td>
                                     <td class="text-left"><?php echo $order['transaction_id']; ?></td>
                                       <!--<td class="text-left"><?php echo $order['date_added']; ?></td> -->
                                     <td class="text-left"><?php echo $order['paid_to']; ?></td>
