@@ -111,6 +111,15 @@ class ControllerSaleEditinvoice extends Controller {
 
                 $data['customer_id'] = $order_info['customer_id'];
 
+                $this->load->model('account/customer');
+                $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
+                /* IF CUSTOMER SUB CUSTOMER */
+                $parent_customer_info = NULL;
+                if (isset($customer_info) && $customer_info['parent'] > 0) {
+                    $parent_customer_info = $this->model_account_customer->getCustomer($customer_info['parent']);
+                    $customer_info['customer_discount_category'] = $parent_customer_info['customer_discount_category'];
+                }
+
                 if ($store_data) {
                     $store_address = $store_data['address'];
                     $store_email = $store_data['email'];
@@ -188,6 +197,16 @@ class ControllerSaleEditinvoice extends Controller {
                     // $variationsold =array_merge($variations,$variation_disabled);
                     //   }
                     // echo "<pre>";print_r($variationsold);
+                    $discount_category_price = 0;
+                    $discount_percentage = 0;
+                    $discount_amount = 0;
+                    if ($customer_info['customer_discount_category'] != NULL) {
+                        $category_price_data = $this->model_sale_order->getDiscountCategoryPrices($product['product_id'], $order_info['store_id'], $customer_info['customer_discount_category']);
+                        $discount_category_price = is_array($category_price_data) && count($category_price_data) > 0 && array_key_exists('price', $category_price_data) && $category_price_data['price'] > 0 ? $category_price_data['orginal_price'] : 0;
+                        $discount_percentage = is_array($category_price_data) && count($category_price_data) > 0 && array_key_exists('discount', $category_price_data) && $category_price_data['discount'] > 0 ? $category_price_data['discount'] : 0;
+                        $discount_amount = is_array($category_price_data) && count($category_price_data) > 0 && array_key_exists('price', $category_price_data) && $category_price_data['price'] > 0 ? $category_price_data['orginal_price'] - $category_price_data['price'] : 0;
+                    }
+
                     $missed_quantity = $this->model_sale_order->getMissingProductQuantityByProductIdOrderId($order_id, $product['product_id'], 0);
                     $required_quantity = isset($missed_quantity) && count($missed_quantity) > 0 ? $missed_quantity['quantity_required'] : 0;
                     $product_data[] = [
@@ -201,6 +220,8 @@ class ControllerSaleEditinvoice extends Controller {
                         'product_note' => $product['product_note'],
                         /* OLD PRICE WITH TAX */ //'price' => $product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0),
                         'price' => number_format((float) $product['price'], 2, '.', ''),
+                        'discount_percentage' => $discount_percentage,
+                        'discount_amount' => $discount_amount,
                         //'total' => $product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0)
                         /* OLD TOTAL WITH TAX */ //'total' => ($product['price'] * $product['quantity']) + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0),
                         'total' => ($product['price'] * ($product['quantity'] - $required_quantity)),

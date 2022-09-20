@@ -130,9 +130,9 @@
                       <select name="products[<?php echo $product['product_id']?>][unit]" class="form-control changeUnit" data-product_id="<?php echo $product['product_id']?>">
                           <?php foreach($product['variations'] as $variant) { ?>
                           <?php if($variant['variation_id'] == $product['product_id']) { ?>
-                          <option data-model="<?php echo $variant['model'] ?>" data-categoryprice="<?php echo $variant['category_price'] ?>" data-price="<?php echo $variant['price'] ?>" data-special="<?php echo $variant['special_price'] ?>" data-product_id="<?php echo $variant['variation_id'] ?>" <?php echo $variant['category_price_variant'] ?> selected><?php echo $variant['unit']; ?></option>
+                          <option data-model="<?php echo $variant['model'] ?>" data-categoryprice="<?php echo $variant['category_price'] ?>" data-price="<?php echo $variant['price'] ?>" data-special="<?php echo $variant['special_price'] ?>" data-discount-amount="<?php echo $variant['discount_amount'] ?>" data-product_id="<?php echo $variant['variation_id'] ?>" <?php echo $variant['category_price_variant'] ?> selected><?php echo $variant['unit']; ?></option>
                           <?php } else { ?>
-                          <option data-model="<?php echo $variant['model'] ?>" data-categoryprice="<?php echo $variant['category_price'] ?>" data-price="<?php echo $variant['price'] ?>" data-special="<?php echo $variant['special_price'] ?>" data-product_id="<?php echo $variant['variation_id'] ?>" <?php echo $variant['category_price_variant'] ?> ><?php echo $variant['unit']; ?></option>
+                          <option data-model="<?php echo $variant['model'] ?>" data-categoryprice="<?php echo $variant['category_price'] ?>" data-price="<?php echo $variant['price'] ?>" data-special="<?php echo $variant['special_price'] ?>" data-discount-amount="<?php echo $variant['discount_amount'] ?>" data-product_id="<?php echo $variant['variation_id'] ?>" <?php echo $variant['category_price_variant'] ?> ><?php echo $variant['unit']; ?></option>
                           <?php } } ?>
                       </select>
                       <!--<input type="text" class="form-control" name="products[<?php echo $product['product_id']?>][unit]" value="<?php echo $product['unit']; ?>"/>-->
