@@ -890,7 +890,7 @@ function addInBetween() {
                     console.log(json);
                     var option = '';
                     for (var i=0;i<json.length;i++){
-                           option += '<option data-model="'+ json[i].model +'" data-product_id="'+ json[i].product_store_id +'" data-categoryprice="'+ json[i].category_price +'" data-price="'+ json[i].price +'" data-special="'+ json[i].special_price +'" value="'+ json[i].unit + '"  '+ json[i].category_price_variant + '>' + json[i].unit + '</option>';
+                           option += '<option data-model="'+ json[i].model +'" data-product_id="'+ json[i].product_store_id +'" data-categoryprice="'+ json[i].category_price +'" data-price="'+ json[i].price +'" data-special="'+ json[i].special_price +'" data-discount-amount="'+ json[i].discount_amount+'" value="'+ json[i].unit + '"  '+ json[i].category_price_variant + '>' + json[i].unit + '</option>';
                     }
                     console.log(option);
                     $('select[name=\'products['+noProduct+'][unit]').append(option);
