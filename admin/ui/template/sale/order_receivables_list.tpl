@@ -381,9 +381,9 @@
                                       <!--<td class="text-left"><?php echo $order['date_added']; ?></td> -->
                                     <td class="text-left"><?php echo $order['paid_to']; ?></td>
                                     <td>
- 
-                                    <button class="btn btn-default" type="button" onclick="reverse_payment(<?= $order['order_id'].",'".$order['transaction_id'] ."','".$order['amount_partialy_paid'] ."'"?>);" >Reverse Payment</button>  
-                                    </td>
+                                <?php if ($order['patial_amount_applied_value']>0) { ?>
+                                    <button class="btn btn-default" type="button" onclick="reverse_payment(<?= $order['order_id'].",'".$order['transaction_id'] ."','".$order['patial_amount_applied_value'] ."','".$order['total_value'] ."','".$order['amount_partialy_paid']."'"?>);" >Reverse Payment</button>  
+                                   <?php } ?>   </td>
                                 </tr>
                                 <?php } ?>
                                 <tr>
@@ -1053,13 +1053,13 @@ function showConfirmPopup($order_id,$order_value) {
     }
 
 
-	function reverse_payment($order_id,$transaction_id,$amount_partialy_paid){
+	function reverse_payment($order_id,$transaction_id,$patial_amount_applied_value,$order_total,$amount_partialy_paid){
 
 		if(confirm('Are You Sure,to reverse the payment status?')){
 			$.ajax({
             url: 'index.php?path=sale/order_receivables/reversePaymentReceived&token=<?php echo $token; ?>',
             type: 'post',
-            data: 'paid_order_id=' + $order_id +'&transaction_id='+$transaction_id+'&amount_partialy_paid='+$amount_partialy_paid,
+            data: 'paid_order_id=' + $order_id +'&transaction_id='+$transaction_id+'&patial_amount_applied_value='+$patial_amount_applied_value+'&order_total='+$order_total+'&amount_partialy_paid='+$amount_partialy_paid,
             beforeSend: function() {
             },
             complete: function() {

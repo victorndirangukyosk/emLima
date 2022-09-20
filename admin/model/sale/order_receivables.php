@@ -446,12 +446,41 @@ class ModelSaleOrderReceivables extends Model
         // return $query->row;
     }
 
-    public function reversePaymentReceived($paid_order_id, $amount_received = '') {
+    public function reversePaymentReceived($paid_order_id,$transaction_id, $patial_amount_applied_value = 0,$order_total=0,$amount_partialy_paid=0) {
+       
+       
+       if($patial_amount_applied_value==0 || $patial_amount_applied_value=='')
+       
+       {
+        return;//if no $patial_amount_applied_value , make it non reversable,
+       }
+       $current=$amount_partialy_paid-$patial_amount_applied_value;
     
+        if($amount_partialy_paid==0 || $current==0)
+        {
         $this->db->query('update `' . DB_PREFIX . 'order` SET paid="N", amount_partialy_paid = 0,paid_to="" WHERE order_id="' . $paid_order_id . '"');
+        }
+        else if($amount_partialy_paid>0)
+        {
+            if($current>0)
+            {
+            $this->db->query('update `' . DB_PREFIX . 'order` SET paid="P", amount_partialy_paid = "'.$current.'"  WHERE order_id="' . $paid_order_id . '"');
+            }
+            else
+            {
+                $log = new Log('error.log');
+                $log->write('reversing payment receivables went negative');
+                $log->write('order_id'.$paid_order_id);
+                $log->write('current'.$current);
+
+                $log->write('reversing payment receivables went negative');
+
+            }
+
+        }
     
         
-        $sql = 'DELETE FROM ' . DB_PREFIX . "order_transaction_id WHERE order_id = '" . (int) $paid_order_id . "'";
+        $sql = 'DELETE FROM ' . DB_PREFIX . "order_transaction_id WHERE order_id = '" . (int) $paid_order_id . "' and transaction_id = '" .  $transaction_id . "' ";
 
         $query = $this->db->query($sql);
  
@@ -462,6 +491,15 @@ class ModelSaleOrderReceivables extends Model
     public function insertPaymentReceivedEntery($selected, $transaction_id, $amount_received,$grand_total,$added_by,$reversed_by=NULL) {
   
         $sql = 'INSERT into ' . DB_PREFIX . "payment_received SET order_ids = '" . $selected . "', transaction_id = '" . $transaction_id . "', amount_received = '" . $amount_received . "', grand_total = '" . $grand_total . "', added_by = '" . $added_by . "',reversed_by='".$reversed_by."'";
+
+        $query = $this->db->query($sql);
+
+    }
+
+
+    public function reversePaymentReceivedEntery($selected, $transaction_id, $reversed_by=NULL) {
+  
+        $sql = 'Update ' . DB_PREFIX . "payment_history SET reversed_by='".$reversed_by."' where order_id = '" . $selected . "' and  transaction_id = '" . $transaction_id . "'";
 
         $query = $this->db->query($sql);
 

@@ -288,14 +288,14 @@ class ControllerSaleOrderReceivables extends Controller {
                 // $result_success['company_name'] = "(NA)";
             }
 
-            if ($result_success['partial_amount']) {
-                $result_success['amount_partialy_paid'] = $result_success['partial_amount'];
+            if (empty($result_success['partial_amount'])) {
+                $result_success['partial_amount'] = $result_success['amount_partialy_paid'];
             } 
 
-            if ($result_success['partial_amount']) {
-                $result_success['amount_partialy_paid'] = $result_success['partial_amount'];
-            } 
-            
+            // if ($result_success['patial_amount_applied']) {
+            //     $result_success['patial_amount_applied'] = $result_success['partial_amount'];
+            // } 
+
             // $result_success['transaction_id'] = $this->model_sale_order->getOrderTransactionId($result_success['order_id']);
             $data['orders_success'][] = [
                 'order_id' => $result_success['order_id'],
@@ -310,9 +310,11 @@ class ControllerSaleOrderReceivables extends Controller {
                 'total_pages' => $totalPages_success,
                 // o.paid,o.amount_partialy_paid
                 'paid' => $result_success['paid'],
-                // 'amount_partialy_paid_value' => $result_success['amount_partialy_paid'],
+                'amount_partialy_paid_value_Final' => $result_success['amount_partialy_paid'],
+                'amount_partialy_paid' => $result_success['partial_amount'],
                 // 'amount_partialy_paid' => $result_success['amount_partialy_paid'] ? $this->currency->format($result_success['amount_partialy_paid']) : '',
-                'pending_amount' => ($result_success['amount_partialy_paid'] > 0 ? round(($result_success['total'] - $result_success['amount_partialy_paid']), 2) : 0),
+                // 'pending_amount' => ($result_success['amount_partialy_paid'] > 0 ? round(($result_success['total'] - $result_success['amount_partialy_paid']), 2) : 0),
+                'pending_amount' => ($result_success['partial_amount'] > 0 ? round(($result_success['total'] - $result_success['partial_amount']), 2) : 0),
                 // 'pending_amount' => $this->currency->format ($result_success['total']-$result_success['amount_partialy_paid']),
                 'paid_to' => $result_success['paid_to'],
                 'amount_grand_pending_amount' => $amount_success_pending_amount_KES,
@@ -885,17 +887,18 @@ class ControllerSaleOrderReceivables extends Controller {
                  #region insert the given amount ,selected orders and order total ,to maintain history
                  try{
                     //grand total and amount received are same, in case of individual confirm payment
-                    $this->model_sale_order_receivables->insertPaymentReceivedEntery($this->request->post['paid_order_id'], $this->request->post['transaction_id'],$this->request->post['amount_partialy_paid'],$this->request->post['amount_partialy_paid'],NULL,$this->user->getId());
-                }
+                    $this->model_sale_order_receivables->insertPaymentReceivedEntery($this->request->post['paid_order_id'], $this->request->post['transaction_id'],0,0,NULL,$this->user->getId());
+                    $this->model_sale_order_receivables->reversePaymentReceivedEntery($this->request->post['paid_order_id'], $this->request->post['transaction_id'],$this->user->getId());
+                } 
                 catch(exception $ex)
                 {
                     $log = new Log('error.log');
-                    $log->write('Payment received log entry -Error');
+                    $log->write('Payment reversed log entry -Error');
 
                 }
                 #endregion
 
-                $this->model_sale_order_receivables->reversePaymentReceived($this->request->post['paid_order_id'], $this->request->post['transaction_id']);
+                $this->model_sale_order_receivables->reversePaymentReceived($this->request->post['paid_order_id'], $this->request->post['transaction_id'],$this->request->post['patial_amount_applied_value'],$this->request->post['order_total'],$this->request->post['amount_partialy_paid']);
 
                 $data['success'] = 'Reversed Successfully';
                 // Add to activity log
