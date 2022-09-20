@@ -163,6 +163,18 @@ class ModelCatalogVendorProduct extends Model {
         return $product;
     }
 
+
+    public function getProductByName($product_name,$product_uom) {
+        $query = $this->db->query('SELECT DISTINCT p.*,pd.name,v.user_id as vendor_id FROM ' . DB_PREFIX . 'product_to_store p LEFT JOIN ' . DB_PREFIX . 'product_description pd ON (p.product_id = pd.product_id) LEFT JOIN ' . DB_PREFIX . 'store st ON (st.store_id = p.store_id) LEFT JOIN ' . DB_PREFIX . "user v ON (v.user_id = st.vendor_id) LEFT JOIN hf7_product gp on (gp.product_id=p.product_id) WHERE pd.name = '" . $product_name . "' AND pd.language_id = '" . (int) $this->config->get('config_language_id') . "' AND gp.unit ='". $product_uom."'");
+
+        $product = $query->row;
+
+        // echo ('SELECT DISTINCT p.*,pd.name,v.user_id as vendor_id FROM ' . DB_PREFIX . 'product_to_store p LEFT JOIN ' . DB_PREFIX . 'product_description pd ON (p.product_id = pd.product_id) LEFT JOIN ' . DB_PREFIX . 'store st ON (st.store_id = p.store_id) LEFT JOIN ' . DB_PREFIX . "user v ON (v.user_id = st.vendor_id) WHERE pd.name = '" . $product_name . "' AND pd.language_id = '" . (int) $this->config->get('config_language_id') . "' AND p.unit ='". $product_uom."'");die;
+
+
+        return $product;
+    }
+
     public function getProductDetail($p_id) {
         $query = $this->db->query('SELECT * from ' . DB_PREFIX . "product WHERE product_id = '" . $p_id . "'");
 
