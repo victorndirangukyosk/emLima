@@ -149,7 +149,7 @@
           </td>
 		  
           <td class="text-right"><input type="text"  class="form-control changeTotal text-right" name="products[<?php echo $product['product_id'] ?>][price]" value="<?php echo $product['price']; ?>"/></td>
-          <td class="text-right"><input type="text" class="form-control totalPrice text-right" name="products[<?php echo $product['product_id']?>][total]" value="<?php echo $product['total']; ?>" disabled /></td>
+          <td class="text-right"><input type="text" class="form-control totalPrice text-right" name="products[<?php echo $product['product_id']?>][total]" data-discount-amount-total="<?php echo $product['discount_amount']; ?>" value="<?php echo $product['total']; ?>" disabled /></td>
 
           <td>
 
@@ -190,7 +190,7 @@
             </td>
           <?php } elseif($total['code'] == 'discount') { ?>
             <td class="text-right" colspan="8">
-              <b><input type="text"  class="form-control inBetweenTitle" name="totals[<?php echo $total['code']; ?>][title]" value="<?php echo $total['title']; ?>" disabled /></b>
+              <b><input type="text"  class="form-control" name="totals[<?php echo $total['code']; ?>][title]" value="<?php echo $total['title']; ?>" disabled /></b>
             </td>
             <td class="text-right">
               <input type="text"  class="form-control" name="totals[<?php echo $total['code']; ?>][value]"  id="discount" value="<?php echo $total['text']; ?>" disabled="" />
@@ -427,6 +427,10 @@ $(document).delegate('.changeUnit','change', function() {
   $(this).parent().parent().children().eq(8).children().val($(this).find(':selected').attr('data-price').toString().replace(/,/g, '')*q);    
   }
   //$(this).parent().parent().children().eq(9).children().val($(this).find(':selected').attr('data-product_id'));
+  
+  if($(this).find(':selected').attr('data-discount-amount').toString().replace(/,/g, '') > 0) {
+  $(this).parent().parent().children().eq(8).children().attr('data-discount-amount-total', $(this).find(':selected').attr('data-discount-amount').toString().replace(/,/g, '')*q);  
+  }
   
   $(this).parent().parent().children().eq(9).children('input[name="products['+old_product_id+'][product_id]"]').val($(this).find(':selected').attr('data-product_id'));
   $(this).parent().parent().children().eq(9).children('input[name="products['+old_product_id+'][model]"]').val($(this).find(':selected').attr('data-model'));
@@ -848,6 +852,7 @@ function addInBetween() {
                             price: item['category_price'],
                             model: item['model'],
                             product_id: item['product_store_id'],
+                            discount_amount: item['discount_amount'],
                         }
                     } else if(item['special_price'].toString().replace(/,/g, "") > 0){
                       return {
@@ -857,6 +862,7 @@ function addInBetween() {
                             price: item['special_price'],
                             model: item['model'],
                             product_id: item['product_store_id'],
+                            discount_amount: item['discount_amount'],
                         }  
                     } else {
                     return {
@@ -866,6 +872,7 @@ function addInBetween() {
                             price: item['price'],
                             model: item['model'],
                             product_id: item['product_store_id'],
+                            discount_amount: item['discount_amount'],
                         }    
                     }
                     }));
@@ -882,6 +889,9 @@ function addInBetween() {
           console.log(ui);
           console.log(ui.item.product_id);
           console.log(ui.item.price);
+          console.log('discount_amount');
+          console.log(ui.item.discount_amount);
+          console.log('discount_amount');
 
           $.ajax({
                 url: 'index.php?path=sale/order/getProductVariantsInfo_All&order_id=<?php echo $order_id; ?>&product_store_id='+ui.item.product_id+'&token=<?php echo $token; ?>',
@@ -902,6 +912,7 @@ function addInBetween() {
             //$('.product_name').val(item['value']);
             $('input[name=\'products['+noProduct+'][unit]').val(ui.item.unit);
             $('input[name=\'products['+noProduct+'][price]').val(ui.item.price);
+            $('input[name=\'products['+noProduct+'][total]').attr('data-discount-amount-total', ui.item.discount_amount);
             $('input[name=\'products['+noProduct+'][total]').val(ui.item.price);
             $('input[name=\'products['+noProduct+'][name]').val(ui.item.label);
             $('input[name=\'products['+noProduct+'][product_id]').val(ui.item.product_id);
