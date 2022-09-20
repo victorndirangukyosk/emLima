@@ -225,7 +225,8 @@ class ModelSaleOrderReceivables extends Model
 
     public function getSuccessfulOrderReceivables($data = [])
     {
-        $sql = "SELECT o.order_id, c.customer_id,c.firstname,c.lastname,CONCAT(c.firstname, ' ', c.lastname) as customer,c.company_name as company, o.total,o.date_added ,o.paid,o.amount_partialy_paid,o.paid_to FROM `".DB_PREFIX.'order` o inner join '.DB_PREFIX.'customer c on(c.customer_id = o.customer_id) ';
+        $sql = "SELECT o.order_id, c.customer_id,c.firstname,c.lastname,CONCAT(c.firstname, ' ', c.lastname) as customer,c.company_name as company, o.total,o.date_added ,ot.transaction_id ,o.paid,o.amount_partialy_paid,o.paid_to,ph.partial_amount,ph.amount_received,ph.patial_amount_applied FROM `".DB_PREFIX.'order` o inner join '.DB_PREFIX.'customer c on(c.customer_id = o.customer_id)  left outer join   '.DB_PREFIX.'order_transaction_id ot on ot.order_id = o.order_id';
+        $sql .= " left outer join   ".DB_PREFIX.'payment_history ph on ph.order_id = ot.order_id and ph.transaction_id=ot.transaction_id';
 
         $sql .= " Where (o.paid = 'Y' || o.paid = 'P')   "; 
 
@@ -276,9 +277,9 @@ class ModelSaleOrderReceivables extends Model
         ];
 
         if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
-            $sql .= ' ORDER BY '.$data['sort'];
+            $sql .= ' ORDER BY '.$data['sort'] .',ph.date_added';
         } else {
-            $sql .= ' ORDER BY o.transaction_details_id';
+            $sql .= ' ORDER BY o.transaction_details_id,ph.date_added';
         }
 
         if (isset($data['order']) && ('DESC' == $data['order'])) {
@@ -307,7 +308,7 @@ class ModelSaleOrderReceivables extends Model
 
     public function getTotalSuccessfulOrderReceivablesAndGrandTotal($data = [])
     {
-        $sql = 'SELECT COUNT(*) as total,sum(ort.value) as GrandTotal FROM `'.DB_PREFIX.'order` o inner join '.DB_PREFIX.'customer c on(c.customer_id = o.customer_id) left outer join '.DB_PREFIX.'order_total ort on(o.order_id =ort.order_id) and ort.code="total"';
+        $sql = 'SELECT COUNT(*) as total,sum(ort.value) as GrandTotal FROM `'.DB_PREFIX.'order` o inner join '.DB_PREFIX.'customer c on(c.customer_id = o.customer_id) left outer join '.DB_PREFIX.'order_total ort on(o.order_id =ort.order_id) and ort.code="total"  left outer join   '.DB_PREFIX.'order_transaction_id ot on ot.order_id = o.order_id';
         $sql .= " Where (o.paid = 'Y' || o.paid = 'P')    "; 
         $sql .= " and o.order_status_id not in (0,6,7,8,16,9,10,11,12) ";//15
 
@@ -352,7 +353,52 @@ class ModelSaleOrderReceivables extends Model
         return $query->row;
     }
 
+    public function getSuccessfulOrderReceivablesGrandTotal($data = [])
+    {
+        $sql = 'SELECT COUNT(*) as total,sum(ort.value) as GrandTotal FROM `'.DB_PREFIX.'order` o inner join '.DB_PREFIX.'customer c on(c.customer_id = o.customer_id) left outer join '.DB_PREFIX.'order_total ort on(o.order_id =ort.order_id) and ort.code="total" ';
+        $sql .= " Where (o.paid = 'Y' || o.paid = 'P')    "; 
+        $sql .= " and o.order_status_id not in (0,6,7,8,16,9,10,11,12) ";//15
 
+        if (!empty($data['filter_order_id'])) {
+            $sql .= " AND o.order_id LIKE '".$data['filter_order_id']."%'";
+        }
+        if (!empty($data['filter_customer'])) {
+            $sql .= " AND CONCAT(c.firstname, ' ', c.lastname)  LIKE '%".$this->db->escape($data['filter_customer'])."%'";
+        }
+
+        if (!empty($data['filter_company'])) {
+            $sql .= " AND c.company_name  LIKE '%".$this->db->escape($data['filter_company'])."%'";
+        }
+        // if (!empty($data['filter_customer'])) {
+        //     $sql .= " AND c.firstname LIKE '%".$this->db->escape($data['filter_customer'])."%'";
+        // }
+        // if (!empty($data['filter_customer'])) {
+        //     $sql .= " AND c.lastname LIKE '%".$this->db->escape($data['filter_customer'])."%'";
+        // }
+
+        if (isset($data['filter_customer_group']) && !empty($data['filter_customer_group'])) {
+            $sql .= ' AND c.customer_group_id="' . $data['filter_customer_group'] . '"';
+        }
+
+        if (!empty($data['filter_date_added']) && empty($data['filter_date_added_end'])) {
+            $sql .= " AND DATE(o.date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
+        }
+
+        if (!empty($data['filter_date_added']) && !empty($data['filter_date_added_end'])) {
+            $sql .= " AND DATE(o.date_added) BETWEEN DATE('" . $this->db->escape($data['filter_date_added']) . "') AND DATE('" . $this->db->escape($data['filter_date_added_end']) . "')";
+        }
+
+        // if (!empty($data['filter_total'])) {
+        //     $sql .= " AND o.total = '".(float) $data['filter_total']."'";
+        // }
+
+        $query = $this->db->query($sql);
+        //    echo $sql;die;
+
+
+        // return $query->row['total'];
+        return $query->row;
+    }
     public function getTotalPendingAmount($data = [])
     {
         $sql = 'SELECT  sum(ort.value) as total1,sum(o.amount_partialy_paid) as total2  FROM `'.DB_PREFIX.'order` o inner join '.DB_PREFIX.'customer c on(c.customer_id = o.customer_id) left outer join '.DB_PREFIX.'order_total ort on(o.order_id =ort.order_id) and ort.code="total"';
@@ -419,7 +465,7 @@ class ModelSaleOrderReceivables extends Model
 
         $query = $this->db->query($sql);
 
-}
+    }
 
  
     public function checkPaymentReceivedEntery($transaction_id,$paid_to) {
