@@ -176,7 +176,8 @@ class ControllerSaleOrderReceivables extends Controller {
             // $order_total = $this->model_sale_transactions->getTotaltransactions($filter_data);
             $order_total_grandTotal = $this->model_sale_order_receivables->getTotalOrderReceivablesAndGrandTotal($filter_data);
             $order_total_grandTotal_success = $this->model_sale_order_receivables->getTotalSuccessfulOrderReceivablesAndGrandTotal($filter_data_success);
-
+            $order_total_grandTotal_success_New = $this->model_sale_order_receivables->getSuccessfulOrderReceivablesGrandTotal($filter_data_success);
+ 
             //    echo'<pre>';print_r($order_total_grandTotal['total']);exit;
 
             $order_total = $order_total_grandTotal['total'];
@@ -189,7 +190,8 @@ class ControllerSaleOrderReceivables extends Controller {
             $amount_balance = $amount - $amount_partially_paid;
             $amount_balance_KES = $this->currency->format($amount_balance);
 
-            $amount_success = $order_total_grandTotal_success['GrandTotal'];
+            // $amount_success = $order_total_grandTotal_success['GrandTotal'];
+            $amount_success = $order_total_grandTotal_success_New['GrandTotal'];
 
             $amount_success_pending_amount = $this->model_sale_order_receivables->getTotalPendingAmount($filter_data_success);
             ;
@@ -285,7 +287,16 @@ class ControllerSaleOrderReceivables extends Controller {
             } else {
                 // $result_success['company_name'] = "(NA)";
             }
-            $result_success['transaction_id'] = $this->model_sale_order->getOrderTransactionId($result_success['order_id']);
+
+            if ($result_success['partial_amount']) {
+                $result_success['amount_partialy_paid'] = $result_success['partial_amount'];
+            } 
+
+            if ($result_success['partial_amount']) {
+                $result_success['amount_partialy_paid'] = $result_success['partial_amount'];
+            } 
+            
+            // $result_success['transaction_id'] = $this->model_sale_order->getOrderTransactionId($result_success['order_id']);
             $data['orders_success'][] = [
                 'order_id' => $result_success['order_id'],
                 'customer_id' => $result_success['customer_id'],
@@ -299,12 +310,14 @@ class ControllerSaleOrderReceivables extends Controller {
                 'total_pages' => $totalPages_success,
                 // o.paid,o.amount_partialy_paid
                 'paid' => $result_success['paid'],
-                'amount_partialy_paid_value' => $result_success['amount_partialy_paid'],
-                'amount_partialy_paid' => $result_success['amount_partialy_paid'] ? $this->currency->format($result_success['amount_partialy_paid']) : '',
+                // 'amount_partialy_paid_value' => $result_success['amount_partialy_paid'],
+                // 'amount_partialy_paid' => $result_success['amount_partialy_paid'] ? $this->currency->format($result_success['amount_partialy_paid']) : '',
                 'pending_amount' => ($result_success['amount_partialy_paid'] > 0 ? round(($result_success['total'] - $result_success['amount_partialy_paid']), 2) : 0),
                 // 'pending_amount' => $this->currency->format ($result_success['total']-$result_success['amount_partialy_paid']),
                 'paid_to' => $result_success['paid_to'],
                 'amount_grand_pending_amount' => $amount_success_pending_amount_KES,
+                'patial_amount_applied_value' => $result_success['patial_amount_applied'],
+
             ];
         }
 
