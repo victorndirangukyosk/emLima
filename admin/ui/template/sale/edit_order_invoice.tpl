@@ -374,12 +374,22 @@ $(document).delegate('.changeTotal','change', function() {
 
   var sum =0;
   var inbetweensum =0;
+  var discountsum =0;
   $('.totalPrice').each(function() {
     console.log("value");
 
     console.log(this.value);
 
     sum += Number($(this).val());
+  });
+  
+  $('.totalPrice').each(function() {
+    console.log("discountsum");
+
+    console.log($(this).attr("data-discount-amount-total"));
+
+    discountsum += Number($(this).attr("data-discount-amount-total"));
+    console.log(discountsum);
   });
 
   $('.inBetween').each(function() {
@@ -394,6 +404,8 @@ $(document).delegate('.changeTotal','change', function() {
   
 
   $('#sub_total').val(sum);
+  
+  $('#discount').val("-"+discountsum);
 
   $('#total').val(inbetweensum + Number(sum));
 
@@ -493,12 +505,22 @@ $(document).delegate('.changeTotalValue','blur', function() {
 
   var sum =0;
   var inbetweensum =0;
+  var discountsum =0;
   $('.totalPrice').each(function() {
     console.log("value");
 
     console.log(this.value);
 
     sum += Number($(this).val());
+  });
+  
+  $('.totalPrice').each(function() {
+    console.log("discountsum");
+
+    console.log($(this).attr("data-discount-amount-total"));
+
+    discountsum += Number($(this).attr("data-discount-amount-total"));
+    console.log(discountsum);
   });
 
   $('.inBetween').each(function() {
@@ -513,6 +535,8 @@ $(document).delegate('.changeTotalValue','blur', function() {
   
 
   $('#sub_total').val(sum);
+  
+  $('#discount').val("-"+discountsum);
 
   $('#total').val(inbetweensum + Number(sum));
 
