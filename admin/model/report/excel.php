@@ -10999,6 +10999,13 @@ class ModelReportExcel extends Model {
                 // echo "<pre>";print_r(strtotime($sendingDate));
                 // echo "<pre>";print_r(round($datediff / (60 * 60 * 24)));exit;
                 $result['ageing'] = round($datediff / (60 * 60 * 24));
+                $trans = $this->model_sale_order->getOrderTransactionIdandDate($result['order_id']);
+                if($trans!=null)
+                {
+                $result['transaction_id'] = $trans['transaction_id'];
+                $result['created_at'] = $trans['created_at'] ;
+                }
+                
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $i);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['order_id']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['company_name']);
@@ -14636,6 +14643,12 @@ class ModelReportExcel extends Model {
                 // echo "<pre>";print_r(round($datediff / (60 * 60 * 24)));exit;
                 $result['ageing'] = round($datediff / (60 * 60 * 24));
                 $result['balance'] = round((($result['order_total'] ?? 0) - ($result['amount_partialy_paid'] ?? 0)), 2);
+                $trans = $this->model_sale_order->getOrderTransactionIdandDate($result['order_id']);
+                if($trans!=null)
+                {
+                $result['transaction_id'] = $trans['transaction_id'];
+                $result['created_at'] = $trans['created_at'] ;
+                }
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $i);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['order_id']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['company_name']);
@@ -15082,7 +15095,12 @@ class ModelReportExcel extends Model {
                 // echo "<pre>";print_r(round($datediff / (60 * 60 * 24)));exit;
                 $result['ageing'] = round($datediff / (60 * 60 * 24));
                 $result['balance'] = round((($result['order_total'] ?? 0) - ($result['amount_partialy_paid'] ?? 0)), 2);
-
+                $trans = $this->model_sale_order->getOrderTransactionIdandDate($result['order_id']);
+                if($trans!=null)
+                {
+                $result['transaction_id'] = $trans['transaction_id'];
+                $result['created_at'] = $trans['created_at'] ;
+                }
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $i);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['order_id']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['company_name']);
@@ -15202,6 +15220,14 @@ class ModelReportExcel extends Model {
                 // echo "<pre>";print_r(round($datediff / (60 * 60 * 24)));exit;
                 $result['ageing'] = round($datediff / (60 * 60 * 24));
                 $result['balance'] = round((($result['order_total'] ?? 0) - ($result['amount_partialy_paid'] ?? 0)), 2);
+                
+                $trans = $this->model_sale_order->getOrderTransactionIdandDate($result['order_id']);
+                if($trans!=null)
+                {
+                $result['transaction_id'] = $trans['transaction_id'];
+                $result['created_at'] = $trans['created_at'] ;
+                }
+                
                 $objPHPExcel1->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $i);
                 $objPHPExcel1->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['order_id']);
                 $objPHPExcel1->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['company_name']);
