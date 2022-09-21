@@ -1775,9 +1775,6 @@ class ControllerCommonHome extends Controller {
                 $result['discount_price'] = 0;
                 $result['discount_percentage'] = 0;
                 if ($this->customer->getCustomerCategory() == NULL && $this->customer->getCustomerDiscountCategory() != NULL) {
-                    $log->write('getCustomerDiscountCategory');
-                    $log->write($this->customer->getCustomerDiscountCategory());
-                    $log->write('getCustomerDiscountCategory');
                     $category_discount_response = $this->load->controller('common/customercategorydiscount', $result);
                     if (isset($category_discount_response) && is_array($category_discount_response)) {
 
