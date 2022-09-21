@@ -10337,11 +10337,14 @@ class ModelReportExcel extends Model {
 
             // $order_total = $this->model_sale_transactions->getTotaltransactions($filter_data);
             $order_total_grandTotal = $this->model_sale_order_receivables->getTotalSuccessfulOrderReceivablesAndGrandTotal($filter_data);
-
+            // $order_total_grandTotal_success = $this->model_sale_order_receivables->getTotalSuccessfulOrderReceivablesAndGrandTotal($filter_data_success);
+            $order_total_grandTotal_success_New = $this->model_sale_order_receivables->getSuccessfulOrderReceivablesGrandTotal($filter_data);
+ 
             //    echo'<pre>';print_r($order_total_grandTotal['total']);exit;
 
             $order_total = $order_total_grandTotal['total'];
-            $amount = $order_total_grandTotal['GrandTotal'];
+            // $amount = $order_total_grandTotal['GrandTotal'];
+            $amount = $order_total_grandTotal_success_New['GrandTotal'];
             $results = $this->model_sale_order_receivables->getSuccessfulOrderReceivables($filter_data);
         } else {
             $order_total_grandTotal = null;
@@ -10354,7 +10357,7 @@ class ModelReportExcel extends Model {
         foreach ($results as $result) {
             // $amount=$amount+$result['total'];
             $totals = $this->model_sale_order->getOrderTotals($result['order_id']);
-            $result['transaction_id'] = $this->model_sale_order->getOrderTransactionId($result['order_id']);
+            // $result['transaction_id'] = $this->model_sale_order->getOrderTransactionId($result['order_id']);
 
             // echo "<pre>";print_r($totals);die;
             foreach ($totals as $total) {
@@ -10374,6 +10377,11 @@ class ModelReportExcel extends Model {
             } else {
                 // $result['company_name'] = "(NA)";
             }
+
+            if (empty($result_success['partial_amount'])) {
+                $result_success['partial_amount'] = $result_success['amount_partialy_paid'];
+            } 
+
             $data['orders'][] = [
                 'order_id' => $result['order_id'],
                 'customer_id' => $result['customer_id'],
@@ -10388,12 +10396,21 @@ class ModelReportExcel extends Model {
                 'total_pages' => $totalPages,
                 // o.paid,o.amount_partialy_paid
                 'paid' => $result['paid'],
-                'amount_partialy_paid_value' => $result['amount_partialy_paid'],
-                'amount_partialy_paid' => $result['amount_partialy_paid'] ? $this->currency->format($result['amount_partialy_paid']) : '',
-                // 'pending_amount' => $this->currency->format($result['total'] - $result['amount_partialy_paid']),
-                'pending_amount' => $this->currency->format($result['amount_partialy_paid'] > 0 ? round(($result['total'] - $result['amount_partialy_paid']), 2) : 0),
-                'pending_amount_value' => ($result['amount_partialy_paid'] > 0 ? round(($result['total'] - $result['amount_partialy_paid']), 2) : 0),
+
+                'amount_partialy_paid_value_Final' => $result['amount_partialy_paid'],
+                'amount_partialy_paid' => $result['partial_amount'],
+                // 'amount_partialy_paid' => $result['amount_partialy_paid'] ? $this->currency->format($result['amount_partialy_paid']) : '',
+                // 'pending_amount' => ($result['amount_partialy_paid'] > 0 ? round(($result['total'] - $result['amount_partialy_paid']), 2) : 0),
+                'pending_amount' => ($result['partial_amount'] > 0 ? round(($result['total'] - $result['partial_amount']), 2) : 0),
+                // 'pending_amount' => $this->currency->format ($result['total']-$result['amount_partialy_paid']),
+                'pending_amount_value' => ($result['partial_amount'] > 0 ? round(($result['total'] - $result['partial_amount']), 2) : 0),
+                
                 'paid_to' => $result['paid_to'],
+                'amount_grand_pending_amount' => $amount_success_pending_amount_KES,
+                'patial_amount_applied_value' => $result['patial_amount_applied'],
+
+
+                
             ];
         }
         // echo'<pre>';print_r($data['orders']);exit;
@@ -10464,8 +10481,9 @@ class ModelReportExcel extends Model {
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, 4, 'Total');
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 4, 'Paid');
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, 4, 'Pending Amount');
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, 4, 'Transaction ID');
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, 4, 'Paid To');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, 4, 'Amount Applied');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, 4, 'Transaction ID');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, 4, 'Paid To');
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(1, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(2, 4)->applyFromArray($title);
@@ -10473,6 +10491,7 @@ class ModelReportExcel extends Model {
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(4, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(5, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(6, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(7, 4)->applyFromArray($title);
 
             // Fetching the table data
             $row = 5;
@@ -10486,8 +10505,10 @@ class ModelReportExcel extends Model {
                 // $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['amount_partialy_paid']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['paid']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, round($result['pending_amount_value'], 2));
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, $result['transaction_id']);
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, $result['paid_to']);
+
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, $result['patial_amount_applied_value']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, $result['transaction_id']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, $row, $result['paid_to']);
                 // $Amount = $Amount + $result['pending_amount_value'];
                 ++$row;
             }
@@ -10999,6 +11020,13 @@ class ModelReportExcel extends Model {
                 // echo "<pre>";print_r(strtotime($sendingDate));
                 // echo "<pre>";print_r(round($datediff / (60 * 60 * 24)));exit;
                 $result['ageing'] = round($datediff / (60 * 60 * 24));
+                $trans = $this->model_sale_order->getOrderTransactionIdandDate($result['order_id']);
+                if($trans!=null)
+                {
+                $result['transaction_id'] = $trans['transaction_id'];
+                $result['created_at'] = $trans['created_at'] ;
+                }
+
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $i);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['order_id']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['company_name']);
@@ -14636,6 +14664,12 @@ class ModelReportExcel extends Model {
                 // echo "<pre>";print_r(round($datediff / (60 * 60 * 24)));exit;
                 $result['ageing'] = round($datediff / (60 * 60 * 24));
                 $result['balance'] = round((($result['order_total'] ?? 0) - ($result['amount_partialy_paid'] ?? 0)), 2);
+                $trans = $this->model_sale_order->getOrderTransactionIdandDate($result['order_id']);
+                if($trans!=null)
+                {
+                $result['transaction_id'] = $trans['transaction_id'];
+                $result['created_at'] = $trans['created_at'] ;
+                }
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $i);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['order_id']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['company_name']);
@@ -15082,7 +15116,12 @@ class ModelReportExcel extends Model {
                 // echo "<pre>";print_r(round($datediff / (60 * 60 * 24)));exit;
                 $result['ageing'] = round($datediff / (60 * 60 * 24));
                 $result['balance'] = round((($result['order_total'] ?? 0) - ($result['amount_partialy_paid'] ?? 0)), 2);
-
+                $trans = $this->model_sale_order->getOrderTransactionIdandDate($result['order_id']);
+                if($trans!=null)
+                {
+                $result['transaction_id'] = $trans['transaction_id'];
+                $result['created_at'] = $trans['created_at'] ;
+                }
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $i);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['order_id']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['company_name']);
@@ -15202,6 +15241,14 @@ class ModelReportExcel extends Model {
                 // echo "<pre>";print_r(round($datediff / (60 * 60 * 24)));exit;
                 $result['ageing'] = round($datediff / (60 * 60 * 24));
                 $result['balance'] = round((($result['order_total'] ?? 0) - ($result['amount_partialy_paid'] ?? 0)), 2);
+                
+                $trans = $this->model_sale_order->getOrderTransactionIdandDate($result['order_id']);
+                if($trans!=null)
+                {
+                $result['transaction_id'] = $trans['transaction_id'];
+                $result['created_at'] = $trans['created_at'] ;
+                }
+                
                 $objPHPExcel1->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $i);
                 $objPHPExcel1->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['order_id']);
                 $objPHPExcel1->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['company_name']);

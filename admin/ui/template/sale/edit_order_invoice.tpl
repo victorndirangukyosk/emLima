@@ -130,9 +130,9 @@
                       <select name="products[<?php echo $product['product_id']?>][unit]" class="form-control changeUnit" data-product_id="<?php echo $product['product_id']?>">
                           <?php foreach($product['variations'] as $variant) { ?>
                           <?php if($variant['variation_id'] == $product['product_id']) { ?>
-                          <option data-model="<?php echo $variant['model'] ?>" data-categoryprice="<?php echo $variant['category_price'] ?>" data-price="<?php echo $variant['price'] ?>" data-special="<?php echo $variant['special_price'] ?>" data-product_id="<?php echo $variant['variation_id'] ?>" <?php echo $variant['category_price_variant'] ?> selected><?php echo $variant['unit']; ?></option>
+                          <option data-model="<?php echo $variant['model'] ?>" data-categoryprice="<?php echo $variant['category_price'] ?>" data-price="<?php echo $variant['price'] ?>" data-special="<?php echo $variant['special_price'] ?>" data-discount-amount="<?php echo $variant['discount_amount'] ?>" data-product_id="<?php echo $variant['variation_id'] ?>" <?php echo $variant['category_price_variant'] ?> selected><?php echo $variant['unit']; ?></option>
                           <?php } else { ?>
-                          <option data-model="<?php echo $variant['model'] ?>" data-categoryprice="<?php echo $variant['category_price'] ?>" data-price="<?php echo $variant['price'] ?>" data-special="<?php echo $variant['special_price'] ?>" data-product_id="<?php echo $variant['variation_id'] ?>" <?php echo $variant['category_price_variant'] ?> ><?php echo $variant['unit']; ?></option>
+                          <option data-model="<?php echo $variant['model'] ?>" data-categoryprice="<?php echo $variant['category_price'] ?>" data-price="<?php echo $variant['price'] ?>" data-special="<?php echo $variant['special_price'] ?>" data-discount-amount="<?php echo $variant['discount_amount'] ?>" data-product_id="<?php echo $variant['variation_id'] ?>" <?php echo $variant['category_price_variant'] ?> ><?php echo $variant['unit']; ?></option>
                           <?php } } ?>
                       </select>
                       <!--<input type="text" class="form-control" name="products[<?php echo $product['product_id']?>][unit]" value="<?php echo $product['unit']; ?>"/>-->
@@ -149,7 +149,7 @@
           </td>
 		  
           <td class="text-right"><input type="text"  class="form-control changeTotal text-right" name="products[<?php echo $product['product_id'] ?>][price]" value="<?php echo $product['price']; ?>"/></td>
-          <td class="text-right"><input type="text" class="form-control totalPrice text-right" name="products[<?php echo $product['product_id']?>][total]" value="<?php echo $product['total']; ?>" disabled /></td>
+          <td class="text-right"><input type="text" class="form-control totalPrice text-right" name="products[<?php echo $product['product_id']?>][total]" data-discount-amount-total="<?php echo $product['discount_amount']; ?>" value="<?php echo $product['total']; ?>" disabled /></td>
 
           <td>
 
@@ -187,6 +187,13 @@
             </td>
             <td class="text-right">
               <input type="text"  class="form-control" name="totals[<?php echo $total['code']; ?>][value]"  id="sub_total" value="<?php echo $total['text']; ?>" disabled="" />
+            </td>
+          <?php } elseif($total['code'] == 'discount') { ?>
+            <td class="text-right" colspan="8">
+              <b><input type="text"  class="form-control" name="totals[<?php echo $total['code']; ?>][title]" value="<?php echo $total['title']; ?>" disabled /></b>
+            </td>
+            <td class="text-right">
+              <input type="text"  class="form-control" name="totals[<?php echo $total['code']; ?>][value]"  id="discount" value="<?php echo $total['text']; ?>" disabled="" />
             </td>
            <!-- shipping_custom ADDED PREVIOUSLY IT IS shipping -->
           <?php } elseif($total['code'] == 'shipping_custom' && $total['text']>0) { ?>
@@ -367,12 +374,22 @@ $(document).delegate('.changeTotal','change', function() {
 
   var sum =0;
   var inbetweensum =0;
+  var discountsum =0;
   $('.totalPrice').each(function() {
     console.log("value");
 
     console.log(this.value);
 
     sum += Number($(this).val());
+  });
+  
+  $('.totalPrice').each(function() {
+    console.log("discountsum");
+
+    console.log($(this).attr("data-discount-amount-total"));
+
+    discountsum += Number($(this).attr("data-discount-amount-total"));
+    console.log(discountsum);
   });
 
   $('.inBetween').each(function() {
@@ -387,6 +404,8 @@ $(document).delegate('.changeTotal','change', function() {
   
 
   $('#sub_total').val(sum);
+  
+  $('#discount').val("-"+discountsum);
 
   $('#total').val(inbetweensum + Number(sum));
 
@@ -420,6 +439,10 @@ $(document).delegate('.changeUnit','change', function() {
   $(this).parent().parent().children().eq(8).children().val($(this).find(':selected').attr('data-price').toString().replace(/,/g, '')*q);    
   }
   //$(this).parent().parent().children().eq(9).children().val($(this).find(':selected').attr('data-product_id'));
+  
+  if($(this).find(':selected').attr('data-discount-amount').toString().replace(/,/g, '') > 0) {
+  $(this).parent().parent().children().eq(8).children().attr('data-discount-amount-total', $(this).find(':selected').attr('data-discount-amount').toString().replace(/,/g, '')*q);  
+  }
   
   $(this).parent().parent().children().eq(9).children('input[name="products['+old_product_id+'][product_id]"]').val($(this).find(':selected').attr('data-product_id'));
   $(this).parent().parent().children().eq(9).children('input[name="products['+old_product_id+'][model]"]').val($(this).find(':selected').attr('data-model'));
@@ -482,12 +505,22 @@ $(document).delegate('.changeTotalValue','blur', function() {
 
   var sum =0;
   var inbetweensum =0;
+  var discountsum =0;
   $('.totalPrice').each(function() {
     console.log("value");
 
     console.log(this.value);
 
     sum += Number($(this).val());
+  });
+  
+  $('.totalPrice').each(function() {
+    console.log("discountsum");
+
+    console.log($(this).attr("data-discount-amount-total"));
+
+    discountsum += Number($(this).attr("data-discount-amount-total"));
+    console.log(discountsum);
   });
 
   $('.inBetween').each(function() {
@@ -502,6 +535,8 @@ $(document).delegate('.changeTotalValue','blur', function() {
   
 
   $('#sub_total').val(sum);
+  
+  $('#discount').val("-"+discountsum);
 
   $('#total').val(inbetweensum + Number(sum));
 
@@ -841,6 +876,7 @@ function addInBetween() {
                             price: item['category_price'],
                             model: item['model'],
                             product_id: item['product_store_id'],
+                            discount_amount: item['discount_amount'],
                         }
                     } else if(item['special_price'].toString().replace(/,/g, "") > 0){
                       return {
@@ -850,6 +886,7 @@ function addInBetween() {
                             price: item['special_price'],
                             model: item['model'],
                             product_id: item['product_store_id'],
+                            discount_amount: item['discount_amount'],
                         }  
                     } else {
                     return {
@@ -859,6 +896,7 @@ function addInBetween() {
                             price: item['price'],
                             model: item['model'],
                             product_id: item['product_store_id'],
+                            discount_amount: item['discount_amount'],
                         }    
                     }
                     }));
@@ -875,6 +913,9 @@ function addInBetween() {
           console.log(ui);
           console.log(ui.item.product_id);
           console.log(ui.item.price);
+          console.log('discount_amount');
+          console.log(ui.item.discount_amount);
+          console.log('discount_amount');
 
           $.ajax({
                 url: 'index.php?path=sale/order/getProductVariantsInfo_All&order_id=<?php echo $order_id; ?>&product_store_id='+ui.item.product_id+'&token=<?php echo $token; ?>',
@@ -883,7 +924,7 @@ function addInBetween() {
                     console.log(json);
                     var option = '';
                     for (var i=0;i<json.length;i++){
-                           option += '<option data-model="'+ json[i].model +'" data-product_id="'+ json[i].product_store_id +'" data-categoryprice="'+ json[i].category_price +'" data-price="'+ json[i].price +'" data-special="'+ json[i].special_price +'" value="'+ json[i].unit + '"  '+ json[i].category_price_variant + '>' + json[i].unit + '</option>';
+                           option += '<option data-model="'+ json[i].model +'" data-product_id="'+ json[i].product_store_id +'" data-categoryprice="'+ json[i].category_price +'" data-price="'+ json[i].price +'" data-special="'+ json[i].special_price +'" data-discount-amount="'+ json[i].discount_amount+'" value="'+ json[i].unit + '"  '+ json[i].category_price_variant + '>' + json[i].unit + '</option>';
                     }
                     console.log(option);
                     $('select[name=\'products['+noProduct+'][unit]').append(option);
@@ -895,6 +936,7 @@ function addInBetween() {
             //$('.product_name').val(item['value']);
             $('input[name=\'products['+noProduct+'][unit]').val(ui.item.unit);
             $('input[name=\'products['+noProduct+'][price]').val(ui.item.price);
+            $('input[name=\'products['+noProduct+'][total]').attr('data-discount-amount-total', ui.item.discount_amount);
             $('input[name=\'products['+noProduct+'][total]').val(ui.item.price);
             $('input[name=\'products['+noProduct+'][name]').val(ui.item.label);
             $('input[name=\'products['+noProduct+'][product_id]').val(ui.item.product_id);
