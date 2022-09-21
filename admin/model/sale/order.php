@@ -3238,14 +3238,20 @@ class ModelSaleOrder extends Model {
         }
     }
 
-    public function insertOrderSubTotalAndTotal($order_id, $sub_total, $total, $sort_order) {
-        $sql = 'INSERT into ' . DB_PREFIX . "order_total SET value = '" . $sub_total . "', order_id = '" . $order_id . "', title = 'Sub-Total', code = 'sub_total', sort_order = '1'";
+    public function insertOrderSubTotalAndTotal($order_id, $sub_total, $total, $sort_order, $discount = NULL) {
+        $sql1 = 'INSERT into ' . DB_PREFIX . "order_total SET value = '" . $sub_total . "', order_id = '" . $order_id . "', title = 'Sub-Total', code = 'sub_total', sort_order = '1'";
 
-        $query = $this->db->query($sql);
+        $query1 = $this->db->query($sql1);
 
-        $sql = 'INSERT into ' . DB_PREFIX . "order_total SET value = '" . $total . "', order_id = '" . $order_id . "', title = 'Total', code = 'total', sort_order = '" . $sort_order . "'";
+        $total = $total - $discount;
 
-        $query = $this->db->query($sql);
+        $sql2 = 'INSERT into ' . DB_PREFIX . "order_total SET value = '" . $total . "', order_id = '" . $order_id . "', title = 'Total', code = 'total', sort_order = 9";
+
+        $query2 = $this->db->query($sql2);
+
+        $sql3 = 'INSERT into ' . DB_PREFIX . "order_total SET value = '" . '-' . $discount . "', order_id = '" . $order_id . "', title = 'Discount', code = 'discount', sort_order = 3";
+
+        $query3 = $this->db->query($sql3);
 
         $order_sql = 'UPDATE ' . DB_PREFIX . "order SET total = '" . $total . "' WHERE order_id = '" . (int) $order_id . "'";
 
