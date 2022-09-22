@@ -781,7 +781,7 @@ class ControllerSaleCustomer extends Controller {
 
         $this->getList();
     }
-    
+
     public function kibandaapprove() {
         $this->load->language('sale/customer');
 
@@ -3823,14 +3823,14 @@ class ControllerSaleCustomer extends Controller {
             #enregion
             if ($store_info) {
                 if ($ce_id > 0)
-                    $this->response->redirect($store_info['url'] . 'index.php?path=account/login/adminRedirectLogin&token=' . $token . '&ce_id=' . $ce_id);
+                    $this->response->redirect($store_info['url'] . 'index.php?path=account/login/adminRedirectLogin&token=' . $token . '&ce_id=' . $ce_id . '&user_id=' . $this->user->getId());
                 else
-                    $this->response->redirect($store_info['url'] . 'index.php?path=account/login/adminRedirectLogin&token=' . $token);
+                    $this->response->redirect($store_info['url'] . 'index.php?path=account/login/adminRedirectLogin&token=' . $token . '&user_id=' . $this->user->getId());
             } else {
                 if ($ce_id > 0)
-                    $this->response->redirect(HTTP_CATALOG . 'index.php?path=account/login/adminRedirectLogin&token=' . $token . '&ce_id=' . $ce_id);
+                    $this->response->redirect(HTTP_CATALOG . 'index.php?path=account/login/adminRedirectLogin&token=' . $token . '&ce_id=' . $ce_id . '&user_id=' . $this->user->getId());
                 else
-                    $this->response->redirect(HTTP_CATALOG . 'index.php?path=account/login/adminRedirectLogin&token=' . $token);
+                    $this->response->redirect(HTTP_CATALOG . 'index.php?path=account/login/adminRedirectLogin&token=' . $token . '&user_id=' . $this->user->getId());
             }
         } else {
             $this->load->language('error/not_found');
@@ -4874,17 +4874,17 @@ class ControllerSaleCustomer extends Controller {
             //  echo "<pre>";print_r($data['extensions']);die;
 
             foreach ($data['extensions'] as $result) {
-             
-            //  echo "<pre>";print_r($data['extensions']);die;
 
-                if ($result['status'] != 'Disabled' ) {
-                    if (strripos($result['name'], $filter_name) !== false ) {
-                    $json[] = [
-                        'name' => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8')),
-                        'code' => $result['extension'],
-                            // 'status' => $result['status'], 
-                    ];
-                }
+                //  echo "<pre>";print_r($data['extensions']);die;
+
+                if ($result['status'] != 'Disabled') {
+                    if (strripos($result['name'], $filter_name) !== false) {
+                        $json[] = [
+                            'name' => strip_tags(html_entity_decode($result['name'], ENT_QUOTES, 'UTF-8')),
+                            'code' => $result['extension'],
+                                // 'status' => $result['status'], 
+                        ];
+                    }
                 }
             }
         }

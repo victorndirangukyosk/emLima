@@ -44,6 +44,7 @@ class ControllerAccountLogout extends Controller {
             unset($this->session->data['order_approval_access']);
             unset($this->session->data['order_approval_access_role']);
             unset($this->session->data['adminlogin']);
+            unset($this->session->data['adminlogin_id']);
             unset($this->session->data['accept_vendor_terms']);
             unset($this->session->data['delivery_charge_terms']);
             unset($this->session->data['pezesha_amount_limit']);

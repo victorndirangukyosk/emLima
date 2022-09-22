@@ -164,7 +164,7 @@ class ModelCheckoutOrder extends Model {
                 //ADDED FOR MULTI VENDOR ORDER
 
                 if ($this->session->data['adminlogin'] && $this->session->data['adminlogin'] == 1) {
-                    $this->db->query("UPDATE `" . DB_PREFIX . "order` SET isadmin_login = 1  WHERE order_id='" . $order_id . "'");
+                    $this->db->query("UPDATE `" . DB_PREFIX . "order` SET isadmin_login = 1, admin_id = '" . $this->session->data['adminlogin_id'] . "'  WHERE order_id='" . $order_id . "'");
                 }
 
                 $this->db->query("UPDATE `" . DB_PREFIX . "order` SET "

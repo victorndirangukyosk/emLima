@@ -774,6 +774,7 @@ class ControllerAccountLogin extends Controller {
             unset($this->session->data['voucher']);
             unset($this->session->data['vouchers']);
             unset($this->session->data['adminlogin']);
+            unset($this->session->data['adminlogin_id']);
             unset($this->session->data['add_delivery_charges']);
             unset($this->session->data['price_drop_seen']);
             setcookie('po_number', null, -1, '/');
@@ -798,6 +799,7 @@ class ControllerAccountLogin extends Controller {
 
                 // maintain session to identify as admin login
                 $this->session->data['adminlogin'] = 1;
+                $this->session->data['adminlogin_id'] = isset($this->request->get['user_id']) ? $this->request->get['user_id'] : NULL;
                 // maintain session to identify admin logged user group
                 if (!empty($this->request->get['ce_id'])) {
                     $this->session->data['ce_id'] = $this->request->get['ce_id'];
