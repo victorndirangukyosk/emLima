@@ -148,7 +148,7 @@
           <input type="number" min="1" step="1" class="form-control changeTotal changeQuantity text-right" name="products[<?php echo $product['product_id'] ?>][quantity]" value="<?php echo $product['quantity']; ?>"/>
           </td>
 		  
-          <td class="text-right"><input type="text"  class="form-control changeTotal text-right" name="products[<?php echo $product['product_id'] ?>][price]" value="<?php echo $product['price']; ?>"/></td>
+          <td class="text-right"><input type="text"  class="form-control changeTotal text-right" name="products[<?php echo $product['product_id'] ?>][price]" data-discount-amount="<?php echo $product['discount_amount']; ?>" value="<?php echo $product['price']; ?>"/></td>
           <td class="text-right"><input type="text" class="form-control totalPrice text-right" name="products[<?php echo $product['product_id']?>][total]" data-discount-amount-total="<?php echo $product['discount_amount']; ?>" value="<?php echo $product['total']; ?>" disabled /></td>
 
           <td>
@@ -193,7 +193,7 @@
               <b><input type="text"  class="form-control" name="totals[<?php echo $total['code']; ?>][title]" value="<?php echo $total['title']; ?>" disabled /></b>
             </td>
             <td class="text-right">
-              <input type="text"  class="form-control" name="totals[<?php echo $total['code']; ?>][value]"  id="discount" value="<?php echo $total['text']; ?>" disabled="" />
+              <input type="text"  class="form-control" name="totals[<?php echo $total['code']; ?>][value]"  id="discount" value="<?php echo $total['text']; ?>" disabled />
             </td>
            <!-- shipping_custom ADDED PREVIOUSLY IT IS shipping -->
           <?php } elseif($total['code'] == 'shipping_custom' && $total['text']>0) { ?>
@@ -369,8 +369,10 @@ $(document).delegate('.changeTotal','change', function() {
 
   var q = $(this).parent().parent().children().eq(6).children().val();
   var p = $(this).parent().parent().children().eq(7).children().val();
+  var d = $(this).parent().parent().children().eq(7).children().attr('data-discount-amount');
 
   $(this).parent().parent().children().eq(8).children().val(p*q);
+  $(this).parent().parent().children().eq(8).children().attr('data-discount-amount-total', d*q);
 
   var sum =0;
   var inbetweensum =0;
@@ -936,6 +938,7 @@ function addInBetween() {
             //$('.product_name').val(item['value']);
             $('input[name=\'products['+noProduct+'][unit]').val(ui.item.unit);
             $('input[name=\'products['+noProduct+'][price]').val(ui.item.price);
+            $('input[name=\'products['+noProduct+'][price]').attr('data-discount-amount', ui.item.discount_amount);
             $('input[name=\'products['+noProduct+'][total]').attr('data-discount-amount-total', ui.item.discount_amount);
             $('input[name=\'products['+noProduct+'][total]').val(ui.item.price);
             $('input[name=\'products['+noProduct+'][name]').val(ui.item.label);

@@ -413,7 +413,11 @@ class ControllerSaleEditinvoice extends Controller {
                 //echo "<pre>";print_r($old_sub_total);die;
 
                 $allProductIds = $this->model_sale_order->getOrderProductsIds($order_id);
-                $product_numbers = array_keys($datas['products']);
+                $numeric_products = array_filter($datas['products'], function ($key) {
+                    return is_numeric($key);
+                }, ARRAY_FILTER_USE_KEY);
+                //$product_numbers = array_keys($datas['products']);
+                $product_numbers = array_keys($numeric_products);
                 $product_numbers_string = implode(',', $product_numbers);
 
                 $not_in_invoice_products = $this->model_sale_order->getinvoiceproducts($product_numbers_string, $order_id);
@@ -440,6 +444,7 @@ class ControllerSaleEditinvoice extends Controller {
                 }
 
                 $sumTotal = 0;
+                $sumDiscount = 0;
 
                 $tempProds['products'] = [];
 
@@ -476,14 +481,66 @@ class ControllerSaleEditinvoice extends Controller {
                         //echo "<pre>";print_r($datas['products']);die;
                         $updateProduct_tax_total = $this->model_tool_image->getTaxTotalCustom($updateProduct, $store_id, $pricing_category, $custom_price);
                         $products = $this->model_sale_order->updateOrderProduct($order_id, $p_id_key, $updateProduct, $updateProduct_tax_total);
+
+                        if ($parent_customer_info == NULL && $customer_info['customer_category'] == NULL && isset($customer_info['customer_discount_category']) && $customer_info['customer_discount_category'] != NULL) {
+                            $category_price_data = $this->model_sale_order->getDiscountCategoryPrices($p_id_key, $store_id, $customer_info['customer_discount_category']);
+                            $discount_category_price = is_array($category_price_data) && count($category_price_data) > 0 && array_key_exists('price', $category_price_data) && $category_price_data['price'] > 0 ? $category_price_data['orginal_price'] : 0;
+                            $discount_percentage = is_array($category_price_data) && count($category_price_data) > 0 && array_key_exists('discount', $category_price_data) && $category_price_data['discount'] > 0 ? $category_price_data['discount'] : 0;
+                            $discount_amount = is_array($category_price_data) && count($category_price_data) > 0 && array_key_exists('price', $category_price_data) && $category_price_data['price'] > 0 ? $category_price_data['orginal_price'] - $category_price_data['price'] : 0;
+                            $log->write('category_discount_price_1');
+                            $log->write($discount_category_price);
+                            $log->write($discount_percentage);
+                            $log->write($discount_amount);
+                            $log->write('category_discount_price_1');
+                        }
+
+                        if ($parent_customer_info != NULL && $parent_customer_info['customer_category'] == NULL && isset($parent_customer_info['customer_discount_category']) && $parent_customer_info['customer_discount_category'] != NULL) {
+                            $category_price_data = $this->model_sale_order->getDiscountCategoryPrices($p_id_key, $store_id, $parent_customer_info['customer_discount_category']);
+                            $discount_category_price = is_array($category_price_data) && count($category_price_data) > 0 && array_key_exists('price', $category_price_data) && $category_price_data['price'] > 0 ? $category_price_data['orginal_price'] : 0;
+                            $discount_percentage = is_array($category_price_data) && count($category_price_data) > 0 && array_key_exists('discount', $category_price_data) && $category_price_data['discount'] > 0 ? $category_price_data['discount'] : 0;
+                            $discount_amount = is_array($category_price_data) && count($category_price_data) > 0 && array_key_exists('price', $category_price_data) && $category_price_data['price'] > 0 ? $category_price_data['orginal_price'] - $category_price_data['price'] : 0;
+                            $log->write('category_discount_price_2');
+                            $log->write($discount_category_price);
+                            $log->write($discount_percentage);
+                            $log->write($discount_amount);
+                            $log->write('category_discount_price_2');
+                        }
                     } else {
+                        $log->write('updateProduct_new');
+                        $log->write($updateProduct);
+                        $log->write('updateProduct_new');
                         $updateProduct_tax_total = NULL;
                         //echo "<pre>";print_r($updateProduct);die;
                         $updateProduct_tax_total = $this->model_tool_image->getTaxTotalCustom($updateProduct, $store_id, $pricing_category, $custom_price);
                         $products = $this->model_sale_order->updateOrderNewProduct($order_id, $updateProduct['product_id'], $updateProduct, $updateProduct_tax_total);
+
+                        if ($parent_customer_info == NULL && $customer_info['customer_category'] == NULL && isset($customer_info['customer_discount_category']) && $customer_info['customer_discount_category'] != NULL) {
+                            $category_price_data = $this->model_sale_order->getDiscountCategoryPrices($updateProduct['product_id'], $store_id, $customer_info['customer_discount_category']);
+                            $discount_category_price = is_array($category_price_data) && count($category_price_data) > 0 && array_key_exists('price', $category_price_data) && $category_price_data['price'] > 0 ? $category_price_data['orginal_price'] : 0;
+                            $discount_percentage = is_array($category_price_data) && count($category_price_data) > 0 && array_key_exists('discount', $category_price_data) && $category_price_data['discount'] > 0 ? $category_price_data['discount'] : 0;
+                            $discount_amount = is_array($category_price_data) && count($category_price_data) > 0 && array_key_exists('price', $category_price_data) && $category_price_data['price'] > 0 ? $category_price_data['orginal_price'] - $category_price_data['price'] : 0;
+                            $log->write('category_discount_price_3');
+                            $log->write($discount_category_price);
+                            $log->write($discount_percentage);
+                            $log->write($discount_amount);
+                            $log->write('category_discount_price_3');
+                        }
+
+                        if ($parent_customer_info != NULL && $parent_customer_info['customer_category'] == NULL && isset($parent_customer_info['customer_discount_category']) && $parent_customer_info['customer_discount_category'] != NULL) {
+                            $category_price_data = $this->model_sale_order->getDiscountCategoryPrices($updateProduct['product_id'], $store_id, $parent_customer_info['customer_discount_category']);
+                            $discount_category_price = is_array($category_price_data) && count($category_price_data) > 0 && array_key_exists('price', $category_price_data) && $category_price_data['price'] > 0 ? $category_price_data['orginal_price'] : 0;
+                            $discount_percentage = is_array($category_price_data) && count($category_price_data) > 0 && array_key_exists('discount', $category_price_data) && $category_price_data['discount'] > 0 ? $category_price_data['discount'] : 0;
+                            $discount_amount = is_array($category_price_data) && count($category_price_data) > 0 && array_key_exists('price', $category_price_data) && $category_price_data['price'] > 0 ? $category_price_data['orginal_price'] - $category_price_data['price'] : 0;
+                            $log->write('category_discount_price_4');
+                            $log->write($discount_category_price);
+                            $log->write($discount_percentage);
+                            $log->write($discount_amount);
+                            $log->write('category_discount_price_4');
+                        }
                     }
 
                     $sumTotal += ($updateProduct['price'] * $updateProduct['quantity']);
+                    $sumDiscount += ($discount_amount) * ($updateProduct['quantity']);
 
                     array_push($tempProds['products'], $updateProduct);
 
@@ -507,6 +564,7 @@ class ControllerSaleEditinvoice extends Controller {
                 }
 
                 $subTotal = $sumTotal;
+                $discount = $sumDiscount;
 
                 //$log->write("tax_total start ");
                 $tax_total = $this->model_tool_image->getTaxTotal($tempProds, $store_id, $pricing_category, $custom_price);
@@ -656,7 +714,7 @@ class ControllerSaleEditinvoice extends Controller {
                 $orderTotal = round($orderTotal, 2);
                 $subTotal = round($subTotal, 2);
 
-                $this->model_sale_order->insertOrderSubTotalAndTotal($order_id, $subTotal, $orderTotal, $p);
+                $this->model_sale_order->insertOrderSubTotalAndTotal($order_id, $subTotal, $orderTotal, $p, $discount);
                 $log->write($orderTotal);
                 //die;
                 // editDeliveryRequest
