@@ -232,20 +232,20 @@ class ModelAccountCustomer extends Model {
 
 
 
-// Send to main admin email if new account email is enabled
-//commented as particular message is not required.
-// if ($this->config->get('config_account_mail')) {
-//     $mail = new Mail($this->config->get('config_mail'));
-//     $mail->setTo($this->config->get('config_email'));
-//     $mail->send();
-//     $emails = explode(',', $this->config->get('config_alert_emails'));
-//     foreach ($emails as $email) {
-//         if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
-//             $mail->setTo($email);
-//             $mail->send();
-//         }
-//     }
-// }
+        // Send to main admin email if new account email is enabled
+        //commented as particular message is not required.
+        // if ($this->config->get('config_account_mail')) {
+        //     $mail = new Mail($this->config->get('config_mail'));
+        //     $mail->setTo($this->config->get('config_email'));
+        //     $mail->send();
+        //     $emails = explode(',', $this->config->get('config_alert_emails'));
+        //     foreach ($emails as $email) {
+        //         if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        //             $mail->setTo($email);
+        //             $mail->send();
+        //         }
+        //     }
+        // }
 
         $this->trigger->fire('post.customer.add', $customer_id);
 
@@ -253,13 +253,13 @@ class ModelAccountCustomer extends Model {
     }
 
     public function editCustomer($data) {
-// echo "<pre>";print_r($data);die;
+        // echo "<pre>";print_r($data);die;
         $this->trigger->fire('pre.customer.edit', $data);
 
         $customer_id = $this->customer->getId();
 
         if (isset($data['telephone'])) {
-//(21) 42353-5255
+            //(21) 42353-5255
             $data['telephone'] = preg_replace('/[^0-9]/', '', $data['telephone']);
         }
 
@@ -270,9 +270,9 @@ class ModelAccountCustomer extends Model {
         if (!isset($data['gender'])) {
             $data['gender'] = null;
         }
-//if(isset($data['dob'])) {
-        //$this->db->query('UPDATE ' . DB_PREFIX . "customer SET  customer_group_id = '" . (int) $data['customer_group_id'] . "' , firstname = '" . $this->db->escape($data['firstname']) . "', dob = '" . $data['dob'] . "', gender = '" . $this->db->escape($data['gender']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', company_name = '" . $this->db->escape($data['companyname']) . "', company_address = '" . $this->db->escape($data['companyaddress']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', fax = '" . $this->db->escape($data['fax']) . "', custom_field = '" . $this->db->escape(isset($data['custom_field']) ? serialize($data['custom_field']) : '') . "', modified_by = '" . $this->customer->getId() . "', modifier_role = 'customer', date_modified = NOW() WHERE customer_id = '" . (int) $customer_id . "'");
-//}
+        //if(isset($data['dob'])) {
+                //$this->db->query('UPDATE ' . DB_PREFIX . "customer SET  customer_group_id = '" . (int) $data['customer_group_id'] . "' , firstname = '" . $this->db->escape($data['firstname']) . "', dob = '" . $data['dob'] . "', gender = '" . $this->db->escape($data['gender']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', company_name = '" . $this->db->escape($data['companyname']) . "', company_address = '" . $this->db->escape($data['companyaddress']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', fax = '" . $this->db->escape($data['fax']) . "', custom_field = '" . $this->db->escape(isset($data['custom_field']) ? serialize($data['custom_field']) : '') . "', modified_by = '" . $this->customer->getId() . "', modifier_role = 'customer', date_modified = NOW() WHERE customer_id = '" . (int) $customer_id . "'");
+        //}
         $this->db->query('UPDATE ' . DB_PREFIX . "customer SET firstname = '" . $this->db->escape($data['firstname']) . "', dob = '" . $data['dob'] . "', national_id = '" . $data['national_id'] . "', kra = '" . $data['kra'] . "', gender = '" . $this->db->escape($data['gender']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', company_name = '" . $this->db->escape($data['companyname']) . "', company_address = '" . $this->db->escape($data['companyaddress']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', fax = '" . $this->db->escape($data['fax']) . "', custom_field = '" . $this->db->escape(isset($data['custom_field']) ? serialize($data['custom_field']) : '') . "', modified_by = '" . $this->customer->getId() . "', modifier_role = 'customer', date_modified = NOW() WHERE customer_id = '" . (int) $customer_id . "'");
 
         $this->trigger->fire('post.customer.edit', $customer_id);
@@ -302,38 +302,38 @@ class ModelAccountCustomer extends Model {
     }
 
     public function resetPassword($email, $password) {
-//echo "<pre>";print_r($password);die;, ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "'
-
-        if ($password && 'default' != $password) {
-// echo "<pre>";print_r($this->db->escape($this->request->server['REMOTE_ADDR']));die;
-
-            $this->trigger->fire('pre.customer.edit.password');
-
-            $this->db->query('UPDATE ' . DB_PREFIX . "customer SET temporary_password = '" . $password . "',  temppassword = '" . $this->db->escape(1) . "',   salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($password)))) . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "' WHERE LOWER(email) = '" . $this->db->escape(utf8_strtolower($email)) . "'");
-
-            $this->trigger->fire('post.customer.edit.password');
-        }
-    }
-
-    public function resetPasswordWithMobile($phone, $password) {
         //echo "<pre>";print_r($password);die;, ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "'
 
+                if ($password && 'default' != $password) {
+        // echo "<pre>";print_r($this->db->escape($this->request->server['REMOTE_ADDR']));die;
+
+                    $this->trigger->fire('pre.customer.edit.password');
+
+                    $this->db->query('UPDATE ' . DB_PREFIX . "customer SET temporary_password = '" . $password . "',  temppassword = '" . $this->db->escape(1) . "',   salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($password)))) . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "' WHERE LOWER(email) = '" . $this->db->escape(utf8_strtolower($email)) . "'");
+
+                    $this->trigger->fire('post.customer.edit.password');
+                }
+            }
+
+            public function resetPasswordWithMobile($phone, $password) {
+                //echo "<pre>";print_r($password);die;, ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "'
+
+                if ($password && 'default' != $password) {
+                    // echo "<pre>";print_r($this->db->escape($this->request->server['REMOTE_ADDR']));die;
+
+                    $this->trigger->fire('pre.customer.edit.password');
+
+                    $this->db->query('UPDATE ' . DB_PREFIX . "customer SET temporary_password = '" . $password . "',  temppassword = '" . $this->db->escape(1) . "',   salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($password)))) . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "' WHERE telephone = '" . $this->db->escape(($phone)) . "'");
+
+                    $this->trigger->fire('post.customer.edit.password');
+                }
+            }
+
+            public function editPassword($email, $password) {
+        //  echo "<pre>";print_r($password);die;
+
         if ($password && 'default' != $password) {
-            // echo "<pre>";print_r($this->db->escape($this->request->server['REMOTE_ADDR']));die;
-
-            $this->trigger->fire('pre.customer.edit.password');
-
-            $this->db->query('UPDATE ' . DB_PREFIX . "customer SET temporary_password = '" . $password . "',  temppassword = '" . $this->db->escape(1) . "',   salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($password)))) . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "' WHERE telephone = '" . $this->db->escape(($phone)) . "'");
-
-            $this->trigger->fire('post.customer.edit.password');
-        }
-    }
-
-    public function editPassword($email, $password) {
-//  echo "<pre>";print_r($password);die;
-
-        if ($password && 'default' != $password) {
-// echo "<pre>";print_r($password);die;
+        // echo "<pre>";print_r($password);die;
 
             $this->trigger->fire('pre.customer.edit.password');
 
@@ -381,7 +381,7 @@ class ModelAccountCustomer extends Model {
     public function getTotalOrders($customer_id) {
         $query = $this->db->query('SELECT COUNT(*) AS total FROM `' . DB_PREFIX . "order` o WHERE customer_id = '" . (int) $customer_id . "' AND o.order_status_id > '0' ");
 
-//return $query;
+            //return $query;
         return $query->row['total'];
     }
 
@@ -425,7 +425,7 @@ class ModelAccountCustomer extends Model {
     }
 
     public function deleteOTP($customer_id, $otp, $type) {
-//echo "<pre>";print_r($customer_id.$otp.$type);die;
+        //echo "<pre>";print_r($customer_id.$otp.$type);die;
         $query = $this->db->query('DELETE FROM ' . DB_PREFIX . "otp WHERE otp='" . $this->db->escape($otp) . "' AND customer_id = '" . $customer_id . "' and type='" . $type . "'");
 
         return true;
