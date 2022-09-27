@@ -647,7 +647,7 @@
                     </li>
 
                     <li>
-                      <b class="mt-3 font-bold">Pay Bill Account    </b>  <?= $paybill_act ?>
+                      <b class="mt-3 font-bold">Pay Bill Account :   </b>  <?= $paybill_act ?>
                     </li>
                     <li class="mt-3 font-bold">
                         <p>
