@@ -6111,9 +6111,11 @@ class ControllerSaleOrder extends Controller {
                     $order_customer_detials = $this->model_sale_customer->getCustomer($order_info['customer_id']);
                     $order_customer_first_last_name = NULL;
                     $company_name = NULL;
+                    $paybill_act = NULL;
                     if ($order_customer_detials != NULL && is_array($order_customer_detials)) {
                         $order_customer_first_last_name = $order_customer_detials['firstname'] . ' ' . $order_customer_detials['lastname'];
                         $company_name = $order_customer_detials['company_name'];
+                        $paybill_act = $order_customer_detials['paybill_act'];
                     }
 
                     $this->load->model('drivers/drivers');
@@ -6179,6 +6181,7 @@ class ControllerSaleOrder extends Controller {
                         'delivery_executive_phone' => '+' . $this->config->get('config_telephone_code') . ' ' . $delivery_executive_phone,
                         'paid' => $order_info['paid'],
                         'order_transcation_id' => $transaction_id,
+                        'paybill_act' => $paybill_act,
                     ];
                 }
             }
