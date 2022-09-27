@@ -152,7 +152,7 @@ class ModelAccountCustomer extends Model {
             // $log->write("customer_paybill_act");
             $customer_reg_date=$this->db->query('select date_added from  ' . DB_PREFIX . "customer WHERE customer_id = '" . (int) $customer_id . "'")->row;
             // $log->write($customer_reg_date);            
-            $customer_reg_date_value=$customer_reg_date[0]??date("Y-m-d H:i:s");
+            $customer_reg_date_value=$customer_reg_date['date_added']??date("Y-m-d H:i:s");
             // $log->write($customer_reg_date_value);
             $customer_paybill_act = $customer_id.strtotime($customer_reg_date_value);
             // $log->write($customer_paybill_act); 

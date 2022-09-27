@@ -31,7 +31,7 @@ class ModelSaleCustomer extends Model {
             // $log->write("customer_paybill_act");
             $customer_reg_date=$this->db->query('select date_added from  ' . DB_PREFIX . "customer WHERE customer_id = '" . (int) $customer_id . "'")->row;
             // $log->write($customer_reg_date);            
-            $customer_reg_date_value=$customer_reg_date[0]??date("Y-m-d H:i:s");
+            $customer_reg_date_value=$customer_reg_date['date_added']??date("Y-m-d H:i:s");
             // $log->write($customer_reg_date_value);
             $customer_paybill_act = $customer_id.strtotime($customer_reg_date_value);
             // $log->write($customer_paybill_act); 
@@ -79,6 +79,22 @@ class ModelSaleCustomer extends Model {
                     $this->db->query('UPDATE ' . DB_PREFIX . "customer SET address_id = '" . (int) $address_id . "' WHERE customer_id = '" . (int) $customer_id . "'");
                 }
             }
+        }
+        
+            $log = new Log('error.log');
+            $log->write("customer_paybill_act");
+        $customer_reg_date=$this->db->query('select date_added,paybill_act from  ' . DB_PREFIX . "customer WHERE customer_id = '" . (int) $customer_id . "'")->row;
+        $customer_paybill_act=   $customer_reg_date['paybill_act']??"";
+        if ($customer_paybill_act == null || empty($customer_paybill_act) )
+         {
+
+            $customer_reg_date_value=$customer_reg_date['date_added']??date("Y-m-d H:i:s");
+            $log->write($customer_reg_date_value);
+            $customer_paybill_act = $customer_id.strtotime($customer_reg_date_value);
+            $log->write($customer_paybill_act); 
+            $log->write("customer_paybill_act");
+            $this->db->query('UPDATE ' . DB_PREFIX . "customer SET paybill_act = '" . $customer_paybill_act . "' WHERE customer_id = '" . (int) $customer_id . "'");
+            // echo "<pre>";print_r('UPDATE ' . DB_PREFIX . "customer SET paybill_act = '" . $customer_paybill_act . "' WHERE customer_id = '" . (int) $customer_id . "'");die;
         }
     }
 
