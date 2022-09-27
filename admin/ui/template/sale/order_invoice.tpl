@@ -37,7 +37,7 @@
                                     <li><?= $order['shipping_name'] ?></li>
                                     <li><?= $order['telephone'] ?></li>
                                     <li class="mb-2"><?= $order['email'] ?></li>
-                                    <li class="mb-2"><b>Pay Bill Account    </b><?= $order['paybill_act'] ?></li>
+                                    <li class="mb-2"><b>Pay Bill Account :   </b><?= $order['paybill_act'] ?></li>
                                     <li>
                                         <p class="bold"><?= $order['shipping_name_original'] ?></br> <?= $order['shipping_address'] ?></p>
                                     </li>
