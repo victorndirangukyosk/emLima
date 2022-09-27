@@ -5056,6 +5056,7 @@ class ControllerSaleOrder extends Controller {
                 $order_customer_detials = $this->model_sale_customer->getCustomer($order_info['customer_id']);
                 $order_customer_first_last_name = NULL;
                 $company_name = NULL;
+                $paybill_act = NULL;
                 $customer_account_manager_first_last_name = NULL;
                 $customer_account_manager_phone = NULL;
                 $customer_experience_first_last_name = NULL;
@@ -5063,6 +5064,7 @@ class ControllerSaleOrder extends Controller {
                 if ($order_customer_detials != NULL && is_array($order_customer_detials)) {
                     $order_customer_first_last_name = $order_customer_detials['firstname'] . ' ' . $order_customer_detials['lastname'];
                     $company_name = $order_customer_detials['company_name'];
+                    $paybill_act = $order_customer_detials['paybill_act'];
                     $customer_account_manager_detials = $this->model_user_accountmanager->getUser($order_customer_detials['account_manager_id']);
                     if ($order_customer_detials['account_manager_id'] > 0 && $order_customer_detials['account_manager_id'] != NULL && $customer_account_manager_detials != NULL) {
                         $customer_account_manager_first_last_name = $customer_account_manager_detials['firstname'] . ' ' . $customer_account_manager_detials['lastname'];
@@ -5159,6 +5161,7 @@ class ControllerSaleOrder extends Controller {
                     'paid' => $order_info['paid'],
                     'order_transcation_id' => $transaction_id,
                     'show_discount' => $show,
+                    'paybill_act' => $paybill_act,
                 ];
             }
         }
@@ -5527,6 +5530,8 @@ class ControllerSaleOrder extends Controller {
                     'paid' => $order_info['paid'],
                     'order_transcation_id' => $transaction_id,
                     'show_discount' => $show,
+                    
+
                 ];
             }
         }
