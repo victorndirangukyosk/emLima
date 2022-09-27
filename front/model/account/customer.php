@@ -146,6 +146,23 @@ class ModelAccountCustomer extends Model {
             $this->db->query('UPDATE ' . DB_PREFIX . "customer SET email = '" . $temp_email . "' WHERE customer_id = '" . (int) $customer_id . "'");
         }
 
+
+        if ($customer_paybill_act == null || empty($customer_paybill_act) ) {
+            // $log = new Log('error.log');
+            // $log->write("customer_paybill_act");
+            $customer_reg_date=$this->db->query('select date_added from  ' . DB_PREFIX . "customer WHERE customer_id = '" . (int) $customer_id . "'")->row;
+            // $log->write($customer_reg_date);            
+            $customer_reg_date_value=$customer_reg_date[0]??date("Y-m-d H:i:s");
+            // $log->write($customer_reg_date_value);
+            $customer_paybill_act = $customer_id.strtotime($customer_reg_date_value);
+            // $log->write($customer_paybill_act); 
+            // $log->write("customer_paybill_act");
+            $this->db->query('UPDATE ' . DB_PREFIX . "customer SET paybill_act = '" . $customer_paybill_act . "' WHERE customer_id = '" . (int) $customer_id . "'");
+            // echo "<pre>";print_r('UPDATE ' . DB_PREFIX . "customer SET paybill_act = '" . $customer_paybill_act . "' WHERE customer_id = '" . (int) $customer_id . "'");die;
+        }
+       
+
+
         if (!empty($data['country_id'])) {
             $this->db->query('INSERT INTO ' . DB_PREFIX . "address SET customer_id = '" . (int) $customer_id . "', firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', dob = '" . $data['dob'] . "', company = '" . $this->db->escape($data['company']) . "', address_1 = '" . $this->db->escape($data['address_1']) . "', address_2 = '" . $this->db->escape($data['address_2']) . "', city_id = '" . $this->db->escape($data['cityid']) . "', postcode = '" . $this->db->escape($data['postcode']) . "', country_id = '" . (int) $data['country_id'] . "', zone_id = '" . (int) $data['zone_id'] . "', custom_field = '" . $this->db->escape(isset($data['custom_field']['address']) ? serialize($data['custom_field']['address']) : '') . "'");
 
