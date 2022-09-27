@@ -5,16 +5,6 @@ class ControllerSaleOrder extends Controller {
     private $error = [];
 
     public function index() {
-        //$this->sendNewInvoice(812);die;
-        /* echo "<pre>";print_r(date('d M Y h:i A', strtotime(date("Y-m-d H:i:s"))));die;
-          if (date_default_timezone_get()) {
-          echo 'date_default_timezone_set: ' . date_default_timezone_get() . '<br />';
-          }
-
-          if (ini_get('date.timezone')) {
-          echo 'date.timezone: ' . ini_get('date.timezone');
-          }
-          die; */
 
         $this->load->language('sale/order');
 
