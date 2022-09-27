@@ -209,6 +209,16 @@
             </div>
           </div>
 
+
+ <div class="form-group has-feedback">
+                <label for="paybill_customer_act" class="col-sm-3 control-label">Invoice Pay Bill Account</label>
+                <div class="col-sm-6">
+                    <input type="text" value="<?php echo $paybill_act; ?>" size="30" placeholder="Invoice Pay Bill Account" name="paybill_customer_act" maxlength="100" id="paybill_customer_act" class="form-control input-lg" readonly/>
+                     
+                </div>
+            </div>
+
+
           <?php if ($site_key) { ?>
           <div class="form-group  ">
             <label class="col-sm-3 control-label" for="input-date-added"></label>
