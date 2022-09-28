@@ -199,7 +199,7 @@ class ModelSchedulerDbupdates extends Model {
         //  echo "<pre>";print_r($sql);die;
 
         return $query->rows;
-     }
+    }
 
      
      public function updateUnapprovedOrdersTimeslot($timeslot,$new_timeslot,$delivery_date) {
@@ -232,5 +232,60 @@ class ModelSchedulerDbupdates extends Model {
         // return $query->rows;
      }
 
-    
+     public function GetUnallocatedFundCustomers() {
+        try{
+            $log = new Log('error.log'); 
+            $sqlSelect = 'select distinct customer_id from  ' . DB_PREFIX . "customer_unallocated_fund WHERE closed = 0 ";// || available_balance>0
+            $customer_ids= $this->db->query($sqlSelect)->rows;
+            // echo "<pre>";print_r($customer_ids); 
+            return $customer_ids;
+        }
+        catch(exception $ex)
+        {
+            $log = new Log('error.log'); 
+            $log->write('GetUnallocatedFundCustomers - error');
+            $log->write($ex);
+            return null;
+        }       
+
+    }
+
+
+
+    public function GetCustomerPendingOrders($customer_id) {
+        try{
+            $log = new Log('error.log'); 
+            $sqlSelect = 'select o.order_id,ot.value as total,o.amount_partialy_paid from  ' . DB_PREFIX . "order o join hf7_order_total ot on o.order_id=ot.order_id  WHERE  o.customer_id = ".$customer_id ." and ot.code = 'total' and o.paid!='Y' order by o.deliverydate asc";// || available_balance>0
+            $order_data= $this->db->query($sqlSelect)->rows;
+            // echo "<pre>";print_r($order_data); 
+            return $order_data;
+        }
+        catch(exception $ex)
+        {
+            $log = new Log('error.log'); 
+            $log->write('GetCustomerPendingOrders - error');
+            $log->write($ex);
+            return null;
+        }       
+
+    }
+
+
+    public function GetUnallocatedFunds() {
+        try{
+            $log = new Log('error.log'); 
+            $sqlSelect = 'select customer_fund_id,customer_id,amount,transaction_id,available_balance, amount_used from  ' . DB_PREFIX . "customer_unallocated_fund WHERE closed = 0 ";// || available_balance>0
+            $fund_data= $this->db->query($sqlSelect)->rows;
+            // echo "<pre>";print_r($fund_data); 
+            return $fund_data;
+        }
+        catch(exception $ex)
+        {
+            $log = new Log('error.log'); 
+            $log->write('GetUnallocatedFunds - error');
+            $log->write($ex);
+            return null;
+        }       
+
+    }
 }
