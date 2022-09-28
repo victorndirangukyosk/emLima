@@ -2776,7 +2776,8 @@ class ControllerDeliversystemDeliversystem extends Controller {
             if (isset($customer_pay_bill_account_details) && $customer_pay_bill_account_details != NULL && $customer_pay_bill_account_details['customer_id'] > 0) {
                 $this->model_account_customer->updateAmountToCustomerByPayBillAccountNumber($pay_bill_account_details['paybill_act'], $pay_bill_account_details['customer_id'], $postData->TransAmount);
             } else {
-                $this->model_account_customer->addAmountToCustomerByPayBillAccountNumber($pay_bill_account_details['paybill_act'], $pay_bill_account_details['customer_id'], $postData->TransAmount);
+                $amount = $customer_pay_bill_account_details['amount'] + $postData->TransAmount;
+                $this->model_account_customer->addAmountToCustomerByPayBillAccountNumber($pay_bill_account_details['paybill_act'], $pay_bill_account_details['customer_id'], $amount);
             }
         }
 
