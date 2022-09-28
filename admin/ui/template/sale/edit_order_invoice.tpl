@@ -193,7 +193,7 @@
               <b><input type="text"  class="form-control" name="totals[<?php echo $total['code']; ?>][title]" value="<?php echo $total['title']; ?>" disabled /></b>
             </td>
             <td class="text-right">
-              <input type="text"  class="form-control" name="totals[<?php echo $total['code']; ?>][value]"  id="discount" value="<?php echo $total['text']; ?>" disabled="" />
+              <input type="text"  class="form-control" name="totals[<?php echo $total['code']; ?>][value]"  id="discount" value="<?php echo $total['text']; ?>" disabled />
             </td>
            <!-- shipping_custom ADDED PREVIOUSLY IT IS shipping -->
           <?php } elseif($total['code'] == 'shipping_custom' && $total['text']>0) { ?>
