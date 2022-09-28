@@ -1672,6 +1672,21 @@ class ModelAccountCustomer extends Model {
         return $last_inserted_id;
     }
 
+    public function addCustomerActivity($paybillaccountnumber, $customer_id, $amount) {
+        $customer_info = $this->getCustomer($customer_id);
+
+        $activity_data = [
+            'name' => $customer_info['firstname'] . ' ' . $customer_info['lastname'],
+            'customer_id' => $customer_info['customer_id'],
+            'amount' => $amount,
+            'paybillaccountnumber' => $paybillaccountnumber
+        ];
+
+        $this->db->query('INSERT INTO `' . DB_PREFIX . "customer_activity` SET `customer_id` = '" . (int) $customer_id . "', `key` = 'unallocated_funds', `data` = '" . $this->db->escape(serialize($activity_data)) . "', `ip` = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "', `date_added` = NOW()");
+        $last_inserted_id = $this->db->getLastId();
+        return $last_inserted_id;
+    }
+
     public function updateAmountToCustomerByPayBillAccountNumber($paybillaccountnumber, $customer_id, $amount) {
         $this->db->query('UPDATE ' . DB_PREFIX . "customer_unallocated_fund_totals SET amount = '" . (int) $amount . "', updated_at = NOW() WHERE customer_id = '" . (int) $customer_id . "' AND paybill_act = '" . (int) $paybillaccountnumber . "'");
     }
