@@ -200,7 +200,7 @@ class ControllerAccountApplypezesha extends Controller {
 
         $log = new Log('error.log');
 
-        $body = array('grant_type' => 'client_credentials', 'provider' => 'users', 'client_secret' => $this->config->get('pezesha_client_secret'), 'client_id' => $this->config->get('pezesha_client_id'), 'merchant _key' => $this->config->get('pezesha_merchant_key'));
+        $body = array('grant_type' => 'client_credentials', 'provider' => 'users', 'client_secret' => $this->config->get('pezesha_client_secret'), 'client_id' => $this->config->get('pezesha_client_id'), 'merchant_key' => $this->config->get('pezesha_merchant_key'));
         $body = http_build_query($body);
         $curl = curl_init();
         if ($this->config->get('pezesha_environment') == 'live') {

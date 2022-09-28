@@ -475,7 +475,7 @@ class ControllerSaleEditinvoice extends Controller {
                     $updateProduct['store_id'] = $store_id;
                     $updateProduct['vendor_id'] = $vendor_id;
                     $custom_price = $updateProduct['price'];
-
+                    $discount_amount = 0;
                     if (is_numeric($p_id_key)) {
                         $updateProduct_tax_total = NULL;
                         //echo "<pre>";print_r($datas['products']);die;
