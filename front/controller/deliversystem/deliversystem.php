@@ -2765,8 +2765,23 @@ class ControllerDeliversystemDeliversystem extends Controller {
 
         $postData = json_decode($postData);
         $this->load->model('payment/mpesa');
-        $this->model_payment_mpesa->insertMpesapaymentsconfirmation($postData);
-        $this->model_payment_mpesa->UpdateDeliveredOrders($postData);
+        $this->load->model('account/customer');
+
+        $pay_bill_account_details = $this->model_account_customer->getCustomerByPayBillAccountNumber($postData->BillRefNumber);
+        if (isset($pay_bill_account_details) && $pay_bill_account_details != NULL) {
+            
+            $customer_pay_bill_account_details = $this->model_account_customer->getCustomerByPayBillAccountDetails($pay_bill_account_details['paybill_act'], $pay_bill_account_details['customer_id']);
+            if (isset($customer_pay_bill_account_details) && $customer_pay_bill_account_details != NULL && $customer_pay_bill_account_details['customer_id'] > 0) {
+                $this->model_account_customer->updateAmountToCustomerByPayBillAccountNumber($pay_bill_account_details['paybill_act'], $pay_bill_account_details['customer_id'], $postData->TransAmount);
+            } else {
+                $this->model_account_customer->addAmountToCustomerByPayBillAccountNumber($pay_bill_account_details['paybill_act'], $pay_bill_account_details['customer_id'], $postData->TransAmount);
+            }
+        }
+
+        if ($pay_bill_account_details == NULL) {
+            $this->model_payment_mpesa->insertMpesapaymentsconfirmation($postData);
+            $this->model_payment_mpesa->UpdateDeliveredOrders($postData);
+        }
     }
 
     public function paymentsvalidation() {

@@ -147,20 +147,20 @@ class ModelAccountCustomer extends Model {
         }
 
 
-        if ($customer_paybill_act == null || empty($customer_paybill_act) ) {
+        if ($customer_paybill_act == null || empty($customer_paybill_act)) {
             // $log = new Log('error.log');
             // $log->write("customer_paybill_act");
-            $customer_reg_date=$this->db->query('select date_added from  ' . DB_PREFIX . "customer WHERE customer_id = '" . (int) $customer_id . "'")->row;
+            $customer_reg_date = $this->db->query('select date_added from  ' . DB_PREFIX . "customer WHERE customer_id = '" . (int) $customer_id . "'")->row;
             // $log->write($customer_reg_date);            
-            $customer_reg_date_value=$customer_reg_date['date_added']??date("Y-m-d H:i:s");
+            $customer_reg_date_value = $customer_reg_date['date_added'] ?? date("Y-m-d H:i:s");
             // $log->write($customer_reg_date_value);
-            $customer_paybill_act = $customer_id.strtotime($customer_reg_date_value);
+            $customer_paybill_act = $customer_id . strtotime($customer_reg_date_value);
             // $log->write($customer_paybill_act); 
             // $log->write("customer_paybill_act");
             $this->db->query('UPDATE ' . DB_PREFIX . "customer SET paybill_act = '" . $customer_paybill_act . "' WHERE customer_id = '" . (int) $customer_id . "'");
             // echo "<pre>";print_r('UPDATE ' . DB_PREFIX . "customer SET paybill_act = '" . $customer_paybill_act . "' WHERE customer_id = '" . (int) $customer_id . "'");die;
         }
-       
+
 
 
         if (!empty($data['country_id'])) {
@@ -288,7 +288,7 @@ class ModelAccountCustomer extends Model {
             $data['gender'] = null;
         }
         //if(isset($data['dob'])) {
-                //$this->db->query('UPDATE ' . DB_PREFIX . "customer SET  customer_group_id = '" . (int) $data['customer_group_id'] . "' , firstname = '" . $this->db->escape($data['firstname']) . "', dob = '" . $data['dob'] . "', gender = '" . $this->db->escape($data['gender']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', company_name = '" . $this->db->escape($data['companyname']) . "', company_address = '" . $this->db->escape($data['companyaddress']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', fax = '" . $this->db->escape($data['fax']) . "', custom_field = '" . $this->db->escape(isset($data['custom_field']) ? serialize($data['custom_field']) : '') . "', modified_by = '" . $this->customer->getId() . "', modifier_role = 'customer', date_modified = NOW() WHERE customer_id = '" . (int) $customer_id . "'");
+        //$this->db->query('UPDATE ' . DB_PREFIX . "customer SET  customer_group_id = '" . (int) $data['customer_group_id'] . "' , firstname = '" . $this->db->escape($data['firstname']) . "', dob = '" . $data['dob'] . "', gender = '" . $this->db->escape($data['gender']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', company_name = '" . $this->db->escape($data['companyname']) . "', company_address = '" . $this->db->escape($data['companyaddress']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', fax = '" . $this->db->escape($data['fax']) . "', custom_field = '" . $this->db->escape(isset($data['custom_field']) ? serialize($data['custom_field']) : '') . "', modified_by = '" . $this->customer->getId() . "', modifier_role = 'customer', date_modified = NOW() WHERE customer_id = '" . (int) $customer_id . "'");
         //}
         $this->db->query('UPDATE ' . DB_PREFIX . "customer SET firstname = '" . $this->db->escape($data['firstname']) . "', dob = '" . $data['dob'] . "', national_id = '" . $data['national_id'] . "', kra = '" . $data['kra'] . "', gender = '" . $this->db->escape($data['gender']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', company_name = '" . $this->db->escape($data['companyname']) . "', company_address = '" . $this->db->escape($data['companyaddress']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', fax = '" . $this->db->escape($data['fax']) . "', custom_field = '" . $this->db->escape(isset($data['custom_field']) ? serialize($data['custom_field']) : '') . "', modified_by = '" . $this->customer->getId() . "', modifier_role = 'customer', date_modified = NOW() WHERE customer_id = '" . (int) $customer_id . "'");
 
@@ -321,36 +321,36 @@ class ModelAccountCustomer extends Model {
     public function resetPassword($email, $password) {
         //echo "<pre>";print_r($password);die;, ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "'
 
-                if ($password && 'default' != $password) {
-        // echo "<pre>";print_r($this->db->escape($this->request->server['REMOTE_ADDR']));die;
+        if ($password && 'default' != $password) {
+            // echo "<pre>";print_r($this->db->escape($this->request->server['REMOTE_ADDR']));die;
 
-                    $this->trigger->fire('pre.customer.edit.password');
+            $this->trigger->fire('pre.customer.edit.password');
 
-                    $this->db->query('UPDATE ' . DB_PREFIX . "customer SET temporary_password = '" . $password . "',  temppassword = '" . $this->db->escape(1) . "',   salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($password)))) . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "' WHERE LOWER(email) = '" . $this->db->escape(utf8_strtolower($email)) . "'");
+            $this->db->query('UPDATE ' . DB_PREFIX . "customer SET temporary_password = '" . $password . "',  temppassword = '" . $this->db->escape(1) . "',   salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($password)))) . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "' WHERE LOWER(email) = '" . $this->db->escape(utf8_strtolower($email)) . "'");
 
-                    $this->trigger->fire('post.customer.edit.password');
-                }
-            }
+            $this->trigger->fire('post.customer.edit.password');
+        }
+    }
 
-            public function resetPasswordWithMobile($phone, $password) {
-                //echo "<pre>";print_r($password);die;, ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "'
+    public function resetPasswordWithMobile($phone, $password) {
+        //echo "<pre>";print_r($password);die;, ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "'
 
-                if ($password && 'default' != $password) {
-                    // echo "<pre>";print_r($this->db->escape($this->request->server['REMOTE_ADDR']));die;
+        if ($password && 'default' != $password) {
+            // echo "<pre>";print_r($this->db->escape($this->request->server['REMOTE_ADDR']));die;
 
-                    $this->trigger->fire('pre.customer.edit.password');
+            $this->trigger->fire('pre.customer.edit.password');
 
-                    $this->db->query('UPDATE ' . DB_PREFIX . "customer SET temporary_password = '" . $password . "',  temppassword = '" . $this->db->escape(1) . "',   salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($password)))) . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "' WHERE telephone = '" . $this->db->escape(($phone)) . "'");
+            $this->db->query('UPDATE ' . DB_PREFIX . "customer SET temporary_password = '" . $password . "',  temppassword = '" . $this->db->escape(1) . "',   salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($password)))) . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "' WHERE telephone = '" . $this->db->escape(($phone)) . "'");
 
-                    $this->trigger->fire('post.customer.edit.password');
-                }
-            }
+            $this->trigger->fire('post.customer.edit.password');
+        }
+    }
 
-            public function editPassword($email, $password) {
+    public function editPassword($email, $password) {
         //  echo "<pre>";print_r($password);die;
 
         if ($password && 'default' != $password) {
-        // echo "<pre>";print_r($password);die;
+            // echo "<pre>";print_r($password);die;
 
             $this->trigger->fire('pre.customer.edit.password');
 
@@ -398,7 +398,7 @@ class ModelAccountCustomer extends Model {
     public function getTotalOrders($customer_id) {
         $query = $this->db->query('SELECT COUNT(*) AS total FROM `' . DB_PREFIX . "order` o WHERE customer_id = '" . (int) $customer_id . "' AND o.order_status_id > '0' ");
 
-            //return $query;
+        //return $query;
         return $query->row['total'];
     }
 
@@ -1654,6 +1654,26 @@ class ModelAccountCustomer extends Model {
 
     public function updatecustomerinfo($customer_id, $data) {
         $this->db->query('UPDATE ' . DB_PREFIX . "customer SET dob = '" . $data['dob'] . "', gender = '" . $this->db->escape($data['gender']) . "', national_id = '" . $data['national_id'] . "', kra = '" . $data['kra'] . "' WHERE customer_id = '" . (int) $customer_id . "'");
+    }
+
+    public function getCustomerByPayBillAccountNumber($paybillaccountnumber) {
+        $customer_info = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer WHERE paybill_act = '" . (int) $paybillaccountnumber . "'");
+        return $customer_info->row;
+    }
+
+    public function getCustomerByPayBillAccountDetails($paybillaccountnumber, $customer_id) {
+        $customer_info = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer_unallocated_fund_totals WHERE paybill_act = '" . (int) $paybillaccountnumber . "' AND customer_id = '" . (int) $customer_id . "'");
+        return $customer_info->row;
+    }
+
+    public function addAmountToCustomerByPayBillAccountNumber($paybillaccountnumber, $customer_id, $amount) {
+        $this->db->query('INSERT INTO ' . DB_PREFIX . "customer_unallocated_fund_totals SET customer_id = '" . (int) $customer_id . "', paybill_act = '" . (int) $paybillaccountnumber . "', amount = '" . (int) $amount . "'");
+        $last_inserted_id = $this->db->getLastId();
+        return $last_inserted_id;
+    }
+
+    public function updateAmountToCustomerByPayBillAccountNumber($paybillaccountnumber, $customer_id, $amount) {
+        $this->db->query('UPDATE ' . DB_PREFIX . "customer_unallocated_fund_totals SET amount = '" . (int) $amount . "', updated_at = NOW() WHERE customer_id = '" . (int) $customer_id . "' AND paybill_act = '" . (int) $paybillaccountnumber . "'");
     }
 
 }
