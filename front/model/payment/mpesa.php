@@ -440,7 +440,9 @@ class ModelPaymentMpesa extends Model {
                 }
 
                 if ($pending_amount > $data->TransAmount) {
-                    $sql = 'INSERT into ' . DB_PREFIX . "order_transaction_id SET order_id = '" . (int) $result['order_id'] . "', transaction_id = '" . $this->db->escape($data->TransID) . "', pending_amount = '" . (int) ((int) $result['amount_partialy_paid']) - ((int) $data->TransAmount) . "', amount = '" . (int) $data->TransAmount . "', customer_id = '" . $result['customer_id'] . "', created_at = NOW()";
+                    $pending_amount = ((int) $result['amount_partialy_paid']) - ((int) $data->TransAmount);
+
+                    $sql = 'INSERT into ' . DB_PREFIX . "order_transaction_id SET order_id = '" . (int) $result['order_id'] . "', transaction_id = '" . $this->db->escape($data->TransID) . "', pending_amount = '" . (int) $pending_amount . "', amount = '" . (int) $data->TransAmount . "', customer_id = '" . $result['customer_id'] . "', created_at = NOW()";
                     $query = $this->db->query($sql);
 
                     $amount_partialy_paid = ((int) $result['amount_partialy_paid']) + ((int) $data->TransAmount);
