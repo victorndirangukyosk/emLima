@@ -1691,4 +1691,29 @@ class ModelAccountCustomer extends Model {
         $this->db->query('UPDATE ' . DB_PREFIX . "customer_unallocated_fund_totals SET amount = '" . (int) $amount . "', updated_at = NOW() WHERE customer_id = '" . (int) $customer_id . "' AND paybill_act = '" . (int) $paybillaccountnumber . "'");
     }
 
+    public function addCustomerAccountNumberPayBillTransaction($data, $customer) {
+        $log = new Log('error.log');
+
+        $log->write('addCustomerAccountNumberPayBillTransaction');
+        $log->write($data);
+        $log->write('addCustomerAccountNumberPayBillTransaction');
+
+        $transaction_details = $this->findTransactionDetailsByTransactionID($data->TransID);
+
+        $log->write('transaction_details');
+        $log->write($transaction_details);
+        $log->write('transaction_details');
+
+        if ($transaction_details == NULL) {
+            $this->db->query('INSERT INTO ' . DB_PREFIX . "customer_unallocated_fund SET customer_id = '" . (int) $customer['customer_id'] . "', transaction_time = '" . $data->TransTime . "', business_short_code = '" . $data->BusinessShortCode . "', org_account_balance = '" . $data->OrgAccountBalance . "', msisdn = '" . $data->MSISDN . "', firstname = '" . $data->FirstName . "', description = '" . $data->TransactionType . "', amount = '" . (int) $data->TransAmount . "', transaction_id = '" . (int) $data->TransID . "', available_balance = '" . (int) $data->TransAmount . "'");
+            $last_inserted_id = $this->db->getLastId();
+            return $last_inserted_id;
+        }
+    }
+
+    public function findTransactionDetailsByTransactionID($transaction_id) {
+        $transaction_details = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer_unallocated_fund WHERE transaction_id = '" . $transaction_id . "'");
+        return $transaction_details;
+    }
+
 }

@@ -2769,6 +2769,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
 
         $pay_bill_account_details = $this->model_account_customer->getCustomerByPayBillAccountNumber($postData->BillRefNumber);
         if (isset($pay_bill_account_details) && $pay_bill_account_details != NULL) {
+            $this->model_account_customer->addCustomerAccountNumberPayBillTransaction($postData, $pay_bill_account_details['customer_id']);
 
             $this->model_account_customer->addCustomerActivity($postData->BillRefNumber, $pay_bill_account_details['customer_id'], $postData->TransAmount);
 
