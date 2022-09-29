@@ -339,11 +339,11 @@ class ModelSchedulerDbupdates extends Model {
    }
 
 
-   public function updateFundAndTotals($customer_fund_id, $closed, $available_balance,$amount_used,$customer_id) {
+   public function updateFundAndTotals($customer_fund_id, $closed, $available_balance,$amount_used,$amount_used_single,$customer_id) {
     $this->db->query('update `' . DB_PREFIX . 'customer_unallocated_fund` SET available_balance="'.$available_balance.'" , amount_used = "'.$amount_used.'",closed="'.$closed.'" WHERE customer_fund_id="' . $customer_fund_id . '"');
     $sqlSelect = 'select amount from  ' . DB_PREFIX . 'customer_unallocated_fund_totals WHERE customer_id = "' . $customer_id . '"';// || available_balance>0
     $total= $this->db->query($sqlSelect)->row['amount']??0;
-    $updated_total=$total-$amount_used;
+    $updated_total=$total-$amount_used_single;
 
     $this->db->query('update `' . DB_PREFIX . 'customer_unallocated_fund_totals` SET amount="'.$updated_total.'" WHERE customer_id="' . $customer_id . '"');
      
