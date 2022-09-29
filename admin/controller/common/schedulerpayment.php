@@ -52,8 +52,9 @@ class ControllerCommonSchedulerPayment extends Controller {
                         $order_paid=1;
                         $closed=1;     
                         $available_balance=0;
-                        $amount_used   =  $fund['available_balance']    ;                    
-                        $this->model_scheduler_dbupdates->updateFundAndTotals($fund['customer_fund_id'], $closed,$available_balance,$amount_used,$cust['customer_id']);
+                        $amount_used   =  $fund['available_balance']; 
+                        $amount_used_single =  $fund['available_balance'];               
+                        $this->model_scheduler_dbupdates->updateFundAndTotals($fund['customer_fund_id'], $closed,$available_balance,$amount_used,$amount_used_single,$cust['customer_id']);
                             
 
                      }
@@ -64,8 +65,10 @@ class ControllerCommonSchedulerPayment extends Controller {
 
                         $order_paid=1;$closed=0; 
                         $available_balance=$fund['available_balance']-$ord['pending_total'];
-                        $amount_used   =  $fund['amount_used']+$ord['pending_total']   ;                    
-                        $this->model_scheduler_dbupdates->updateFundAndTotals($fund['customer_fund_id'], $closed,$available_balance,$amount_used,$cust['customer_id']);
+                        $amount_used   =  $fund['amount_used']+$ord['pending_total']   ;    
+                        $amount_used_single =  $ord['pending_total'];           
+
+                        $this->model_scheduler_dbupdates->updateFundAndTotals($fund['customer_fund_id'], $closed,$available_balance,$amount_used,$amount_used_single,$cust['customer_id']);
                         //extra amount adding to wallet is in discussion
                        //even after discussion, write seperate job for crediting amount, as forloop is using
                         //and need to run that job , once the payment job is completed
@@ -83,8 +86,10 @@ class ControllerCommonSchedulerPayment extends Controller {
                         $closed=1;
                         // $available_balance=$fund['available_balance']-$fund['available_balance'];
                         $available_balance=0;
-                        $amount_used   =  $fund['amount_used']+$fund['available_balance']   ;                    
-                        $this->model_scheduler_dbupdates->updateFundAndTotals($fund['customer_fund_id'], $closed,$available_balance,$amount_used,$cust['customer_id']);
+                        $amount_used   =  $fund['amount_used']+$fund['available_balance']   ;  
+                        $amount_used_single =  $fund['available_balance'] ;           
+
+                        $this->model_scheduler_dbupdates->updateFundAndTotals($fund['customer_fund_id'], $closed,$available_balance,$amount_used,$amount_used_single,$cust['customer_id']);
                         
                         // finally get the updated orders , as in partial payment again , we need to check the updated values
                        
