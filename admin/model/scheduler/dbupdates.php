@@ -255,7 +255,9 @@ class ModelSchedulerDbupdates extends Model {
     public function GetCustomerPendingOrders($customer_id) {
         try{
             $log = new Log('error.log'); 
-            $sqlSelect = 'select o.order_id,ot.value as total,o.amount_partialy_paid from  ' . DB_PREFIX . "order o join hf7_order_total ot on o.order_id=ot.order_id  WHERE  o.customer_id = ".$customer_id ." and ot.code = 'total' and o.paid!='Y' order by o.deliverydate asc";// || available_balance>0
+            $sqlSelect = 'select o.order_id,ot.value as total,o.amount_partialy_paid,o.delivery_date from  ' . DB_PREFIX . "order o join hf7_order_total ot on o.order_id=ot.order_id  WHERE  o.customer_id = ".$customer_id ." and ot.code = 'total' and o.paid!='Y' and o.order_status_id not in (0,6,7,8,15,16,9,10,11,12)  order by o.delivery_date asc";// || available_balance>0
+            // echo "<pre>";print_r($sqlSelect); 
+            
             $order_data= $this->db->query($sqlSelect)->rows;
             // echo "<pre>";print_r($order_data); 
             return $order_data;
@@ -335,5 +337,16 @@ class ModelSchedulerDbupdates extends Model {
         $query = $this->db->query($sql);
 
    }
+
+
+   public function updateFundAndTotals($customer_fund_id, $closed, $available_balance,$amount_used,$customer_id) {
+    $this->db->query('update `' . DB_PREFIX . 'customer_unallocated_fund` SET available_balance="'.$available_balance.'" , amount_used = "'.$amount_used.'",closed="'.$closed.'" WHERE customer_fund_id="' . $customer_fund_id . '"');
+    $sqlSelect = 'select amount from  ' . DB_PREFIX . 'customer_unallocated_fund_totals WHERE customer_id = "' . $customer_id . '"';// || available_balance>0
+    $total= $this->db->query($sqlSelect)->row['amount']??0;
+    $updated_total=$total-$amount_used;
+
+    $this->db->query('update `' . DB_PREFIX . 'customer_unallocated_fund_totals` SET amount="'.$updated_total.'" WHERE customer_id="' . $customer_id . '"');
+     
+  }
 
 }
