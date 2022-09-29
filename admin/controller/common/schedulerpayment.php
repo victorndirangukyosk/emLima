@@ -85,6 +85,12 @@ class ControllerCommonSchedulerPayment extends Controller {
                         $amount_used   =  $fund['amount_used']+$fund['available_balance']   ;                    
                         $this->model_scheduler_dbupdates->updateFundAndTotals($fund['customer_fund_id'], $closed,$available_balance,$amount_used,$cust['customer_id']);
                         
+                        // finally get the updated orders , as in partial payment again , we need to check the updated values
+                       
+                        $ord['amount_partialy_paid']=$amount_partialy_paid;
+                        $ord['pending_total']= $ord['total']-$ord['amount_partialy_paid'];
+
+
                      }
                     }              
 
