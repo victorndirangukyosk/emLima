@@ -73,7 +73,7 @@ class ControllerCommonSchedulerPayment extends Controller {
                      else if($fund['available_balance']<$ord['pending_total'] && $order_paid==0 )
                      {//update order to partialy paid and
                        
-                        $amount_partialy_paid=$fund['available_balance']+ord['amount_partialy_paid'];
+                        $amount_partialy_paid=$fund['available_balance']+$ord['amount_partialy_paid'];
                        
                         $this->model_scheduler_dbupdates->confirmPartialPaymentReceived($ord['order_id'], $fund['transaction_id'], $fund['amount'],$amount_partialy_paid, 'Pay bill No',$ord['pending_total'],$fund['available_balance']);
 
