@@ -23,7 +23,7 @@ class ControllerCommonSchedulerPayment extends Controller {
                 // echo "<pre>";print_r($result_orders);die; 
                 
                 $order_total_pending_Value = 0;
-                foreach ($result_orders as $ord) {
+                foreach ($result_orders as $ord_index=>$ord) {
                     // if($ord['paid']=="N")
                     // {
                     //   $order_total_pending_Value += $ord['total'];
@@ -40,11 +40,12 @@ class ControllerCommonSchedulerPayment extends Controller {
                      $result_funds = $this->model_scheduler_dbupdates->GetUnallocatedFunds($cust['customer_id']);
                     //  echo "<pre>";print_r($result_funds);die; 
 
-                    $closed=0;
                     $order_paid=0;
                     $ord['pending_total']=$ord['total']-$ord['amount_partialy_paid'];
                     foreach ($result_funds as $fund) {
-                     if( ($fund['available_balance']==$ord['pending_total']) && $order_paid==0 && $ord['pending_total']>0)
+                    $closed=0;
+
+                     if( ($fund['available_balance']==$ord['pending_total']) && $order_paid==0 && $ord['pending_total']>0 &&  $closed==0)
                      {//update order to paid and deduct from funds_totls
                         //and finally map the fund id as closed/totaly used,reset pending_amount
                         $this->model_scheduler_dbupdates->confirmPaymentReceived($ord['order_id'], $fund['transaction_id'], $fund['amount'],0, 'Pay bill No',$ord['pending_total'],$fund['available_balance']);
@@ -56,7 +57,7 @@ class ControllerCommonSchedulerPayment extends Controller {
                             
 
                      }
-                     else if(($fund['available_balance']>$ord['pending_total']) && $order_paid==0 && $ord['pending_total']>0 )
+                     else if(($fund['available_balance']>$ord['pending_total']) && $order_paid==0 && $ord['pending_total']>0 &&  $closed==0 )
                      {// deduct from funds_totals
                         //and finally map the fund id as closed/totaly used,
                         $this->model_scheduler_dbupdates->confirmPaymentReceived($ord['order_id'], $fund['transaction_id'], $fund['amount'],0, 'Pay bill No',$ord['pending_total'],$ord['pending_total']);
@@ -70,10 +71,10 @@ class ControllerCommonSchedulerPayment extends Controller {
                         //and need to run that job , once the payment job is completed
 
                      }
-                     else if($fund['available_balance']<$ord['pending_total'] && $order_paid==0 && $ord['pending_total']>0 )
+                     else if($fund['available_balance']<$ord['pending_total'] && $order_paid==0 && $ord['pending_total']>0  &&  $closed==0)
                      {//update order to partialy paid and
                        
-                        $amount_partialy_paid=$fund['available_balance']+$ord['amount_partialy_paid'];
+                        $amount_partialy_paid=$fund['available_balance'] + $ord['amount_partialy_paid'];
                        
                         $this->model_scheduler_dbupdates->confirmPartialPaymentReceived($ord['order_id'], $fund['transaction_id'], $fund['amount'],$amount_partialy_paid, 'Pay bill No',$ord['pending_total'],$fund['available_balance']);
 
