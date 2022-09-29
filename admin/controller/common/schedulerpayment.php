@@ -9,7 +9,7 @@ class ControllerCommonSchedulerPayment extends Controller {
 
     private $error = [];    
 
-    public function UpdatePaybillPayments() {
+    public function UpdatePaybillPayments123() {
         $log = new Log('error.log');
         try {
             $log->write('UpdatePaybillPayments -' . date('Y-m-d H:i:s'));
