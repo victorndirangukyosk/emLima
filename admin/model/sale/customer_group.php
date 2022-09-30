@@ -44,6 +44,12 @@ class ModelSaleCustomerGroup extends Model {
         return $query->rows;
     }
 
+    public function getDiscountPriceCategories() {
+        $query = $this->db->query('SELECT DISTINCT price_category FROM ' . DB_PREFIX . 'customer_discount');
+
+        return $query->rows;
+    }
+
     public function getDiscountCategories() {
         $query = $this->db->query('SELECT DISTINCT price_category FROM ' . DB_PREFIX . 'customer_discount');
 
