@@ -1658,6 +1658,7 @@ class ControllerSaleCustomer extends Controller {
 
         $data['customer_groups'] = $this->model_sale_customer_group->getCustomerGroups();
         $data['price_categories'] = $this->model_sale_customer_group->getPriceCategories();
+        $data['price_discount_categories'] = $this->model_sale_customer_group->getDiscountPriceCategories();
 
         $this->load->model('setting/store');
 
@@ -2311,6 +2312,7 @@ class ControllerSaleCustomer extends Controller {
 
         $data['customer_groups'] = $this->model_sale_customer_group->getCustomerGroups();
         $data['price_categories'] = $this->model_sale_customer_group->getPriceCategories();
+        $data['price_discount_categories'] = $this->model_sale_customer_group->getDiscountPriceCategories();
 
         $this->load->model('setting/store');
 
@@ -3310,6 +3312,7 @@ class ControllerSaleCustomer extends Controller {
         $data['sub_users'] = $this->model_sale_customer->getSubCustomers($filter_data);
         $data['customer_groups'] = $this->model_sale_customer_group->getCustomerGroups();
         $data['price_categories'] = $this->model_sale_customer_group->getPriceCategories();
+        $data['price_discount_categories'] = $this->model_sale_customer_group->getDiscountPriceCategories();
         $data['account_managers_list'] = $this->model_user_accountmanager->getAccountManagers();
         $data['customer_experience_list'] = $this->model_user_customerexperience->getCustomerExperience();
         $data['customer_otp_list'] = $this->model_account_customer->getCustomerOTP($this->request->get['customer_id']);
@@ -5194,6 +5197,7 @@ class ControllerSaleCustomer extends Controller {
         $data['sub_users'] = $this->model_sale_customer->getSubCustomers($filter_data);
         $data['customer_groups'] = $this->model_sale_customer_group->getCustomerGroups();
         $data['price_categories'] = $this->model_sale_customer_group->getPriceCategories();
+        $data['price_discount_categories'] = $this->model_sale_customer_group->getDiscountPriceCategories();
         $data['customer_otp_list'] = $this->model_account_customer->getCustomerOTP($this->request->get['customer_id']);
         $data['customer_otp_list_phone'] = $this->model_account_customer->getCustomerOTPByPhone($customer_info['telephone']);
 
@@ -6053,6 +6057,7 @@ class ControllerSaleCustomer extends Controller {
         $data['sub_users'] = $this->model_sale_customer->getSubCustomers($filter_data);
         $data['customer_groups'] = $this->model_sale_customer_group->getCustomerGroups();
         $data['price_categories'] = $this->model_sale_customer_group->getPriceCategories();
+        $data['price_discount_categories'] = $this->model_sale_customer_group->getDiscountPriceCategories();
         $data['account_managers_list'] = $this->model_user_accountmanager->getAccountManagers();
         $data['customer_experience_list'] = $this->model_user_customerexperience->getCustomerExperience();
         $data['customer_otp_list'] = $this->model_account_customer->getCustomerOTP($this->request->get['customer_id']);

@@ -748,6 +748,22 @@
                           </select>
                         </div>
                     </div>
+                            
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="input-discount-price-category">Discount Price Category</label>
+                        <div class="col-sm-10">
+                            <select name="customer_discount_category" id="input-discount-price-category" class="form-control" <?php echo $customer_category_disabled; ?> >
+                            <option value="">Select Discount Price Category</option>
+                            <?php foreach ($price_discount_categories as $category) { ?>
+                            <?php if(isset($customer_category) && ($customer_category== $category['price_category'])){?>
+                            <option selected="selected" value="<?php echo $category['price_category']; ?>"><?php echo $category['price_category']; ?></option>
+                            <?php }else {?>
+                             <option  value="<?php echo $category['price_category']; ?>"><?php echo $category['price_category']; ?></option>
+                             <?php } ?>
+                            <?php } ?>
+                          </select>
+                        </div>
+                    </div>        
                     
                     <div class="form-group">
                         <label class="col-sm-2 control-label" for="input-account-manager">Account Manager Name</label>
