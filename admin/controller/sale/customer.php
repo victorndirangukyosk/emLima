@@ -3470,7 +3470,7 @@ class ControllerSaleCustomer extends Controller {
         if (isset($this->request->post['customer_price_category'])) {
             $data['customer_price_category'] = $this->request->post['customer_price_category'];
         } elseif (!empty($customer_info)) {
-            $data['customer_price_category'] = $customer_info['customer_price_category'];
+            $data['customer_price_category'] = $customer_info['customer_category'];
         } else {
             $data['customer_price_category'] = true;
         }
@@ -3570,7 +3570,7 @@ class ControllerSaleCustomer extends Controller {
         if (isset($this->request->post['customer_price_category'])) {
             $data['customer_price_category'] = $this->request->post['customer_price_category'];
         } elseif (!empty($customer_info)) {
-            $data['customer_price_category'] = $customer_info['customer_price_category'];
+            $data['customer_price_category'] = $customer_info['customer_category'];
         } else {
             $data['customer_price_category'] = '';
         }
