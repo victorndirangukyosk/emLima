@@ -73,7 +73,7 @@
                             <div class="form-group required">
                                 <label class="col-sm-2 control-label" for="input-quantity"><?php echo $entry_quantity; ?></label>
                                 <div class="col-sm-10">
-                                    <input type="number" name="quantity" value="<?php echo $quantity; ?>" placeholder="<?php echo $entry_quantity; ?>" id="input-quantity" class="form-control" />
+                                    <input type="number" name="quantity" value="<?php echo $quantity; ?>" placeholder="<?php echo $entry_quantity; ?>" id="input-quantity" class="form-control" step="0.05" />
                                     <?php if ($error_quantity) { ?>
                                     <div class="text-danger"><?php echo $error_quantity; ?></div>
                                     <?php  } ?>
@@ -82,7 +82,7 @@
                             <div class="form-group required">
                                 <label class="col-sm-2 control-label" for="input-price"><?php echo $entry_price; ?></label>
                                 <div class="col-sm-10">
-                                    <input type="number" name="price" value="<?php echo $price; ?>" placeholder="<?php echo $entry_price; ?>" id="input-price" class="form-control"   />
+                                    <input type="number" name="price" value="<?php echo $price; ?>" placeholder="<?php echo $entry_price; ?>" id="input-price" class="form-control" step="0.01"  />
                                     <?php if ($error_price) { ?>
                                     <div class="text-danger"><?php echo $error_price; ?></div>
                                     <?php  } ?>
