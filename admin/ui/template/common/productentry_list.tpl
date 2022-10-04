@@ -10,6 +10,7 @@
                 <!--<button type="button" data-toggle="tooltip" title="Download" class="btn btn-success"><i class="fa fa-download"></i></button>-->
                 <a href="<?php echo $add; ?>" data-toggle="tooltip" title="<?php echo $button_add; ?>" class="btn btn-success"><i class="fa fa-plus"></i></a>
                 <button type="button" data-toggle="tooltip" title="<?php echo $button_delete; ?>" class="btn btn-danger" onclick="confirmnew('Are you sure to delete ?') ? $('#form-product-entry').submit() : false;"><i class="fa fa-trash-o"></i></button>
+                <button type="button" onclick="excel();" data-toggle="tooltip" title="" class="btn btn-success " data-original-title="Download Excel"><i class="fa fa-download"></i></button>
 
 
             </div>
@@ -334,6 +335,58 @@
                 $('input[name=\'filter_model\']').val(item['label']);
             }
         });
+
+
+
+
+            function excel() {
+
+            url = 'index.php?path=common/productentry/export_excel&token=<?php echo $token; ?>';
+
+
+             var filter_name = $('input[name=\'filter_name\']').val();
+
+            if (filter_name) {
+                url += '&filter_name=' + encodeURIComponent(filter_name);
+            }
+
+            var filter_source = $('input[name=\'filter_source\']').val();
+
+            if (filter_source) {
+                url += '&filter_source=' + encodeURIComponent(filter_source);
+            }
+
+           
+
+            //var filter_price = $('input[name=\'filter_price\']').val();
+
+            //if (filter_price) {
+              //  url += '&filter_price=' + encodeURIComponent(filter_price);
+            //}
+
+            //var filter_quantity = $('input[name=\'filter_quantity\']').val();
+
+           // if (filter_quantity) {
+             //   url += '&filter_quantity=' + encodeURIComponent(filter_quantity);
+            //}
+
+             var filter_date_added = $('input[name=\'filter_date_added\']').val();
+
+            if (filter_date_added) {
+                url += '&filter_date_added=' + encodeURIComponent(filter_date_added);
+            }
+            
+            var filter_date_added_end = $('input[name=\'filter_date_added_end\']').val();
+
+            if (filter_date_added_end) {
+                url += '&filter_date_added_end=' + encodeURIComponent(filter_date_added_end);
+            }
+
+         
+            location = url;
+        }
+
+
   //--></script></div>
 
 
