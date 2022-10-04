@@ -27,6 +27,8 @@ $_['entry_source'] = 'Source';
 $_['entry_price'] = 'Price';
 $_['entry_quantity'] = 'Quantity';
 $_['entry_unit'] = 'UoM';
+$_['entry_date_added'] = 'Date Added (From)';
+$_['entry_date_added_end'] = 'Date Added (To)';
 
    
 
