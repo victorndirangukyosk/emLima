@@ -57,14 +57,37 @@
                         </div>
                         
                         <div class="col-sm-4">
-                            <div class="form-group">
+                           <!-- <div class="form-group">
                                 <label class="control-label" for="input-quantity"><?php echo $entry_quantity; ?></label>
                                 <input type="text" name="filter_quantity" value="<?php echo $filter_quantity; ?>" placeholder="<?php echo $entry_quantity; ?>" id="input-quantity" class="form-control" />
                             </div>
                             <div class="form-group">
                                 <label class="control-label" for="input-price"><?php echo $entry_price; ?></label>
                                 <input type="text" name="filter_price" value="<?php echo $filter_price; ?>" placeholder="<?php echo $entry_price; ?>" id="input-price" class="form-control" />
+                            </div>-->
+
+                            <div class="form-group">
+                                <label class="control-label" for="input-date-added"><?php echo $entry_date_added; ?></label>
+                                <div class="input-group date">
+                                    <input type="text" name="filter_date_added" value="<?php echo $filter_date_added; ?>" placeholder="<?php echo $entry_date_added; ?>" data-date-format="YYYY-MM-DD" id="input-date-added" class="form-control" />
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+                                    </span>
+                                </div>
+                          </div>
+
+
+                            <div class="form-group">    
+                                <label class="control-label" for="input-date-added-end"><?php echo $entry_date_added_end; ?></label>
+                                <div class="input-group date">
+                                    <input type="text" name="filter_date_added_end" value="<?php echo $filter_date_added_end; ?>" placeholder="<?php echo $entry_date_added_end; ?>" data-date-format="YYYY-MM-DD" id="input-date-end" class="form-control" />
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+                                    </span>
+                                </div>
                             </div>
+
+
 
                             <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>
 
@@ -216,6 +239,13 @@
         
     
 
+    $('.date').datetimepicker({
+            pickTime: false,
+     widgetParent: 'body'
+
+        });
+
+
   $('#button-filter').on('click', function() {
 
             var url = 'index.php?path=common/productentry';
@@ -234,16 +264,28 @@
 
            
 
-            var filter_price = $('input[name=\'filter_price\']').val();
+            //var filter_price = $('input[name=\'filter_price\']').val();
 
-            if (filter_price) {
-                url += '&filter_price=' + encodeURIComponent(filter_price);
+            //if (filter_price) {
+              //  url += '&filter_price=' + encodeURIComponent(filter_price);
+            //}
+
+            //var filter_quantity = $('input[name=\'filter_quantity\']').val();
+
+           // if (filter_quantity) {
+             //   url += '&filter_quantity=' + encodeURIComponent(filter_quantity);
+            //}
+
+             var filter_date_added = $('input[name=\'filter_date_added\']').val();
+
+            if (filter_date_added) {
+                url += '&filter_date_added=' + encodeURIComponent(filter_date_added);
             }
+            
+            var filter_date_added_end = $('input[name=\'filter_date_added_end\']').val();
 
-            var filter_quantity = $('input[name=\'filter_quantity\']').val();
-
-            if (filter_quantity) {
-                url += '&filter_quantity=' + encodeURIComponent(filter_quantity);
+            if (filter_date_added_end) {
+                url += '&filter_date_added_end=' + encodeURIComponent(filter_date_added_end);
             }
 
          
