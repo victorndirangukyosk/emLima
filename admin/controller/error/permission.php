@@ -80,6 +80,8 @@ class ControllerErrorPermission extends Controller
                 'dashboard/sale',
                 'common/scheduler',
                 'common/scheduleraws',
+                'common/productentry',
+
                 'common/loginAPI',
                 'amitruck/amitruckstatus',
                 'amitruck/amitruckquotes',
