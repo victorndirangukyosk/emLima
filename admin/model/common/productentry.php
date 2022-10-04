@@ -42,16 +42,24 @@ class ModelCommonProductEntry extends Model {
             $sql .= " AND p.source LIKE '".$this->db->escape($data['filter_source'])."%'";
         }
 
-        if (!empty($data['filter_price'])) {
-            $sql .= " AND p.price = '". $data['filter_price']."'";
-        }
+        // if (!empty($data['filter_price'])) {
+        //     $sql .= " AND p.price = '". $data['filter_price']."'";
+        // }
 
         
 
-        if ( isset( $data['filter_quantity'] ) && !is_null( $data['filter_quantity'] ) ) {
-            $sql .= " AND p.quantity = '" .  $data['filter_quantity'] . "'";
-        }
+        // if ( isset( $data['filter_quantity'] ) && !is_null( $data['filter_quantity'] ) ) {
+        //     $sql .= " AND p.quantity = '" .  $data['filter_quantity'] . "'";
+        // }
  
+
+        if (!empty($data['filter_date_added']) && empty($data['filter_date_added_end'])) {
+            $sql .= " AND DATE(p.date_added) = DATE('" . $this->db->escape($data['filter_date_added']) . "')";
+        }
+
+        if (!empty($data['filter_date_added']) && !empty($data['filter_date_added_end'])) {
+            $sql .= " AND DATE(p.date_added) BETWEEN DATE('" . $this->db->escape($data['filter_date_added']) . "') AND DATE('" . $this->db->escape($data['filter_date_added_end']) . "')";
+        }
 
         // $sql .= ' GROUP BY p.product_name';
 
