@@ -48,17 +48,25 @@ class ControllerCommonProductEntry extends Controller {
 
             
 
-            if (isset($this->request->get['filter_price'])) {
-                $url .= '&filter_price=' . $this->request->get['filter_price'];
-            }
+            // if (isset($this->request->get['filter_price'])) {
+            //     $url .= '&filter_price=' . $this->request->get['filter_price'];
+            // }
 
             
 
-            if (isset($this->request->get['filter_quantity'])) {
-                $url .= '&filter_quantity=' . $this->request->get['filter_quantity'];
+            // if (isset($this->request->get['filter_quantity'])) {
+            //     $url .= '&filter_quantity=' . $this->request->get['filter_quantity'];
+            // }
+
+            if (isset($this->request->get['filter_date_added'])) {
+                $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
             }
 
-            
+            if (isset($this->request->get['filter_date_added_end'])) {
+                $url .= '&filter_date_added_end=' . $this->request->get['filter_date_added_end'];
+            }
+    
+                       
             if (isset($this->request->get['sort'])) {
                 $url .= '&sort=' . $this->request->get['sort'];
             }
@@ -108,15 +116,23 @@ class ControllerCommonProductEntry extends Controller {
 
              
 
-            if (isset($this->request->get['filter_price'])) {
-                $url .= '&filter_price=' . $this->request->get['filter_price'];
-            }
+            // if (isset($this->request->get['filter_price'])) {
+            //     $url .= '&filter_price=' . $this->request->get['filter_price'];
+            // }
            
 
-            if (isset($this->request->get['filter_quantity'])) {
-                $url .= '&filter_quantity=' . $this->request->get['filter_quantity'];
+            // if (isset($this->request->get['filter_quantity'])) {
+            //     $url .= '&filter_quantity=' . $this->request->get['filter_quantity'];
+            // }
+
+
+            if (isset($this->request->get['filter_date_added'])) {
+                $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
             }
 
+            if (isset($this->request->get['filter_date_added_end'])) {
+                $url .= '&filter_date_added_end=' . $this->request->get['filter_date_added_end'];
+            }
            
 
             if (isset($this->request->get['sort'])) {
@@ -171,15 +187,22 @@ class ControllerCommonProductEntry extends Controller {
 
             
 
-            if (isset($this->request->get['filter_price'])) {
-                $url .= '&filter_price=' . $this->request->get['filter_price'];
+            // if (isset($this->request->get['filter_price'])) {
+            //     $url .= '&filter_price=' . $this->request->get['filter_price'];
+            // }          
+
+
+            // if (isset($this->request->get['filter_quantity'])) {
+            //     $url .= '&filter_quantity=' . $this->request->get['filter_quantity'];
+            // }
+
+
+            if (isset($this->request->get['filter_date_added'])) {
+                $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
             }
 
-             
-
-
-            if (isset($this->request->get['filter_quantity'])) {
-                $url .= '&filter_quantity=' . $this->request->get['filter_quantity'];
+            if (isset($this->request->get['filter_date_added_end'])) {
+                $url .= '&filter_date_added_end=' . $this->request->get['filter_date_added_end'];
             }
 
             
@@ -218,17 +241,28 @@ class ControllerCommonProductEntry extends Controller {
             $filter_name = null;
         }             
 
-        if (isset($this->request->get['filter_quantity'])) {
-            $filter_quantity = $this->request->get['filter_quantity'];
-        } else {
-            $filter_quantity = null;
-        }
+            // if (isset($this->request->get['filter_quantity'])) {
+            //     $filter_quantity = $this->request->get['filter_quantity'];
+            // } else {
+            //     $filter_quantity = null;
+            // }
 
-        if (isset($this->request->get['filter_price'])) {
-            $filter_price = $this->request->get['filter_price'];
-        } else {
-            $filter_price = null;
-        } 
+            // if (isset($this->request->get['filter_price'])) {
+            //     $filter_price = $this->request->get['filter_price'];
+            // } else {
+            //     $filter_price = null;
+            // } 
+
+            if (isset($this->request->get['filter_date_added'])) {
+                $filter_date_added = $this->request->get['filter_date_added'];
+            } else {
+                $filter_date_added = null;
+            }
+            if (isset($this->request->get['filter_date_added_end'])) {
+                $filter_date_added_end = $this->request->get['filter_date_added_end'];
+            } else {
+                $filter_date_added_end = null;
+            }
 
         if (isset($this->request->get['sort'])) {
             $sort = $this->request->get['sort'];
@@ -259,17 +293,23 @@ class ControllerCommonProductEntry extends Controller {
         }
 
           
-        if (isset($this->request->get['filter_price'])) {
-            $url .= '&filter_price=' . $this->request->get['filter_price'];
-        }
+        // if (isset($this->request->get['filter_price'])) {
+        //     $url .= '&filter_price=' . $this->request->get['filter_price'];
+        // }
 
        
 
-        if (isset($this->request->get['filter_quantity'])) {
-            $url .= '&filter_quantity=' . $this->request->get['filter_quantity'];
+        // if (isset($this->request->get['filter_quantity'])) {
+        //     $url .= '&filter_quantity=' . $this->request->get['filter_quantity'];
+        // }
+
+        if (isset($this->request->get['filter_date_added'])) {
+            $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
         }
 
-        
+        if (isset($this->request->get['filter_date_added_end'])) {
+            $url .= '&filter_date_added_end=' . $this->request->get['filter_date_added_end'];
+        }
 
         if (isset($this->request->get['sort'])) {
             $url .= '&sort=' . $this->request->get['sort'];
@@ -303,8 +343,10 @@ class ControllerCommonProductEntry extends Controller {
         $filter_data = [
             'filter_name' => $filter_name,
             'filter_source' => $filter_source,            
-            'filter_price' => $filter_price,
-            'filter_quantity' => $filter_quantity,
+            // 'filter_price' => $filter_price,
+            // 'filter_quantity' => $filter_quantity,
+            'filter_date_added' => $filter_date_added,
+            'filter_date_added_end' => $filter_date_added_end,           
             'sort' => $sort,
             'order' => $order,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
@@ -353,6 +395,9 @@ class ControllerCommonProductEntry extends Controller {
 
         $data['entry_price'] = $this->language->get('entry_price');
         $data['entry_quantity'] = $this->language->get('entry_quantity');
+        $data['entry_date_added'] = $this->language->get('entry_date_added');
+        $data['entry_date_added_end'] = $this->language->get('entry_date_added_end');
+
 
         $data['button_add'] = $this->language->get('button_add');
         $data['button_close'] = $this->language->get('button_close');
@@ -399,12 +444,24 @@ class ControllerCommonProductEntry extends Controller {
      
 
 
-        if (isset($this->request->get['filter_price'])) {
-            $url .= '&filter_price=' . $this->request->get['filter_price'];
+        // if (isset($this->request->get['filter_price'])) {
+        //     $url .= '&filter_price=' . $this->request->get['filter_price'];
+        // }
+
+        // if (isset($this->request->get['filter_quantity'])) {
+        //     $url .= '&filter_quantity=' . $this->request->get['filter_quantity'];
+        // }
+
+        if (isset($this->request->get['filter_date_added'])) {
+            $filter_date_added = $this->request->get['filter_date_added'];
+        } else {
+            $filter_date_added = null;
         }
 
-        if (isset($this->request->get['filter_quantity'])) {
-            $url .= '&filter_quantity=' . $this->request->get['filter_quantity'];
+        if (isset($this->request->get['filter_date_added_end'])) {
+            $filter_date_added_end = $this->request->get['filter_date_added_end'];
+        } else {
+            $filter_date_added_end = null;
         }
 
        
@@ -436,15 +493,24 @@ class ControllerCommonProductEntry extends Controller {
         }
 
        
-        if (isset($this->request->get['filter_price'])) {
-            $url .= '&filter_price=' . $this->request->get['filter_price'];
-        }
+        // if (isset($this->request->get['filter_price'])) {
+        //     $url .= '&filter_price=' . $this->request->get['filter_price'];
+        // }
 
         
 
-        if (isset($this->request->get['filter_quantity'])) {
-            $url .= '&filter_quantity=' . $this->request->get['filter_quantity'];
+        // if (isset($this->request->get['filter_quantity'])) {
+        //     $url .= '&filter_quantity=' . $this->request->get['filter_quantity'];
+        // }
+
+        if (isset($this->request->get['filter_date_added'])) {
+            $url .= '&filter_date_added=' . $this->request->get['filter_date_added'];
         }
+
+        if (isset($this->request->get['filter_date_added_end'])) {
+            $url .= '&filter_date_added_end=' . $this->request->get['filter_date_added_end'];
+        }
+
 
       
 
@@ -473,6 +539,8 @@ class ControllerCommonProductEntry extends Controller {
        
         $data['filter_price'] = $filter_price;
         $data['filter_quantity'] = $filter_quantity;
+        $data['filter_date_added'] = $filter_date_added;
+        $data['filter_date_added_end'] = $filter_date_added_end;
 
         $data['sort'] = $sort;
         $data['order'] = $order;
