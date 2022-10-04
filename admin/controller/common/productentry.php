@@ -16,11 +16,7 @@ class ControllerCommonProductEntry extends Controller {
         $this->getList();
     }
 
-    public function export_excel() {
-        $data = [];
-        $this->load->model('report/excel');
-        $this->model_report_excel->download_product_entry_excel($data);
-    }
+    
 
     public function add() {
 
@@ -738,6 +734,75 @@ class ControllerCommonProductEntry extends Controller {
     }
 
     
+
+    public function export_excel() {
+        $data = [];
+        $this->load->model('report/excel');
+        if (isset($this->request->get['filter_source'])) {
+            $filter_source = $this->request->get['filter_source'];
+        } else {
+            $filter_source = null;
+        }
+       
+        if (isset($this->request->get['filter_name'])) {
+            $filter_name = $this->request->get['filter_name'];
+        } else {
+            $filter_name = null;
+        }             
+
+            // if (isset($this->request->get['filter_quantity'])) {
+            //     $filter_quantity = $this->request->get['filter_quantity'];
+            // } else {
+            //     $filter_quantity = null;
+            // }
+
+            // if (isset($this->request->get['filter_price'])) {
+            //     $filter_price = $this->request->get['filter_price'];
+            // } else {
+            //     $filter_price = null;
+            // } 
+
+            if (isset($this->request->get['filter_date_added'])) {
+                $filter_date_added = $this->request->get['filter_date_added'];
+            } else {
+                $filter_date_added = null;
+            }
+            if (isset($this->request->get['filter_date_added_end'])) {
+                $filter_date_added_end = $this->request->get['filter_date_added_end'];
+            } else {
+                $filter_date_added_end = null;
+            }
+
+        if (isset($this->request->get['sort'])) {
+            $sort = $this->request->get['sort'];
+        } else {
+            $sort = 'p.product_entry_id';
+        }
+
+        if (isset($this->request->get['order'])) {
+            $order = $this->request->get['order'];
+        } else {
+            $order = 'ASC';
+        }
+
+
+        $filter_data = [
+            'filter_source' => $filter_source,
+            'filter_name' => $filter_name,
+            // 'filter_quantity' => $filter_quantity,
+            // 'filter_price' => $filter_price,
+            'filter_date_added' => $filter_date_added,
+            'filter_date_added_end' => $filter_date_added_end,
+            'sort' => $sort,
+            'order' => $order,
+           
+        ];
+
+        //  echo "<pre>";print_r($filter_data);die;
+
+
+        $this->model_report_excel->download_product_entry_excel($filter_data);
+    }
 
    
 
