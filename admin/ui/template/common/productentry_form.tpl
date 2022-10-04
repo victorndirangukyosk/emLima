@@ -102,7 +102,6 @@ function save(type) {
         input.type = 'hidden';
         input.name = 'button';
         input.value = type;
-        assign_customers();
         form = $("form[id^='form-']").append(input);
         form.submit();
     }
