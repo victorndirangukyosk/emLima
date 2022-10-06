@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
+<head> 
+    <meta charset="UTF-8">
     <link rel="stylesheet" href="https://kwikbasket-assets.s3.ap-south-1.amazonaws.com/fonts/sofiapro/index.css">
     <!-- CSS Reset -->
     <style>
