@@ -11,6 +11,8 @@ class ControllerSaleAccountManagerUserOrders extends Controller {
         $this->document->setTitle($this->language->get('heading_title'));
 
         $this->load->model('sale/order');
+        $this->load->model('vendor/vendor');
+
 
         $this->getList();
     }
@@ -230,13 +232,16 @@ class ControllerSaleAccountManagerUserOrders extends Controller {
 
         $results = $this->model_sale_order->getOrdersByAccountManager($filter_data);
 
-        //        echo "<pre>";print_r($results);die;
+            //    echo "<pre>";print_r($results);die;
         foreach ($results as $result) {
             $sub_total = 0;
 
             $totals = $this->model_sale_order->getOrderTotals($result['order_id']);
+            $store_details = $this->model_vendor_vendor->getVendorByStoreId($result['store_id']);
 
-            //echo "<pre>";print_r($totals);die;
+            $vendor_details = $this->model_vendor_vendor->getVendorDetails($store_details['vendor_id']);
+
+            // echo "<pre>";print_r($vendor_details);die;
             foreach ($totals as $total) {
                 if ('sub_total' == $total['code']) {
                     $sub_total = $total['value'];
@@ -254,8 +259,10 @@ class ControllerSaleAccountManagerUserOrders extends Controller {
                 // $result['company_name'] = "(NA)";
             }
 
-            $data['orders'][] = [
+            $data['orders'][] = [ 
                 'order_id' => $result['order_id'],
+                'order_prefix' => $vendor_details['orderprefix'] != '' ? $vendor_details['orderprefix'] . '-' : '',
+
                 'customer' => $result['customer'],
                 'company_name' => $result['company_name'],
                 'status' => $result['status'],
