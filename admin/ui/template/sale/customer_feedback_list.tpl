@@ -159,7 +159,8 @@
                   <td class="text-left"><?php echo $customer_feedback['accepted_user']; ?></td>
                   <td class="text-left"><?php echo $customer_feedback['closed_date']; ?></td>
                   <td class="text-left"><?php echo $customer_feedback['closed_comments']; ?></td>
-                  <?php if ($this->user->isCustomerExperience() ){ ?>
+                  <?php if ($this->user->hasPermission('modify', 'sale/customer_feedback')){ ?>
+  
                   <?php if ($customer_feedback['rating']<=3  && $customer_feedback['status']=='Open') { ?>
                                     <td class="text-right">
                                     <div style="width: 100%; display:flex; justify-content: space-between; flex-flow: row wrap; gap: 4px;">

@@ -74,13 +74,17 @@ class ModelCommonProductEntry extends Model {
         if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
             $sql .= ' ORDER BY '.$data['sort'];
         } else {
-            $sql .= ' ORDER BY p.product_name';
+            $sql .= ' ORDER BY p.product_entry_id';
         }
 
         if (isset($data['order']) && ('DESC' == $data['order'])) {
             $sql .= ' DESC';
-        } else {
+        } else if(isset($data['order']) && ('ASC' == $data['order']))
+        {
             $sql .= ' ASC';
+        }        
+        else {
+            $sql .= ' DESC';
         }
 
         if (isset($data['start']) || isset($data['limit'])) {
