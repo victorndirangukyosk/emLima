@@ -3882,11 +3882,26 @@ class ControllerCatalogVendorProduct extends Controller {
             $filter_date_added_end = null;
         }
 
+        if (isset($this->request->get['sort'])) {
+            $sort = $this->request->get['sort'];
+        } else {
+            $sort = 'product_name';
+        }
+
+        if (isset($this->request->get['order'])) {
+            $order = $this->request->get['order'];
+        } else {
+            $order = 'DESC';
+        }
+
+        
         $filter_data = [
             'filter_name' => $filter_name,
             'filter_store_id' => $filter_store_id,
             'filter_date_added' => $filter_date_added,
             'filter_date_added_end' => $filter_date_added_end,
+            'sort' => $sort,
+            'order' => $order,
         ];
 
         // echo "<pre>";print_r($filter_data);die;

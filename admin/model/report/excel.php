@@ -5808,19 +5808,19 @@ class ModelReportExcel extends Model {
             ];
 
             //Company name, address
-            $objPHPExcel->getActiveSheet()->mergeCells('A1:O2');
+            $objPHPExcel->getActiveSheet()->mergeCells('A1:P2');
             $objPHPExcel->getActiveSheet()->setCellValue('A1', 'Inventory History ');
-            $objPHPExcel->getActiveSheet()->getStyle('A1:O2')->applyFromArray(['font' => ['bold' => true], 'color' => [
+            $objPHPExcel->getActiveSheet()->getStyle('A1:P2')->applyFromArray(['font' => ['bold' => true], 'color' => [
                     'rgb' => '4390df',
             ]]);
 
-            $objPHPExcel->getActiveSheet()->getStyle('A4:O4')->applyFromArray(['font' => ['bold' => true], 'color' => [
+            $objPHPExcel->getActiveSheet()->getStyle('A4:P4')->applyFromArray(['font' => ['bold' => true], 'color' => [
                     'rgb' => '4390df',
             ]]);
 
             //subtitle
 
-            $objPHPExcel->getActiveSheet()->getStyle('A1:O3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $objPHPExcel->getActiveSheet()->getStyle('A1:P3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
 
             /* $objPHPExcel->getActiveSheet()->getColumnDimension("A")->setWidth(30);
               $objPHPExcel->getActiveSheet()->getColumnDimension("B")->setWidth(20);
@@ -5838,20 +5838,21 @@ class ModelReportExcel extends Model {
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, 4, 'Product Name');
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 4, 'General Product ID');
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, 4, 'Product Store ID');
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 4, 'Procured Quantity');
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, 4, 'Rejected Quantity');
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, 4, 'Previous Quantity');
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, 4, 'Updated Quantity');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 4, 'Unit');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, 4, 'Procured Quantity');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, 4, 'Rejected Quantity');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, 4, 'Previous Quantity');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, 4, 'Updated Quantity');
 
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, 4, 'Previous Buying Price');
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(8, 4, 'Buying Price');
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(9, 4, 'Previous Source');
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(10, 4, 'Source');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(8, 4, 'Previous Buying Price');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(9, 4, 'Buying Price');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(10, 4, 'Previous Source');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(11, 4, 'Source');
 
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(11, 4, 'Updated By');
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(12, 4, 'User Role');
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(13, 4, 'Date Added');
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(14, 4, 'Date Time');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(12, 4, 'Updated By');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(13, 4, 'User Role');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(14, 4, 'Date Added');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(15, 4, 'Date Time');
 
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(1, 4)->applyFromArray($title);
@@ -5870,6 +5871,7 @@ class ModelReportExcel extends Model {
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(12, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(13, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(14, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(15, 4)->applyFromArray($title);
 
             // Fetching the table data
             $row = 5;
@@ -5877,21 +5879,22 @@ class ModelReportExcel extends Model {
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $result['product_name']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['product_id']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['product_store_id']);
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['procured_qty']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['unit']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, $result['procured_qty']);
 
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, $result['rejected_qty']);
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, $result['prev_qty']);
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, $result['current_qty']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, $result['rejected_qty']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, $result['prev_qty']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, $row, $result['current_qty']);
 
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, $row, $result['prev_buying_price']);
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(8, $row, $result['buying_price']);
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(9, $row, $result['prev_source']);
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(10, $row, $result['source']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(8, $row, $result['prev_buying_price']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(9, $row, $result['buying_price']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(10, $row, $result['prev_source']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(11, $row, $result['source']);
 
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(11, $row, $result['added_user']);
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(12, $row, $result['added_user_role']);
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(13, $row, date($this->language->get('date_format_short'), strtotime($result['date_added'])));
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(14, $row, date($this->language->get('time_format'), strtotime($result['date_added'])));
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(12, $row, $result['added_user']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(13, $row, $result['added_user_role']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(14, $row, date($this->language->get('date_format_short'), strtotime($result['date_added'])));
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(15, $row, date($this->language->get('time_format'), strtotime($result['date_added'])));
                 ++$row;
             }
 
