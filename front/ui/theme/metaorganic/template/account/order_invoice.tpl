@@ -23,7 +23,8 @@
                                 <img width="210" src="admin/ui/images/logo.png" alt="KwikBasket Logo" class="mb-2">
                                 <div class="text-left address-block">
                                     <ul class="list-block">
-                                        <li>12 Githuri Rd, Parklands, Nairobi</li>
+                                        <!--<li>12 Githuri Rd, Parklands, Nairobi</li>-->
+                                        <li>Zambezi – Sigona (Kikuyu), Nairobi – Naivasha Highway (A104), Kiambu, Kenya</li>
                                         <li>+254780703586</li>
                                         <li>operations@kwikbasket.com</li>
                                         <li>www.kwikbasket.com</li>
