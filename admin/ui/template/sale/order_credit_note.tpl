@@ -31,7 +31,7 @@
                                         <li>www.kwikbasket.com</li>
                                         <li>KRA PIN Number P051904531E</li>
                                     </ul>
-                                    <br><br>
+                                    <br>
                                        <h6 class="bold text-uppercase mb-3">TO <?= $order['customer_company_name'] ?></h6>
                                 <ul class="list-block">
                                     <li><?= $order['shipping_name'] ?></li>
