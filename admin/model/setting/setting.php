@@ -151,13 +151,19 @@ class ModelSettingSetting extends Model
         if($this->db->escape($data['config_meatcheckingteam']))         
         $this->db->query('UPDATE '.DB_PREFIX."setting_email SET `value` = '".$this->db->escape($data['config_meatcheckingteam'])."' WHERE `code` = 'meatcheckingteam' AND `key` =  'meatcheckingteam' ");
        
+        if($this->db->escape($data['config_feedbackalert']))         
+        $this->db->query('UPDATE '.DB_PREFIX."setting_email SET `value` = '".$this->db->escape($data['config_feedbackalert'])."' WHERE `code` = 'feedbackalert' AND `key` =  'feedbackalert' ");
+       
+        if($this->db->escape($data['config_missingitem']))         
+        $this->db->query('UPDATE '.DB_PREFIX."setting_email SET `value` = '".$this->db->escape($data['config_missingitem'])."' WHERE `code` = 'missingitem' AND `key` =  'missingitem' ");
+       
     }
 
     
     public function getEmailSettings()
     {
         
-        $query = $this->db->query('SELECT * FROM '.DB_PREFIX."setting_email WHERE  `code` =  'consolidatedorder' or `code` =  'careers'  or `code` =  'stockout' or `code` =  'issue' or `code` =  'financeteam' or `code` ='meatcheckingteam'");
+        $query = $this->db->query('SELECT * FROM '.DB_PREFIX."setting_email WHERE  `code` =  'consolidatedorder' or `code` =  'careers'  or `code` =  'stockout' or `code` =  'issue' or `code` =  'financeteam' or `code` ='meatcheckingteam'  or `code` ='feedbackalert'  or `code` ='missingitem'");
        
         return $query->rows;
     }
