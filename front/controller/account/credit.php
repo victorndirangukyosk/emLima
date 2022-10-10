@@ -1,10 +1,11 @@
 <?php
 
-class ControllerAccountCredit extends Controller
-{
-    public function updateBarcode()
-    {
-        $allProducts = $this->db->query('SELECT * from '.DB_PREFIX.'product')->rows;
+require_once DIR_SYSTEM . '/vendor/pesapal/OAuth.php';
+
+class ControllerAccountCredit extends Controller {
+
+    public function updateBarcode() {
+        $allProducts = $this->db->query('SELECT * from ' . DB_PREFIX . 'product')->rows;
 
         //echo "<pre>";print_r($allProducts);die;
 
@@ -17,22 +18,21 @@ class ControllerAccountCredit extends Controller
                 $randomString .= $characters[rand(0, strlen($characters) - 1)];
             }
 
-            $this->db->query('UPDATE '.DB_PREFIX."product SET model = '".(int) $randomString."' WHERE product_id = '".(int) $product['product_id']."'");
+            $this->db->query('UPDATE ' . DB_PREFIX . "product SET model = '" . (int) $randomString . "' WHERE product_id = '" . (int) $product['product_id'] . "'");
             //die;
         }
     }
 
-    public function index()
-    {
+    public function index() {
         /* $x = 'Second Parklands Avenuez';
-         $data['building_name'] = explode(",",$x)[0];
-         echo "<pre>";print_r($data['building_name']);die;*/
+          $data['building_name'] = explode(",",$x)[0];
+          echo "<pre>";print_r($data['building_name']);die; */
         /* $value = "Test a";
-         echo strtok($value, " "); // Test
-         die;*/
+          echo strtok($value, " "); // Test
+          die; */
         //echo "<pre>";print_r(floor(1.234));die;
         //echo "<pre>";print_r(date($this->language->get('full_datetime_format'), strtotime(date("Y-m-d H:i:s"))));die;
-        $this->document->addStyle('front/ui/theme/'.$this->config->get('config_template').'/stylesheet/layout_login.css');
+        $this->document->addStyle('front/ui/theme/' . $this->config->get('config_template') . '/stylesheet/layout_login.css');
 
         if (!$this->customer->isLogged()) {
             $this->session->data['redirect'] = $this->url->link('account/credit', '', 'SSL');
@@ -108,15 +108,14 @@ class ControllerAccountCredit extends Controller
         $results = $this->model_account_credit->getCredits($filter_data);
 
         foreach ($results as $result) {
-            $transaction_ID="";
-            if(isset($result['transaction_id']) && $result['transaction_id']!="" )
-            {
-                $transaction_ID='#Transaction ID '.$result['transaction_id'];
+            $transaction_ID = "";
+            if (isset($result['transaction_id']) && $result['transaction_id'] != "") {
+                $transaction_ID = '#Transaction ID ' . $result['transaction_id'];
             }
             $data['credits'][] = [
                 'amount' => $this->currency->format($result['amount'], $this->config->get('config_currency')),
                 'plain_amount' => $result['amount'],
-                'description' => $result['description'].' ' .$transaction_ID,
+                'description' => $result['description'] . ' ' . $transaction_ID,
                 'date_added' => date($this->language->get('date_format_medium'), strtotime($result['date_added'])),
             ];
         }
@@ -163,26 +162,93 @@ class ControllerAccountCredit extends Controller
         $data['header'] = $this->load->controller('common/header/information');
 
         // echo "<pre>";print_r($data['credits']);die;
-        if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/account/credit.tpl')) {
-            $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/account/credit.tpl', $data));
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/credit.tpl')) {
+            $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/account/credit.tpl', $data));
         } else {
             $this->response->setOutput($this->load->view('default/template/account/credit.tpl', $data));
         }
     }
 
-
     public function getWalletTotal() {
         $total = 0;
         // if (!$this->customer->isLogged()) {
         //     $this->session->data['redirect'] = $this->url->link('account/credit', '', 'SSL');
-
         //     $this->response->redirect($this->url->link('account/login', '', 'SSL'));
         // } 
-        $this->load->model('account/credit');         
+        $this->load->model('account/credit');
 
-        $result = $this->model_account_credit->getTotalAmount();       
-        $total=$this->currency->format($result, $this->config->get('config_currency'));
+        $result = $this->model_account_credit->getTotalAmount();
+        $total = $this->currency->format($result, $this->config->get('config_currency'));
         return $total;
+    }
+
+    public function pesapal() {
+
+        $log = new Log('error.log');
+
+        $this->load->language('payment/pesapal');
+        $this->load->model('setting/setting');
+        $this->load->model('payment/pesapal');
+        $this->load->model('account/customer');
+
+        $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
+        $amount = $this->request->post['amount'];
+        $pesapal_creds = $this->model_setting_setting->getSetting('pesapal', 0);
+        //pesapal params
+        $token = $params = null;
+
+        /*
+          PesaPal Sandbox is at https://demo.pesapal.com. Use this to test your developement and
+          when you are ready to go live change to https://www.pesapal.com.
+         */
+        $consumer_key = $pesapal_creds['pesapal_consumer_key']; //Register a merchant account on
+        //demo.pesapal.com and use the merchant key for testing.
+        //When you are ready to go live make sure you change the key to the live account
+        //registered on www.pesapal.com!
+        $consumer_secret = $pesapal_creds['pesapal_consumer_secret']; // Use the secret from your test
+        //account on demo.pesapal.com. When you are ready to go live make sure you
+        //change the secret to the live account registered on www.pesapal.com!
+        $signature_method = new OAuthSignatureMethod_HMAC_SHA1();
+        $iframelink = 'https://www.pesapal.com/api/PostPesapalDirectOrderV4'; //change to
+        //https://www.pesapal.com/API/PostPesapalDirectOrderV4 when you are ready to go live!
+        //get form details
+        $transaction_fee = 0;
+        $percentage = 3.5;
+        $transaction_fee = ($percentage / 100) * $amount;
+        $amount = $amount + $transaction_fee;
+        $log->write('TRANSACTION FEE');
+        $log->write($transaction_fee);
+        $log->write($amount);
+        //$amount = 100;
+        $amount = number_format($amount, 2); //format amount to 2 decimal places
+
+        $desc = $customer_info['company_name'] . '-' . $customer_info['firstname'] . '-' . $customer_info['lastname'] . '-' . $order_id;
+        $type = 'MERCHANT'; //default value = MERCHANT
+        $reference = 'WALLET_TOPUP' . '_' . time() . '_' . $this->customer->getId(); //unique order id of the transaction, generated by merchant
+
+        $first_name = $customer_info['firstname'];
+        $last_name = $customer_info['lastname'];
+        $email = $customer_info['email'];
+        $phonenumber = '+254' . $customer_info['telephone']; //ONE of email or phonenumber is required
+        $Currency = 'KES';
+
+        $callback_url = $this->url->link('account/transactions/status', '', 'SSL'); //redirect url, the page that will handle the response from pesapal.
+
+        $post_xml = '<?xml version="1.0" encoding="utf-8"?><PesapalDirectOrderInfo xmlns:xsi="http://www.w3.org/2001/XMLSchemainstance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Amount="' . $amount . '" Description="' . $desc . '" Type="' . $type . '" Reference="' . $reference . '" FirstName="' . $first_name . '" LastName="' . $last_name . '" Email="' . $email . '" PhoneNumber="' . $phonenumber . '" xmlns="http://www.pesapal.com" />';
+        $post_xml = htmlentities($post_xml);
+
+        $consumer = new OAuthConsumer($consumer_key, $consumer_secret, $callback_url);
+        //print_r($consumer);
+        //post transaction to pesapal
+        $iframe_src = OAuthRequest::from_consumer_and_token($consumer, $token, 'GET', $iframelink, $params);
+        $iframe_src->set_parameter('oauth_callback', $callback_url);
+        $iframe_src->set_parameter('pesapal_request_data', $post_xml);
+        $iframe_src->sign_request($signature_method, $consumer, $token);
+        //display pesapal - iframe and pass iframe_src
+        $log->write($iframe_src);
+        $data['iframe'] = $iframe_src;
+
+        echo '<iframe src=' . $iframe_src . ' width="100%" height="700px"  scrolling="no" frameBorder="0"><p>Browser unable to load iFrame</p></iframe>';
     }
 
 }
