@@ -14,7 +14,7 @@
 
 
                                       <div class="col-md-12" style="border: 1px solid #d7dcd6;padding: 10px;margin: 15px;width: -webkit-fill-available;">
-                                    <div class="col-md-9" id="pay_with" >
+                                    <div class="col-md-12" id="pay_with" >
                                     Top Up With
                                     <div class="row">
                                         <!--<div class="col-md-4">
@@ -25,6 +25,12 @@
                                         <div class="col-md-6">
                                             <div class="radio">
                                                 <label><input class="option_pay" onchange="payWithmPesa()" type="radio" name="pay_with">mPesa Online</label>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-md-6 text-right">
+                                            <div class="radio">
+                                                <label><input class="option_pay" onchange="payWithmPesaPal()" type="radio" name="pay_with">Credit/Debit Card</label>
                                             </div>
                                         </div>
                                         <!--<div class="col-md-6">
@@ -87,6 +93,17 @@
                                     <!--MPESA REMOVED FROM HERE-->
                                 </div>
                                 
+                                
+                                <div id="pay-confirm-order-pesapal" class="col-md-12 confirm_order_class" style="display:none; ">
+                                    <div class="row">
+                                        <div class="col-md-8 align-left">
+                                                <input id="pesapal_amount_topup" name="pesapal_amount_topup" type="text" value="" class="form-control input-md" required="" placeholder="Amount" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 &amp;&amp; event.charCode <= 57" minlength="9" maxlength="9" style="display: inline-block;    width: 50%;" >
+                                        </div>
+                                        <div class="col-md-4 align-right">
+                                            <button type="button" id="pesapal-button-confirm" data-toggle="collapse" data-loading-text="checking phone..." class="btn btn-default">PAY &amp; CONFIRM</button>
+                                        </div>
+                                    </div>
+                                </div>
                                 </div>
                                 
                                 </div>
@@ -278,8 +295,17 @@ __kdt.push({"post_on_load": false});
      function payWithmPesa() {
         $("#pay-confirm-order").html('');
         $("#pay-confirm-order").hide();
+        $("#pay-confirm-order-pesapal").hide();
         $("#pay-confirm-order-mpesa").show();
         $("#pay-amount").show();
+    }
+    
+    function payWithmPesaPal() {
+        $("#pay-confirm-order").html('');
+        $("#pay-confirm-order").hide();
+        $("#pay-confirm-order-mpesa").hide();
+        $("#pay-amount").hide();
+        $("#pay-confirm-order-pesapal").show();
     }
 
     </script>
