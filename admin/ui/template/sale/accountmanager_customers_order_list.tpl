@@ -6,14 +6,14 @@
             <div class="pull-right">
                 <?php if (!$this->user->isVendor()): ?>
                 <button type="" id="button-shipping" form="form-order" formaction="<?php echo $shipping; ?>" data-toggle="tooltip" title="<?php echo $button_shipping_print; ?>" class="btn btn-default"><i class="fa fa-truck"></i></button>
-                <?php endif ?>  
+                <?php endif ?>
 
 
                 <button type="" id="button-invoice" form="form-order" formaction="<?php echo $invoice; ?>" data-toggle="tooltip" title="<?php echo $button_invoice_print; ?>" class="btn btn-default"><i class="fa fa-print"></i></button>
 
                 <?php if (!$this->user->isVendor()): ?>
                 <!-- <a href="<?php echo $add; ?>" data-toggle="tooltip" title="<?php echo $button_add; ?>" class="btn btn-success"><i class="fa fa-plus"></i></a> -->
-                <?php endif ?>  
+                <?php endif ?>
             </div>
             <h1><?php echo $heading_title; ?></h1>
             <ul class="breadcrumb">
@@ -43,7 +43,7 @@
                 <div class="pull-right">
                     <button type="button" data-toggle="tooltip" title="<?php echo $button_show_filter; ?>" class="btn btn-primary btn-sm" id="showFilter"><i class="fa fa-eye"></i></button>
                     <button type="button" data-toggle="tooltip" title="<?php echo $button_hide_filter; ?>" class="btn btn-primary btn-sm" id="hideFilter"><i class="fa fa-eye-slash"></i></button>
-                </div>		
+                </div>
             </div>
             <div class="panel-body">
                 <div class="well" style="display:none;">
@@ -59,7 +59,7 @@
                                 <label class="control-label" for="input-customer"><?php echo $entry_customer; ?></label>
                                 <input type="text" name="filter_customer" value="<?php echo $filter_customer; ?>" placeholder="<?php echo $entry_customer; ?>" id="input-customer" class="form-control" />
                             </div>
-                            <?php endif ?> 
+                            <?php endif ?>
 
 
 
@@ -72,7 +72,7 @@
                                 <label class="control-label" for="input-name"><?= $column_delivery_method ?></label>
                                 <input type="text" name="filter_delivery_method" value="<?php echo $filter_delivery_method; ?>" placeholder="<?php echo $column_delivery_method; ?>" id="input-name" class="form-control" />
                             </div>
-                            <div class="form-group">    
+                            <div class="form-group">
                                 <label class="control-label" for="input-delivery-date"><?php echo $entry_delivery_date; ?></label>
                                 <div class="input-group date">
                                     <input type="text" name="filter_delivery_date" value="<?php echo $filter_delivery_date; ?>" placeholder="<?php echo $entry_delivery_date; ?>" data-date-format="YYYY-MM-DD" id="input-delivery-date" class="form-control" />
@@ -118,7 +118,7 @@
                                 <label class="control-label" for="input-name"><?= $column_payment ?></label>
                                 <input type="text" name="filter_payment" value="<?php echo $filter_payment; ?>" placeholder="<?php echo $column_payment; ?>" id="input-name" class="form-control" />
                             </div>
-                            <?php endif ?> 
+                            <?php endif ?>
 
 
                         </div>
@@ -132,7 +132,7 @@
                                 <input type="text" name="filter_company" value="<?php echo $filter_company; ?>" placeholder="Company Name" id="input-company" class="form-control" />
                             </div>
 
-                            <?php if(!$this->user->isVendor()){ ?>  
+                            <?php if(!$this->user->isVendor()){ ?>
                             <!--<div class="form-group">
                                 <label class="control-label" for="input-model"><?= $text_vendor ?></label>
                                 <input type="text" name="filter_vendor" value="<?php echo $filter_vendor; ?>" placeholder="<?php echo $text_vendor; ?>" id="input-model" class="form-control" />
@@ -149,7 +149,7 @@
                                     </span>
                                 </div>
                             </div>
-                            <div class="form-group">    
+                            <div class="form-group">
                                 <label class="control-label" for="input-date-added-end"><?php echo $entry_date_added_end; ?></label>
                                 <div class="input-group date">
                                     <input type="text" name="filter_date_added_end" value="<?php echo $filter_date_added_end; ?>" placeholder="<?php echo $entry_date_added_end; ?>" data-date-format="YYYY-MM-DD" id="input-date-end" class="form-control" />
@@ -199,7 +199,7 @@
                                         <?php } ?>
                                     </td>
 
-                                    <?php endif ?> 
+                                    <?php endif ?>
 
 
                                     <!-- <td class="text-left">
@@ -248,7 +248,7 @@
 
                                     <?php if (!$this->user->isVendor()): ?>
                                     <td class="text-right"><?php echo $column_payment; ?></td>
-                                    <?php endif ?>  
+                                    <?php endif ?>
 
 
                                     <td class="text-right"><?php echo $column_delivery_method; ?></td>
@@ -267,7 +267,7 @@
                                         <?php } ?>
                                         <input type="hidden" name="shipping_code[]" value="<?php echo $order['shipping_code']; ?>" />
                                     </td>
-                                    <td class="text-right"><?php echo $order['order_id']; ?></td>
+                                    <td class="text-left"><?php echo $order['order_prefix'].''.$order['order_id']; ?></td>
 
                                     <?php if (!$this->user->isVendor()): ?>
 
@@ -277,7 +277,7 @@
                                         <?php echo $order['shipping_address']  ; ?>
                                     </td>
 
-                                    <?php endif ?> 
+                                    <?php endif ?>
                                     <!-- <td class="text-left"><?php echo $order['city']; ?></td> -->
                                     <!-- <td class="text-left"><?php echo $order['status']; ?></td> -->
                                     <td class="text-left">
@@ -295,7 +295,7 @@
 
                                     <?php if (!$this->user->isVendor()): ?>
                                     <td class="text-right"  style="width:120px"><?php echo $order['payment_method']; ?></td>
-                                    <?php endif ?>  
+                                    <?php endif ?>
 
 
                                     <td class="text-right"><?php echo $order['shipping_method']; ?></td>
@@ -304,10 +304,10 @@
                                         <?php if (!$this->user->isVendor()): ?>
                                         <!-- <a href="<?php echo $order['order_spreadsheet']; ?>" target="_blank" data-toggle="tooltip" title="Download Calculation Sheet" class="btn btn-info"><i class="fa fa-file-excel-o"></i></a> -->
                                         <!--<a href="<?php echo $order['shipping']; ?>" target="_blank" data-toggle="tooltip" title="Print Delivery Note" class="btn btn-info"><i class="fa fa-truck"></i></a>-->
-                                        <?php endif ?>                                         
+                                        <?php endif ?>
                                         <a href="<?php echo $order['invoice']; ?>" target="_blank" data-toggle="tooltip" title="Print Invoice" class="btn btn-info"><i class="fa fa-print"></i></a>
 
-                                        <a href="<?php echo $order['view']; ?>" data-toggle="tooltip" title="<?php echo $button_view; ?>" class="btn btn-info"><i class="fa fa-eye"></i></a> 
+                                        <a href="<?php echo $order['view']; ?>" data-toggle="tooltip" title="<?php echo $button_view; ?>" class="btn btn-info"><i class="fa fa-eye"></i></a>
 
                                         <?php if ( !in_array( $order['order_status_id'], array_merge( $this->config->get( 'config_refund_status' ), $this->config->get( 'config_complete_status' ) ) ) ) { ?>
                                         <!--<a href="<?php echo $order['edit']; ?>" data-toggle="tooltip" title="<?php echo $button_edit; ?>" class="btn btn-primary"><i class="fa fa-pencil"></i></a> -->
@@ -476,13 +476,13 @@
             if (filter_date_added) {
                 url += '&filter_date_added=' + encodeURIComponent(filter_date_added);
             }
-            
+
             var filter_date_added_end = $('input[name=\'filter_date_added_end\']').val();
 
             if (filter_date_added_end) {
                 url += '&filter_date_added_end=' + encodeURIComponent(filter_date_added_end);
             }
-            
+
             var filter_delivery_date = $('input[name=\'filter_delivery_date\']').val();
 
             if (filter_delivery_date) {
@@ -572,7 +572,7 @@
             }
         });
 
-        //--></script> 
+        //--></script>
     <script type="text/javascript"><!--
   $('input[name^=\'selected\']').on('change', function () {
 
@@ -603,7 +603,7 @@
                 location = $(this).attr('href');
             }
         });
-        //--></script> 
+        //--></script>
 
 
 
@@ -620,12 +620,12 @@
                                 <div class="store-find">
                                     <div class="store-head">
                                         <h2>  Save PO & SAP  data     </h2>
-                                        </br> 
+                                        </br>
                                     </div>
                                     <div id="poModal-message" style="color: red;text-align:center; font-size: 15px;" >
                                     </div>
                                     <div id="poModal-success-message" style="color: green; ; text-align:center; font-size: 15px;">
-                                    </div>  
+                                    </div>
                                     </br>
                                     <!-- Text input-->
                                     <div class="store-form">
@@ -680,7 +680,7 @@
                                                     </div>
 
                                                     <div class="form-group">
-                                                        <div class="col-md-12"> 
+                                                        <div class="col-md-12">
                                                             <button type="button" class="btn btn-grey" data-dismiss="modal" style="width:30%; float: right; margin-top: 10px; height: 45px;border-radius:20px">Close</button>
 
 
@@ -689,7 +689,7 @@
                                                     </div>
                                                 </div>
                                         </form>
-                                    </div>  
+                                    </div>
                                 </div>
                             </div>
 
@@ -780,7 +780,7 @@
                     },
                     error: function (xhr, ajaxOptions, thrownError) {
 
-                        // alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);                       
+                        // alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
                         $('#poModal-message').html("Please try again");
                         return false;
                     }
