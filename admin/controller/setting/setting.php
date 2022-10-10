@@ -2954,6 +2954,25 @@ class ControllerSettingSetting extends Controller {
         }
 
 
+        if (isset($this->request->post['config_feedbackalert'])) {
+            $data['config_feedbackalert'] = $this->request->post['config_feedbackalert'];
+        } elseif (isset($email_info[6]['value'])) {
+            $data['config_feedbackalert'] = $email_info[6]['value'];
+        } else {
+            $data['config_feedbackalert'] = '';
+        }
+
+
+
+        if (isset($this->request->post['config_missingitem'])) {
+            $data['config_missingitem'] = $this->request->post['config_missingitem'];
+        } elseif (isset($email_info[7]['value'])) {
+            $data['config_missingitem'] = $email_info[7]['value'];
+        } else {
+            $data['config_missingitem'] = '';
+        }
+
+
         $this->document->setTitle("Email Settings");
         $this->load->model('setting/setting');
 
@@ -3011,6 +3030,13 @@ class ControllerSettingSetting extends Controller {
 
 
         if ((strpos($this->request->post['config_meatcheckingteam'], "@") == false)) {
+            $this->error['email'] = "Please enter correct Email";
+        }
+
+        if ((strpos($this->request->post['config_feedbackalert'], "@") == false)) {
+            $this->error['email'] = "Please enter correct Email";
+        }
+        if ((strpos($this->request->post['config_missingitem'], "@") == false)) {
             $this->error['email'] = "Please enter correct Email";
         }
 
