@@ -106,6 +106,8 @@
                                 </div>
                                 </div>
                                 
+                                    <div class="col-md-12" id="pesapal_div"></div>    
+                                
                                 </div>
                             
 
@@ -296,6 +298,7 @@ __kdt.push({"post_on_load": false});
         $("#pay-confirm-order").html('');
         $("#pay-confirm-order").hide();
         $("#pay-confirm-order-pesapal").hide();
+        $("#pesapal_div").hide();
         $("#pay-confirm-order-mpesa").show();
         $("#pay-amount").show();
     }
@@ -305,9 +308,39 @@ __kdt.push({"post_on_load": false});
         $("#pay-confirm-order").hide();
         $("#pay-confirm-order-mpesa").hide();
         $("#pay-amount").hide();
+        $("#pesapal_div").hide();
         $("#pay-confirm-order-pesapal").show();
     }
-
+    
+    $('#pesapal-button-confirm').on('click', function() {
+         $.ajax({
+                url: 'index.php?path=account/credit/pesapal',
+                type: 'post',
+                data: {
+                    amount: $("input[name=pesapal_amount_topup]").val(),
+                },
+                dataType: 'html',
+                cache: false,
+                async: false,
+                beforeSend: function () {
+                $('#pesapal_div').html('Loading Please Wait....');
+                },
+                complete: function () {
+                },
+                success: function (json) {
+                    console.log("json");
+                    console.log(json);
+                    $('#pesapal_div').html(json);
+                    $("#pesapal_div").prepend("<p>* 3.5% Payment Gateway Charges Applicable On Order Total</p>");
+                    $('#pesapal_div').removeAttr('style');
+                    return true;
+                    //window.location = json.redirect;
+                }, error: function (xhr, ajaxOptions, thrownError) {
+                    alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+                    return false;
+                }
+            });
+    });
     </script>
 
 
