@@ -268,6 +268,19 @@ class ControllerAccountCredit extends Controller {
         $log->write('PESAPAL WALLET CALL BACK');
         $status = $this->ipinlistenercustom('CHANGE', $transaction_tracking_id, $merchant_reference);
 
+        // Add to activity log
+        $this->load->model('account/activity');
+        $activity_data = [
+            'customer_id' => $this->customer->getId(),
+            'name' => $this->customer->getFirstName() . ' ' . $this->customer->getLastName(),
+            'transaction_tracking_id' => $transaction_tracking_id,
+            'merchant_reference' => $merchant_reference,
+            'status' => $status
+        ];
+
+        $this->model_account_activity->addActivity('WALLET_TOPUP_CHECKING_STATUS', $activity_data);
+        // Add to activity log
+
         if ('COMPLETED' == $status) {
             $this->response->redirect($this->url->link('checkout/pesapalsuccess'));
         }
@@ -310,7 +323,7 @@ class ControllerAccountCredit extends Controller {
           $pesapal_merchant_reference = $this->request->get['pesapal_merchant_reference']; */
 
         if ('CHANGE' == $pesapalNotification && '' != $pesapalTrackingId) {
-            $log->write('ipinlistener');
+            $log->write('PESAPAL WALLET STATUS ipinlistener');
             $token = $params = null;
             $consumer = new OAuthConsumer($consumer_key, $consumer_secret);
             $signature_method = new OAuthSignatureMethod_HMAC_SHA1();
