@@ -3388,6 +3388,8 @@ class ControllerCatalogVendorProduct extends Controller {
                 'added_by' => $result['added_by'],
                 'added_user_role' => $result['added_user_role'],
                 'added_user' => $result['added_user'],
+                'grn' => $result['grn'],
+                'notes' => $result['notes'],
                 'voucher' => $this->url->link('catalog/vendor_product/inventoryvoucher', 'token=' . $this->session->data['token'] . '&product_history_id=' . $result['product_history_id'] . $url, 'SSL'),
             ];
         }
