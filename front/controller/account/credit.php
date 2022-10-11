@@ -254,6 +254,7 @@ class ControllerAccountCredit extends Controller {
     public function status() {
         $log = new Log('error.log');
         $status = NULL;
+        $amount = NULL;
 
         $this->load->language('payment/pesapal');
         $this->load->model('setting/setting');
@@ -265,6 +266,10 @@ class ControllerAccountCredit extends Controller {
         $merchant_reference = $this->request->get['pesapal_merchant_reference'];
         $log->write($transaction_tracking_id);
         $log->write($merchant_reference);
+        $wallet_topup_details = explode('_', $merchant_reference);
+        if (is_array($wallet_topup_details)) {
+            $amount = $wallet_topup_details[0];
+        }
         $log->write('PESAPAL WALLET CALL BACK');
         $status = $this->ipinlistenercustom('CHANGE', $transaction_tracking_id, $merchant_reference);
 
@@ -275,7 +280,8 @@ class ControllerAccountCredit extends Controller {
             'name' => $this->customer->getFirstName() . ' ' . $this->customer->getLastName(),
             'transaction_tracking_id' => $transaction_tracking_id,
             'merchant_reference' => $merchant_reference,
-            'status' => $status
+            'status' => $status,
+            'amount' => $amount
         ];
 
         $this->model_account_activity->addActivity('WALLET_TOPUP_CHECKING_STATUS', $activity_data);
