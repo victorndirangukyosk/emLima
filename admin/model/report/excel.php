@@ -5883,6 +5883,8 @@ class ModelReportExcel extends Model {
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(13, 4, 'User Role');
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(14, 4, 'Date Added');
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(15, 4, 'Date Time');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(16, 4, 'GRN');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(17, 4, 'Remarks');
 
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(1, 4)->applyFromArray($title);
@@ -5902,6 +5904,8 @@ class ModelReportExcel extends Model {
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(13, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(14, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(15, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(16, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(17, 4)->applyFromArray($title);
 
             // Fetching the table data
             $row = 5;
@@ -5925,6 +5929,8 @@ class ModelReportExcel extends Model {
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(13, $row, $result['added_user_role']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(14, $row, date($this->language->get('date_format_short'), strtotime($result['date_added'])));
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(15, $row, date($this->language->get('time_format'), strtotime($result['date_added'])));
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(16, $row, $result['grn']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(17, $row, $result['notes']);
                 ++$row;
             }
 
