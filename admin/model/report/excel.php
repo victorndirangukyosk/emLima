@@ -2198,6 +2198,11 @@ class ModelReportExcel extends Model {
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(9, 6, 'Payment Status');
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(10, 6, 'Payment Reference Number');
 
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(11, 6, 'Delivery Executive Name');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(12, 6, 'Phone Number');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(13, 6, 'Vehicle Registration');
+
+
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, 6)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(1, 6)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(2, 6)->applyFromArray($title);
@@ -2210,14 +2215,29 @@ class ModelReportExcel extends Model {
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(9, 6)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(10, 6)->applyFromArray($title);
 
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(11, 6)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(12, 6)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(13, 6)->applyFromArray($title);
+
+
             // Fetching the table data
             $row = 10;
 
-            //echo "<pre>";print_r($data['filter_date_end']."er".$data['filter_date_start']);
+            // echo "<pre>";print_r($rows);die;
             $i = 1;
             foreach ($rows as $result) {
 
                 $order_transaction_id = $this->getOrderTransactionIdExists($result['order_id']);
+                if(isset($result['delivery_executive_id']) && !empty($result['delivery_executive_id']))
+                {
+                $de_details = $this->getDEDetails($result['delivery_executive_id']);
+                if($de_details!=NULL)
+                {
+                    $result['de_name']=$de_details['name'];
+                    $result['de_mobile']=$de_details['mobile'];
+                }
+                }
+
                 $paid = NULL;
                 if (isset($result['paid']) && $result['paid'] == 'Y') {
                     $paid = 'PAID';
@@ -2240,6 +2260,11 @@ class ModelReportExcel extends Model {
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(8, $row, $result['payment_method']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(9, $row, $paid);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(10, $row, $order_transaction_id);
+
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(11, $row, $result['de_name']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(12, $row, $result['de_mobile']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(13, $row, $result['vehicle_number']);
+
                 $i++;
                 ++$row;
             }
@@ -15011,6 +15036,14 @@ class ModelReportExcel extends Model {
         }
 
         return null;
+    }
+
+
+    public function getDEDetails($delivery_executive_id) {
+
+        $sql2 = 'SELECT concat(firstname," ",lastname) as name ,de.mobile FROM ' . DB_PREFIX . "user de WHERE user_id = '" . (int) $delivery_executive_id . "'";
+        $query2 = $this->db->query($sql2);
+        return $query2->row;      
     }
 
     public function mail_customer_all_unpaid_order_excel($data, $data_kibanda, $data_pezesha, $data_other) {
