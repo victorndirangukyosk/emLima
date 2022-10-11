@@ -232,7 +232,7 @@ class ControllerAccountCredit extends Controller {
         $phonenumber = '+254' . $customer_info['telephone']; //ONE of email or phonenumber is required
         $Currency = 'KES';
 
-        $callback_url = $this->url->link('account/transactions/status', '', 'SSL'); //redirect url, the page that will handle the response from pesapal.
+        $callback_url = $this->url->link('account/credit/status', '', 'SSL'); //redirect url, the page that will handle the response from pesapal.
 
         $post_xml = '<?xml version="1.0" encoding="utf-8"?><PesapalDirectOrderInfo xmlns:xsi="http://www.w3.org/2001/XMLSchemainstance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Amount="' . $amount . '" Description="' . $desc . '" Type="' . $type . '" Reference="' . $reference . '" FirstName="' . $first_name . '" LastName="' . $last_name . '" Email="' . $email . '" PhoneNumber="' . $phonenumber . '" xmlns="http://www.pesapal.com" />';
         $post_xml = htmlentities($post_xml);
@@ -249,6 +249,109 @@ class ControllerAccountCredit extends Controller {
         $data['iframe'] = $iframe_src;
 
         echo '<iframe src=' . $iframe_src . ' width="100%" height="700px"  scrolling="no" frameBorder="0"><p>Browser unable to load iFrame</p></iframe>';
+    }
+
+    public function status() {
+        $log = new Log('error.log');
+        $status = NULL;
+
+        $this->load->language('payment/pesapal');
+        $this->load->model('setting/setting');
+        $this->load->model('payment/pesapal');
+        $this->load->model('account/customer');
+
+        $log->write('PESAPAL WALLET CALL BACK');
+        $transaction_tracking_id = $this->request->get['pesapal_transaction_tracking_id'];
+        $merchant_reference = $this->request->get['pesapal_merchant_reference'];
+        $log->write($transaction_tracking_id);
+        $log->write($merchant_reference);
+        $log->write('PESAPAL WALLET CALL BACK');
+        $status = $this->ipinlistenercustom('CHANGE', $transaction_tracking_id, $merchant_reference);
+
+        if ('COMPLETED' == $status) {
+            $this->response->redirect($this->url->link('checkout/pesapalsuccess'));
+        }
+
+        if ('COMPLETED' != $status || NULL == $status) {
+            $this->response->redirect($this->url->link('checkout/success/pesapalfailed'));
+        }
+    }
+
+    public function ipinlistenercustom($pesapalNotification, $pesapalTrackingId, $pesapal_merchant_reference) {
+        $status = null;
+        $log = new Log('error.log');
+        $log->write('ipinlistener');
+        $this->load->model('setting/setting');
+        $this->load->model('payment/pesapal');
+        $this->load->model('checkout/order');
+        $this->load->model('account/customer');
+        $pesapal_creds = $this->model_setting_setting->getSetting('pesapal', 0);
+
+        $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
+        $customer_id = $customer_info['customer_id'];
+
+        $consumer_key = $pesapal_creds['pesapal_consumer_key']; //Register a merchant account on
+        //demo.pesapal.com and use the merchant key for testing.
+        //When you are ready to go live make sure you change the key to the live account
+        //registered on www.pesapal.com!
+        $consumer_secret = $pesapal_creds['pesapal_consumer_secret']; // Use the secret from your test
+        //account on demo.pesapal.com. When you are ready to go live make sure you
+        //change the secret to the live account registered on www.pesapal.com!
+        $statusrequestAPI = 'https://www.pesapal.com/api/querypaymentstatus';
+        //'https://demo.pesapal.com/api/querypaymentstatus'; //change to
+        //https://www.pesapal.com/api/querypaymentstatus' when you are ready to go live!
+        // Parameters sent to you by PesaPal IPN
+        $pesapalNotification = $pesapalNotification;
+        $pesapalTrackingId = $pesapalTrackingId;
+        $pesapal_merchant_reference = $pesapal_merchant_reference;
+
+        /* $pesapalNotification = $this->request->get['pesapal_notification_type'];
+          $pesapalTrackingId = $this->request->get['pesapal_transaction_tracking_id'];
+          $pesapal_merchant_reference = $this->request->get['pesapal_merchant_reference']; */
+
+        if ('CHANGE' == $pesapalNotification && '' != $pesapalTrackingId) {
+            $log->write('ipinlistener');
+            $token = $params = null;
+            $consumer = new OAuthConsumer($consumer_key, $consumer_secret);
+            $signature_method = new OAuthSignatureMethod_HMAC_SHA1();
+
+            //get transaction status
+            $request_status = OAuthRequest::from_consumer_and_token($consumer, $token, 'GET', $statusrequestAPI, $params);
+            $request_status->set_parameter('pesapal_merchant_reference', $pesapal_merchant_reference);
+            $request_status->set_parameter('pesapal_transaction_tracking_id', $pesapalTrackingId);
+            $request_status->sign_request($signature_method, $consumer, $token);
+
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $request_status);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_HEADER, 1);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+            if (defined('CURL_PROXY_REQUIRED')) {
+                if (CURL_PROXY_REQUIRED == 'True') {
+                    $proxy_tunnel_flag = (defined('CURL_PROXY_TUNNEL_FLAG') && 'FALSE' == strtoupper(CURL_PROXY_TUNNEL_FLAG)) ? false : true;
+                    curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, $proxy_tunnel_flag);
+                    curl_setopt($ch, CURLOPT_PROXYTYPE, CURLPROXY_HTTP);
+                    curl_setopt($ch, CURLOPT_PROXY, CURL_PROXY_SERVER_DETAILS);
+                }
+            }
+
+            $response = curl_exec($ch);
+            $log->write($response);
+
+            $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+            $raw_header = substr($response, 0, $header_size - 4);
+            $headerArray = explode("\r\n\r\n", $raw_header);
+            $header = $headerArray[count($headerArray) - 1];
+
+            //transaction status
+            $elements = preg_split('/=/', substr($response, $header_size));
+            $status = $elements[1];
+            $log->write('PESAPAL WALLET STATUS');
+            $log->write($status);
+            $log->write('PESAPAL WALLET STATUS');
+            curl_close($ch);
+        }
+        echo $status;
     }
 
 }
