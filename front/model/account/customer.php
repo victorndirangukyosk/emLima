@@ -1205,6 +1205,7 @@ class ModelAccountCustomer extends Model {
             $data['customer_name'] = $this->customer->getFirstName() . ' ' . $this->customer->getLastName();
             $data['email'] = $this->customer->getEmail();
             $data['mobile'] = $this->customer->getTelephone();
+            $data['feedback_type_notation']=$data['feedback_type'];
             $data['feedback_type'] = ($data['feedback_type'] == "S" ? "Suggestions" : ($data['feedback_type'] == "I" ? "Issue" . " - " . $data['selectissuetype'] : "Happy"));
             $data['description'] = $data['issuesummary'];
             $status = 'Open';
@@ -1229,7 +1230,16 @@ class ModelAccountCustomer extends Model {
                 if ($data['rating_id'] <= 3) {
                     //get customer experience emails.
                     $customerexperienceEmails = $this->getCustomerExperienceEmails();
+                    
                 }
+                // if($data['feedback_type_notation'] !='')
+                {
+                // add new mail receipients
+                $feedback_receipiantsEmails = null;
+                $feedback_receipiantsEmails = $this->getFeedbackReceipiantsEmails();
+                
+                }
+
 
                 $subject = $this->emailtemplate->getSubject('Feedback', 'feedback_1', $data);
                 $message = $this->emailtemplate->getMessage('Feedback', 'feedback_1', $data);
@@ -1242,6 +1252,16 @@ class ModelAccountCustomer extends Model {
                         else
                             $Senderemails = $Senderemails . ';' . $emailvalue['email'];
                     }
+
+                    if($feedback_receipiantsEmails!=null)
+                     {
+                        if ($Senderemails == "")
+                        $Senderemails = $feedback_receipiantsEmails;
+                    else
+                        $Senderemails = $Senderemails . ';' . $feedback_receipiantsEmails;
+                    }
+                    //   echo '<pre>';print_r($Senderemails);exit;          
+
                     if ($Senderemails != "") {
                         $mail = new Mail($this->config->get('config_mail'));
                         // $mail->setTo($this->config->get('config_email'));
@@ -1275,6 +1295,13 @@ class ModelAccountCustomer extends Model {
     public function getCustomerExperienceEmails() {
         $customerexperienceEmails = $this->db->query('SELECT email FROM ' . DB_PREFIX . "user u join " . DB_PREFIX . "user_group ug on u.user_group_id =ug.user_group_id WHERE ug.name = 'Customer Experience' and u.status=1");
         return $customerexperienceEmails->rows;
+    }
+
+
+    public function getFeedbackReceipiantsEmails() {
+        $query = $this->db->query('SELECT value FROM '.DB_PREFIX."setting_email WHERE  `code` =  'feedbackalert'   ");
+        //echo "<pre>";print_r($query->row[value]);die;
+        return $query->row['value'];
     }
 
     public function updateCustomerStatus($email_id) {

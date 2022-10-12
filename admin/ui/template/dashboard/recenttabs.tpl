@@ -34,7 +34,9 @@
             <thead>
             <tr>
               <td><?php echo $column_order_id; ?></td>
+               <?php if (!$this->user->isVendor()): ?>
               <td><?php echo $column_customer; ?></td>
+               <?php endif ?>
               <td><?php echo $column_status; ?></td>
               <td><?php echo $column_date_added; ?></td>
               <td><?php echo $column_total; ?></td>
@@ -46,7 +48,9 @@
             <?php foreach ($orders as $order) { ?>
             <tr>
               <td><?php echo $order['order_id']; ?></td>
+               <?php if (!$this->user->isVendor()): ?>
               <td><?php echo $order['customer']; ?></td>
+                <?php endif ?> 
               <td><?php echo $order['status']; ?></td>
               <td><?php echo $order['date_added']; ?></td>
               <td><?php echo $order['total']; ?></td>

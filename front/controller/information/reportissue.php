@@ -17,7 +17,7 @@ class ControllerInformationReportissue extends Controller
             $this->load->model('account/customer');
             // $stats= $this->model_account_customer->addCustomerIssue($this->customer->getId(), $this->request->post);
             $stats= $this->model_account_customer->addCustomerfeedback($this->customer->getId(), $this->request->post);
-           if($stats==true)
+           if($stats==true) 
            {
 
             $data['status'] = true;
@@ -176,7 +176,7 @@ class ControllerInformationReportissue extends Controller
 
     protected function validate()
     {
-        if ((utf8_strlen($this->request->post['issuesummary']) < 10) || (utf8_strlen($this->request->post['issuesummary']) > 2000)) {
+        if ((utf8_strlen($this->request->post['issuesummary']) < 3) || (utf8_strlen($this->request->post['issuesummary']) > 2000)) {
             $this->error['issuesummary'] = $this->language->get('error_issuesummary');
         }
 

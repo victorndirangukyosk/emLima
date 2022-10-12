@@ -305,6 +305,7 @@ class ControllerCatalogProduct extends Controller {
             // $vendor_product_id = $this->request->get['vendor_product_id'];
             $vendor_product_id = $product_details['product_store_id'];
             $grn = $this->request->get['grn'];
+            $notes = $this->request->get['notes'];
 
 
             $product['rejected_qty'] = $rejected_quantity;
@@ -316,6 +317,7 @@ class ControllerCatalogProduct extends Controller {
             $product['product_name'] = $product_details['name'];
             $product['product_id'] = $product_details['product_id'];
             $product['grn'] = $grn;
+            $product['notes'] = $notes;
 
             $result = $this->model_catalog_vendor_product->updateProductInventory($vendor_product_id, $product);
 
@@ -369,7 +371,7 @@ class ControllerCatalogProduct extends Controller {
           } */
         foreach ($update_products as $key => $value) {
             foreach ($value as $ke => $val) {
-                $product = array('rejected_qty' => $val['rejected_qty'], 'procured_qty' => $val['total_procured_qty'], 'current_qty' => $val['current_qty'], 'current_buying_price' => $val['buying_price'], 'source' => $val['source'], 'product_id' => $val['product_id'], 'product_name' => $val['product_name'], 'grn' => $val['grn']);
+                $product = array('rejected_qty' => $val['rejected_qty'], 'procured_qty' => $val['total_procured_qty'], 'current_qty' => $val['current_qty'], 'current_buying_price' => $val['buying_price'], 'source' => $val['source'], 'product_id' => $val['product_id'], 'product_name' => $val['product_name'], 'grn' => $val['grn'], 'notes' => $val['notes']);
                 $data[] = $this->model_catalog_vendor_product->updateProductInventory($ke, $product);
             }
         }
@@ -417,6 +419,7 @@ class ControllerCatalogProduct extends Controller {
 		<th>Updated Date</th>
                 <th>Updated By</th>
                 <th>GRN</th>
+                <th>Remarks</th>
       </tr>
       </thead>';
         } else {
@@ -438,6 +441,7 @@ class ControllerCatalogProduct extends Controller {
 					<th>' . $product_history['date_added'] . '</th>
                                         <th>' . $product_history['added_user'] . '</th>
                                         <th>' . $product_history['grn'] . '</th>
+                                        <th>' . $product_history['notes'] . '</th>
 			   </tr>';
             }
 

@@ -73,10 +73,13 @@
                     <label class="control-label"><?= $entry_city ?></label>  
                     <input name="filter_city" class="form-control" value="<?= $filter_city ?>" />
                 </div>
+                            <?php if(!$this->user->isVendor()){ ?>  
+
                 <div class="form-group">
                     <label class="control-label"><?= $entry_customer ?></label>  
                     <input name="filter_customer" class="form-control" value="<?= $filter_customer ?>" />
                 </div>
+                  <?php } ?>
                 <button type="button" id="button-filter" class="btn btn-primary pull-right"><i class="fa fa-search"></i> <?php echo $button_filter; ?></button>
               </div>
           </div>
