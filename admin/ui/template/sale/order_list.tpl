@@ -227,13 +227,13 @@
 
 
                         <div class="col-sm-4">
-
+                            <?php if(!$this->user->isVendor()){ ?>  
+                        
                            <div class="form-group">
                                 <label class="control-label" for="input-company">Company Name</label>
                                 <input type="text" name="filter_company" value="<?php echo $filter_company; ?>" placeholder="Company Name" id="input-company" class="form-control" />
                             </div>
 
-                            <?php if(!$this->user->isVendor()){ ?>  
                             <div class="form-group">
                                 <label class="control-label" for="input-model"><?= $text_vendor ?></label>
                                 <input type="text" name="filter_vendor" value="<?php echo $filter_vendor; ?>" placeholder="<?php echo $text_vendor; ?>" id="input-model" class="form-control" />
