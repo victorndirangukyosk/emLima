@@ -2,9 +2,12 @@
 <div id="content">
     <div class="page-header">
         <div class="container-fluid">
-            <div class="pull-right">
-                <a href="<?php echo $cancel; ?>" data-toggle="tooltip" title="<?php echo $button_cancel; ?>" class="btn btn-default"><i class="fa fa-times-circle text-danger"></i></a></div>
             <h1><?php echo $heading_title; ?></h1>
+
+            <div class="pull-right">
+             <?php if (!$this->user->isVendor()): ?>
+                 <a href="<?php echo $cancel; ?>" data-toggle="tooltip" title="<?php echo $button_cancel; ?>" class="btn btn-default"><i class="fa fa-times-circle text-danger"></i></a></div>
+                     <?php endif ?> 
             <ul class="breadcrumb">
                 <?php foreach ($breadcrumbs as $breadcrumb) { ?>
                 <li><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a></li>
