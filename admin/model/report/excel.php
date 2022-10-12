@@ -2626,8 +2626,8 @@ class ModelReportExcel extends Model {
                 }
 
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $result['order_id']);
-                // $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, date($this->language->get('date_format_short'), strtotime($result['delivery_date'])));
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['delivery_date']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, date($this->language->get('date_format_short'), strtotime($result['delivery_date'])));
+                // $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['delivery_date']);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $products_qty);
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, round($total, 2));
 
