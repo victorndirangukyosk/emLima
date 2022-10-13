@@ -355,7 +355,9 @@ class ControllerAccountCredit extends Controller {
             }
 
             $response = curl_exec($ch);
+            $log->write('PESAPAL WALLET RESPONSE');
             $log->write($response);
+            $log->write('PESAPAL WALLET RESPONSE');
 
             $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
             $raw_header = substr($response, 0, $header_size - 4);
