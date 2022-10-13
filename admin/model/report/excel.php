@@ -10901,18 +10901,18 @@ class ModelReportExcel extends Model {
             //     $sheet_subtitle = '';
             // }
 
-            $objPHPExcel->getActiveSheet()->mergeCells('A1:G1');
-            $objPHPExcel->getActiveSheet()->mergeCells('A2:G2');
+            $objPHPExcel->getActiveSheet()->mergeCells('A1:H1');
+            $objPHPExcel->getActiveSheet()->mergeCells('A2:H2');
             $objPHPExcel->getActiveSheet()->setCellValue('A1', 'Customers Wallet ');
             // $objPHPExcel->getActiveSheet()->setCellValue('A2', $sheet_subtitle);
-            $objPHPExcel->getActiveSheet()->getStyle('A1:G2')->applyFromArray(['font' => ['bold' => true], 'color' => [
+            $objPHPExcel->getActiveSheet()->getStyle('A1:H2')->applyFromArray(['font' => ['bold' => true], 'color' => [
                     'rgb' => '4390df',
             ]]);
 
             //subtitle
             // $objPHPExcel->getActiveSheet()->setCellValue('A3', $html);
-            $objPHPExcel->getActiveSheet()->getStyle('A1:G2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-            $objPHPExcel->getActiveSheet()->getStyle('E')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_LEFT);
+            $objPHPExcel->getActiveSheet()->getStyle('A1:H2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $objPHPExcel->getActiveSheet()->getStyle('F')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
             // $objPHPExcel->getActiveSheet()->getStyle('D')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
             foreach (range('A', 'L') as $columnID) {
@@ -10921,12 +10921,13 @@ class ModelReportExcel extends Model {
             }
 
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, 3, 'Customer Name');
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 3, 'Amount');
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, 3, 'Type');
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 3, 'Description');
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, 3, 'Order ID');
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, 3, 'Date Added');
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, 3, 'Time Added');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 3, 'Company Name');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, 3, 'Amount');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 3, 'Type');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, 3, 'Description');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, 3, 'Order ID');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, 3, 'Date Added');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, 3, 'Time Added');
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, 3)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(1, 3)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(2, 3)->applyFromArray($title);
@@ -10934,24 +10935,27 @@ class ModelReportExcel extends Model {
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(4, 3)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(5, 3)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(6, 3)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(7, 3)->applyFromArray($title);
 
             // Fetching the table data
             $row = 4;
             $Amount = 0;
             foreach ($data['customers'] as $result) {
 
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $result['name'] . PHP_EOL . $result['company']);
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['amount']);
+                // $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $result['name'] . PHP_EOL . $result['company']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $result['name']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['company']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['amount']);
                 if ($result['amount'] > 0) {
 
-                    $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, 'Credit');
+                    $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, 'Credit');
                 } else {
-                    $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, 'Debit');
+                    $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, 'Debit');
                 }
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['description']);
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, $result['order_id']);
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, $result['date_added']);
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, $result['date_added_time']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, $result['description']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, $result['order_id']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, $result['date_added']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, $row, $result['date_added_time']);
                 // $Amount = $Amount + $result['subtotalvalue'];
                 ++$row;
             }
