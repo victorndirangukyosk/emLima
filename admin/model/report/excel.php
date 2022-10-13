@@ -16125,6 +16125,7 @@ class ModelReportExcel extends Model {
     public function mail_download_missing_order_products_excel_report($data) {
         $this->load->library('excel');
         $this->load->library('iofactory');
+        $log = new Log('error.log');
 
         try {
             // set appropriate timeout limit
@@ -16268,6 +16269,8 @@ class ModelReportExcel extends Model {
  
             
         } catch (Exception $e) {
+             $log = new Log('error.log');
+
             $errstr = $e->getMessage();
             $errline = $e->getLine();
             $errfile = $e->getFile();
