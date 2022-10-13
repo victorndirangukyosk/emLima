@@ -1139,6 +1139,10 @@ class ControllerCommonScheduler extends Controller {
     public function missingProductsSheet() { 
 
         $deliveryDate = date("Y-m-d"); // current day delivery date
+
+        $log = new Log('error.log');
+        $log->write('Missing Products Notification'.$deliveryDate );
+
         // $deliveryDate= date("Y-m-d", strtotime("-2 days"));
     //     $time = $this->request->get['time'];
     //     $dateAdded = date("Y-m-d", strtotime("-1 days"));
