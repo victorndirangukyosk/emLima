@@ -9810,15 +9810,15 @@ class ModelReportExcel extends Model {
             ];
 
             //Company name, address
-            $objPHPExcel->getActiveSheet()->mergeCells('A1:J2');
+            $objPHPExcel->getActiveSheet()->mergeCells('A1:K2');
             $objPHPExcel->getActiveSheet()->setCellValue('A1', 'Customers Feedback');
-            $objPHPExcel->getActiveSheet()->getStyle('A4:J4')->applyFromArray(['font' => ['bold' => true], 'color' => [
+            $objPHPExcel->getActiveSheet()->getStyle('A4:K4')->applyFromArray(['font' => ['bold' => true], 'color' => [
                     'rgb' => '4390df',
             ]]);
 
             //subtitle
 
-            $objPHPExcel->getActiveSheet()->getStyle('A1:J3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $objPHPExcel->getActiveSheet()->getStyle('A1:K3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
 
             foreach (range('A', 'L') as $columnID) {
                 $objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
@@ -9826,16 +9826,17 @@ class ModelReportExcel extends Model {
             }
 
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, 4, 'Customer');
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 4, 'Rating');
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, 4, 'Feedback Type');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 4, 'Customer');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, 4, 'Rating');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 4, 'Feedback Type');
 
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 4, 'Comments');
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, 4, 'Order_Id');
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, 4, 'Raised On');
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, 4, 'Status');
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, 4, 'Accepted By');
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(8, 4, 'Closed Date');
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(9, 4, 'Closed Comments');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, 4, 'Comments');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, 4, 'Order_Id');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, 4, 'Raised On');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, 4, 'Status');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(8, 4, 'Accepted By');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(9, 4, 'Closed Date');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(10, 4, 'Closed Comments');
 
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(1, 4)->applyFromArray($title);
@@ -9847,6 +9848,7 @@ class ModelReportExcel extends Model {
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(7, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(8, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(9, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(10, 4)->applyFromArray($title);
 
             // Fetching the table data
             $row = 5;
@@ -9855,18 +9857,20 @@ class ModelReportExcel extends Model {
             foreach ($rows as $result) {
 
                 // $lfcr=$result['customer_name'].length
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $result['customer_name'] . PHP_EOL . $result['company_name']);
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['rating']);
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['feedback_type']);
+                // $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $result['customer_name'] . PHP_EOL . $result['company_name']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $result['customer_name']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['company_name']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['rating']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['feedback_type']);
 
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['comments']);
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, $result['order_id']);
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, $result['created_date']);
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, $result['status']);
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, $row, $result['accepted_user']);
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(8, $row, $result['closed_date']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, $result['comments']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, $result['order_id']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, $result['created_date']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, $row, $result['status']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(8, $row, $result['accepted_user']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(9, $row, $result['closed_date']);
 
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(9, $row, $result['closed_comments']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(10, $row, $result['closed_comments']);
 
                 ++$row;
             }
