@@ -10423,11 +10423,11 @@ class ModelReportExcel extends Model {
                     $result['total'] = $total['value'];
                 }
             }
-            if ($result['company']) {
-                $result['company'] = ' (' . $result['company'] . ')';
-            } else {
-                // $result['company_name'] = "(NA)";
-            }
+            // if ($result['company']) {
+            //     $result['company'] = ' (' . $result['company'] . ')';
+            // } else {
+            //     // $result['company_name'] = "(NA)";
+            // }
 
             if (empty($result_success['partial_amount'])) {
                 $result_success['partial_amount'] = $result_success['amount_partialy_paid'];
@@ -10500,25 +10500,25 @@ class ModelReportExcel extends Model {
 
             $objPHPExcel->getActiveSheet()->getStyle('B')->getAlignment()->setWrapText(true);
 
-            $objPHPExcel->getActiveSheet()->mergeCells('A1:G1');
-            $objPHPExcel->getActiveSheet()->mergeCells('A2:G2');
+            $objPHPExcel->getActiveSheet()->mergeCells('A1:I1');
+            $objPHPExcel->getActiveSheet()->mergeCells('A2:I2');
             $objPHPExcel->getActiveSheet()->setCellValue('A1', 'Payments Received');
             // $objPHPExcel->getActiveSheet()->setCellValue('A2', $sheet_subtitle);
-            $objPHPExcel->getActiveSheet()->getStyle('A1:G2')->applyFromArray(['font' => ['bold' => true], 'color' => [
+            $objPHPExcel->getActiveSheet()->getStyle('A1:I2')->applyFromArray(['font' => ['bold' => true], 'color' => [
                     'rgb' => '4390df',
             ]]);
 
             //subtitle
 
 
-            $objPHPExcel->getActiveSheet()->mergeCells('A3:G3');
+            $objPHPExcel->getActiveSheet()->mergeCells('A3:I3');
             // if ($from != null) {
             //     $from = date('d-m-Y', strtotime($data['filter_date_added']));
             //     $html = 'Date Added ' . $from;
             // }
             // $objPHPExcel->getActiveSheet()->setCellValue('A3', $html);
-            $objPHPExcel->getActiveSheet()->getStyle('A1:G3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-            $objPHPExcel->getActiveSheet()->getStyle('C')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+            $objPHPExcel->getActiveSheet()->getStyle('A1:I3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $objPHPExcel->getActiveSheet()->getStyle('G')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
             $objPHPExcel->getActiveSheet()->getStyle('D')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
             $objPHPExcel->getActiveSheet()->getStyle('E')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 
@@ -10529,12 +10529,13 @@ class ModelReportExcel extends Model {
 
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, 4, 'Order IDs');
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 4, 'Customer');
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, 4, 'Total');
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 4, 'Paid');
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, 4, 'Pending Amount');
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, 4, 'Amount Applied');
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, 4, 'Transaction ID');
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, 4, 'Paid To');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, 4, 'Company');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 4, 'Total');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, 4, 'Paid');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, 4, 'Pending Amount');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, 4, 'Amount Applied');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, 4, 'Transaction ID');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(8, 4, 'Paid To');
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(1, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(2, 4)->applyFromArray($title);
@@ -10543,6 +10544,7 @@ class ModelReportExcel extends Model {
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(5, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(6, 4)->applyFromArray($title);
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(7, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(8, 4)->applyFromArray($title);
 
             // Fetching the table data
             $row = 5;
@@ -10550,16 +10552,18 @@ class ModelReportExcel extends Model {
             foreach ($data['orders'] as $result) {
 
                 $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $result['order_id']);
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['customer'] . PHP_EOL . $result['company']);
+                // $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['customer'] . PHP_EOL . $result['company']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['customer'] );
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['company']);
 
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, round($result['total_value'], 2));
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, round($result['total_value'], 2));
                 // $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['amount_partialy_paid']);
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['paid']);
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, round($result['pending_amount_value'], 2));
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, $result['paid']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, round($result['pending_amount_value'], 2));
 
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, $result['patial_amount_applied_value']);
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, $result['transaction_id']);
-                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, $row, $result['paid_to']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, $result['patial_amount_applied_value']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, $row, $result['transaction_id']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(8, $row, $result['paid_to']);
                 // $Amount = $Amount + $result['pending_amount_value'];
                 ++$row;
             }
