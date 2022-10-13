@@ -16120,4 +16120,166 @@ class ModelReportExcel extends Model {
         }
     }
 
+
+
+    public function mail_download_missing_order_products_excel_report($data) {
+        $this->load->library('excel');
+        $this->load->library('iofactory');
+
+        try {
+            // set appropriate timeout limit
+            set_time_limit(1800);
+
+            $objPHPExcel = new PHPExcel();
+            $objPHPExcel->getProperties()->setTitle('Missing Order Products Sheet')->setDescription('none');
+            $objPHPExcel->setActiveSheetIndex(0);
+
+            // Field names in the first row
+            // ID, Photo, Name, Contact no., Reason, Valid from, Valid upto, Intime, Outtime
+            $title = [
+                'font' => [
+                    'bold' => true,
+                    'color' => [
+                        'rgb' => 'FFFFFF',
+                    ],
+                ],
+                'fill' => [
+                    'type' => PHPExcel_Style_Fill::FILL_SOLID,
+                    'startcolor' => [
+                        'rgb' => '4390df',
+                    ],
+                ],
+            ];
+
+            //Company name, address
+            $objPHPExcel->getActiveSheet()->mergeCells('A1:F3');
+            $objPHPExcel->getActiveSheet()->setCellValue('A1', 'Missing Order Products Sheet');
+            $objPHPExcel->getActiveSheet()->getStyle('A1:F3')->applyFromArray(['font' => ['bold' => true], 'color' => [
+                    'rgb' => '4390df',
+            ]]);
+
+            $objPHPExcel->getActiveSheet()->getStyle('A1:E4')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+
+            foreach (range('A', 'L') as $columnID) {
+                $objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
+                        ->setAutoSize(true);
+            }
+
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, 4, 'S.NO');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 4, 'Order ID');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, 4, 'Company');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 4, 'Product');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, 4, 'Unit');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, 4, 'Missing quantity');
+            // $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, 4, 'Delivery Date');
+            // $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, 4, 'Delivery Time Slot');
+
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(1, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(2, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(3, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(4, 4)->applyFromArray($title);
+            $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(5, 4)->applyFromArray($title);
+            // $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(6, 4)->applyFromArray($title);
+            // $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(7, 4)->applyFromArray($title);
+            // Fetching the table data
+            $row = 5;
+
+            $i = 1;
+            // echo "<pre>";print_r($data);;die;
+            
+            foreach ($data['orders'] as $result) {
+                if(!empty($result))
+                {
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $i);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['order_id']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['company_name']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['name']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, $result['unit']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, $result['quantity_required']);
+                // $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, $result['delivery_date']);
+                // $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(7, $row, $result['delivery_timeslot']);
+               
+                 }
+                  $i++;
+                ++$row;
+            }
+
+            $objPHPExcel->setActiveSheetIndex(0);
+
+            
+            $deliveryDate = $data['orders'][0]['delivery_date'];
+            $filename = 'Missing_Item_Sheet_' . $deliveryDate . '.xlsx';
+
+            $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+            // header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            // header('Content-Disposition: attachment;filename="' . $filename . '"');
+            //header('Cache-Control: max-age=0');
+            // $objWriter->save('php://output');
+
+
+            if (!file_exists(DIR_UPLOAD . 'schedulertemp/')) {
+                mkdir(DIR_UPLOAD . 'schedulertemp/', 0777, true);
+            }
+            // unlink($filename);
+            $folder_path = DIR_UPLOAD . 'schedulertemp';
+            $files = glob($folder_path . '/*');
+            // Deleting all the files in the list
+            foreach ($files as $file) {
+                if (is_file($file)) {
+                    unlink($file); // Delete the given file
+                }
+            }
+            // echo "<pre>";print_r($file);;
+            $objWriter->save(DIR_UPLOAD . 'schedulertemp/' . $filename);
+
+            #region mail sending
+            $maildata['deliverydate'] = $deliveryDate;
+            $subject = $this->emailtemplate->getSubject('ConsolidatedOrderSheet', 'ConsolidatedOrderSheet_1', $maildata);
+            $message = $this->emailtemplate->getMessage('ConsolidatedOrderSheet', 'ConsolidatedOrderSheet_1', $maildata);
+
+            $subject = str_replace("Consolidated Order Sheet", "Missing Items",$subject);
+            $message = str_replace("Consolidated Order Sheet", "Missing Items",$message);
+            $message = str_replace("consolidated order sheet", "Missing Items",$message);
+            // $subject = "Consolidated Order Sheet";
+            // $message = "Please find the attachment.  <br>";
+            // $message = $message ."<li> Full Name :".$first_name ."</li><br><li> Email :".$email ."</li><br><li> Phone :".$phone ."</li><br>";
+            $this->load->model('setting/setting');
+            $email = $this->model_setting_setting->getEmailSetting('missingitem');
+
+            if (strpos($email, "@") == false) {//if mail Id not set in define.php
+                $email = "sridivya.talluri@technobraingroup.com";
+            }
+            $bccemail = "sridivya.talluri@technobraingroup.com";
+            //   echo "<pre>";print_r($email);die;
+            $filepath = DIR_UPLOAD . 'schedulertemp/' . $filename;
+            $mail = new Mail($this->config->get('config_mail'));
+            $mail->setTo($email);
+            $mail->setBCC($bccemail);
+            $mail->setFrom($this->config->get('config_from_email'));
+            $mail->setSender($this->config->get('config_name'));
+            $mail->setSubject($subject);
+            $mail->setHTML($message);
+            $mail->addAttachment($filepath);
+            $mail->send();
+            #endregion
+            exit;
+
+ 
+            
+        } catch (Exception $e) {
+            $errstr = $e->getMessage();
+            $errline = $e->getLine();
+            $errfile = $e->getFile();
+            $errno = $e->getCode();
+            $this->session->data['export_import_error'] = ['errstr' => $errstr, 'errno' => $errno, 'errfile' => $errfile, 'errline' => $errline];
+            if ($this->config->get('config_error_log')) {
+                $this->log->write('PHP ' . get_class($e) . ':  ' . $errstr . ' in ' . $errfile . ' on line ' . $errline);
+            }
+
+            return;
+        }
+    }
+
+
 }
