@@ -1132,4 +1132,100 @@ class ControllerCommonScheduler extends Controller {
             $ret = $this->emailtemplate->sendmessage($customer_info['telephone'], $sms_message);
         }
     }
+
+
+
+
+    public function missingProductsSheet() { 
+
+        $deliveryDate = date("Y-m-d"); // current day delivery date
+        // $deliveryDate= date("Y-m-d", strtotime("-2 days"));
+    //     $time = $this->request->get['time'];
+    //     $dateAdded = date("Y-m-d", strtotime("-1 days"));
+    //     $dateAdded = new DateTime($dateAdded);
+    //     // Here 5 hours, 3 Minutes and 10 seconds is added--PT5H3M10S
+    //        $dateAdded->add(new DateInterval('PT23H0M0S'));
+    //    // echo "<pre>";print_r($dateAdded);die;
+    //    $dateAdded_filter=$dateAdded->format('Y-m-d H:i:s');
+    //    if(!isset($time))
+    //    {
+    //        $dateAdded_filter=null;
+
+    //    }
+
+       $filter_data = [
+           'filter_delivery_date' => $deliveryDate,           
+        //    'filter_date_added_greater'=>$dateAdded_filter
+       ];
+
+
+       $order_total_final = [];
+       $results_final = [];
+       $data = NULL;
+
+       $this->load->model('sale/order');
+       $filter_order_id_temp = $this->model_sale_order->getOrderedMissingProductsOnlyOrder($filter_data);
+    //    echo "<pre>";print_r($filter_order_id_temp);die;
+
+       if (!empty($filter_order_id_temp)) {
+
+           foreach ($filter_order_id_temp as $tmp) {
+               $tmp = $tmp['order_id'];
+
+               $filter_data['filter_order_id'] = $tmp;
+
+               $order_total = $this->model_sale_order->getTotalOrderedMissingProducts($filter_data);
+
+               $results = $this->model_sale_order->getOrderedMissingProducts($filter_data);
+
+               array_push($order_total_final, $order_total);
+               array_push($results_final, $results);
+           }
+
+           $order_total = array_sum($order_total_final);
+       } else {
+           $order_total = 0;
+           $results = [];
+       }
+
+       foreach ($results_final as $key => $results) {
+           $result_order_tmp = null;
+           foreach ($results as $result) {
+                $result['customer'] = $result['firstname'].' '.$result['lastname'];
+
+               if ($this->user->isVendor()) {
+                   $result['customer'] = '';
+                   $result['company_name']='';
+               } 
+               $this->load->model('localisation/order_status');
+               $data['orders'][] = [
+                   'order_id' => $result['order_id'],
+                   'id' => $result['id'],
+                   'customer' => $result['customer'],
+                   'company_name' => $result['company_name'],
+                   'product_store_id' => $result['product_store_id'],
+                   'name' => $result['name'],
+                   'unit' => $result['unit'],
+                   'quantity' => $result['quantity'],
+                   'quantity_required' => $result['quantity_required'],
+                   'delivery_date' => $result['delivery_date'],
+                   'delivery_timeslot' => $result['delivery_timeslot'],
+                   'total' => $result['total'],
+                   'price' => $result['price'],
+                   'tax' => $result['tax'],
+               ];
+           }
+       }
+
+    //    $this->model_report_excel->download_missing_order_products_excel_report($data['orders']);
+
+        //  echo "<pre>";print_r($data);die;
+       if ($data['orders'] != null) {
+           // echo "<pre>";print_r($data['products']);die;
+           $this->load->model('report/excel');
+           $file = $this->model_report_excel->mail_download_missing_order_products_excel_report($data);
+       }
+      
+   }
+
 }
