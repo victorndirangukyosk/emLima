@@ -311,6 +311,8 @@ class ControllerAccountCredit extends Controller {
     }
 
     public function ipinlistenercustom($pesapalNotification, $pesapalTrackingId, $pesapal_merchant_reference) {
+
+        $amount = NULL;
         $status = null;
         $log = new Log('error.log');
         $log->write('ipinlistener');
@@ -383,6 +385,13 @@ class ControllerAccountCredit extends Controller {
             $status = $elements[1];
             $log->write('PESAPAL WALLET STATUS');
             $log->write($status);
+
+            $log->write($pesapalTrackingId);
+            $log->write($pesapal_merchant_reference);
+            $wallet_topup_details = explode('_', $pesapal_merchant_reference);
+            if (is_array($wallet_topup_details)) {
+                $amount = $wallet_topup_details[0];
+            }
             $log->write('PESAPAL WALLET STATUS');
             curl_close($ch);
         }
