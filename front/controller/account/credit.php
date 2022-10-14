@@ -252,7 +252,8 @@ class ControllerAccountCredit extends Controller {
         $activity_data = [
             'customer_id' => $this->customer->getId(),
             'name' => $this->customer->getFirstName() . ' ' . $this->customer->getLastName(),
-            'amount' => $amount
+            'amount' => $amount,
+            'frame' => json_encode($iframe_src)
         ];
 
         $this->model_account_activity->addActivity('WALLET_TOPUP_PESAPAL_INITIALIZE', $activity_data);
