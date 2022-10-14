@@ -152,6 +152,7 @@ class ControllerCommonMenu extends Controller {
         $data['report_sale_advanced'] = $this->url->link('report/sale_advanced', 'token=' . $this->session->data['token'] . '&filter_order_status_id=5', 'SSL');
 
         $data['report_sale_productmissing'] = $this->url->link('report/sale_productmissing', 'token=' . $this->session->data['token'], 'SSL');
+        $data['report_sale_productstockout'] = $this->url->link('report/sale_productstockout', 'token=' . $this->session->data['token'], 'SSL');
 
         $data['report_sale_tax'] = $this->url->link('report/sale_tax', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_sale_shipping'] = $this->url->link('report/sale_shipping', 'token=' . $this->session->data['token'], 'SSL');
@@ -481,6 +482,7 @@ class ControllerCommonMenu extends Controller {
         $data['preturn_sale_advanced'] = $this->user->hasPermission('access', 'report/sale_advanced');
 
         $data['preturn_sale_productmissing'] = $this->user->hasPermission('access', 'report/sale_productmissing');
+        $data['preturn_sale_productstockout'] = $this->user->hasPermission('access', 'report/sale_productstockout');
         $data['preturn_sale_productacceptreject'] = $this->user->hasPermission('access', 'report/sale_productacceptreject');
 
         $data['preturn_sale_tax'] = $this->user->hasPermission('access', 'report/sale_tax');
@@ -600,6 +602,7 @@ class ControllerCommonMenu extends Controller {
         $data['report_sale_advanced'] = $this->url->link('report/sale_advanced', 'token=' . $this->session->data['token'] . '&filter_order_status_id=5', 'SSL');
 
         $data['report_sale_productmissing'] = $this->url->link('report/sale_productmissing', 'token=' . $this->session->data['token'] . '&filter_order_status_id=5', 'SSL');
+        $data['report_sale_productstockout'] = $this->url->link('report/sale_productstockout', 'token=' . $this->session->data['token'] . '&filter_order_status_id=5', 'SSL');
 
         $data['report_sale_tax'] = $this->url->link('report/sale_tax', 'token=' . $this->session->data['token'], 'SSL');
         $data['report_sale_shipping'] = $this->url->link('report/sale_shipping', 'token=' . $this->session->data['token'], 'SSL');
@@ -674,6 +677,7 @@ class ControllerCommonMenu extends Controller {
 
         $data['preturn_sale_advanced'] = $this->user->hasPermission('access', 'report/sale_advanced');
         $data['preturn_sale_productmissing'] = $this->user->hasPermission('access', 'report/sale_productmissing');
+        $data['preturn_sale_productstockout'] = $this->user->hasPermission('access', 'report/sale_productstockout');
         $data['preturn_sale_productacceptreject'] = $this->user->hasPermission('access', 'report/sale_productacceptreject');
 
         $data['preturn_general_products'] = $this->user->hasPermission('access', 'catalog/general');
@@ -703,6 +707,7 @@ class ControllerCommonMenu extends Controller {
         $data['preturn_sale_advanced'] = $this->user->hasPermission('access', 'report/sale_advanced');
 
         $data['preturn_sale_productmissing'] = $this->user->hasPermission('access', 'report/sale_productmissing');
+        $data['preturn_sale_productstockout'] = $this->user->hasPermission('access', 'report/sale_productstockout');
         $data['preturn_sale_productacceptreject'] = $this->user->hasPermission('access', 'report/sale_productacceptreject');
 
         $data['preturn_sale_tax'] = $this->user->hasPermission('access', 'report/sale_tax');
