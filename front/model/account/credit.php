@@ -75,7 +75,7 @@ class ModelAccountCredit extends Model {
     }
 
     public function addCustomerCredit($customer_id, $description, $amount, $transaction_id, $pesapal_merchant_reference, $order_id = 0) {
-        $this->db->query('INSERT INTO ' . DB_PREFIX . "customer_credit SET customer_id = '" . (int) $customer_id . "', order_id = '" . (int) $order_id . "', description = '" . $this->db->escape($description) . "', amount = '" . (float) $amount . "', transaction_id = '" . $transaction_id . '_' . $pesapal_merchant_reference . "', date_added = NOW()");
+        $this->db->query('INSERT INTO ' . DB_PREFIX . "customer_credit SET customer_id = '" . (int) $customer_id . "', order_id = '" . (int) $order_id . "', description = '" . $this->db->escape($description) . "', amount = '" . (float) $amount . "', transaction_id = '" . $transaction_id . "', date_added = NOW()");
         $this->db->query('INSERT INTO ' . DB_PREFIX . "order_transaction_id SET customer_id = '" . (int) $customer_id . "', amount = '" . (float) $amount . "', order_id = '" . (int) $order_id . "', transaction_id = '" . $transaction_id . "', merchant_request_id = '" . $pesapal_merchant_reference . "', created_at = NOW()");
     }
 
