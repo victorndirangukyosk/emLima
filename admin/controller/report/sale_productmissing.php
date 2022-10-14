@@ -35,6 +35,14 @@ class ControllerReportSaleProductMissing extends Controller
             $filter_name = '';
         }
 
+        if (isset($this->request->get['filter_delivery_time_slot'])) {
+            $filter_delivery_time_slot = $this->request->get['filter_delivery_time_slot'];
+        } else {
+            $filter_delivery_time_slot = '';
+        }
+
+        
+
         if (isset($this->request->get['filter_date_end'])) {
             $filter_date_end = $this->request->get['filter_date_end'];
         } else {
@@ -48,6 +56,7 @@ class ControllerReportSaleProductMissing extends Controller
         $data['filter_date_start'] = $filter_date_start;
         $data['filter_date_end'] = $filter_date_end;
         $data['filter_name'] = $filter_name;
+        $data['filter_delivery_time_slot'] = $filter_delivery_time_slot;
         $data['filter_order_status_id'] = $filter_order_status_id;
 
         //echo "<pre>";print_r($data);die;
@@ -74,6 +83,7 @@ class ControllerReportSaleProductMissing extends Controller
         } else {
             $filter_store = '';
         }
+        
 
         if (isset($this->request->get['filter_store_id'])) {
             $filter_store_id = $this->request->get['filter_store_id'];
@@ -85,6 +95,12 @@ class ControllerReportSaleProductMissing extends Controller
             $filter_name = $this->request->get['filter_name'];
         } else {
             $filter_name = '';
+        }
+
+        if (isset($this->request->get['filter_delivery_time_slot'])) {
+            $filter_delivery_time_slot = $this->request->get['filter_delivery_time_slot'];
+        } else {
+            $filter_delivery_time_slot = '';
         }
 
         if (isset($this->request->get['filter_date_start'])) {
@@ -135,6 +151,12 @@ class ControllerReportSaleProductMissing extends Controller
             $url .= '&filter_name='.$this->request->get['filter_name'];
         }
 
+        if (isset($this->request->get['filter_delivery_time_slot'])) {
+            $url .= '&filter_delivery_time_slot='.$this->request->get['filter_delivery_time_slot'];
+        }
+
+        
+
         if (isset($this->request->get['filter_group'])) {
             $url .= '&filter_group='.$this->request->get['filter_group'];
         }
@@ -178,6 +200,7 @@ class ControllerReportSaleProductMissing extends Controller
             'filter_name' => $filter_name,
             'filter_date_start' => $filter_date_start,
             'filter_date_end' => $filter_date_end,
+            'filter_delivery_time_slot'=>$filter_delivery_time_slot,
             'filter_order_status_id' => $filter_order_status_id,
             'filter_store' => $filter_store_id,
             'start' => ($page - 1) * $this->config->get('config_limit_admin'),
@@ -367,6 +390,10 @@ class ControllerReportSaleProductMissing extends Controller
             $url .= '&filter_name='.$this->request->get['filter_name'];
         }
 
+        if (isset($this->request->get['filter_delivery_time_slot'])) {
+            $url .= '&filter_delivery_time_slot='.$this->request->get['filter_delivery_time_slot'];
+        }
+        
         if (isset($this->request->get['filter_date_end'])) {
             $url .= '&filter_date_end='.$this->request->get['filter_date_end'];
         }
@@ -395,9 +422,10 @@ class ControllerReportSaleProductMissing extends Controller
         $data['filter_date_start'] = $filter_date_start;
         $data['filter_date_end'] = $filter_date_end;
         $data['filter_name'] = $filter_name;
+        $data['filter_delivery_time_slot'] = $filter_delivery_time_slot;
         $data['filter_group'] = $filter_group;
         $data['filter_order_status_id'] = $filter_order_status_id;
-
+        
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');
