@@ -400,6 +400,9 @@ class ControllerAccountCredit extends Controller {
             if ('COMPLETED' == $status) {
                 $this->load->model('account/credit');
                 $this->model_account_credit->addCustomerCredit($this->customer->getId(), 'WALLET TOPUP USING PESAPAL', $amount, $pesapalTrackingId, $pesapal_merchant_reference, 0);
+            } else {
+                $this->load->model('account/credit');
+                $this->model_account_credit->addCustomerCredits($this->customer->getId(), 'WALLET TOPUP USING PESAPAL', 0, $pesapalTrackingId, $pesapal_merchant_reference, 0);
             }
         }
         echo $status;
