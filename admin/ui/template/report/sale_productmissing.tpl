@@ -42,6 +42,21 @@
                   <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
                   </span></div>
               </div>
+                <div class="form-group" style="width:50%">
+              
+                                <label class="control-label" for="input-delivery-date">Delivery Time Slot</label>
+                                    <select name="filter_delivery_time_slot" id="input-delivery-time-slot" class="form-control">
+                                    <option value="">Select <?php echo $column_delivery_time_slot; ?></option>
+                                    <?php foreach ($time_slots as $time_slot) { ?>
+                                    <?php if ($time_slot['timeslot'] == $filter_delivery_time_slot) { ?>
+                                    <option value="<?php echo $time_slot['timeslot']; ?>" selected="selected"><?php echo $time_slot['timeslot']; ?></option>
+                                    <?php } else { ?>
+                                    <option value="<?php echo $time_slot['timeslot']; ?>"><?php echo $time_slot['timeslot']; ?></option>
+                                    <?php } ?>
+                                    <?php } ?>
+                                </select>
+                                  </div>
+
             </div>
             <div class="col-sm-6">
 
@@ -216,6 +231,13 @@ $('#button-filter').on('click', function() {
 	}
 
 	
+
+   var filter_delivery_time_slot = $('select[name=\'filter_delivery_time_slot\']').val();
+
+            if (filter_delivery_time_slot) {
+                url += '&filter_delivery_time_slot=' + encodeURIComponent(filter_delivery_time_slot);
+            }
+
 	var filter_order_status_id = $('select[name=\'filter_order_status_id\']').val();
 	
 	if (filter_order_status_id != 0) {
@@ -255,6 +277,11 @@ function excel() {
       url += '&filter_name=' + encodeURIComponent(filter_name);
   }
 
+ var filter_delivery_time_slot = $('select[name=\'filter_delivery_time_slot\']').val();
+
+            if (filter_delivery_time_slot) {
+                url += '&filter_delivery_time_slot=' + encodeURIComponent(filter_delivery_time_slot);
+            }
   
   var filter_order_status_id = $('select[name=\'filter_order_status_id\']').val();
   
