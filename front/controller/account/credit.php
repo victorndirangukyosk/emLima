@@ -246,6 +246,19 @@ class ControllerAccountCredit extends Controller {
         $iframe_src->sign_request($signature_method, $consumer, $token);
         //display pesapal - iframe and pass iframe_src
         $log->write($iframe_src);
+
+        // Add to activity log
+        $this->load->model('account/activity');
+        $activity_data = [
+            'customer_id' => $this->customer->getId(),
+            'name' => $this->customer->getFirstName() . ' ' . $this->customer->getLastName(),
+            'amount' => $amount
+        ];
+
+        $this->model_account_activity->addActivity('WALLET_TOPUP_PESAPAL_INITIALIZE', $activity_data);
+        // Add to activity log
+
+
         $data['iframe'] = $iframe_src;
 
         echo '<iframe src=' . $iframe_src . ' width="100%" height="700px"  scrolling="no" frameBorder="0"><p>Browser unable to load iFrame</p></iframe>';
