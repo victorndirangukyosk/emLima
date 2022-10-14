@@ -2872,7 +2872,8 @@ class ModelReportSale extends Model {
         }
 
         if (!empty($data['filter_delivery_time_slot']) && $data['filter_delivery_time_slot'] != 'undefined') {
-            $sql .= " AND o.delivery_timeslot = '" . $this->db->escape($data['filter_delivery_time_slot']) . "'";
+            $sql1 .= " AND o.delivery_timeslot = '" . $this->db->escape($data['filter_delivery_time_slot']) . "'";
+            $sql2 .= " AND o.delivery_timeslot = '" . $this->db->escape($data['filter_delivery_time_slot']) . "'";
         }
 
 
