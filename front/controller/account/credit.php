@@ -377,7 +377,7 @@ class ControllerAccountCredit extends Controller {
 
     public function pesapalsuccess() {
 
-        $this->load->language('checkout/success');
+        $this->load->language('credit/success');
 
         $this->document->addStyle('front/ui/theme/' . $this->config->get('config_template') . '/stylesheet/layout_checkout.css');
 
@@ -430,9 +430,9 @@ class ControllerAccountCredit extends Controller {
 
         // Get Order Status enter Message
         if ($this->customer->isLogged() && empty($_SESSION['parent'])) {
-            $data['text_message'] = sprintf($this->language->get('text_customer'), $this->url->link('account/order', '', 'SSL'), $this->url->link('account/account', '', 'SSL'));
+            $data['text_message'] = sprintf($this->language->get('text_customer'), $this->url->link('account/credit', '', 'SSL'), $this->url->link('account/account', '', 'SSL'));
         } elseif ($this->customer->isLogged() && !empty($_SESSION['parent'])) {
-            $data['text_message'] = sprintf($this->language->get('text_customer_sub_user'), $this->url->link('account/order', '', 'SSL'), $this->url->link('account/account', '', 'SSL'));
+            $data['text_message'] = sprintf($this->language->get('text_customer_sub_user'), $this->url->link('account/credit', '', 'SSL'), $this->url->link('account/account', '', 'SSL'));
         } else {
             $data['text_message'] = sprintf($this->language->get('text_guest'), $this->url->link('information/contact'));
         }
@@ -459,7 +459,7 @@ class ControllerAccountCredit extends Controller {
 
     public function pesapalfailed() {
 
-        $this->load->language('checkout/success');
+        $this->load->language('credit/success');
 
         $this->document->addStyle('front/ui/theme/' . $this->config->get('config_template') . '/stylesheet/layout_checkout.css');
 
@@ -496,7 +496,7 @@ class ControllerAccountCredit extends Controller {
 
         // Get Order Status enter Message
         if ($this->customer->isLogged()) {
-            $data['text_message'] = sprintf($this->language->get('text_customer_failed'), $this->url->link('account/order', '', 'SSL'), $this->url->link('account/account', '', 'SSL'));
+            $data['text_message'] = sprintf($this->language->get('text_customer_failed'), $this->url->link('account/credit', '', 'SSL'), $this->url->link('account/account', '', 'SSL'));
         } else {
             $data['text_message'] = sprintf($this->language->get('text_customer_failed'), $this->url->link('information/contact'));
         }
