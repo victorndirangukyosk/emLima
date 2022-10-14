@@ -2917,6 +2917,106 @@ class ModelReportSale extends Model {
         return $query->rows;
     }
 
+    // If the search is made for 01/10/2022 till 05/10/2022 - the data shown for the stock-out report must have the below calculation
+    //             Product Name, UOM, Closing balance (as of 01/10/2022), 
+    //Consumed Quantity = Closing Balance + (Procured Qty on 1st + 2nd + 3rd + 4th) - (Sold Qty on 1st + 2nd + 3rd + 4th), Avg Selling Price
+
+
+    public function getstockoutOrdersAndProductsNew($data = []) {
+        //echo "<pre>";print_r($data);die;
+        // $sql1 = "SELECT op.product_id, op.name,op.unit,sum(op.quantity) as quantity ,sum(op.total) as total,sum(op.tax*op.quantity) as tax,o.store_name FROM `" . DB_PREFIX . 'order` o ';
+        // $sql2 = "SELECT op.product_id, op.name,op.unit,sum(op.quantity) as quantity ,sum(op.total) as total,sum(op.tax*op.quantity) as tax,o.store_name FROM `" . DB_PREFIX . 'order` o ';
+
+
+        $sql1 = 'SELECT op.product_id,op.name,op.unit,op.quantity,op.total as sum1,(op.tax*op.quantity)as sum2,0 as procured_qty,0 as rejected_qty,0 as buying_price,0 as total ,0 as count FROM `hf7_order_product`op join hf7_order o on o.order_id =op.order_id WHERE   o.order_status_id not in(0,6,8,9,16) and o.order_id not in (select order_id from hf7_real_order_product) ';
+        $sql2 = 'SELECT op.product_id,op.name,op.unit,op.quantity,op.total as sum1,(op.tax*op.quantity)as sum2,0 as procured_qty,0 as rejected_qty,0 as buying_price,0 as total,0 as count FROM `hf7_real_order_product`op join hf7_order o on o.order_id =op.order_id WHERE   o.order_status_id not in(0,6,8,9,16)  ';
+
+        $sql3 = 'SELECT i.product_store_id as product_id,i.product_name as name,p.unit,0 as quantity,0 as sum1,0 as sum2,i.procured_qty,i.rejected_qty,i.buying_price as buying_price,(i.buying_price*i.procured_qty) as total,1 as count   FROM `hf7_product_inventory_history` i join hf7_product p on i.product_id =p.product_id WHERE  1=1  ';
+        
+        // $sql1 .= '  JOIN ' . DB_PREFIX . 'store on(' . DB_PREFIX . 'store.store_id = o.store_id) ';
+        // $sql2 .= '  JOIN ' . DB_PREFIX . 'store on(' . DB_PREFIX . 'store.store_id = o.store_id) ';
+ 
+       
+        if (!empty($data['filter_name'])) {
+            $sql1 .= " AND op.name LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
+            $sql2 .= " AND op.name LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
+           
+            $sql3 .= " AND i.product_name LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
+           }  
+
+         
+        if (!empty($data['filter_date_start'])) {
+            $sql1 .= " AND DATE(o.delivery_date) >= '" . $this->db->escape($data['filter_date_start']) . "'";
+            $sql2 .= " AND DATE(o.delivery_date) >= '" . $this->db->escape($data['filter_date_start']) . "'";
+
+            $sql3 .= " AND DATE_FORMAT(i.date_added, '%Y-%m-%d') >= '" . $this->db->escape($data['filter_date_start']) . "'";
+
+        }
+
+        if (!empty($data['filter_date_end'])) {
+            $sql1 .= " AND DATE(o.delivery_date) <= '" . $this->db->escape($data['filter_date_end']) . "'";
+            $sql2 .= " AND DATE(o.delivery_date) <= '" . $this->db->escape($data['filter_date_end']) . "'";
+            $sql3 .= " AND DATE_FORMAT(i.date_added, '%Y-%m-%d') <= '" . $this->db->escape($data['filter_date_end']) . "'";
+
+        }
+
+        if (!empty($data['filter_delivery_time_slot']) && $data['filter_delivery_time_slot'] != 'undefined') {
+            $sql1 .= " AND o.delivery_timeslot = '" . $this->db->escape($data['filter_delivery_time_slot']) . "'";
+            $sql2 .= " AND o.delivery_timeslot = '" . $this->db->escape($data['filter_delivery_time_slot']) . "'";
+        }
+
+
+        //echo "<pre>";print_r($sql);die;
+        if (!empty($data['filter_store'])) {
+            $sql1 .= " AND o.store_id = '" . $data['filter_store'] . "'";
+            $sql2 .= " AND o.store_id = '" . $data['filter_store'] . "'";
+        }
+
+        // $sql1 .= " AND o.order_id not in (select orp.order_id from hf7_real_order_product orp) GROUP BY op.product_id ,op.name,op.unit,o.store_name";
+        // $sql2 .= " GROUP BY op.product_id ,op.name,op.unit,o.store_name";
+        $sql .= 'select  t.product_id,t.name,t.unit,sum(quantity)as quantity,sum(t.sum1+t.sum2)as revenue,sum(procured_qty) as procured_qty ,sum(rejected_qty) as rejected_qty,0 as priceperItem ,sum(total) as Totalprice from ('.$sql1. ' union all ' .$sql2 .' union all ' .$sql3.') as t';
+        $sql .= '  group by  t.product_id,t.name ,t.unit ORDER BY name ASC';//t.product_id,t.product_id,
+
+        // $sort_data = [
+        //     'o.order_id',
+        //     'customer',
+        //     'status',
+        //     'o.date_added',
+        //     'o.date_modified',
+        //     'o.total',
+        //     'c.name',
+        // ];
+
+        // $sql .= ' GROUP BY o.order_id';
+
+        // if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
+        //     $sql .= ' ORDER BY ' . $data['sort'];
+        // } else {
+        //     $sql .= ' ORDER BY o.order_id';
+        // }
+
+        // if (isset($data['order']) && ('DESC' == $data['order']) || true) {
+        //     $sql .= ' DESC';
+        // } else {
+        //     $sql .= ' ASC';
+        // }
+
+        // $sql = "SELECT t.product_id, name,unit,sum(quantity) as quantity,sum(total) as total,sum(tax) as tax,t.store_name from (" .$sql1." union all ".$sql2." )as t GROUP BY product_id ,name,unit ,store_name ORDER BY name ASC"; 
+        // echo "<pre>";print_r($sql);die;
+        $query = $this->db->query($sql);
+
+        return $query->rows;
+    }
+
+    public function getClosingBalance($product_store_id,$date_added) {
+        
+          $sql = 'SELECT  prev_qty FROM `hf7_product_inventory_history` i WHERE  product_Store_id='.$product_store_id.' and date_added<='.$date_added.' order by product_history_id desc limit 0, 1 ';
+        //    echo "<pre>";print_r($sql);die;
+        $query = $this->db->query($sql);
+
+        return $query->row['prev_qty'];
+    }
+
 
     public function getNonCancelledOrdersbyDeliveryDate($data = []) {
         $sql = "SELECT o.order_id, o.delivery_date, o.order_status_id,o.store_name,o.comment,  o.date_added,o.shipping_address, o.date_modified FROM `" . DB_PREFIX . 'order` o ';
