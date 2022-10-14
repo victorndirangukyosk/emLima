@@ -314,6 +314,10 @@ class ControllerReportSaleProductMissing extends Controller
         $data['column_ordered_qty'] = $this->language->get('column_ordered_qty');
         $data['column_store'] = $this->language->get('column_store');
 
+        $this->load->model('setting/store');
+        $deliveryTimeslots = $this->model_setting_store->getDeliveryTimeslots(75);
+        $data['time_slots'] = $deliveryTimeslots;
+        
         $data['entry_date_start'] = $this->language->get('entry_date_start');
         $data['entry_date_end'] = $this->language->get('entry_date_end');
         $data['entry_group'] = $this->language->get('entry_group');
