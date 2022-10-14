@@ -2871,6 +2871,11 @@ class ModelReportSale extends Model {
             $sql2 .= " AND DATE(o.delivery_date) <= '" . $this->db->escape($data['filter_date_end']) . "'";
         }
 
+        if (!empty($data['filter_delivery_time_slot']) && $data['filter_delivery_time_slot'] != 'undefined') {
+            $sql .= " AND o.delivery_timeslot = '" . $this->db->escape($data['filter_delivery_time_slot']) . "'";
+        }
+
+
         //echo "<pre>";print_r($sql);die;
         if (!empty($data['filter_store'])) {
             $sql1 .= " AND o.store_id = '" . $data['filter_store'] . "'";
