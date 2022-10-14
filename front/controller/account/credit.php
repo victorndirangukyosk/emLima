@@ -288,11 +288,11 @@ class ControllerAccountCredit extends Controller {
         // Add to activity log
 
         if ('COMPLETED' == $status) {
-            $this->response->redirect($this->url->link('credit/pesapalsuccess'));
+            $this->response->redirect($this->url->link('account/credit/pesapalsuccess'));
         }
 
         if ('COMPLETED' != $status || NULL == $status) {
-            $this->response->redirect($this->url->link('credit/pesapalfailed'));
+            $this->response->redirect($this->url->link('account/credit/pesapalfailed'));
         }
     }
 
