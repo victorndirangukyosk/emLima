@@ -390,9 +390,9 @@ class ControllerAccountCredit extends Controller {
             $log->write($pesapal_merchant_reference);
             $wallet_topup_details = explode('_', $pesapal_merchant_reference);
             if (is_array($wallet_topup_details)) {
-                $amount = $wallet_topup_details[0];
+                $amount = $wallet_topup_details[2];
             }
-            $log->write((int) ($amount));
+            $log->write($amount);
             $amount = (int) ($amount);
             $log->write('PESAPAL WALLET STATUS');
             curl_close($ch);
