@@ -1,10 +1,9 @@
 <?php
 
-class ModelAccountCredit extends Model
-{
-    public function getCredits($data = [])
-    {
-        $sql = 'SELECT * FROM `'.DB_PREFIX."customer_credit` WHERE customer_id = '".(int) $this->customer->getId()."'";
+class ModelAccountCredit extends Model {
+
+    public function getCredits($data = []) {
+        $sql = 'SELECT * FROM `' . DB_PREFIX . "customer_credit` WHERE customer_id = '" . (int) $this->customer->getId() . "'";
 
         $sort_data = [
             'amount',
@@ -13,7 +12,7 @@ class ModelAccountCredit extends Model
         ];
 
         if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
-            $sql .= ' ORDER BY '.$data['sort'];
+            $sql .= ' ORDER BY ' . $data['sort'];
         } else {
             $sql .= ' ORDER BY date_added';
         }
@@ -33,7 +32,7 @@ class ModelAccountCredit extends Model
                 $data['limit'] = 20;
             }
 
-            $sql .= ' LIMIT '.(int) $data['start'].','.(int) $data['limit'];
+            $sql .= ' LIMIT ' . (int) $data['start'] . ',' . (int) $data['limit'];
         }
 
         $query = $this->db->query($sql);
@@ -41,22 +40,20 @@ class ModelAccountCredit extends Model
         return $query->rows;
     }
 
-    public function getTotalCredits()
-    {
-        $query = $this->db->query('SELECT COUNT(*) AS total FROM `'.DB_PREFIX."customer_credit` WHERE customer_id = '".(int) $this->customer->getId()."'");
+    public function getTotalCredits() {
+        $query = $this->db->query('SELECT COUNT(*) AS total FROM `' . DB_PREFIX . "customer_credit` WHERE customer_id = '" . (int) $this->customer->getId() . "'");
 
         return $query->row['total'];
     }
 
-    public function getTotalAmount()
-    {
+    public function getTotalAmount() {
 
 
-        $query = $this->db->query('SELECT SUM(amount) AS total FROM `'.DB_PREFIX."customer_credit` WHERE customer_id = '".(int) $this->customer->getId()."' GROUP BY customer_id");
+        $query = $this->db->query('SELECT SUM(amount) AS total FROM `' . DB_PREFIX . "customer_credit` WHERE customer_id = '" . (int) $this->customer->getId() . "' GROUP BY customer_id");
         // echo "<pre>";print_r('SELECT SUM(amount) AS total FROM `'.DB_PREFIX."customer_credit` WHERE customer_id = '".(int) $this->customer->getId()."' GROUP BY customer_id");die;
 
         if ($query->num_rows) {
-        //   echo "<pre>";print_r($query->row['total']);die;
+            //   echo "<pre>";print_r($query->row['total']);die;
 
             return $query->row['total'];
         } else {
@@ -64,20 +61,22 @@ class ModelAccountCredit extends Model
         }
     }
 
-
-    public function getTotalAmountOfParent($parent_id)
-    {
-        $query = $this->db->query('SELECT SUM(amount) AS total FROM `'.DB_PREFIX."customer_credit` WHERE  customer_id = '".(int) $parent_id."'  GROUP BY customer_id");//customer_id = '".(int) $this->customer->getId()."' ||
+    public function getTotalAmountOfParent($parent_id) {
+        $query = $this->db->query('SELECT SUM(amount) AS total FROM `' . DB_PREFIX . "customer_credit` WHERE  customer_id = '" . (int) $parent_id . "'  GROUP BY customer_id"); //customer_id = '".(int) $this->customer->getId()."' ||
         // echo "<pre>";print_r('SELECT SUM(amount) AS total FROM `'.DB_PREFIX."customer_credit` WHERE customer_id = '".(int) $parent_id."' GROUP BY customer_id");die;
 
         if ($query->num_rows) {
-        //   echo "<pre>";print_r($query->row['total']);die;
+            //   echo "<pre>";print_r($query->row['total']);die;
 
             return $query->row['total'];
         } else {
             return 0;
         }
-
-       
     }
+
+    public function addCustomerCredit($customer_id, $description, $amount, $transaction_id, $pesapal_merchant_reference, $order_id = 0) {
+        $this->db->query('INSERT INTO ' . DB_PREFIX . "customer_credit SET customer_id = '" . (int) $customer_id . "', order_id = '" . (int) $order_id . "', description = '" . $this->db->escape($description) . "', amount = '" . (float) $amount . "', transaction_id = '" . $transaction_id . '_' . $pesapal_merchant_reference . "', date_added = NOW()");
+        $this->db->query('INSERT INTO ' . DB_PREFIX . "order_transaction_id SET customer_id = '" . (int) $customer_id . "', amount = '" . (float) $amount . "', order_id = '" . (int) $order_id . "', transaction_id = '" . $transaction_id . "', merchant_request_id = '" . $pesapal_merchant_reference . "', created_at = NOW()");
+    }
+
 }

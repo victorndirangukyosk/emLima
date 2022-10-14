@@ -392,8 +392,14 @@ class ControllerAccountCredit extends Controller {
             if (is_array($wallet_topup_details)) {
                 $amount = $wallet_topup_details[0];
             }
+            $log->write(int($amount));
             $log->write('PESAPAL WALLET STATUS');
             curl_close($ch);
+
+            if ('COMPLETED' == $status) {
+                $this->load->model('account/credit');
+                $this->model_account_credit->addCustomerCredit($this->customer->getId(), 'WALLET TOPUP USING PESAPAL', $amount, $pesapalTrackingId, $pesapal_merchant_reference, 0);
+            }
         }
         echo $status;
     }
