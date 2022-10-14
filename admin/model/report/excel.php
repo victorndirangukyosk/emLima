@@ -3610,6 +3610,7 @@ class ModelReportExcel extends Model {
             $objPHPExcel->getActiveSheet()->setCellValue('A3', $html1);
 
             $objPHPExcel->getActiveSheet()->setCellValue('A4', $html);
+            $objPHPExcel->getActiveSheet()->setCellValue('A5', $data['filter_delivery_time_slot']);
 
             $storename = $data['filter_store_name'];
 
@@ -3622,6 +3623,7 @@ class ModelReportExcel extends Model {
 
             $objPHPExcel->getActiveSheet()->getStyle('A1:G3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
             $objPHPExcel->getActiveSheet()->getStyle('A4:G4')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $objPHPExcel->getActiveSheet()->getStyle('A5:G5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
 
             foreach (range('A', 'L') as $columnID) {
                 $objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
