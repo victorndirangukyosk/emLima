@@ -16311,4 +16311,165 @@ class ModelReportExcel extends Model {
     }
 
 
+    public function download_saleorderproductstockout($data) {
+        $this->load->library('excel');
+        $this->load->library('iofactory');
+
+        $this->load->model('sale/order');
+        $this->load->model('account/order');
+
+        $this->load->language('report/income');
+        $this->load->model('report/sale');
+        //$rows = $this->model_report_sale->getOrdersCommission($data);
+        // //echo "<pre>";print_r($data);die;
+        // $results = $this->model_report_sale->getstockoutOrders($data);
+        $OrignalProducts = $this->model_report_sale->getstockoutOrdersAndProducts($data);
+
+        $data['orders'] = [];
+        // $data['torders'] = [];
+        //echo "<pre>";print_r($results);die;
+        
+
+        foreach ($OrignalProducts as $OrignalProduct) {
+
+            $total = $OrignalProduct['total'] + $OrignalProduct['tax'];
+            $product_total_average = ($total / $OrignalProduct['quantity']);
+
+            $data['torders'][] = [
+                'store' => $OrignalProduct['store_name'],
+                'model' => $OrignalProduct['product_id'],
+                'product_name' => $OrignalProduct['name'],
+                'unit' => $OrignalProduct['unit'],
+                'product_id' => $OrignalProduct['product_id'],
+                // 'product_qty' => (float) $OrignalProduct['quantity'],
+                // 'product_total' => (float) $total,
+                // 'product_total_average' => (float) $product_total_average,
+                'product_qty' => round($OrignalProduct['quantity'], 2),
+                'product_total' => round($total, 2),
+                'product_total_average' => round($product_total_average, 2),
+            ];
+            ++$order_total;
+        }
+        // $rows = $data['orders'];
+        $rows = $data['torders'];
+
+        //echo "<pre>";print_r($rows);die;
+
+        try {
+            // set appropriate timeout limit
+            set_time_limit(1800);
+
+            $objPHPExcel = new PHPExcel();
+            $objPHPExcel->getProperties()->setTitle('STOCK OUT PRODUCTS')->setDescription('none');
+            $objPHPExcel->setActiveSheetIndex(0);
+
+            // Field names in the first row
+            // ID, Photo, Name, Contact no., Reason, Valid from, Valid upto, Intime, Outtime
+            $title = [
+                'font' => [
+                    'bold' => true,
+                    'color' => [
+                        'rgb' => 'FFFFFF',
+                    ],
+                ],
+                'fill' => [
+                    'type' => PHPExcel_Style_Fill::FILL_SOLID,
+                    'startcolor' => [
+                        'rgb' => '4390df',
+                    ],
+                ],
+            ];
+
+            //Company name, address
+            $objPHPExcel->getActiveSheet()->mergeCells('A1:G2');
+            $objPHPExcel->getActiveSheet()->setCellValue('A1', '');
+            $objPHPExcel->getActiveSheet()->getStyle('A1:G6')->applyFromArray(['font' => ['bold' => true], 'color' => [
+                    'rgb' => '4390df',
+            ]]);
+
+            //subtitle
+            $from = date('d/m/Y', strtotime($data['filter_date_start']));
+            $to = date('d/m/Y', strtotime($data['filter_date_end']));
+            $objPHPExcel->getActiveSheet()->mergeCells('A3:G3');
+            $html1 = 'STOCK OUT PRODUCTS';
+
+            $html = 'FROM ' . $from . ' TO ' . $to;
+
+            $objPHPExcel->getActiveSheet()->setCellValue('A3', $html1);
+
+            $objPHPExcel->getActiveSheet()->setCellValue('A4', $html);
+            $objPHPExcel->getActiveSheet()->setCellValue('A5', $data['filter_delivery_time_slot']);
+
+            $storename = $data['filter_store_name'];
+
+            if (empty($data['filter_store_name'])) {
+                $storename = 'Combined';
+            }
+
+            $objPHPExcel->getActiveSheet()->mergeCells('A4:G4');
+            $objPHPExcel->getActiveSheet()->mergeCells('A5:G5');
+
+            $objPHPExcel->getActiveSheet()->getStyle('A1:G3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $objPHPExcel->getActiveSheet()->getStyle('A4:G4')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $objPHPExcel->getActiveSheet()->getStyle('A5:G5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+
+            foreach (range('A', 'L') as $columnID) {
+                $objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
+                        ->setAutoSize(true);
+            }
+
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, 6, 'Store Name');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 6, 'Product ID');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, 6, 'Product Name');
+
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 6, 'Unit');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, 6, 'Ordered Qty');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, 6, 'Total Price');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, 6, 'Avg. Sale Price');
+
+            // Fetching the table data
+
+            $row = 7;
+            foreach ($rows as $result) {
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, $result['store']);
+                //$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row, $result['model']);
+                $objPHPExcel->getActiveSheet()->setCellValueExplicit('B' . $row, $result['model'], PHPExcel_Cell_DataType::TYPE_STRING);
+
+                //$worksheet->setCellValueExplicit('A'.$row, $val, PHPExcel_Cell_DataType::TYPE_STRING);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row, $result['product_name']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, $row, $result['unit']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, $row, $result['product_qty']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row, $result['product_total']);
+                $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, $result['product_total_average']);
+
+                ++$row;
+            }
+
+            $objPHPExcel->setActiveSheetIndex(0);
+            /* $objWriter = IOFactory::createWriter($objPHPExcel, 'Excel5');
+
+              // Sending headers to force the user to download the file
+              header('Content-Type: application/vnd.ms-excel'); */
+
+            $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+
+            header('Content-Disposition: attachment;filename="stock_out_products.xlsx"');
+            header('Cache-Control: max-age=0');
+            $objWriter->save('php://output');
+            exit;
+        } catch (Exception $e) {
+            $errstr = $e->getMessage();
+            $errline = $e->getLine();
+            $errfile = $e->getFile();
+            $errno = $e->getCode();
+            $this->session->data['export_import_error'] = ['errstr' => $errstr, 'errno' => $errno, 'errfile' => $errfile, 'errline' => $errline];
+            if ($this->config->get('config_error_log')) {
+                $this->log->write('PHP ' . get_class($e) . ':  ' . $errstr . ' in ' . $errfile . ' on line ' . $errline);
+            }
+
+            return;
+        }
+    }
+
 }
