@@ -19,23 +19,23 @@ class ModelInventoryProductReceivedSold extends Model {
         }
  
         if (!empty($data['filter_date_added'])  && !empty($data['filter_date_added_to'])) {
-            $sql1 .= " AND DATE_FORMAT(o.date_added, '%Y-%m-%d') >= '" . $this->db->escape($data['filter_date_added']) . "' and DATE_FORMAT(o.date_added, '%Y-%m-%d') <= '" . $this->db->escape($data['filter_date_added_to']) . "'";
-            $sql2 .= " AND DATE_FORMAT(o.date_added, '%Y-%m-%d') >= '" . $this->db->escape($data['filter_date_added']) . "' and DATE_FORMAT(o.date_added, '%Y-%m-%d') <= '" . $this->db->escape($data['filter_date_added_to']) . "'";
+            $sql1 .= " AND DATE_FORMAT(o.delivery_date, '%Y-%m-%d') >= '" . $this->db->escape($data['filter_date_added']) . "' and DATE_FORMAT(o.delivery_date, '%Y-%m-%d') <= '" . $this->db->escape($data['filter_date_added_to']) . "'";
+            $sql2 .= " AND DATE_FORMAT(o.delivery_date, '%Y-%m-%d') >= '" . $this->db->escape($data['filter_date_added']) . "' and DATE_FORMAT(o.delivery_date, '%Y-%m-%d') <= '" . $this->db->escape($data['filter_date_added_to']) . "'";
             
             $sql3 .= " AND DATE_FORMAT(i.date_added, '%Y-%m-%d') >= '" . $this->db->escape($data['filter_date_added']) . "' and DATE_FORMAT(i.date_added, '%Y-%m-%d') <= '" . $this->db->escape($data['filter_date_added_to']) . "'";
         }
         else if(!empty($data['filter_date_added']) && empty($data['filter_date_added_to']))
         {
-            $sql1 .= " AND DATE_FORMAT(o.date_added, '%Y-%m-%d') = '" . $this->db->escape($data['filter_date_added']) . "'";
-            $sql2 .= " AND DATE_FORMAT(o.date_added, '%Y-%m-%d') = '" . $this->db->escape($data['filter_date_added']) . "'";
+            $sql1 .= " AND DATE_FORMAT(o.delivery_date, '%Y-%m-%d') = '" . $this->db->escape($data['filter_date_added']) . "'";
+            $sql2 .= " AND DATE_FORMAT(o.delivery_date, '%Y-%m-%d') = '" . $this->db->escape($data['filter_date_added']) . "'";
             
             $sql3 .= " AND DATE_FORMAT(i.date_added, '%Y-%m-%d') = '" . $this->db->escape($data['filter_date_added']) . "'";
 
         }
         else if(!empty($data['filter_date_added_to']) && empty($data['filter_date_added']))
         {          
-            $sql1 .= "AND DATE_FORMAT(o.date_added, '%Y-%m-%d') = '" . $this->db->escape($data['filter_date_added_to']) . "'";
-            $sql2 .= "AND DATE_FORMAT(o.date_added, '%Y-%m-%d') = '" . $this->db->escape($data['filter_date_added_to']) . "'";
+            $sql1 .= "AND DATE_FORMAT(o.delivery_date, '%Y-%m-%d') = '" . $this->db->escape($data['filter_date_added_to']) . "'";
+            $sql2 .= "AND DATE_FORMAT(o.delivery_date, '%Y-%m-%d') = '" . $this->db->escape($data['filter_date_added_to']) . "'";
            
             $sql2 .= "AND DATE_FORMAT(i.date_added, '%Y-%m-%d') = '" . $this->db->escape($data['filter_date_added_to']) . "'";
           

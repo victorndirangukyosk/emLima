@@ -16,7 +16,7 @@
         <h3 class="panel-title"><i class="fa fa-bar-chart"></i> <?php echo $text_list; ?></h3>
           <div class="pull-right">
 
-                <button type="button" onclick="excel();" data-toggle="tooltip" title="" class="btn btn-success btn-sm" data-original-title="Download Excel"><i class="fa fa-download"></i></button>
+                <!--<button type="button" onclick="excel();" data-toggle="tooltip" title="" class="btn btn-success btn-sm" data-original-title="Download Excel"><i class="fa fa-download"></i></button>-->
 
                 <button type="button" data-toggle="tooltip" title="<?php echo $button_show_filter; ?>" class="btn btn-primary btn-sm" id="showFilter"><i class="fa fa-eye"></i></button>
                 <button type="button" data-toggle="tooltip" title="<?php echo $button_hide_filter; ?>" class="btn btn-primary btn-sm" id="hideFilter"><i class="fa fa-eye-slash"></i></button>
@@ -95,13 +95,15 @@
           <table class="table table-bordered">
             <thead>
               <tr>
-                <td class="text-left"><?php echo $column_store; ?></td>
+                <!--<td class="text-left"><?php echo $column_store; ?></td>-->
                 <td class="text-left">Product ID</td>
                 <td class="text-left"><?php echo $column_product; ?></td>
                 <td class="text-left"><?php echo $column_unit; ?></td>
-                <td class="text-left"><?php echo $column_ordered_qty; ?></td>
-                <td class="text-left">Total Price</td>
-                <td class="text-left">Avg. Sale Price</td>
+                <td class="text-left">Closing Balance</td>
+                <td class="text-left">Procured Quantity</td>
+                <td class="text-left">Sold Quantity</td>
+                <td class="text-left">Consumed Quantity</td>
+                <td class="text-left">Avg. Selling Price</td>
 
               </tr>
             </thead>
@@ -109,12 +111,13 @@
               <?php if ($orders) { ?>
               <?php foreach ($orders as $order) { ?>
               <tr>
-                <td class="text-left"><?php echo $order['store']; ?></td>
                 <td class="text-left"><?php echo $order['model']; ?></td>
                 <td class="text-left"><?php echo $order['product_name']; ?></td>
                 <td class="text-left"><?php echo $order['unit']; ?></td>
-                <td class="text-left"><?php echo $order['product_qty']; ?></td>
-                <td class="text-right"><?php echo $order['product_total']; ?></td>
+                <td class="text-left"><?php echo $order['closing_balance']; ?></td>
+                <td class="text-left"><?php echo $order['procured_qty']; ?></td>
+                <td class="text-right"><?php echo $order['product_qty']; ?></td>
+                <td class="text-right"><?php echo $order['consumed_quantity']; ?></td>
                 <td class="text-right"><?php echo $order['product_total_average']; ?></td>
                
 
@@ -165,7 +168,7 @@
     $('input[name=\'filter_city\']').autocomplete({
 	'source': function(request, response) {
 		$.ajax({
-			url: 'index.php?path=report/sale_productmissing/city_autocomplete&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request),
+			url: 'index.php?path=report/sale_productstockout/city_autocomplete&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request),
 			dataType: 'json',
 			success: function(json) {
 				response($.map(json, function(item) {
@@ -203,7 +206,7 @@
         });
     
 $('#button-filter').on('click', function() {
-	url = 'index.php?path=report/sale_productmissing&token=<?php echo $token; ?>';
+	url = 'index.php?path=report/sale_productstockout&token=<?php echo $token; ?>';
 	
 	var filter_store = $('input[name=\'store_name\']').val();
         var filter_store_id = $('input[name=\'filter_store_id\']').val();
@@ -250,7 +253,7 @@ $('#button-filter').on('click', function() {
 
 function excel() {
   
-  url = 'index.php?path=report/sale_productmissing/excel&token=<?php echo $token; ?>';
+  url = 'index.php?path=report/sale_productstockout/excel&token=<?php echo $token; ?>';
   
   var filter_store = $('input[name=\'store_name\']').val();
     var filter_store_id = $('input[name=\'filter_store_id\']').val();

@@ -331,7 +331,7 @@ __kdt.push({"post_on_load": false});
                     console.log("json");
                     console.log(json);
                     $('#pesapal_div').html(json);
-                    $("#pesapal_div").prepend("<p>* 3.5% Payment Gateway Charges Applicable On Order Total</p>");
+                    $("#pesapal_div").prepend("<p>* 3.5% Payment Gateway Charges Applicable On Amount Total</p>");
                     $('#pesapal_div').removeAttr('style');
                     return true;
                     //window.location = json.redirect;
