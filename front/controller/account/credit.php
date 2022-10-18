@@ -1,6 +1,7 @@
 <?php
 
 require_once DIR_SYSTEM . '/vendor/pesapal/OAuth.php';
+require_once DIR_SYSTEM . '/vendor/mpesa-php-sdk-master/vendor/autoload.php';
 
 class ControllerAccountCredit extends Controller {
 
