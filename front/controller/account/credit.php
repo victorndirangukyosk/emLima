@@ -558,4 +558,74 @@ class ControllerAccountCredit extends Controller {
         }
     }
 
+    public function confirmtransaction() {
+        $log = new Log('error.log');
+        $json['processed'] = false;
+
+        if ('mpesa' == $this->request->post['payment_method']) {
+            $this->load->language('payment/mpesa');
+            $this->load->model('payment/mpesa');
+            $this->load->model('checkout/order');
+
+            $log->write($this->request->post['mobile']);
+            $log->write($this->request->post['order_id']);
+            $log->write($this->request->post['amount']);
+            $log->write($this->request->post['payment_type']);
+            $log->write($this->request->post['payment_method']);
+
+            $live = 'true';
+            $mpesa = new \Safaricom\Mpesa\Mpesa($this->config->get('mpesa_customer_key'), $this->config->get('mpesa_customer_secret'), $this->config->get('mpesa_environment'), $live);
+            $sta = false;
+            $log->write('STKPushSimulation confirm for wallet topup from mpesa');
+            $log->write($sta);
+
+            if (!$sta) {
+                $PartyA = $this->config->get('config_telephone_code') . '' . $this->request->post['mobile'];
+
+                $BusinessShortCode = $this->config->get('mpesa_business_short_code');
+                $LipaNaMpesaPasskey = $this->config->get('mpesa_lipanampesapasskey');
+                $TransactionType = 'CustomerPayBillOnline'; //'CustomerBuyGoodsOnline';
+
+                $CallBackURL = $this->url->link('deliversystem/deliversystem/mpesaOrderStatus', '', 'SSL');
+                $Amount = $this->request->post['amount'];
+                $PartyB = $this->config->get('mpesa_business_short_code');
+
+                $PhoneNumber = $this->config->get('config_telephone_code') . '' . $this->request->post['mobile'];
+                $AccountReference = $this->customer->getId() . 'WALLET_TOPUP'; //$this->config->get('config_name');
+                $TransactionDesc = $this->customer->getId() . 'WALLET_TOPUP';
+                $Remarks = 'PAYMENT';
+            }
+
+            $log->write($BusinessShortCode . 'x' . $LipaNaMpesaPasskey . 'x' . $TransactionType . 'amount' . $Amount . 'x' . $PartyA . 'x' . $PartyB . 'x' . $PhoneNumber . 'x' . $CallBackURL . 'x' . $AccountReference . 'x' . $TransactionDesc . 'x' . $Remarks);
+            $stkPushSimulation = $mpesa->STKPushSimulation($BusinessShortCode, $LipaNaMpesaPasskey, $TransactionType, $Amount, $PartyA, $PartyB, $PhoneNumber, $CallBackURL, $AccountReference, $TransactionDesc, $Remarks);
+
+// Void the order first
+            $log->write('STKPushSimulation');
+            $log->write($stkPushSimulation);
+
+            $stkPushSimulation = json_decode($stkPushSimulation);
+
+            $json['response'] = $stkPushSimulation;
+            $json['error'] = '';
+            if (isset($json['response']->errorMessage)) {
+                $json['error'] = $json['response']->errorMessage;
+            }
+
+            if (isset($stkPushSimulation->ResultCode) && 0 != $stkPushSimulation->ResultCode && $stkPushSimulation->ResultDesc != NULL) {
+                $json['error'] = $json['error'] . ' ' . $stkPushSimulation->ResultDesc;
+            }
+
+            if (isset($stkPushSimulation->ResponseCode) && 0 == $stkPushSimulation->ResponseCode) {
+                $json['processed'] = true;
+            } else {
+                $json['processed'] = false;
+            }
+        } else {
+            $json['processed'] = true;
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
 }
