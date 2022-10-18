@@ -615,7 +615,9 @@ class ControllerAccountCredit extends Controller {
                 'name' => $this->customer->getFirstName() . ' ' . $this->customer->getLastName(),
                 'amount' => $this->request->post['amount'],
                 'result_code' => $stkPushSimulation->ResultCode,
-                'result_description' => $stkPushSimulation->ResultDesc
+                'result_description' => $stkPushSimulation->ResultDesc,
+                'merchant_request_id' => $stkPushSimulation->MerchantRequestID,
+                'checkout_request_id' => $stkPushSimulation->CheckoutRequestID
             ];
 
             $this->model_account_activity->addActivity('WALLET_TOPUP_MPESA_INITIALIZE', $activity_data);
@@ -630,12 +632,14 @@ class ControllerAccountCredit extends Controller {
             }
 
             if (isset($stkPushSimulation->ResponseCode) && 0 == $stkPushSimulation->ResponseCode) {
+                $json['checkout_request_id'] = $stkPushSimulation->CheckoutRequestID;
+                $json['merchant_request_id'] = $stkPushSimulation->MerchantRequestID;
                 $json['processed'] = true;
             } else {
+                $json['checkout_request_id'] = '';
+                $json['merchant_request_id'] = '';
                 $json['processed'] = false;
             }
-        } else {
-            $json['processed'] = true;
         }
 
         $this->response->addHeader('Content-Type: application/json');
