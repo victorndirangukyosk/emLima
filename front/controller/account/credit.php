@@ -607,6 +607,20 @@ class ControllerAccountCredit extends Controller {
 
             $json['response'] = $stkPushSimulation;
             $json['error'] = '';
+
+            // Add to activity log
+            $this->load->model('account/activity');
+            $activity_data = [
+                'customer_id' => $this->customer->getId(),
+                'name' => $this->customer->getFirstName() . ' ' . $this->customer->getLastName(),
+                'amount' => $this->request->post['amount'],
+                'result_code' => $stkPushSimulation->ResultCode,
+                'result_description' => $stkPushSimulation->ResultDesc
+            ];
+
+            $this->model_account_activity->addActivity('WALLET_TOPUP_MPESA_INITIALIZE', $activity_data);
+            // Add to activity log
+
             if (isset($json['response']->errorMessage)) {
                 $json['error'] = $json['response']->errorMessage;
             }
