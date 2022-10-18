@@ -392,7 +392,7 @@ __kdt.push({"post_on_load": false});
             if($('#mpesa_phone_number').val().length >= 9) {
                 $.ajax({
                         type: 'post',
-                        url: 'index.php?path=payment/mpesa/confirmtransaction',
+                        url: 'index.php?path=account/credit/confirmtransaction',
                         data: { 
                         mobile : encodeURIComponent($('#mpesa_phone_number').val()),
                         order_id: null,
@@ -473,7 +473,7 @@ __kdt.push({"post_on_load": false});
 
         $.ajax({
                 type: 'post',
-                url: 'index.php?path=payment/mpesa/completetransaction',
+                url: 'index.php?path=account/credit/completetransaction',
             dataType: 'json',
                 cache: false,
                 data: { 

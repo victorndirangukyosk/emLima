@@ -558,4 +558,171 @@ class ControllerAccountCredit extends Controller {
         }
     }
 
+    public function confirmtransaction() {
+        $log = new Log('error.log');
+        $json['processed'] = false;
+
+        if ('mpesa' == $this->request->post['payment_method']) {
+            $this->load->language('payment/mpesa');
+            $this->load->model('payment/mpesa');
+            $this->load->model('checkout/order');
+
+            $log->write($this->request->post['mobile']);
+            $log->write($this->request->post['order_id']);
+            $log->write($this->request->post['amount']);
+            $log->write($this->request->post['payment_type']);
+            $log->write($this->request->post['payment_method']);
+
+            $live = 'true';
+            $mpesa = new \Safaricom\Mpesa\Mpesa($this->config->get('mpesa_customer_key'), $this->config->get('mpesa_customer_secret'), $this->config->get('mpesa_environment'), $live);
+            $sta = false;
+            $log->write('STKPushSimulation confirm for wallet topup from mpesa');
+            $log->write($sta);
+
+            if (!$sta) {
+                $PartyA = $this->config->get('config_telephone_code') . '' . $this->request->post['mobile'];
+
+                $BusinessShortCode = $this->config->get('mpesa_business_short_code');
+                $LipaNaMpesaPasskey = $this->config->get('mpesa_lipanampesapasskey');
+                $TransactionType = 'CustomerPayBillOnline'; //'CustomerBuyGoodsOnline';
+
+                $CallBackURL = $this->url->link('deliversystem/deliversystem/mpesaOrderStatus', '', 'SSL');
+                $Amount = $this->request->post['amount'];
+                $PartyB = $this->config->get('mpesa_business_short_code');
+
+                $PhoneNumber = $this->config->get('config_telephone_code') . '' . $this->request->post['mobile'];
+                $AccountReference = $this->customer->getId() . 'WALLET_TOPUP'; //$this->config->get('config_name');
+                $TransactionDesc = $this->customer->getId() . 'WALLET_TOPUP';
+                $Remarks = 'PAYMENT';
+            }
+
+            $log->write($BusinessShortCode . 'x' . $LipaNaMpesaPasskey . 'x' . $TransactionType . 'amount' . $Amount . 'x' . $PartyA . 'x' . $PartyB . 'x' . $PhoneNumber . 'x' . $CallBackURL . 'x' . $AccountReference . 'x' . $TransactionDesc . 'x' . $Remarks);
+            $stkPushSimulation = $mpesa->STKPushSimulation($BusinessShortCode, $LipaNaMpesaPasskey, $TransactionType, $Amount, $PartyA, $PartyB, $PhoneNumber, $CallBackURL, $AccountReference, $TransactionDesc, $Remarks);
+
+            $log->write('STKPushSimulation');
+            $log->write($stkPushSimulation);
+
+            $stkPushSimulation = json_decode($stkPushSimulation);
+
+            $json['response'] = $stkPushSimulation;
+            $json['error'] = '';
+
+            // Add to activity log
+            $this->load->model('account/activity');
+            $activity_data = [
+                'customer_id' => $this->customer->getId(),
+                'name' => $this->customer->getFirstName() . ' ' . $this->customer->getLastName(),
+                'amount' => $this->request->post['amount'],
+                'result_code' => $stkPushSimulation->ResultCode,
+                'result_description' => $stkPushSimulation->ResultDesc
+            ];
+
+            $this->model_account_activity->addActivity('WALLET_TOPUP_MPESA_INITIALIZE', $activity_data);
+            // Add to activity log
+
+            if (isset($json['response']->errorMessage)) {
+                $json['error'] = $json['response']->errorMessage;
+            }
+
+            if (isset($stkPushSimulation->ResultCode) && 0 != $stkPushSimulation->ResultCode && $stkPushSimulation->ResultDesc != NULL) {
+                $json['error'] = $json['error'] . ' ' . $stkPushSimulation->ResultDesc;
+            }
+
+            if (isset($stkPushSimulation->ResponseCode) && 0 == $stkPushSimulation->ResponseCode) {
+                $json['processed'] = true;
+            } else {
+                $json['processed'] = false;
+            }
+        } else {
+            $json['processed'] = true;
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function completetransaction() {
+        $log = new Log('error.log');
+        $json['processed'] = false;
+        $json['status'] = false;
+
+        $json['error'] = 'Transaction Failed. Please Try again.';
+
+        if ('mpesa' == $this->request->post['payment_method']) {
+            $this->load->language('payment/mpesa');
+            $this->load->model('payment/mpesa');
+            $this->load->model('checkout/order');
+            $this->load->model('account/customer');
+
+            $amount = 0;
+            $amount = $this->request->post['amount'];
+
+            // for topup $this->request->post['order_id'] will be null
+            if ($this->request->post['payment_type'] == 'topup') {
+
+                $mpesaDetails = $this->model_payment_mpesa->getMpesaByCustomerId($this->customer->getId());
+                $log->write('GET CUSTOMER RECENT MPESA REQUESTS');
+                $log->write($mpesaDetails);
+                $log->write('GET CUSTOMER RECENT MPESA REQUESTS');
+
+                $live = true;
+
+                $mpesa = new \Safaricom\Mpesa\Mpesa($this->config->get('mpesa_customer_key'), $this->config->get('mpesa_customer_secret'), $this->config->get('mpesa_environment'), $live);
+                $customer_id = $this->customer->getId();
+                $amount_topup = $this->request->post['amount'];
+                if ($mpesaDetails) {
+
+                    $BusinessShortCode = $this->config->get('mpesa_business_short_code');
+                    $LipaNaMpesaPasskey = $this->config->get('mpesa_lipanampesapasskey');
+
+                    $checkoutRequestID = $mpesaDetails['checkout_request_id']; //'ws_CO_28032018142406660';
+                    $timestamp = '20' . date('ymdhis');
+                    $password = base64_encode($BusinessShortCode . $LipaNaMpesaPasskey . $timestamp);
+
+                    $stkPushSimulation = $mpesa->STKPushQuery($live, $checkoutRequestID, $BusinessShortCode, $password, $timestamp);
+
+                    // Void the order first
+                    $log->write('STKPushSimulation WALLET');
+                    $log->write($stkPushSimulation);
+
+                    $stkPushSimulation = json_decode($stkPushSimulation);
+                    $log->write('STKPushSimulation WALLET JSON ARRAY');
+                    $log->write($stkPushSimulation);
+                    if (isset($stkPushSimulation->ResultCode) && 0 != $stkPushSimulation->ResultCode && $stkPushSimulation->ResultDesc != NULL) {
+                        $json['error'] = $json['error'] . ' ' . $stkPushSimulation->ResultDesc;
+                    }
+
+                    if (isset($stkPushSimulation->ResultCode) && 0 == $stkPushSimulation->ResultCode) {
+
+                        //SKIPPNG HERE UPDATING CheckoutRequestID..BUT WE NEED TO UPDATE RECEIPT NUMBER
+                        //success pending to processing
+                        $order_status_id = $this->config->get('mpesa_order_status_id');
+                        $log->write('Merchant request ID previous');
+                        $log->write($mpesaDetails['request_id']);
+
+                        $log->write('Merchant request ID after confirm');
+                        $log->write($stkPushSimulation->MerchantRequestID);
+
+                        $log->write('Checkout request ID previous');
+                        $log->write($mpesaDetails['checkout_request_id']);
+
+                        $log->write('Checkout request ID after confirm');
+                        $log->write($stkPushSimulation->CheckoutRequestID);
+
+                        $transaction_details = $this->model_payment_mpesa->getCustomerTransactionDetailsByMerchantRequestId($mpesaDetails['request_id']);
+                        if (is_array($transaction_details) && count($transaction_details) <= 0) {
+                            $this->model_payment_mpesa->insertCustomerTransactionId($mpesaDetails['customer_id'], $stkPushSimulation->CheckoutRequestID, $stkPushSimulation->MerchantRequestID, $amount_topup);
+                        }
+
+                        $this->model_payment_mpesa->addCustomerHistoryTransaction($customer_id, $this->config->get('mpesa_order_status_id'), $amount_topup, 'mPesa Online', 'mpesa', $stkPushSimulation->MerchantRequestID);
+                        $json['status'] = true;
+                        $json['redirect'] = $this->url->link('account/credit');
+                    }
+                }
+            }
+        }
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
 }
