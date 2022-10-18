@@ -701,7 +701,6 @@ class ControllerAccountCredit extends Controller {
 
                         //SKIPPNG HERE UPDATING CheckoutRequestID..BUT WE NEED TO UPDATE RECEIPT NUMBER
                         //success pending to processing
-                        $order_status_id = $this->config->get('mpesa_order_status_id');
                         $log->write('Merchant request ID previous');
                         $log->write($mpesaDetails['request_id']);
 
