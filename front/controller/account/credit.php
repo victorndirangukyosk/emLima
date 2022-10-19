@@ -751,11 +751,13 @@ class ControllerAccountCredit extends Controller {
         $log->write('STKPushSimulation WALLET JSON ARRAY');
         $log->write($stkPushSimulation);
 
-        if ($stkPushSimulation->ResultCode == 0) {
+        if ($stkPushSimulation->ResponseCode == 0) {
             $json['processed'] = true;
+            $json['description'] = $stkPushSimulation->ResponseDescription;
             $json['redirect'] = $this->url->link('account/credit');
         } else {
             $json['processed'] = false;
+            $json['description'] = $stkPushSimulation->ResponseDescription;
         }
 
         $json = $stkPushSimulation;
