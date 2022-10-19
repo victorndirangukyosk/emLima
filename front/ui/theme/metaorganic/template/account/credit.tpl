@@ -531,7 +531,7 @@ function mpesaresponse() {
                 if($('#mpesa_checkout_request_id').val() != '') {
                 $.ajax({
                         type: 'post',
-                        url: 'index.php?path=payment/mpesa/mpesatopupautoupdate',
+                        url: 'index.php?path=account/credit/mpesatopupautoupdate',
                         data: { 
                         mpesa_checkout_request_id : encodeURIComponent($('#mpesa_checkout_request_id').val()),
                         },
@@ -556,10 +556,6 @@ function mpesaresponse() {
                         $('#mpesa_checkout_request_id').val('');
                         $('#success_msg').html('Processing ,Please wait');
                         $('#success_msg').hide();
-                        //$('#error_msg').html(' ');
-                        //$('#error_msg').show();
-                        //$('#button-complete').hide();
-                        //$('#button-retry').show();
                         return false;
                         }
                         if(json['processed'] == '') {

@@ -729,4 +729,30 @@ class ControllerAccountCredit extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
+    public function mpesatopupautoupdate() {
+
+        $log = new Log('error.log');
+        $live = true;
+        $mpesa = new \Safaricom\Mpesa\Mpesa($this->config->get('mpesa_customer_key'), $this->config->get('mpesa_customer_secret'), $this->config->get('mpesa_environment'), $live);
+
+        $BusinessShortCode = $this->config->get('mpesa_business_short_code');
+        $LipaNaMpesaPasskey = $this->config->get('mpesa_lipanampesapasskey');
+
+        $checkoutRequestID = $this->request->post['mpesa_checkout_request_id'];
+        $timestamp = '20' . date('ymdhis');
+        $password = base64_encode($BusinessShortCode . $LipaNaMpesaPasskey . $timestamp);
+
+        $stkPushSimulation = $mpesa->STKPushQuery($live, $checkoutRequestID, $BusinessShortCode, $password, $timestamp);
+        // Void the order first
+        $log->write('STKPushSimulation WALLET');
+        $log->write($stkPushSimulation);
+
+        $stkPushSimulation = json_decode($stkPushSimulation);
+        $log->write('STKPushSimulation WALLET JSON ARRAY');
+        $log->write($stkPushSimulation);
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
 }
