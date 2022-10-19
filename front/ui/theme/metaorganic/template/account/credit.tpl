@@ -557,6 +557,7 @@ function mpesaresponse() {
                         $('#success_msg').html('Processing ,Please wait');
                         $('#success_msg').hide();
                         $('#error_msg').html(json['description']);
+                        $('#button-retry').show();
                         return false;
                         }
                         if(json['processed'] == '') {
