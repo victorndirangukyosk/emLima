@@ -587,7 +587,7 @@ class ControllerAccountCredit extends Controller {
                 $LipaNaMpesaPasskey = $this->config->get('mpesa_lipanampesapasskey');
                 $TransactionType = 'CustomerPayBillOnline'; //'CustomerBuyGoodsOnline';
 
-                $CallBackURL = $this->url->link('deliversystem/deliversystem/mpesaOrderStatus', '', 'SSL');
+                $CallBackURL = $this->url->link('deliversystem/deliversystem/mpesaWalletStatus', '', 'SSL');
                 $Amount = $this->request->post['amount'];
                 $PartyB = $this->config->get('mpesa_business_short_code');
 
@@ -632,6 +632,7 @@ class ControllerAccountCredit extends Controller {
             }
 
             if (isset($stkPushSimulation->ResponseCode) && 0 == $stkPushSimulation->ResponseCode) {
+                $this->model_payment_mpesa->insertCustomerTransactionId($this->customer->getId(), $stkPushSimulation->CheckoutRequestID, $stkPushSimulation->MerchantRequestID, $this->request->post['amount']);
                 $json['checkout_request_id'] = $stkPushSimulation->CheckoutRequestID;
                 $json['merchant_request_id'] = $stkPushSimulation->MerchantRequestID;
                 $json['processed'] = true;
@@ -665,7 +666,7 @@ class ControllerAccountCredit extends Controller {
             // for topup $this->request->post['order_id'] will be null
             if ($this->request->post['payment_type'] == 'topup') {
 
-                $mpesaDetails = $this->model_payment_mpesa->getMpesaByCustomerId($this->customer->getId());
+                $mpesaDetails = $this->model_payment_mpesa->getMpesaWalletByCustomerId($this->customer->getId(), $this->request->post['mpesa_checkout_request_id']);
                 $log->write('GET CUSTOMER RECENT MPESA REQUESTS');
                 $log->write($mpesaDetails);
                 $log->write('GET CUSTOMER RECENT MPESA REQUESTS');
@@ -694,6 +695,7 @@ class ControllerAccountCredit extends Controller {
                     $log->write('STKPushSimulation WALLET JSON ARRAY');
                     $log->write($stkPushSimulation);
                     if (isset($stkPushSimulation->ResultCode) && 0 != $stkPushSimulation->ResultCode && $stkPushSimulation->ResultDesc != NULL) {
+                        $json['status'] = false;
                         $json['error'] = $json['error'] . ' ' . $stkPushSimulation->ResultDesc;
                     }
 
@@ -701,24 +703,8 @@ class ControllerAccountCredit extends Controller {
 
                         //SKIPPNG HERE UPDATING CheckoutRequestID..BUT WE NEED TO UPDATE RECEIPT NUMBER
                         //success pending to processing
-                        $log->write('Merchant request ID previous');
-                        $log->write($mpesaDetails['request_id']);
-
-                        $log->write('Merchant request ID after confirm');
-                        $log->write($stkPushSimulation->MerchantRequestID);
-
-                        $log->write('Checkout request ID previous');
-                        $log->write($mpesaDetails['checkout_request_id']);
-
-                        $log->write('Checkout request ID after confirm');
-                        $log->write($stkPushSimulation->CheckoutRequestID);
-
-                        $transaction_details = $this->model_payment_mpesa->getCustomerTransactionDetailsByMerchantRequestId($mpesaDetails['request_id']);
-                        if (is_array($transaction_details) && count($transaction_details) <= 0) {
-                            $this->model_payment_mpesa->insertCustomerTransactionId($mpesaDetails['customer_id'], $stkPushSimulation->CheckoutRequestID, $stkPushSimulation->MerchantRequestID, $amount_topup);
-                        }
-
-                        $this->model_payment_mpesa->addCustomerHistoryTransaction($customer_id, $this->config->get('mpesa_order_status_id'), $amount_topup, 'mPesa Online', 'mpesa', $stkPushSimulation->MerchantRequestID);
+                        //$this->model_payment_mpesa->updateOrderTransactionId($mpesa_receipt_number, $stkPushSimulation->MerchantRequestID, $stkPushSimulation->CheckoutRequestID, 0);
+                        //$this->model_payment_mpesa->addCustomerHistoryTransaction($customer_id, $this->config->get('mpesa_order_status_id'), $amount_topup, 'mPesa Online', 'mpesa', $stkPushSimulation->MerchantRequestID);
                         $json['status'] = true;
                         $json['redirect'] = $this->url->link('account/credit');
                     }
