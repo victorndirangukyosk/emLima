@@ -556,7 +556,8 @@ function mpesaresponse() {
                         $('#mpesa_checkout_request_id').val('');
                         $('#success_msg').html('Processing ,Please wait');
                         $('#success_msg').hide();
-                        $('#error_msg').html(json['description']);
+                        $('#error_msg').html(json['response']['ResultDesc']);
+                        $('#mpesa-button-confirm').hide();
                         $('#button-retry').show();
                         return false;
                         }
