@@ -754,7 +754,7 @@ class ControllerAccountCredit extends Controller {
 
         //$json = $stkPushSimulation;
 
-        if ($stkPushSimulation['ResponseCode'] == 0) {
+        if ($stkPushSimulation['ResultCode'] == 0) {
             $json['processed'] = true;
             $json['description'] = $stkPushSimulation['ResponseDescription'];
             $json['redirect'] = $this->url->link('account/credit');
