@@ -750,6 +750,7 @@ class ControllerAccountCredit extends Controller {
         $stkPushSimulation = json_decode($stkPushSimulation, true);
         $log->write('STKPushSimulation WALLET JSON ARRAY');
         $log->write($stkPushSimulation);
+        $log->write($stkPushSimulation['ResultDesc']);
 
         if ($stkPushSimulation['ResponseCode'] == 0) {
             $json['processed'] = true;
