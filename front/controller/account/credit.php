@@ -747,7 +747,7 @@ class ControllerAccountCredit extends Controller {
         $log->write('STKPushSimulation WALLET');
         $log->write($stkPushSimulation);
 
-        $stkPushSimulation = json_decode($stkPushSimulation);
+        $stkPushSimulation = json_decode($stkPushSimulation, true);
         $log->write('STKPushSimulation WALLET JSON ARRAY');
         $log->write($stkPushSimulation);
 
