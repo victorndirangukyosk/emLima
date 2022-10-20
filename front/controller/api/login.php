@@ -232,6 +232,8 @@ class ControllerApiLogin extends Controller {
             unset($this->session->data['vouchers']);
             unset($this->session->data['adminlogin']);
             unset($this->session->data['add_delivery_charges']);
+            unset($this->session->data['delivery_charges_value']);
+
 
             $api_info= $customer_info = $this->model_account_customer->getCustomerByToken($token);
 
