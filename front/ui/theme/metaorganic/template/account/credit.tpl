@@ -372,9 +372,8 @@ __kdt.push({"post_on_load": false});
         $('#mpesa-button-confirm,#button-retry').on('click', function() {
 	    
             $('#loading').show();
-
             $('#error_msg').hide();
-            
+            $("input[name='amount_topup']").attr("disabled","disabled");
             //var radioValue = $("input[name='pay_option']:checked").val();
             var total_amount = $("input[name='amount_topup']").val();
             console.log(total_amount);
@@ -415,7 +414,7 @@ __kdt.push({"post_on_load": false});
                                 console.log('json mpesa');
 
                                 $('#mpesa-button-confirm').button('reset');
-                            $('#loading').hide();
+                                $('#loading').hide();
 
                                 if(json['processed']) {
                                         //location = '<?php echo $continue; ?>';
