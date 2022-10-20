@@ -754,7 +754,7 @@ class ControllerAccountCredit extends Controller {
 
                     if ($ResultCode != 0) {
                         $json['status'] = false;
-                        $json['error'] = $json['error'] . ' ' . $ResponseDescription;
+                        $json['error'] = $json['error'];
                     }
 
                     if ($ResultCode == 0) {
