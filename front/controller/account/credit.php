@@ -603,22 +603,22 @@ class ControllerAccountCredit extends Controller {
             $log->write('STKPushSimulation');
             $log->write($stkPushSimulation);
 
-            $stkPushSimulation = json_decode($stkPushSimulation);
-
             // Add to activity log
             $this->load->model('account/activity');
             $activity_data = [
                 'customer_id' => $this->customer->getId(),
                 'name' => $this->customer->getFirstName() . ' ' . $this->customer->getLastName(),
                 'amount' => $this->request->post['amount'],
-                'result_code' => $stkPushSimulation->ResultCode,
-                'result_description' => $stkPushSimulation->ResultDesc,
+                'result_code' => $stkPushSimulation->ResponseCode,
+                'result_description' => $stkPushSimulation->ResponseDescription,
                 'merchant_request_id' => $stkPushSimulation->MerchantRequestID,
                 'checkout_request_id' => $stkPushSimulation->CheckoutRequestID
             ];
 
             $this->model_account_activity->addActivity('WALLET_TOPUP_MPESA_INITIALIZE', $activity_data);
             // Add to activity log
+
+            $stkPushSimulation = json_decode($stkPushSimulation);
 
             $json['response'] = $stkPushSimulation;
             $json['error'] = '';
@@ -627,8 +627,8 @@ class ControllerAccountCredit extends Controller {
                 $json['error'] = $json['response']->errorMessage;
             }
 
-            if (isset($stkPushSimulation->ResultCode) && 0 != $stkPushSimulation->ResultCode && $stkPushSimulation->ResultDesc != NULL) {
-                $json['error'] = $json['error'] . ' ' . $stkPushSimulation->ResultDesc;
+            if (isset($stkPushSimulation->ResponseCode) && 0 != $stkPushSimulation->ResponseCode && $stkPushSimulation->ResponseCode != NULL) {
+                $json['error'] = $json['error'] . ' ' . $stkPushSimulation->ResponseDescription;
             }
 
             if (isset($stkPushSimulation->ResponseCode) && 0 == $stkPushSimulation->ResponseCode) {
