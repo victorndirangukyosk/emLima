@@ -194,7 +194,7 @@ class ModelPaymentMpesa extends Model {
 
     public function getMpesaWalletByCustomerId($customer_id, $mpesa_checkout_request_id) {
         //$result = $this->db->query('SELECT * FROM `' . DB_PREFIX . "order_transaction_id` WHERE `order_id` = 0 and customer_id='" . $this->db->escape($customer_id) . "' and checkout_request_id='" . $mpesa_checkout_request_id . "' order by created_at asc");
-        $result = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer_contact WHERE checkout_request_id = '" . $this->db->escape($mpesa_checkout_request_id) . "'");
+        $result = $this->db->query('SELECT * FROM ' . DB_PREFIX . "order_transaction_id WHERE checkout_request_id = '" . $this->db->escape($mpesa_checkout_request_id) . "'");
 
         $log = new Log('error.log');
 
