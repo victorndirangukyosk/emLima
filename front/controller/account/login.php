@@ -49,6 +49,7 @@ class ControllerAccountLogin extends Controller {
             unset($this->session->data['pezesha_amount_limit']);
             unset($this->session->data['pezesha_customer_amount_limit']);
             unset($this->session->data['add_delivery_charges']);
+            unset($this->session->data['delivery_charges_value']);
             unset($this->session->data['price_drop_seen']);
             setcookie('po_number', null, -1, '/');
 
@@ -776,6 +777,7 @@ class ControllerAccountLogin extends Controller {
             unset($this->session->data['adminlogin']);
             unset($this->session->data['adminlogin_id']);
             unset($this->session->data['add_delivery_charges']);
+            unset($this->session->data['delivery_charges_value']);
             unset($this->session->data['price_drop_seen']);
             setcookie('po_number', null, -1, '/');
 
@@ -993,6 +995,7 @@ class ControllerAccountLogin extends Controller {
             unset($this->session->data['vouchers']);
             unset($this->session->data['adminlogin']);
             unset($this->session->data['add_delivery_charges']);
+            unset($this->session->data['delivery_charges_value']);
             unset($this->session->data['price_drop_seen']);
 
             $api_info = $customer_info = $this->model_account_customer->getCustomerByToken($token);
