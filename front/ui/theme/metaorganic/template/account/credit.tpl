@@ -411,24 +411,17 @@ __kdt.push({"post_on_load": false});
                             $(".overlayed").hide();
                         },      
                         success: function(json) {
-
                                 console.log(json);
                                 console.log('json mpesa');
-
                                 $('#mpesa-button-confirm').button('reset');
                                 $('#loading').hide();
-
                                 if(json['processed']) {
                                         //location = '<?php echo $continue; ?>';
-		        		
                                         //$('#success_msg').html('A payment request has been sent to the mpesa number '+$('#mpesa_phone_number').val()+'. Please wait for a few seconds then check for your phone for an MPESA PIN entry prompt.');
-
                                         $('#success_msg').html('A payment request has been sent on your above number. Please make the payment by entering mpesa PIN and click on Confirm Payment button after receiving sms from mpesa');
 		        		$('#mpesa_checkout_request_id').val(json['checkout_request_id']);
                                         $('#success_msg').show();
-		        		
                                         $('#button-complete').show();
-
                                         console.log('json mpesa1');
                                         $('#mpesa-button-confirm').hide();
                                         $('#button-retry').hide();
@@ -458,7 +451,8 @@ __kdt.push({"post_on_load": false});
         $('#button-complete').on('click', function() {
 	    
             $('#error_msg').hide();
-            $('#success_msg').hide();        
+            $('#success_msg').hide();      
+            $('#mpesa_checkout_request_id').val('');
             //var radioValue = $("input[name='pay_option']:checked").val();
             
             var total_amount = $("input[name='amount_topup']").val();
