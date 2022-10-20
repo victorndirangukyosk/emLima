@@ -364,8 +364,10 @@ __kdt.push({"post_on_load": false});
             console.log("referfxx");
             if($(this).val().length >= 9) {
                 $( "#mpesa-button-confirm" ).prop( "disabled", false );
+                $( "#button-retry" ).prop( "disabled", false );
             } else {
                 $( "#mpesa-button-confirm" ).prop( "disabled", true );
+                $( "#button-retry" ).prop( "disabled", true );
             }
         });
 
@@ -373,7 +375,7 @@ __kdt.push({"post_on_load": false});
 	    
             $('#loading').show();
             $('#error_msg').hide();
-            $("input[name='amount_topup']").attr("disabled","disabled");
+            $("input[name='amount_topup']").prop( "disabled", true );
             //var radioValue = $("input[name='pay_option']:checked").val();
             var total_amount = $("input[name='amount_topup']").val();
             console.log(total_amount);
@@ -435,6 +437,7 @@ __kdt.push({"post_on_load": false});
                                 } else {
                                         console.log('json mpesa err');
                                         console.log(json['error']);
+                                        $("input[name='amount_topup']").prop( "disabled", false);
                                         $('#error_msg').html(json['error']);
                                         $('#error_msg').show();
                                 }
