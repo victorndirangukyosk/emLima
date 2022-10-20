@@ -603,6 +603,8 @@ class ControllerAccountCredit extends Controller {
             $log->write('STKPushSimulation');
             $log->write($stkPushSimulation);
 
+            $stkPushSimulation = json_decode($stkPushSimulation);
+
             // Add to activity log
             $this->load->model('account/activity');
             $activity_data = [
@@ -617,8 +619,6 @@ class ControllerAccountCredit extends Controller {
 
             $this->model_account_activity->addActivity('WALLET_TOPUP_MPESA_INITIALIZE', $activity_data);
             // Add to activity log
-
-            $stkPushSimulation = json_decode($stkPushSimulation);
 
             $json['response'] = $stkPushSimulation;
             $json['error'] = '';
