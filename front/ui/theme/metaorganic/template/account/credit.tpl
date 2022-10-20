@@ -535,6 +535,7 @@ function mpesaresponse() {
                         url: 'index.php?path=account/credit/mpesatopupautoupdate',
                         data: { 
                         mpesa_checkout_request_id : encodeURIComponent($('#mpesa_checkout_request_id').val()),
+                        amount_topup : encodeURIComponent($('#amount_topup').val()),
                         },
                         dataType: 'json',
                         cache: false,
