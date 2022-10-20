@@ -474,7 +474,6 @@ __kdt.push({"post_on_load": false});
                 data: { 
                         mobile : encodeURIComponent($('#mpesa_phone_number').val()),
                         mpesa_checkout_request_id : encodeURIComponent($('#mpesa_checkout_request_id').val()),
-                        order_id: null,
                         amount: total,
                         payment_type: radioValue,
                         payment_method : 'mpesa'
