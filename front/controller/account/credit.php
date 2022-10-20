@@ -603,6 +603,8 @@ class ControllerAccountCredit extends Controller {
             $log->write('STKPushSimulation');
             $log->write($stkPushSimulation);
 
+            $stkPushSimulation = json_decode($stkPushSimulation);
+
             // Add to activity log
             $this->load->model('account/activity');
             $activity_data = [
@@ -617,8 +619,6 @@ class ControllerAccountCredit extends Controller {
 
             $this->model_account_activity->addActivity('WALLET_TOPUP_MPESA_INITIALIZE', $activity_data);
             // Add to activity log
-
-            $stkPushSimulation = json_decode($stkPushSimulation);
 
             $json['response'] = $stkPushSimulation;
             $json['error'] = '';
@@ -838,6 +838,8 @@ class ControllerAccountCredit extends Controller {
         }
 
         if ($ResultCode == 0) {
+
+            $this->load->model('payment/mpesa');
 
             $this->model_payment_mpesa->addupdateOrderTransactionId($this->customer->getId(), $mpesa_receipt_number, $MerchantRequestID, $CheckoutRequestID, 0, $amount_topup);
             $this->model_payment_mpesa->addCustomerHistoryTransaction($this->customer->getId(), $this->config->get('mpesa_order_status_id'), $amount_topup, 'mPesa Online', 'mpesa', $mpesa_receipt_number);
