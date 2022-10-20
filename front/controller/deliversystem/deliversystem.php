@@ -747,6 +747,17 @@ class ControllerDeliversystemDeliversystem extends Controller {
         return $response;
     }
 
+    public function mpesaWalletStatus() {
+
+        $log = new Log('error.log');
+        $postData = file_get_contents('php://input');
+        $log->write('mpesaWalletStatus');
+        $log->write($postData);
+        $postData = json_decode($postData, true);
+        $stkCallback = $postData->Body;
+        $log->write($stkCallback);
+    }
+
     public function mpesaOrderStatus() {
         $response['status'] = false;
 

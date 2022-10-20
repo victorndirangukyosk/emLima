@@ -423,7 +423,7 @@ __kdt.push({"post_on_load": false});
                                         //$('#success_msg').html('A payment request has been sent to the mpesa number '+$('#mpesa_phone_number').val()+'. Please wait for a few seconds then check for your phone for an MPESA PIN entry prompt.');
 
                                         $('#success_msg').html('A payment request has been sent on your above number. Please make the payment by entering mpesa PIN and click on Confirm Payment button after receiving sms from mpesa');
-		        		$('#mpesa_checkout_request_id').val(json['response'].CheckoutRequestID);
+		        		$('#mpesa_checkout_request_id').val(json['checkout_request_id']);
                                         $('#success_msg').show();
 		        		
                                         $('#button-complete').show();
@@ -478,6 +478,7 @@ __kdt.push({"post_on_load": false});
                 cache: false,
                 data: { 
                         mobile : encodeURIComponent($('#mpesa_phone_number').val()),
+                        mpesa_checkout_request_id : encodeURIComponent($('#mpesa_checkout_request_id').val()),
                         order_id: null,
                         amount: total,
                         payment_type: radioValue,
@@ -534,6 +535,7 @@ function mpesaresponse() {
                         url: 'index.php?path=account/credit/mpesatopupautoupdate',
                         data: { 
                         mpesa_checkout_request_id : encodeURIComponent($('#mpesa_checkout_request_id').val()),
+                        amount_topup : encodeURIComponent($('#amount_topup').val()),
                         },
                         dataType: 'json',
                         cache: false,

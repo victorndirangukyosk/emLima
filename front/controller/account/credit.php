@@ -587,7 +587,7 @@ class ControllerAccountCredit extends Controller {
                 $LipaNaMpesaPasskey = $this->config->get('mpesa_lipanampesapasskey');
                 $TransactionType = 'CustomerPayBillOnline'; //'CustomerBuyGoodsOnline';
 
-                $CallBackURL = $this->url->link('deliversystem/deliversystem/mpesaOrderStatus', '', 'SSL');
+                $CallBackURL = $this->url->link('deliversystem/deliversystem/mpesaWalletStatus', '', 'SSL');
                 $Amount = $this->request->post['amount'];
                 $PartyB = $this->config->get('mpesa_business_short_code');
 
@@ -602,11 +602,6 @@ class ControllerAccountCredit extends Controller {
 
             $log->write('STKPushSimulation');
             $log->write($stkPushSimulation);
-
-            $stkPushSimulation = json_decode($stkPushSimulation);
-
-            $json['response'] = $stkPushSimulation;
-            $json['error'] = '';
 
             // Add to activity log
             $this->load->model('account/activity');
@@ -623,6 +618,11 @@ class ControllerAccountCredit extends Controller {
             $this->model_account_activity->addActivity('WALLET_TOPUP_MPESA_INITIALIZE', $activity_data);
             // Add to activity log
 
+            $stkPushSimulation = json_decode($stkPushSimulation);
+
+            $json['response'] = $stkPushSimulation;
+            $json['error'] = '';
+
             if (isset($json['response']->errorMessage)) {
                 $json['error'] = $json['response']->errorMessage;
             }
@@ -632,6 +632,7 @@ class ControllerAccountCredit extends Controller {
             }
 
             if (isset($stkPushSimulation->ResponseCode) && 0 == $stkPushSimulation->ResponseCode) {
+                $this->model_payment_mpesa->insertCustomerTransactionId($this->customer->getId(), $stkPushSimulation->CheckoutRequestID, $stkPushSimulation->MerchantRequestID, $this->request->post['amount']);
                 $json['checkout_request_id'] = $stkPushSimulation->CheckoutRequestID;
                 $json['merchant_request_id'] = $stkPushSimulation->MerchantRequestID;
                 $json['processed'] = true;
@@ -665,7 +666,7 @@ class ControllerAccountCredit extends Controller {
             // for topup $this->request->post['order_id'] will be null
             if ($this->request->post['payment_type'] == 'topup') {
 
-                $mpesaDetails = $this->model_payment_mpesa->getMpesaByCustomerId($this->customer->getId());
+                $mpesaDetails = $this->model_payment_mpesa->getMpesaWalletByCustomerId($this->customer->getId(), $this->request->post['mpesa_checkout_request_id']);
                 $log->write('GET CUSTOMER RECENT MPESA REQUESTS');
                 $log->write($mpesaDetails);
                 $log->write('GET CUSTOMER RECENT MPESA REQUESTS');
@@ -690,35 +691,68 @@ class ControllerAccountCredit extends Controller {
                     $log->write('STKPushSimulation WALLET');
                     $log->write($stkPushSimulation);
 
-                    $stkPushSimulation = json_decode($stkPushSimulation);
+                    $stkPushSimulation = json_decode($stkPushSimulation, true);
                     $log->write('STKPushSimulation WALLET JSON ARRAY');
                     $log->write($stkPushSimulation);
-                    if (isset($stkPushSimulation->ResultCode) && 0 != $stkPushSimulation->ResultCode && $stkPushSimulation->ResultDesc != NULL) {
-                        $json['error'] = $json['error'] . ' ' . $stkPushSimulation->ResultDesc;
+
+                    if (array_key_exists('MerchantRequestID', $stkPushSimulation)) {
+                        $MerchantRequestID = $stkPushSimulation['MerchantRequestID'];
                     }
 
-                    if (isset($stkPushSimulation->ResultCode) && 0 == $stkPushSimulation->ResultCode) {
+                    if (array_key_exists('Body', $stkPushSimulation) && array_key_exists('stkCallback', $stkPushSimulation['Body'])) {
+                        $MerchantRequestID = $stkPushSimulation['Body']['stkCallback']['MerchantRequestID'];
+                    }
 
-                        //SKIPPNG HERE UPDATING CheckoutRequestID..BUT WE NEED TO UPDATE RECEIPT NUMBER
-                        //success pending to processing
-                        $log->write('Merchant request ID previous');
-                        $log->write($mpesaDetails['request_id']);
+                    if (array_key_exists('CheckoutRequestID', $stkPushSimulation)) {
+                        $CheckoutRequestID = $stkPushSimulation['CheckoutRequestID'];
+                    }
 
-                        $log->write('Merchant request ID after confirm');
-                        $log->write($stkPushSimulation->MerchantRequestID);
+                    if (array_key_exists('Body', $stkPushSimulation) && array_key_exists('stkCallback', $stkPushSimulation['Body'])) {
+                        $CheckoutRequestID = $stkPushSimulation['Body']['stkCallback']['CheckoutRequestID'];
+                    }
 
-                        $log->write('Checkout request ID previous');
-                        $log->write($mpesaDetails['checkout_request_id']);
+                    if (array_key_exists('CheckoutRequestID', $stkPushSimulation)) {
+                        $mpesa_receipt_number = $stkPushSimulation['CheckoutRequestID'];
+                    }
 
-                        $log->write('Checkout request ID after confirm');
-                        $log->write($stkPushSimulation->CheckoutRequestID);
+                    if (array_key_exists('Body', $stkPushSimulation) && array_key_exists('stkCallback', $stkPushSimulation['Body']) && array_key_exists('CallbackMetadata', $stkPushSimulation['Body']['stkCallback'])) {
 
-                        $transaction_details = $this->model_payment_mpesa->getCustomerTransactionDetailsByMerchantRequestId($mpesaDetails['request_id']);
-                        if (is_array($transaction_details) && count($transaction_details) <= 0) {
-                            $this->model_payment_mpesa->insertCustomerTransactionId($mpesaDetails['customer_id'], $stkPushSimulation->CheckoutRequestID, $stkPushSimulation->MerchantRequestID, $amount_topup);
+                        foreach ($stkPushSimulation['Body']['stkCallback']['CallbackMetadata']['Item'] as $item) {
+                            if ($item['Name'] == 'MpesaReceiptNumber') {
+                                $mpesa_receipt_number = $item['Value'];
+                            }
                         }
+                        $mpesa_receipt_number = $stkPushSimulation['Body']['stkCallback']['CheckoutRequestID'];
+                    }
 
-                        $this->model_payment_mpesa->addCustomerHistoryTransaction($customer_id, $this->config->get('mpesa_order_status_id'), $amount_topup, 'mPesa Online', 'mpesa', $stkPushSimulation->MerchantRequestID);
+                    if (array_key_exists('ResponseCode', $stkPushSimulation)) {
+                        $ResponseCode = $stkPushSimulation['ResponseCode'];
+                    }
+
+                    if (array_key_exists('ResultCode', $stkPushSimulation)) {
+                        $ResultCode = $stkPushSimulation['ResultCode'];
+                    }
+
+                    if (array_key_exists('Body', $stkPushSimulation) && array_key_exists('stkCallback', $stkPushSimulation['Body'])) {
+                        $ResultCode = $stkPushSimulation['Body']['stkCallback']['ResultCode'];
+                    }
+
+                    if (array_key_exists('ResponseDescription', $stkPushSimulation)) {
+                        $ResponseDescription = $stkPushSimulation['ResponseDescription'];
+                    }
+
+                    if (array_key_exists('Body', $stkPushSimulation) && array_key_exists('stkCallback', $stkPushSimulation['Body']['stkCallback'])) {
+                        $ResponseDescription = $stkPushSimulation['Body']['stkCallback']['ResultDesc'];
+                    }
+
+                    if ($ResultCode != 0) {
+                        $json['status'] = false;
+                        $json['error'] = $json['error'] . ' ' . $ResponseDescription;
+                    }
+
+                    if ($ResultCode == 0) {
+                        $this->model_payment_mpesa->addupdateOrderTransactionId($this->customer->getId(), $mpesa_receipt_number, $MerchantRequestID, $CheckoutRequestID, 0, $amount_topup);
+                        $this->model_payment_mpesa->addCustomerHistoryTransaction($this->customer->getId(), $this->config->get('mpesa_order_status_id'), $amount_topup, 'mPesa Online', 'mpesa', $mpesa_receipt_number);
                         $json['status'] = true;
                         $json['redirect'] = $this->url->link('account/credit');
                     }
@@ -739,6 +773,7 @@ class ControllerAccountCredit extends Controller {
         $LipaNaMpesaPasskey = $this->config->get('mpesa_lipanampesapasskey');
 
         $checkoutRequestID = $this->request->post['mpesa_checkout_request_id'];
+        $amount_topup = $this->request->post['amount_topup'];
         $timestamp = '20' . date('ymdhis');
         $password = base64_encode($BusinessShortCode . $LipaNaMpesaPasskey . $timestamp);
 
@@ -752,16 +787,68 @@ class ControllerAccountCredit extends Controller {
         $log->write($stkPushSimulation);
         $log->write($stkPushSimulation['ResultDesc']);
 
-        //$json = $stkPushSimulation;
+        if (array_key_exists('MerchantRequestID', $stkPushSimulation)) {
+            $MerchantRequestID = $stkPushSimulation['MerchantRequestID'];
+        }
 
-        if ($stkPushSimulation['ResultCode'] == 0) {
+        if (array_key_exists('Body', $stkPushSimulation) && array_key_exists('stkCallback', $stkPushSimulation['Body'])) {
+            $MerchantRequestID = $stkPushSimulation['Body']['stkCallback']['MerchantRequestID'];
+        }
+
+        if (array_key_exists('CheckoutRequestID', $stkPushSimulation)) {
+            $CheckoutRequestID = $stkPushSimulation['CheckoutRequestID'];
+        }
+
+        if (array_key_exists('Body', $stkPushSimulation) && array_key_exists('stkCallback', $stkPushSimulation['Body'])) {
+            $CheckoutRequestID = $stkPushSimulation['Body']['stkCallback']['CheckoutRequestID'];
+        }
+
+        if (array_key_exists('CheckoutRequestID', $stkPushSimulation)) {
+            $mpesa_receipt_number = $stkPushSimulation['CheckoutRequestID'];
+        }
+
+        if (array_key_exists('Body', $stkPushSimulation) && array_key_exists('stkCallback', $stkPushSimulation['Body']) && array_key_exists('CallbackMetadata', $stkPushSimulation['Body']['stkCallback'])) {
+
+            foreach ($stkPushSimulation['Body']['stkCallback']['CallbackMetadata']['Item'] as $item) {
+                if ($item['Name'] == 'MpesaReceiptNumber') {
+                    $mpesa_receipt_number = $item['Value'];
+                }
+            }
+            $mpesa_receipt_number = $stkPushSimulation['Body']['stkCallback']['CheckoutRequestID'];
+        }
+
+        if (array_key_exists('ResponseCode', $stkPushSimulation)) {
+            $ResponseCode = $stkPushSimulation['ResponseCode'];
+        }
+
+        if (array_key_exists('ResultCode', $stkPushSimulation)) {
+            $ResultCode = $stkPushSimulation['ResultCode'];
+        }
+
+        if (array_key_exists('Body', $stkPushSimulation) && array_key_exists('stkCallback', $stkPushSimulation['Body'])) {
+            $ResultCode = $stkPushSimulation['Body']['stkCallback']['ResultCode'];
+        }
+
+        if (array_key_exists('ResponseDescription', $stkPushSimulation)) {
+            $ResponseDescription = $stkPushSimulation['ResponseDescription'];
+        }
+
+        if (array_key_exists('Body', $stkPushSimulation) && array_key_exists('stkCallback', $stkPushSimulation['Body']['stkCallback'])) {
+            $ResponseDescription = $stkPushSimulation['Body']['stkCallback']['ResultDesc'];
+        }
+
+        if ($ResultCode == 0) {
+
+            $this->model_payment_mpesa->addupdateOrderTransactionId($this->customer->getId(), $mpesa_receipt_number, $MerchantRequestID, $CheckoutRequestID, 0, $amount_topup);
+            $this->model_payment_mpesa->addCustomerHistoryTransaction($this->customer->getId(), $this->config->get('mpesa_order_status_id'), $amount_topup, 'mPesa Online', 'mpesa', $mpesa_receipt_number);
+
             $json['processed'] = true;
-            $json['description'] = $stkPushSimulation['ResponseDescription'];
+            $json['description'] = $ResponseDescription;
             $json['redirect'] = $this->url->link('account/credit');
             $json['response'] = $stkPushSimulation;
         } else {
             $json['processed'] = false;
-            $json['description'] = $stkPushSimulation['ResponseDescription'];
+            $json['description'] = $ResponseDescription;
             $json['response'] = $stkPushSimulation;
             $json['redirect'] = NULL;
         }
