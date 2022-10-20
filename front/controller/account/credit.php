@@ -699,12 +699,24 @@ class ControllerAccountCredit extends Controller {
                         $MerchantRequestID = $stkPushSimulation['MerchantRequestID'];
                     }
 
+                    if (array_key_exists('Body', $stkPushSimulation) && array_key_exists('stkCallback', $stkPushSimulation['Body']['stkCallback'])) {
+                        $MerchantRequestID = $stkPushSimulation['Body']['stkCallback']['MerchantRequestID'];
+                    }
+
                     if (array_key_exists('CheckoutRequestID', $stkPushSimulation)) {
                         $CheckoutRequestID = $stkPushSimulation['CheckoutRequestID'];
                     }
 
+                    if (array_key_exists('Body', $stkPushSimulation) && array_key_exists('stkCallback', $stkPushSimulation['Body']['stkCallback'])) {
+                        $CheckoutRequestID = $stkPushSimulation['Body']['stkCallback']['CheckoutRequestID'];
+                    }
+
                     if (array_key_exists('CheckoutRequestID', $stkPushSimulation)) {
                         $mpesa_receipt_number = $stkPushSimulation['CheckoutRequestID'];
+                    }
+                    
+                    if (array_key_exists('Body', $stkPushSimulation) && array_key_exists('stkCallback', $stkPushSimulation['Body']['stkCallback'])) {
+                        $mpesa_receipt_number = $stkPushSimulation['Body']['stkCallback']['CheckoutRequestID'];
                     }
 
                     if (array_key_exists('ResponseCode', $stkPushSimulation)) {
@@ -718,7 +730,6 @@ class ControllerAccountCredit extends Controller {
                     if (array_key_exists('ResponseDescription', $stkPushSimulation)) {
                         $ResponseDescription = $stkPushSimulation['ResponseDescription'];
                     }
-
 
                     if ($ResponseCode != 0 || $ResultCode != 0) {
                         $json['status'] = false;
