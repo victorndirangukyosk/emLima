@@ -452,7 +452,6 @@ __kdt.push({"post_on_load": false});
 	    
             $('#error_msg').hide();
             $('#success_msg').hide();      
-            $('#mpesa_checkout_request_id').val('');
             //var radioValue = $("input[name='pay_option']:checked").val();
             
             var total_amount = $("input[name='amount_topup']").val();
@@ -487,6 +486,7 @@ __kdt.push({"post_on_load": false});
                 complete: function() {
                     $(".overlayed").hide();
                     $('#button-complete').button('reset');
+                    $('#mpesa_checkout_request_id').val('');
                 },      
                 success: function(json) {
 
