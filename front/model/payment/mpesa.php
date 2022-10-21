@@ -302,9 +302,13 @@ class ModelPaymentMpesa extends Model {
     }
 
     public function updatempesareceiptnumber($mpesa_receipt_number, $merchant_request_id, $checkout_request_id, $order_id) {
+        $log = new Log('error.log');
         $sql1 = 'SELECT * FROM ' . DB_PREFIX . "order_transaction_id WHERE order_id = 0 and checkout_request_id= '" . $checkout_request_id . "'and merchant_request_id = '" . $merchant_request_id . "'";
         $result = $this->db->query($sql1);
         $result = $result->row;
+
+        $log->write($sql1);
+        $log->write($result);
 
         if ($result && isset($result['merchant_request_id']) && $result['merchant_request_id'] != NULL) {
             $this->db->query('UPDATE `' . DB_PREFIX . 'order_transaction_id` SET `transaction_id` = "' . $this->db->escape($mpesa_receipt_number) . '" where merchant_request_id="' . $result['merchant_request_id'] . '" AND checkout_request_id="' . $result['checkout_request_id'] . '" AND order_id =' . (int) $order_id);
