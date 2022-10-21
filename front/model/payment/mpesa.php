@@ -197,7 +197,7 @@ class ModelPaymentMpesa extends Model {
         $log = new Log('error.log');
 
         $log->write($result);
-        return $result;
+        return $result->row;
     }
 
     public function getMpesaByOrderIdApi($order_id) {
@@ -291,8 +291,9 @@ class ModelPaymentMpesa extends Model {
     public function addupdateOrderTransactionId($customer_id, $mpesa_receipt_number, $merchant_request_id, $checkout_request_id, $order_id, $amount_topup) {
         $sql1 = 'SELECT * FROM ' . DB_PREFIX . "order_transaction_id WHERE order_id = 0 and customer_id= '" . (int) $customer_id . "'and merchant_request_id = '" . $merchant_request_id . "'";
         $result = $this->db->query($sql1);
+        $result = $result->row;
 
-        if ($result) {
+        if ($result && isset($result['merchant_request_id']) && $result['merchant_request_id'] != NULL) {
             $this->db->query('UPDATE `' . DB_PREFIX . 'order_transaction_id` SET `transaction_id` = "' . $this->db->escape($mpesa_receipt_number) . '" where merchant_request_id="' . $result['merchant_request_id'] . '" AND checkout_request_id="' . $result['checkout_request_id'] . '" AND order_id =' . (int) $order_id);
         } else {
             $sql = 'INSERT into ' . DB_PREFIX . "order_transaction_id SET order_id = 0 ,customer_id='" . $customer_id . "', amount = '" . $amount_topup . "', transaction_id = '" . $mpesa_receipt_number . "', checkout_request_id = '" . $checkout_request_id . "', merchant_request_id = '" . $checkout_request_id . "', created_at = NOW()";

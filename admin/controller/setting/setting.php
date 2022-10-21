@@ -620,10 +620,17 @@ class ControllerSettingSetting extends Controller {
         } else {
             $data['config_amitruck_url'] = $this->config->get('config_amitruck_url');
         }
+        
         if (isset($this->request->post['config_amitruck_clientId'])) {
             $data['config_amitruck_clientId'] = $this->request->post['config_amitruck_clientId'];
         } else {
             $data['config_amitruck_clientId'] = $this->config->get('config_amitruck_clientId');
+        }
+        
+        if (isset($this->request->post['config_time_restriction_for_order_edit'])) {
+            $data['config_time_restriction_for_order_edit'] = $this->request->post['config_time_restriction_for_order_edit'];
+        } else {
+            $data['config_time_restriction_for_order_edit'] = $this->config->get('config_time_restriction_for_order_edit');
         }
 
         if (isset($this->request->post['config_amitruck_clientSecret'])) {
@@ -1197,6 +1204,12 @@ class ControllerSettingSetting extends Controller {
             $data['config_wallet_subuser'] = $this->request->post['config_wallet_subuser'];
         } else {
             $data['config_wallet_subuser'] = $this->config->get('config_wallet_subuser');
+        }
+        
+        if (isset($this->request->post['config_order_edit_in_customer_login'])) {
+            $data['config_order_edit_in_customer_login'] = $this->request->post['config_order_edit_in_customer_login'];
+        } else {
+            $data['config_order_edit_in_customer_login'] = $this->config->get('config_order_edit_in_customer_login');
         }
 
         $this->load->model('localisation/currency');
@@ -2350,8 +2363,13 @@ class ControllerSettingSetting extends Controller {
         if (!$this->request->post['config_amitruck_url']) {
             $this->error['amitruck_url'] = $this->language->get('error_amitruck_url');
         }
+        
         if (!$this->request->post['config_amitruck_clientId']) {
             $this->error['amitruck_clientId'] = $this->language->get('error_amitruck_clientId');
+        }
+        
+        if (!$this->request->post['config_time_restriction_for_order_edit']) {
+            $this->error['time_restriction_for_order_edit'] = $this->language->get('error_time_restriction_for_order_edit');
         }
 
         if (!$this->request->post['config_amitruck_clientSecret']) {

@@ -602,41 +602,48 @@ class ControllerAccountCredit extends Controller {
 
             $log->write('STKPushSimulation');
             $log->write($stkPushSimulation);
-
-            // Add to activity log
-            $this->load->model('account/activity');
-            $activity_data = [
-                'customer_id' => $this->customer->getId(),
-                'name' => $this->customer->getFirstName() . ' ' . $this->customer->getLastName(),
-                'amount' => $this->request->post['amount'],
-                'result_code' => $stkPushSimulation->ResultCode,
-                'result_description' => $stkPushSimulation->ResultDesc,
-                'merchant_request_id' => $stkPushSimulation->MerchantRequestID,
-                'checkout_request_id' => $stkPushSimulation->CheckoutRequestID
-            ];
-
-            $this->model_account_activity->addActivity('WALLET_TOPUP_MPESA_INITIALIZE', $activity_data);
-            // Add to activity log
+            $log->write('STKPushSimulation');
 
             $stkPushSimulation = json_decode($stkPushSimulation);
 
-            $json['response'] = $stkPushSimulation;
-            $json['error'] = '';
-
-            if (isset($json['response']->errorMessage)) {
-                $json['error'] = $json['response']->errorMessage;
-            }
-
-            if (isset($stkPushSimulation->ResultCode) && 0 != $stkPushSimulation->ResultCode && $stkPushSimulation->ResultDesc != NULL) {
-                $json['error'] = $json['error'] . ' ' . $stkPushSimulation->ResultDesc;
-            }
-
             if (isset($stkPushSimulation->ResponseCode) && 0 == $stkPushSimulation->ResponseCode) {
+
+                // Add to activity log
+                $this->load->model('account/activity');
+                $activity_data = [
+                    'customer_id' => $this->customer->getId(),
+                    'name' => $this->customer->getFirstName() . ' ' . $this->customer->getLastName(),
+                    'amount' => $this->request->post['amount'],
+                    'result_code' => $stkPushSimulation->ResponseCode,
+                    'result_description' => $stkPushSimulation->ResponseDescription,
+                    'merchant_request_id' => $stkPushSimulation->MerchantRequestID,
+                    'checkout_request_id' => $stkPushSimulation->CheckoutRequestID
+                ];
+
+                $this->model_account_activity->addActivity('WALLET_TOPUP_MPESA_INITIALIZE', $activity_data);
+                // Add to activity log
+
                 $this->model_payment_mpesa->insertCustomerTransactionId($this->customer->getId(), $stkPushSimulation->CheckoutRequestID, $stkPushSimulation->MerchantRequestID, $this->request->post['amount']);
                 $json['checkout_request_id'] = $stkPushSimulation->CheckoutRequestID;
                 $json['merchant_request_id'] = $stkPushSimulation->MerchantRequestID;
                 $json['processed'] = true;
             } else {
+
+                // Add to activity log
+                $this->load->model('account/activity');
+                $activity_data = [
+                    'customer_id' => $this->customer->getId(),
+                    'name' => $this->customer->getFirstName() . ' ' . $this->customer->getLastName(),
+                    'amount' => $this->request->post['amount'],
+                    'result_code' => $stkPushSimulation->errorCode,
+                    'result_description' => $stkPushSimulation->errorMessage,
+                    'request_id' => $stkPushSimulation->requestId,
+                ];
+
+                $this->model_account_activity->addActivity('WALLET_TOPUP_MPESA_INITIALIZE', $activity_data);
+                // Add to activity log
+
+                $json['error'] = $stkPushSimulation->errorMessage;
                 $json['checkout_request_id'] = '';
                 $json['merchant_request_id'] = '';
                 $json['processed'] = false;
@@ -747,7 +754,7 @@ class ControllerAccountCredit extends Controller {
 
                     if ($ResultCode != 0) {
                         $json['status'] = false;
-                        $json['error'] = $json['error'] . ' ' . $ResponseDescription;
+                        $json['error'] = $json['error'];
                     }
 
                     if ($ResultCode == 0) {
@@ -838,6 +845,8 @@ class ControllerAccountCredit extends Controller {
         }
 
         if ($ResultCode == 0) {
+
+            $this->load->model('payment/mpesa');
 
             $this->model_payment_mpesa->addupdateOrderTransactionId($this->customer->getId(), $mpesa_receipt_number, $MerchantRequestID, $CheckoutRequestID, 0, $amount_topup);
             $this->model_payment_mpesa->addCustomerHistoryTransaction($this->customer->getId(), $this->config->get('mpesa_order_status_id'), $amount_topup, 'mPesa Online', 'mpesa', $mpesa_receipt_number);

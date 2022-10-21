@@ -754,7 +754,7 @@ class ControllerDeliversystemDeliversystem extends Controller {
         $log->write('mpesaWalletStatus');
         $log->write($postData);
         $postData = json_decode($postData, true);
-        $stkCallback = $postData->Body;
+        $stkCallback = $postData['Body'];
         $log->write($stkCallback);
     }
 

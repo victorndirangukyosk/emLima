@@ -364,17 +364,18 @@ __kdt.push({"post_on_load": false});
             console.log("referfxx");
             if($(this).val().length >= 9) {
                 $( "#mpesa-button-confirm" ).prop( "disabled", false );
+                $( "#button-retry" ).prop( "disabled", false );
             } else {
                 $( "#mpesa-button-confirm" ).prop( "disabled", true );
+                $( "#button-retry" ).prop( "disabled", true );
             }
         });
 
         $('#mpesa-button-confirm,#button-retry').on('click', function() {
 	    
             $('#loading').show();
-
             $('#error_msg').hide();
-            
+            $("input[name='amount_topup']").prop( "disabled", true );
             //var radioValue = $("input[name='pay_option']:checked").val();
             var total_amount = $("input[name='amount_topup']").val();
             console.log(total_amount);
@@ -410,24 +411,17 @@ __kdt.push({"post_on_load": false});
                             $(".overlayed").hide();
                         },      
                         success: function(json) {
-
                                 console.log(json);
                                 console.log('json mpesa');
-
                                 $('#mpesa-button-confirm').button('reset');
-                            $('#loading').hide();
-
+                                $('#loading').hide();
                                 if(json['processed']) {
                                         //location = '<?php echo $continue; ?>';
-		        		
                                         //$('#success_msg').html('A payment request has been sent to the mpesa number '+$('#mpesa_phone_number').val()+'. Please wait for a few seconds then check for your phone for an MPESA PIN entry prompt.');
-
                                         $('#success_msg').html('A payment request has been sent on your above number. Please make the payment by entering mpesa PIN and click on Confirm Payment button after receiving sms from mpesa');
 		        		$('#mpesa_checkout_request_id').val(json['checkout_request_id']);
                                         $('#success_msg').show();
-		        		
                                         $('#button-complete').show();
-
                                         console.log('json mpesa1');
                                         $('#mpesa-button-confirm').hide();
                                         $('#button-retry').hide();
@@ -436,6 +430,7 @@ __kdt.push({"post_on_load": false});
                                 } else {
                                         console.log('json mpesa err');
                                         console.log(json['error']);
+                                        $("input[name='amount_topup']").prop( "disabled", false);
                                         $('#error_msg').html(json['error']);
                                         $('#error_msg').show();
                                 }
@@ -456,7 +451,7 @@ __kdt.push({"post_on_load": false});
         $('#button-complete').on('click', function() {
 	    
             $('#error_msg').hide();
-            $('#success_msg').hide();        
+            $('#success_msg').hide();      
             //var radioValue = $("input[name='pay_option']:checked").val();
             
             var total_amount = $("input[name='amount_topup']").val();
@@ -479,7 +474,6 @@ __kdt.push({"post_on_load": false});
                 data: { 
                         mobile : encodeURIComponent($('#mpesa_phone_number').val()),
                         mpesa_checkout_request_id : encodeURIComponent($('#mpesa_checkout_request_id').val()),
-                        order_id: null,
                         amount: total,
                         payment_type: radioValue,
                         payment_method : 'mpesa'
@@ -491,6 +485,7 @@ __kdt.push({"post_on_load": false});
                 complete: function() {
                     $(".overlayed").hide();
                     $('#button-complete').button('reset');
+                    $('#mpesa_checkout_request_id').val('');
                 },      
                 success: function(json) {
 
