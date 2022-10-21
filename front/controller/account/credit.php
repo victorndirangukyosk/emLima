@@ -694,6 +694,16 @@ class ControllerAccountCredit extends Controller {
 
                     $stkPushSimulation = $mpesa->STKPushQuery($live, $checkoutRequestID, $BusinessShortCode, $password, $timestamp);
 
+                    $errorCode = NULL;
+                    if (array_key_exists('errorCode', $stkPushSimulation)) {
+                        $errorCode = $stkPushSimulation['errorCode'];
+                    }
+
+                    $errorMessage = NULL;
+                    if (array_key_exists('errorMessage', $stkPushSimulation)) {
+                        $errorMessage = $stkPushSimulation['errorMessage'];
+                    }
+
                     // Void the order first
                     $log->write('STKPushSimulation WALLET');
                     $log->write($stkPushSimulation);
@@ -752,12 +762,12 @@ class ControllerAccountCredit extends Controller {
                         $ResponseDescription = $stkPushSimulation['Body']['stkCallback']['ResultDesc'];
                     }
 
-                    if ($ResultCode != 0) {
+                    if ($ResultCode != 0 || $errorCode) {
                         $json['status'] = false;
                         $json['error'] = $json['error'];
                     }
 
-                    if ($ResultCode == 0) {
+                    if ($ResultCode == 0 && $errorMessage == NULL && $errorCode == NULL) {
                         $this->model_payment_mpesa->addupdateOrderTransactionId($this->customer->getId(), $mpesa_receipt_number, $MerchantRequestID, $CheckoutRequestID, 0, $amount_topup);
                         $this->model_payment_mpesa->addCustomerHistoryTransaction($this->customer->getId(), $this->config->get('mpesa_order_status_id'), $amount_topup, 'mPesa Online', 'mpesa', $mpesa_receipt_number);
                         $json['status'] = true;
