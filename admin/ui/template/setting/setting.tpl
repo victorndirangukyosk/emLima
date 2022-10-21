@@ -881,9 +881,6 @@
                                 </div>
                             </div>
                            
-
-                            
-
                               <div class="form-group">
                                 <label class="col-sm-2 control-label"><span data-toggle="tooltip" title="Assign wallet to Sub user">Assign Wallet to Sub User</span></label>
                                 <div class="col-sm-10">
@@ -905,6 +902,40 @@
                                         <?php echo $text_no; ?>
                                         <?php } ?>
                                     </label>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label"><span data-toggle="tooltip" title="Assign wallet to Sub user">Order Edit In Customer Login</span></label>
+                                <div class="col-sm-10">
+                                    <label class="radio-inline">
+                                        <?php if ($config_order_edit_in_customer_login) { ?>
+                                        <input type="radio" name="config_order_edit_in_customer_login" value="1" checked="checked" />
+                                        <?php echo $text_yes; ?>
+                                        <?php } else { ?>
+                                        <input type="radio" name="config_order_edit_in_customer_login" value="1" />
+                                        <?php echo $text_yes; ?>
+                                        <?php } ?>
+                                    </label>
+                                    <label class="radio-inline">
+                                        <?php if (!$config_order_edit_in_customer_login) { ?>
+                                        <input type="radio" name="config_order_edit_in_customer_login" value="0" checked="checked" />
+                                        <?php echo $text_no; ?>
+                                        <?php } else { ?>
+                                        <input type="radio" name="config_order_edit_in_customer_login" value="0" />
+                                        <?php echo $text_no; ?>
+                                        <?php } ?>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group required">
+                                <label class="col-sm-2 control-label" for="input-edit-order-duration">Time(Hours) Restriction For Order Edit</label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="config_time_restriction_for_order_edit" value="<?php echo $config_time_restriction_for_order_edit; ?>" placeholder="Time Restriction For Order Edit" id="input-time-restriction-for-order-edit" class="form-control" />
+                                    <?php if ($error_time_restriction_for_order_edit) { ?>
+                                    <div class="text-danger"><?php echo $error_time_restriction_for_order_edit; ?></div>
+                                    <?php } ?>
                                 </div>
                             </div>
 
