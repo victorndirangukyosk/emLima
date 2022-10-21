@@ -550,7 +550,7 @@ function mpesaresponse() {
                         return false;
                         } 
                         if(json['processed'] == false) {
-                        $('#mpesa_checkout_request_id').val('');
+                        //$('#mpesa_checkout_request_id').val('');
                         $('#success_msg').html('Processing ,Please wait');
                         $('#success_msg').hide();
                         $('#error_msg').html(json['response']['ResultDesc']);
