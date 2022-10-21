@@ -1198,6 +1198,12 @@ class ControllerSettingSetting extends Controller {
         } else {
             $data['config_wallet_subuser'] = $this->config->get('config_wallet_subuser');
         }
+        
+        if (isset($this->request->post['config_order_edit_in_customer_login'])) {
+            $data['config_order_edit_in_customer_login'] = $this->request->post['config_order_edit_in_customer_login'];
+        } else {
+            $data['config_order_edit_in_customer_login'] = $this->config->get('config_order_edit_in_customer_login');
+        }
 
         $this->load->model('localisation/currency');
 
