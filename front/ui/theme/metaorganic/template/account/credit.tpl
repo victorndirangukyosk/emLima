@@ -522,7 +522,7 @@ __kdt.push({"post_on_load": false});
 </script>
 
 <script type="text/javascript">
-$( document ).ready(function() { setInterval(function(){ mpesaresponse(); }, 30000 ); });
+$( document ).ready(function() { setInterval(function(){ mpesaresponse(); }, 60000 ); });
 function mpesaresponse() {
                 if($('#mpesa_checkout_request_id').val() != '') {
                 $.ajax({
