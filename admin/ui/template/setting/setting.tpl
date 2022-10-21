@@ -932,7 +932,7 @@
                             <div class="form-group required">
                                 <label class="col-sm-2 control-label" for="input-edit-order-duration">Time(Hours) Restriction For Order Edit</label>
                                 <div class="col-sm-10">
-                                    <input type="text" name="config_time_restriction_for_order_edit" value="<?php echo $config_time_restriction_for_order_edit; ?>" placeholder="Time Restriction For Order Edit" id="input-time-restriction-for-order-edit" class="form-control" />
+                                    <input type="number" min="1" step="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" name="config_time_restriction_for_order_edit" value="<?php echo $config_time_restriction_for_order_edit; ?>" placeholder="Time Restriction For Order Edit" id="input-time-restriction-for-order-edit" class="form-control" />
                                     <?php if ($error_time_restriction_for_order_edit) { ?>
                                     <div class="text-danger"><?php echo $error_time_restriction_for_order_edit; ?></div>
                                     <?php } ?>
