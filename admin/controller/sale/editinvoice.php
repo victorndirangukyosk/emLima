@@ -617,11 +617,14 @@ class ControllerSaleEditinvoice extends Controller {
                 foreach ($datas['totals'] as $p_id_code => $tot) {
                     $sumTotal += $tot['value'];
                 }
+                if($order_info['isadmin_delivery_charge'])//($old_delivery_vat>0 ||$old_shipping>0)
+                {
                 if($old_delivery_vat>0 ||$old_shipping>0)
                 {
                     $sumTotal += $old_delivery_vat;
                     $sumTotal += $old_shipping;
                 }
+            }
 
                 $orderTotal = $sumTotal;
 
