@@ -3199,6 +3199,13 @@ class ModelSaleOrder extends Model {
         $query = $this->db->query($sql);
     }
 
+
+    public function deleteOrderTotal_Shipping($order_id) {
+        $sql = 'DELETE FROM ' . DB_PREFIX . "order_total WHERE order_id = '" . (int) $order_id . "' and code !='shipping' and code !='delivery_vat'";
+
+        $query = $this->db->query($sql);
+    }
+
     public function deleteCreditNoteOrderTotal($order_id) {
         $sql = 'DELETE FROM ' . DB_PREFIX . "credit_note_total WHERE order_id = '" . (int) $order_id . "'";
 

@@ -19,7 +19,11 @@ class ControllerCheckoutTotals extends Controller {
 
         if (isset($this->request->get['add_delivery_charges']) && $this->request->get['add_delivery_charges'] != NULL) {
             $this->session->data['add_delivery_charges'] = $this->request->get['add_delivery_charges'];
+            $this->session->data['delivery_charges_value'] = $this->request->get['delivery_charges_value'];
         }
+
+        // echo "<pre>";print_r($this->session->data['delivery_charges_value']);die;
+
 
         // Display prices
         if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
@@ -70,7 +74,7 @@ class ControllerCheckoutTotals extends Controller {
         $log->write($data['totals']);
         $log->write('totals');
         $this->session->data['completed_order_totals'] = $data['totals'];
-        //echo "<pre>";print_r($data);die;
+        // echo "<pre>";print_r($data);die;
         $data['cashback_condition'] = $this->language->get('cashback_condition');
 
         $data['text_coupon_willbe_credited'] = $this->language->get('text_coupon_willbe_credited');

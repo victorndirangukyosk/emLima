@@ -249,10 +249,21 @@
                 <input type="text" id="po_number" name="po_number" class="form-control" value="<?php echo $_COOKIE['po_number']; ?>" placeholder="PO Number">
                 </li>
                 <?php if (isset($this->session->data['adminlogin']) && $this->session->data['adminlogin']) { ?>
-                <li>
+               
+                
+                 <li>
+                <label for="delivery_charges_value">Delivery Charge</label>
+               
+                <input type="text" id="delivery_charges_value" name="delivery_charges_value"  class="form-control" value="<?php echo $this->session->data['delivery_charges_value']; ?>" placeholder="Delivery Charge Value">
+
+                </li>
+
+                 <li>
                 <label for="delivery_charges">Add Delivery Charges</label>
                 <input type="checkbox" id="delivery_charges" name="delivery_charges" <?php if((isset($this->session->data['add_delivery_charges']) && $this->session->data['add_delivery_charges'] == 'true') || (isset($this->session->data['delivery_charge_terms']) && $this->session->data['delivery_charge_terms'])) { ?> checked <?php } ?> >
                 </li>
+
+
                 <?php } ?>
             </ul>
            
@@ -1903,17 +1914,24 @@ __kdt.push({"post_on_load": false});
 <script type="text/javascript">
 
 $("#delivery_charges").change(function() {
-       loadTotalsWithShippingCharges($('input[name="shipping_city_id"]').val(), this.checked);
+       loadTotalsWithShippingCharges($('input[name="shipping_city_id"]').val(), this.checked,$('input[name="delivery_charges_value"]').val());
 });
-// Load totals with shipping charges
-function loadTotalsWithShippingCharges($city_id, $add_delivery_charges) {
 
-    console.log('sri divya');
+$("#delivery_charges_value").change(function() {
+        //$('#delivery_charges').prop('checked', false);    
+ 
+       loadTotalsWithShippingCharges($('input[name="shipping_city_id"]').val(), $('#delivery_charges').prop('checked'),$('input[name="delivery_charges_value"]').val());
+
+});
+
+// Load totals with shipping charges
+function loadTotalsWithShippingCharges($city_id, $add_delivery_charges, $delivery_charges_value) {
+
 
     $('#checkout-total-wrapper').html('<center><div class="login-loader" style=""></div></center>');
 
     $.ajax({
-        url: 'index.php?path=checkout/totals&city_id=' + $city_id +'&add_delivery_charges=' + $add_delivery_charges,
+        url: 'index.php?path=checkout/totals&city_id=' + $city_id +'&add_delivery_charges=' + $add_delivery_charges+'&delivery_charges_value=' + $delivery_charges_value,
         type: 'post',
         dataType: 'html',
         cache: false,
@@ -1936,7 +1954,6 @@ function loadTotalsWithShippingCharges($city_id, $add_delivery_charges) {
 // Load totals
 function loadTotals($city_id) {
 
-    console.log('sri divya');
 
     $('#checkout-total-wrapper').html('<center><div class="login-loader" style=""></div></center>');
 

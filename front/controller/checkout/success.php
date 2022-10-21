@@ -216,6 +216,7 @@ class ControllerCheckoutSuccess extends Controller {
                 unset($this->session->data['accept_vendor_terms']);
                 unset($this->session->data['delivery_charge_terms']);
                 unset($this->session->data['add_delivery_charges']);
+                unset($this->session->data['delivery_charges_value']);
 
                 unset($this->session->data['pezesha_amount_limit']);
                 unset($this->session->data['pezesha_customer_amount_limit']);

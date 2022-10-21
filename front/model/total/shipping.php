@@ -83,13 +83,15 @@ class ModelTotalShipping extends Model {
         // }
 
 
-        if ($this->cart->getSubTotal() <= $this->config->get('config_active_store_minimum_order_amount') && ($store_id == 75 || $store_id == -1 || $store_id == '')) {
+        if ($this->cart->getSubTotal() <= $this->config->get('config_active_store_minimum_order_amount') && ($store_id == 75 || $store_id == -1 || $store_id == '') && !isset($this->session->data['add_delivery_charges'])) {
             //$shipping_charge = $this->config->get('config_active_store_delivery_charge') ?? 0;
 
             $shipping_charge = $this->config->get('config_active_store_delivery_charge') > 0 ? $this->config->get('config_active_store_delivery_charge') : 0;
             if (isset($this->session->data['adminlogin']) && $this->session->data['adminlogin'] && isset($this->session->data['add_delivery_charges'])) {
                 $shipping_charge = isset($this->session->data['add_delivery_charges']) && $this->session->data['add_delivery_charges'] == 'true' ? $shipping_charge : 0;
             }
+            // echo "<pre>";print_r($shipping_charge);die;
+
             $shipping_charge_VAT = 0;
 
             $total_data[] = [
@@ -115,8 +117,14 @@ class ModelTotalShipping extends Model {
         } elseif (isset($this->session->data['add_delivery_charges']) && $this->session->data['add_delivery_charges'] != NULL) {
             $log = new Log('error.log');
             $log->write('Shipping 2');
-
+            if (isset($this->session->data['delivery_charges_value']) && $this->session->data['delivery_charges_value'] != NULL) {
+            $shipping_charge = $this->session->data['delivery_charges_value'] ;
+            }
+            else
+            {
             $shipping_charge = $this->config->get('config_active_store_delivery_charge') > 0 ? $this->config->get('config_active_store_delivery_charge') : 0;
+
+            }
             $shipping_charge = $this->session->data['add_delivery_charges'] == 'true' ? $shipping_charge : 0;
             $shipping_charge_VAT = ($shipping_charge * 0.16);
 
