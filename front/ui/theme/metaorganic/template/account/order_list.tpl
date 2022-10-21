@@ -56,7 +56,7 @@
                                 <option disabled style="height: 1px !important;" ></option>
                                 <option   value="<?=$order["order_id"] ?>" type="Download cart" order-id="<?=$order["order_id"] ?>"  order_company="<?=$order["order_company"] ?>"  >&#xf019; &nbsp;Download cart</option>
                                 <option disabled style="height: 1px !important;" ></option>
-                            <?php if($order['customer_id'] == $this->customer->getId() && $order['edit_own_order'] != NULL) { ?>
+                            <?php if($order['customer_id'] == $this->customer->getId() && $order['edit_own_order'] != NULL && $this->config->get('config_order_edit_in_customer_login') == 1) { ?>
                                 
                                 <option   value="<?=$order["order_id"] ?>" type="Edit order"   order-id="<?=$order["order_id"] ?>"  order_href="<?php echo $order['edit_own_order'];?>">&#xf044; &nbsp;Edit Order</option>
                                 <option disabled style="height: 1px !important;" ></option>
