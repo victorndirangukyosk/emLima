@@ -311,6 +311,7 @@ class ModelPaymentMpesa extends Model {
         $log->write($result);
 
         if ($result && isset($result['merchant_request_id']) && $result['merchant_request_id'] != NULL) {
+            $log->write('UPDATING');
             $this->db->query('UPDATE `' . DB_PREFIX . 'order_transaction_id` SET `transaction_id` = "' . $this->db->escape($mpesa_receipt_number) . '" where merchant_request_id="' . $result['merchant_request_id'] . '" AND checkout_request_id="' . $result['checkout_request_id'] . '" AND order_id =' . (int) $order_id);
         }
     }
