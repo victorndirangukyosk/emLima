@@ -620,10 +620,17 @@ class ControllerSettingSetting extends Controller {
         } else {
             $data['config_amitruck_url'] = $this->config->get('config_amitruck_url');
         }
+        
         if (isset($this->request->post['config_amitruck_clientId'])) {
             $data['config_amitruck_clientId'] = $this->request->post['config_amitruck_clientId'];
         } else {
             $data['config_amitruck_clientId'] = $this->config->get('config_amitruck_clientId');
+        }
+        
+        if (isset($this->request->post['config_time_restriction_for_order_edit'])) {
+            $data['config_time_restriction_for_order_edit'] = $this->request->post['config_time_restriction_for_order_edit'];
+        } else {
+            $data['config_time_restriction_for_order_edit'] = $this->config->get('config_time_restriction_for_order_edit');
         }
 
         if (isset($this->request->post['config_amitruck_clientSecret'])) {
@@ -1197,6 +1204,12 @@ class ControllerSettingSetting extends Controller {
             $data['config_wallet_subuser'] = $this->request->post['config_wallet_subuser'];
         } else {
             $data['config_wallet_subuser'] = $this->config->get('config_wallet_subuser');
+        }
+        
+        if (isset($this->request->post['config_order_edit_in_customer_login'])) {
+            $data['config_order_edit_in_customer_login'] = $this->request->post['config_order_edit_in_customer_login'];
+        } else {
+            $data['config_order_edit_in_customer_login'] = $this->config->get('config_order_edit_in_customer_login');
         }
 
         $this->load->model('localisation/currency');
@@ -2350,8 +2363,13 @@ class ControllerSettingSetting extends Controller {
         if (!$this->request->post['config_amitruck_url']) {
             $this->error['amitruck_url'] = $this->language->get('error_amitruck_url');
         }
+        
         if (!$this->request->post['config_amitruck_clientId']) {
             $this->error['amitruck_clientId'] = $this->language->get('error_amitruck_clientId');
+        }
+        
+        if (!$this->request->post['config_time_restriction_for_order_edit']) {
+            $this->error['time_restriction_for_order_edit'] = $this->language->get('error_time_restriction_for_order_edit');
         }
 
         if (!$this->request->post['config_amitruck_clientSecret']) {
@@ -2954,6 +2972,25 @@ class ControllerSettingSetting extends Controller {
         }
 
 
+        if (isset($this->request->post['config_feedbackalert'])) {
+            $data['config_feedbackalert'] = $this->request->post['config_feedbackalert'];
+        } elseif (isset($email_info[6]['value'])) {
+            $data['config_feedbackalert'] = $email_info[6]['value'];
+        } else {
+            $data['config_feedbackalert'] = '';
+        }
+
+
+
+        if (isset($this->request->post['config_missingitem'])) {
+            $data['config_missingitem'] = $this->request->post['config_missingitem'];
+        } elseif (isset($email_info[7]['value'])) {
+            $data['config_missingitem'] = $email_info[7]['value'];
+        } else {
+            $data['config_missingitem'] = '';
+        }
+
+
         $this->document->setTitle("Email Settings");
         $this->load->model('setting/setting');
 
@@ -3011,6 +3048,13 @@ class ControllerSettingSetting extends Controller {
 
 
         if ((strpos($this->request->post['config_meatcheckingteam'], "@") == false)) {
+            $this->error['email'] = "Please enter correct Email";
+        }
+
+        if ((strpos($this->request->post['config_feedbackalert'], "@") == false)) {
+            $this->error['email'] = "Please enter correct Email";
+        }
+        if ((strpos($this->request->post['config_missingitem'], "@") == false)) {
             $this->error['email'] = "Please enter correct Email";
         }
 

@@ -14,7 +14,7 @@
 
 
                                       <div class="col-md-12" style="border: 1px solid #d7dcd6;padding: 10px;margin: 15px;width: -webkit-fill-available;">
-                                    <div class="col-md-9" id="pay_with" >
+                                    <div class="col-md-12" id="pay_with" >
                                     Top Up With
                                     <div class="row">
                                         <!--<div class="col-md-4">
@@ -25,6 +25,12 @@
                                         <div class="col-md-6">
                                             <div class="radio">
                                                 <label><input class="option_pay" onchange="payWithmPesa()" type="radio" name="pay_with">mPesa Online</label>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-md-6 text-right">
+                                            <div class="radio">
+                                                <label><input class="option_pay" onchange="payWithmPesaPal()" type="radio" name="pay_with">Credit/Debit Card</label>
                                             </div>
                                         </div>
                                         <!--<div class="col-md-6">
@@ -87,7 +93,20 @@
                                     <!--MPESA REMOVED FROM HERE-->
                                 </div>
                                 
+                                
+                                <div id="pay-confirm-order-pesapal" class="col-md-12 confirm_order_class" style="display:none; ">
+                                    <div class="row">
+                                        <div class="col-md-8 align-left">
+                                                <input id="pesapal_amount_topup" name="pesapal_amount_topup" type="text" value="" class="form-control input-md" required="" placeholder="Amount" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 &amp;&amp; event.charCode <= 57" minlength="9" maxlength="9" style="display: inline-block;    width: 50%;" >
+                                        </div>
+                                        <div class="col-md-4 align-right">
+                                            <button type="button" id="pesapal-button-confirm" data-toggle="collapse" data-loading-text="checking phone..." class="btn btn-default">PAY &amp; CONFIRM</button>
+                                        </div>
+                                    </div>
                                 </div>
+                                </div>
+                                
+                                    <div class="col-md-12" id="pesapal_div"></div>    
                                 
                                 </div>
                             
@@ -278,10 +297,50 @@ __kdt.push({"post_on_load": false});
      function payWithmPesa() {
         $("#pay-confirm-order").html('');
         $("#pay-confirm-order").hide();
+        $("#pay-confirm-order-pesapal").hide();
+        $("#pesapal_div").hide();
         $("#pay-confirm-order-mpesa").show();
         $("#pay-amount").show();
     }
-
+    
+    function payWithmPesaPal() {
+        $("#pay-confirm-order").html('');
+        $("#pay-confirm-order").hide();
+        $("#pay-confirm-order-mpesa").hide();
+        $("#pay-amount").hide();
+        $("#pesapal_div").hide();
+        $("#pay-confirm-order-pesapal").show();
+    }
+    
+    $('#pesapal-button-confirm').on('click', function() {
+         $.ajax({
+                url: 'index.php?path=account/credit/pesapal',
+                type: 'post',
+                data: {
+                    amount: $("input[name=pesapal_amount_topup]").val(),
+                },
+                dataType: 'html',
+                cache: false,
+                async: false,
+                beforeSend: function () {
+                $('#pesapal_div').html('Loading Please Wait....');
+                },
+                complete: function () {
+                },
+                success: function (json) {
+                    console.log("json");
+                    console.log(json);
+                    $('#pesapal_div').html(json);
+                    $("#pesapal_div").prepend("<p>* 3.5% Payment Gateway Charges Applicable On Amount Total</p>");
+                    $('#pesapal_div').removeAttr('style');
+                    return true;
+                    //window.location = json.redirect;
+                }, error: function (xhr, ajaxOptions, thrownError) {
+                    alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+                    return false;
+                }
+            });
+    });
     </script>
 
 
@@ -305,17 +364,18 @@ __kdt.push({"post_on_load": false});
             console.log("referfxx");
             if($(this).val().length >= 9) {
                 $( "#mpesa-button-confirm" ).prop( "disabled", false );
+                $( "#button-retry" ).prop( "disabled", false );
             } else {
                 $( "#mpesa-button-confirm" ).prop( "disabled", true );
+                $( "#button-retry" ).prop( "disabled", true );
             }
         });
 
         $('#mpesa-button-confirm,#button-retry').on('click', function() {
 	    
             $('#loading').show();
-
             $('#error_msg').hide();
-            
+            $("input[name='amount_topup']").prop( "disabled", true );
             //var radioValue = $("input[name='pay_option']:checked").val();
             var total_amount = $("input[name='amount_topup']").val();
             console.log(total_amount);
@@ -333,7 +393,7 @@ __kdt.push({"post_on_load": false});
             if($('#mpesa_phone_number').val().length >= 9) {
                 $.ajax({
                         type: 'post',
-                        url: 'index.php?path=payment/mpesa/confirmtransaction',
+                        url: 'index.php?path=account/credit/confirmtransaction',
                         data: { 
                         mobile : encodeURIComponent($('#mpesa_phone_number').val()),
                         order_id: null,
@@ -351,24 +411,17 @@ __kdt.push({"post_on_load": false});
                             $(".overlayed").hide();
                         },      
                         success: function(json) {
-
                                 console.log(json);
                                 console.log('json mpesa');
-
                                 $('#mpesa-button-confirm').button('reset');
-                            $('#loading').hide();
-
+                                $('#loading').hide();
                                 if(json['processed']) {
                                         //location = '<?php echo $continue; ?>';
-		        		
                                         //$('#success_msg').html('A payment request has been sent to the mpesa number '+$('#mpesa_phone_number').val()+'. Please wait for a few seconds then check for your phone for an MPESA PIN entry prompt.');
-
                                         $('#success_msg').html('A payment request has been sent on your above number. Please make the payment by entering mpesa PIN and click on Confirm Payment button after receiving sms from mpesa');
-		        		$('#mpesa_checkout_request_id').val(json['response'].CheckoutRequestID);
+		        		$('#mpesa_checkout_request_id').val(json['checkout_request_id']);
                                         $('#success_msg').show();
-		        		
                                         $('#button-complete').show();
-
                                         console.log('json mpesa1');
                                         $('#mpesa-button-confirm').hide();
                                         $('#button-retry').hide();
@@ -377,6 +430,7 @@ __kdt.push({"post_on_load": false});
                                 } else {
                                         console.log('json mpesa err');
                                         console.log(json['error']);
+                                        $("input[name='amount_topup']").prop( "disabled", false);
                                         $('#error_msg').html(json['error']);
                                         $('#error_msg').show();
                                 }
@@ -397,7 +451,7 @@ __kdt.push({"post_on_load": false});
         $('#button-complete').on('click', function() {
 	    
             $('#error_msg').hide();
-            $('#success_msg').hide();        
+            $('#success_msg').hide();      
             //var radioValue = $("input[name='pay_option']:checked").val();
             
             var total_amount = $("input[name='amount_topup']").val();
@@ -414,12 +468,12 @@ __kdt.push({"post_on_load": false});
 
         $.ajax({
                 type: 'post',
-                url: 'index.php?path=payment/mpesa/completetransaction',
+                url: 'index.php?path=account/credit/completetransaction',
             dataType: 'json',
                 cache: false,
                 data: { 
                         mobile : encodeURIComponent($('#mpesa_phone_number').val()),
-                        order_id: null,
+                        mpesa_checkout_request_id : encodeURIComponent($('#mpesa_checkout_request_id').val()),
                         amount: total,
                         payment_type: radioValue,
                         payment_method : 'mpesa'
@@ -431,6 +485,7 @@ __kdt.push({"post_on_load": false});
                 complete: function() {
                     $(".overlayed").hide();
                     $('#button-complete').button('reset');
+                    $('#mpesa_checkout_request_id').val('');
                 },      
                 success: function(json) {
 
@@ -472,9 +527,10 @@ function mpesaresponse() {
                 if($('#mpesa_checkout_request_id').val() != '') {
                 $.ajax({
                         type: 'post',
-                        url: 'index.php?path=payment/mpesa/mpesatopupautoupdate',
+                        url: 'index.php?path=account/credit/mpesatopupautoupdate',
                         data: { 
                         mpesa_checkout_request_id : encodeURIComponent($('#mpesa_checkout_request_id').val()),
+                        amount_topup : encodeURIComponent($('#amount_topup').val()),
                         },
                         dataType: 'json',
                         cache: false,
@@ -494,13 +550,14 @@ function mpesaresponse() {
                         return false;
                         } 
                         if(json['processed'] == false) {
-                        $('#mpesa_checkout_request_id').val('');
+                        //$('#mpesa_checkout_request_id').val('');
                         $('#success_msg').html('Processing ,Please wait');
-                        $('#success_msg').hide();
-                        //$('#error_msg').html(' ');
+                        $('#success_msg').show();
+                        //$('#success_msg').hide();
+                        //$('#error_msg').html(json['response']['ResultDesc']);
                         //$('#error_msg').show();
-                        //$('#button-complete').hide();
-                        //$('#button-retry').show();
+                        $('#button-complete').hide();
+                        $('#button-retry').show();
                         return false;
                         }
                         if(json['processed'] == '') {

@@ -747,6 +747,79 @@ class ControllerDeliversystemDeliversystem extends Controller {
         return $response;
     }
 
+    public function mpesaWalletStatus() {
+
+        $log = new Log('error.log');
+        $postData = file_get_contents('php://input');
+        $log->write('mpesaWalletStatus');
+        $log->write($postData);
+        $postData = json_decode($postData, true);
+        $stkCallback = $postData;
+        $log->write($stkCallback);
+
+        $stkPushSimulation = $stkCallback;
+
+        if (array_key_exists('MerchantRequestID', $stkPushSimulation)) {
+            $MerchantRequestID = $stkPushSimulation['MerchantRequestID'];
+        }
+
+        if (array_key_exists('Body', $stkPushSimulation) && array_key_exists('stkCallback', $stkPushSimulation['Body'])) {
+            $MerchantRequestID = $stkPushSimulation['Body']['stkCallback']['MerchantRequestID'];
+        }
+
+        if (array_key_exists('CheckoutRequestID', $stkPushSimulation)) {
+            $CheckoutRequestID = $stkPushSimulation['CheckoutRequestID'];
+        }
+
+        if (array_key_exists('Body', $stkPushSimulation) && array_key_exists('stkCallback', $stkPushSimulation['Body'])) {
+            $CheckoutRequestID = $stkPushSimulation['Body']['stkCallback']['CheckoutRequestID'];
+        }
+
+        if (array_key_exists('CheckoutRequestID', $stkPushSimulation)) {
+            $mpesa_receipt_number = $stkPushSimulation['CheckoutRequestID'];
+        }
+
+        if (array_key_exists('Body', $stkPushSimulation) && array_key_exists('stkCallback', $stkPushSimulation['Body']) && array_key_exists('CallbackMetadata', $stkPushSimulation['Body']['stkCallback'])) {
+
+            foreach ($stkPushSimulation['Body']['stkCallback']['CallbackMetadata']['Item'] as $item) {
+                if ($item['Name'] == 'MpesaReceiptNumber') {
+                    $mpesa_receipt_number = $item['Value'];
+                }
+            }
+        }
+
+        if (array_key_exists('ResponseCode', $stkPushSimulation)) {
+            $ResponseCode = $stkPushSimulation['ResponseCode'];
+        }
+
+        if (array_key_exists('ResultCode', $stkPushSimulation)) {
+            $ResultCode = $stkPushSimulation['ResultCode'];
+        }
+
+        if (array_key_exists('Body', $stkPushSimulation) && array_key_exists('stkCallback', $stkPushSimulation['Body'])) {
+            $ResultCode = $stkPushSimulation['Body']['stkCallback']['ResultCode'];
+        }
+
+        if (array_key_exists('ResponseDescription', $stkPushSimulation)) {
+            $ResponseDescription = $stkPushSimulation['ResponseDescription'];
+        }
+
+        if (array_key_exists('Body', $stkPushSimulation) && array_key_exists('stkCallback', $stkPushSimulation['Body']['stkCallback'])) {
+            $ResponseDescription = $stkPushSimulation['Body']['stkCallback']['ResultDesc'];
+        }
+
+        $log->write('WALLET_TOPUP_CALLBACK');
+        $log->write($MerchantRequestID);
+        $log->write($CheckoutRequestID);
+        $log->write($mpesa_receipt_number);
+        $log->write('WALLET_TOPUP_CALLBACK');
+
+        if (isset($MerchantRequestID) && $MerchantRequestID != NULL && isset($CheckoutRequestID) && $CheckoutRequestID != NULL && isset($mpesa_receipt_number) && $mpesa_receipt_number != NULL) {
+            $this->load->model('payment/mpesa');
+            $this->model_payment_mpesa->updatempesareceiptnumber($mpesa_receipt_number, $MerchantRequestID, $CheckoutRequestID, 0);
+        }
+    }
+
     public function mpesaOrderStatus() {
         $response['status'] = false;
 

@@ -96,8 +96,8 @@
               </div>
             </div>
             <div class="col-sm-3">
-              <!-- <div class="form-group">
-                <label class="control-label" for="input-approved"><?php echo $entry_approved; ?></label>
+               <div class="form-group">
+                <label class="control-label" for="input-approved"><?php echo $entry_approved; ?>\ Approved</label>
                 <select name="filter_approved" id="input-approved" class="form-control">
                   <option value="*"></option>
                   <?php if ($filter_approved) { ?>
@@ -111,7 +111,7 @@
                   <option value="0"><?php echo $text_no; ?></option>
                   <?php } ?>
                 </select>
-              </div> -->
+              </div> 
              <div class="form-group">
                 <label class="control-label" for="input-telephone"><?php echo $column_telephone; ?></label>
                 <div class="input-group">
@@ -136,6 +136,15 @@
                 </div>
                 
  
+   <div class="form-group">
+                <label class="control-label" for="input-date-added">Date Added From</label>
+                <div class="input-group date" style="max-width: 321px;">
+                  <input type="text" name="filter_date_added" value="<?php echo $filter_date_added; ?>" placeholder="Date Added From" data-date-format="YYYY-MM-DD" id="input-date-added" class="form-control" />
+                  <span class="input-group-btn">
+                  <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
+                  </span></div>
+              </div>
+              
                
               </div>
   
@@ -157,15 +166,15 @@
                 </select>
               </div>   
 
+             
                <div class="form-group">
-                <label class="control-label" for="input-date-added">Date Added From</label>
+                <label class="control-label" for="input-date-added-to">Date Added To</label>
                 <div class="input-group date" style="max-width: 321px;">
-                  <input type="text" name="filter_date_added" value="<?php echo $filter_date_added; ?>" placeholder="Date Added From" data-date-format="YYYY-MM-DD" id="input-date-added" class="form-control" />
+                  <input type="text" name="filter_date_added_to" value="<?php echo $filter_date_added_to; ?>" placeholder="Date Added To" data-date-format="YYYY-MM-DD" id="input-date-added-to" class="form-control" />
                   <span class="input-group-btn">
                   <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
                   </span></div>
               </div>
-              
 
 
              </div>
@@ -185,15 +194,23 @@
               </div>   
 
                
-
-                <div class="form-group">
-                <label class="control-label" for="input-date-added-to">Date Added To</label>
-                <div class="input-group date" style="max-width: 321px;">
-                  <input type="text" name="filter_date_added_to" value="<?php echo $filter_date_added_to; ?>" placeholder="Date Added To" data-date-format="YYYY-MM-DD" id="input-date-added-to" class="form-control" />
-                  <span class="input-group-btn">
-                  <button type="button" class="btn btn-default"><i class="fa fa-calendar"></i></button>
-                  </span></div>
+  <div class="form-group">
+                <label class="control-label" for="input-pezesha">Pezesha Customers</label>
+                <select name="filter_pezesha" id="input-pezesha" class="form-control">
+                  <option value="*"></option>
+                  <?php if ($filter_pezesha) { ?>
+                  <option value="1" selected="selected">Pezesha</option>
+                  <?php } else { ?>
+                  <option value="1">Pezesha</option>
+                  <?php } ?>
+                  <?php if (!$filter_pezesha && !is_null($filter_pezesha)) { ?>
+                  <option value="0" selected="selected">Non-Pezesha</option>
+                  <?php } else { ?>
+                  <option value="0">Non-Pezesha</option>
+                  <?php } ?>
+                </select>
               </div>
+              
 
 
               
@@ -212,22 +229,7 @@
               
 
              
-              <div class="form-group">
-                <label class="control-label" for="input-pezesha">Pezesha Customers</label>
-                <select name="filter_pezesha" id="input-pezesha" class="form-control">
-                  <option value="*"></option>
-                  <?php if ($filter_pezesha) { ?>
-                  <option value="1" selected="selected">Pezesha</option>
-                  <?php } else { ?>
-                  <option value="1">Pezesha</option>
-                  <?php } ?>
-                  <?php if (!$filter_pezesha && !is_null($filter_pezesha)) { ?>
-                  <option value="0" selected="selected">Non-Pezesha</option>
-                  <?php } else { ?>
-                  <option value="0">Non-Pezesha</option>
-                  <?php } ?>
-                </select>
-              </div>
+            
               
                  
                  
@@ -430,6 +432,13 @@ $('#button-filter').on('click', function() {
   
   if (filter_status != '*') {
     url += '&filter_status=' + encodeURIComponent(filter_status); 
+  }
+
+
+  var filter_approved = $('select[name=\'filter_approved\']').val();
+  
+  if (filter_approved != '*') {
+    url += '&filter_approved=' + encodeURIComponent(filter_approved); 
   }
 
 
@@ -702,6 +711,12 @@ function excel() {
     url += '&filter_status=' + encodeURIComponent(filter_status); 
   } 
 
+
+var filter_approved = $('select[name=\'filter_approved\']').val();
+  
+  if (filter_approved != '*') {
+    url += '&filter_approved=' + encodeURIComponent(filter_approved); 
+  }
 
    var filter_pezesha = $('select[name=\'filter_pezesha\']').val();
   

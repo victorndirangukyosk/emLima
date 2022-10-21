@@ -1,8 +1,8 @@
 <?php
 
-class ControllerReportSaleProductMissing extends Controller
+class ControllerReportSaleProductStockOut extends Controller
 {
-    public function excel()//if any changes done to this method, need to update same in Scheduler
+    public function excel()
     {
         //echo "<pre>";print_r($this->request->get);die;
         if (isset($this->request->get['filter_order_status_id'])) {
@@ -62,13 +62,13 @@ class ControllerReportSaleProductMissing extends Controller
         //echo "<pre>";print_r($data);die;
 
         $this->load->model('report/excel');
-        $this->model_report_excel->download_saleorderproductmissing($data);
+        $this->model_report_excel->download_saleorderproductstockout($data);
     }
 
     public function index()
     {
         //echo "<pre>";print_r(date('d-M-y', strtotime('2018-12-26')));die;
-        $this->load->language('report/sale_productmissing');
+        $this->load->language('report/sale_productstockout');
 
         $this->document->setTitle($this->language->get('heading_title'));
 
@@ -186,7 +186,7 @@ class ControllerReportSaleProductMissing extends Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('report/sale_productmissing', 'token='.$this->session->data['token'].$url, 'SSL'),
+            'href' => $this->url->link('report/sale_productstockout', 'token='.$this->session->data['token'].$url, 'SSL'),
         ];
 
         $this->load->model('report/sale');
@@ -215,44 +215,48 @@ class ControllerReportSaleProductMissing extends Controller
 
         // $results = $this->model_report_sale->getstockoutOrders($filter_data);
 
-        $OrignalProducts= $this->model_report_sale->getstockoutOrdersAndProducts($filter_data);
+        $OrignalProducts= $this->model_report_sale->getstockoutOrdersAndProductsNew($filter_data);
  
-        //  echo "<pre>";print_r($results);die;
-        // foreach ($results as $result) {
-        //     $is_edited = $this->model_sale_order->hasRealOrderProducts($result['order_id']);
-
-        //     if ($is_edited) {
-        //         //continue;
-        //         $OrignalProducts = $EditedProducts = $this->model_sale_order->getRealOrderProductsStockOut($result['order_id'], $filter_store_id, $filter_name);
-        //     } else {
-        //         $OrignalProducts = $this->model_sale_order->getOrderProductsStockOut($result['order_id'], $filter_store_id, $filter_name);
-        //     }
-
-            /*echo "<pre>";print_r($OrignalProducts);
-            echo "<pre>";print_r($EditedProducts);die;*/
-            //as per the today discussion, stock out means total stock ordered or out after deliverty
-
+        
+        // echo '<pre>';print_r($OrignalProducts);die;
+ 
              foreach ($OrignalProducts as $OrignalProduct) {
-            //     // $present = false;
+            
+                $total=$OrignalProduct['revenue'];//+$OrignalProduct['tax'];
+                if($total!=0 && $OrignalProduct['quantity']!=0)
+                {
+                $product_total_average=($total/$OrignalProduct['quantity'])??0;
+                }
+                else{
+                    $product_total_average=  0;
+                }
 
-            //     // foreach ($EditedProducts as $EditedProduct) {
-            //     //     if(!empty($OrignalProduct['name']) && $OrignalProduct['name'] == $EditedProduct['name'] && $OrignalProduct['unit'] == $EditedProduct['unit']) {
-            //     //         $present = true;
-            //     //     }
-            //     // }!$present &&
+                $closingBalance=$this->model_report_sale->getClosingBalance($OrignalProduct['product_id'],$filter_date_start)??0;
+                $procuredquantity= round($OrignalProduct['procured_qty'],2);
+                $soldquantity = round($OrignalProduct['quantity'],2);
+                $consumedquantity=$closingBalance+($procuredquantity)-($soldquantity);
 
-            //     if ( !empty($OrignalProduct['name'])) {
-                $total=$OrignalProduct['total']+$OrignalProduct['tax'];
-                $product_total_average=($total/$OrignalProduct['quantity']);
+                $consumedquantity=
                     $data['torders'][] = [
                         'store' => $OrignalProduct['store_name'],
                         'model' => $OrignalProduct['product_id'],
                         'product_name' => $OrignalProduct['name'],
                         'unit' => $OrignalProduct['unit'],
                         'product_id' => $OrignalProduct['product_id'],
-                        'product_qty' => round($OrignalProduct['quantity'],2),
-                        'product_total' => round($total,2),
+                        'product_qty' => $soldquantity,//sold quantity
+                       
+                        // 'product_total' => round($total,2),
                         'product_total_average' => round($product_total_average,2),
+
+
+                        'procured_qty' => $procuredquantity,
+                        'rejected_qty' => $OrignalProduct['rejected_qty'],
+                        'priceperItem' => $OrignalProduct['priceperItem'],
+                        'Totalprice' => $OrignalProduct['Totalprice'],
+                        'closing_balance' => $closingBalance,
+                        'consumed_quantity' => $consumedquantity,
+                        'product_total'=> round($OrignalProduct['revenue'],2),
+
 
                     ]; 
                     ++$order_total;
@@ -261,38 +265,9 @@ class ControllerReportSaleProductMissing extends Controller
         // }
 
         //  echo "<pre>";print_r($data['torders']);die;
-        // foreach ($data['torders'] as $torders1) {
-        //     $ex = false;
-
-        //     foreach ($data['orders'] as $value1) {
-        //         if ($value1['product_name'] == $torders1['product_name'] && $value1['store'] == $torders1['store'] &&  $value1['unit'] == $torders1['unit']) {
-        //             $ex = true;
-        //         }
-        //     }
-
-        //     if (!$ex) {
-        //         $sum = (float) 0.0;
-
-        //         foreach ($data['torders'] as $key => $torders2) {
-        //             if ($torders1['product_name'] == $torders2['product_name'] && $torders1['store'] == $torders2['store'] && $torders1['unit'] == $torders2['unit']) {
-        //                 $sum += (float) $torders2['product_qty'];
-
-        //                 unset($data['torders'][$key]);
-        //             }
-        //         }
-
-        //         $torders1['product_qty'] = (float) $sum;
-
-                // ++$order_total;
-
-        //         array_push($data['orders'], $torders1);
-        //     }
-        // }
+        
         $data['orders']=$data['torders'];
-        if (isset($this->request->get['download_excel']) && (true == $this->request->get['download_excel'])) {
-            $this->load->model('report/excel');
-            $this->model_report_excel->download_saleorderproductmissingNew($data);
-        }
+        
         //echo "<pre>";print_r($data['orders']);die;
         $data['heading_title'] = $this->language->get('heading_title');
 
@@ -414,7 +389,7 @@ class ControllerReportSaleProductMissing extends Controller
         $pagination->total = $order_total;
         $pagination->page = $page;
         $pagination->limit = $this->config->get('config_limit_admin');
-        $pagination->url = $this->url->link('report/sale_productmissing', 'token='.$this->session->data['token'].$url.'&page={page}', 'SSL');
+        $pagination->url = $this->url->link('report/sale_productstockout', 'token='.$this->session->data['token'].$url.'&page={page}', 'SSL');
 
         $data['pagination'] = $pagination->render();
 
@@ -440,14 +415,14 @@ class ControllerReportSaleProductMissing extends Controller
 
         $data['orders'] = array_slice($data['orders'], $start, $limit);
         //echo "<pre>";print_r($data['orders']);die;
-        $this->response->setOutput($this->load->view('report/sale_productmissing.tpl', $data));
+        $this->response->setOutput($this->load->view('report/sale_productstockout.tpl', $data));
     }
 
     public function city_autocomplete()
     {
         $this->load->model('sale/order');
 
-        $json = $this->model_sale_productmissing->getCitiesLike($this->request->get['filter_name']);
+        $json = $this->model_sale_productstockout->getCitiesLike($this->request->get['filter_name']);
 
         header('Content-type: text/json');
         echo json_encode($json);
