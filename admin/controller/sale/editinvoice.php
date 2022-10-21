@@ -701,10 +701,20 @@ class ControllerSaleEditinvoice extends Controller {
                     /* $log->write("updatetotals");
                       $log->write($tot); */
                     $tot['sort'] = $p;
-                    if ($subTotal >= $this->config->get('config_active_store_minimum_order_amount') && ($tot['code'] == 'shipping' || $tot['code'] == 'delivery_vat')) {
-                        $orderTotal = $orderTotal - $tot['value'];
-                    } else {
-                        $this->model_sale_order->insertOrderTotal($order_id, $tot, $shipping_price);
+                    if($order_info['isadmin_delivery_charge'])
+                    {
+                        if (($tot['code'] == 'shipping' || $tot['code'] == 'delivery_vat')) {
+                            $orderTotal = $orderTotal - $tot['value'];
+                        } else {
+                            $this->model_sale_order->insertOrderTotal($order_id, $tot, $shipping_price);
+                        }
+                    }
+                    else{
+                        if ($subTotal >= $this->config->get('config_active_store_minimum_order_amount') && ($tot['code'] == 'shipping' || $tot['code'] == 'delivery_vat')) {
+                            $orderTotal = $orderTotal - $tot['value'];
+                        } else {
+                            $this->model_sale_order->insertOrderTotal($order_id, $tot, $shipping_price);
+                        }
                     }
                     if ($tot['code'] == "credit") {
                         $wallet_amount_positive = abs($tot['value']);
