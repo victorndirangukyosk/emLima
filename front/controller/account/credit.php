@@ -794,6 +794,16 @@ class ControllerAccountCredit extends Controller {
         $log->write($stkPushSimulation);
         $log->write($stkPushSimulation['ResultDesc']);
 
+        $errorCode = NULL;
+        if (array_key_exists('errorCode', $stkPushSimulation)) {
+            $errorCode = $stkPushSimulation['errorCode'];
+        }
+
+        $errorMessage = NULL;
+        if (array_key_exists('errorMessage', $stkPushSimulation)) {
+            $errorMessage = $stkPushSimulation['errorMessage'];
+        }
+
         if (array_key_exists('MerchantRequestID', $stkPushSimulation)) {
             $MerchantRequestID = $stkPushSimulation['MerchantRequestID'];
         }
@@ -844,7 +854,7 @@ class ControllerAccountCredit extends Controller {
             $ResponseDescription = $stkPushSimulation['Body']['stkCallback']['ResultDesc'];
         }
 
-        if ($ResultCode == 0) {
+        if ($ResultCode == 0 && $errorCode == NULL && $errorMessage == NULL) {
 
             $this->load->model('payment/mpesa');
 
