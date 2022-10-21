@@ -383,6 +383,9 @@ class ControllerSaleEditinvoice extends Controller {
                 }
 
                 $old_sub_total = 0;
+                $old_shipping=0;
+                $old_delivery_vat=0;
+
 
                 /* if($this->model_sale_order->hasRealOrderProducts($order_id)) {
                   $log->write('edited again');
@@ -405,9 +408,17 @@ class ControllerSaleEditinvoice extends Controller {
                         $old_sub_total = $total['value'];
                     }
 
-                    if ('total' == $total['code']) {
+                    else if ('total' == $total['code']) {
                         $old_total = $total['value'];
                     }
+
+                    else if ('shipping' == $total['code']) {
+                        $old_shipping = $total['value'];
+                    }
+                    else if ('delivery_vat' == $total['code']) {
+                        $old_delivery_vat = $total['value'];
+                    }
+
                 }
 
                 //echo "<pre>";print_r($old_sub_total);die;
@@ -596,12 +607,21 @@ class ControllerSaleEditinvoice extends Controller {
                 //$log->write($datas['totals']);
                 //die;
                 //saving order total below
-
+                if($order_info['isadmin_delivery_charge'])//($old_delivery_vat>0 ||$old_shipping>0)
+                {
+                $this->model_sale_order->deleteOrderTotal_Shipping($order_id);
+                }
+                else{
                 $this->model_sale_order->deleteOrderTotal($order_id);
-
+                }
                 foreach ($datas['totals'] as $p_id_code => $tot) {
                     $sumTotal += $tot['value'];
                 }
+                // if($old_delivery_vat>0 ||$old_shipping>0)
+                // {
+                //     $sumTotal += $old_delivery_vat;
+                //     $sumTotal += $old_shipping;
+                // }
 
                 $orderTotal = $sumTotal;
 
