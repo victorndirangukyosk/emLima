@@ -786,7 +786,6 @@ class ControllerDeliversystemDeliversystem extends Controller {
                     $mpesa_receipt_number = $item['Value'];
                 }
             }
-            $mpesa_receipt_number = $stkPushSimulation['Body']['stkCallback']['CheckoutRequestID'];
         }
 
         if (array_key_exists('ResponseCode', $stkPushSimulation)) {
