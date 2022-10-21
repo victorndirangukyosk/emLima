@@ -930,7 +930,7 @@
                             </div>
                             
                             <div class="form-group required">
-                                <label class="col-sm-2 control-label" for="input-edit-order-duration">Time Restriction For Order Edit</label>
+                                <label class="col-sm-2 control-label" for="input-edit-order-duration">Time(Hours) Restriction For Order Edit</label>
                                 <div class="col-sm-10">
                                     <input type="text" name="config_time_restriction_for_order_edit" value="<?php echo $config_time_restriction_for_order_edit; ?>" placeholder="Time Restriction For Order Edit" id="input-time-restriction-for-order-edit" class="form-control" />
                                     <?php if ($error_time_restriction_for_order_edit) { ?>
