@@ -809,6 +809,12 @@ class ControllerDeliversystemDeliversystem extends Controller {
             $ResponseDescription = $stkPushSimulation['Body']['stkCallback']['ResultDesc'];
         }
 
+        $log->write('WALLET_TOPUP_CALLBACK');
+        $log->write($MerchantRequestID);
+        $log->write($CheckoutRequestID);
+        $log->write($mpesa_receipt_number);
+        $log->write('WALLET_TOPUP_CALLBACK');
+
         if (isset($MerchantRequestID) && $MerchantRequestID != NULL && isset($CheckoutRequestID) && $CheckoutRequestID != NULL && isset($mpesa_receipt_number) && $mpesa_receipt_number != NULL) {
             $this->load->model('payment/mpesa');
             $this->model_payment_mpesa->updatempesareceiptnumber($mpesa_receipt_number, $MerchantRequestID, $CheckoutRequestID, 0);
