@@ -204,7 +204,8 @@ class ControllerPezeshaPezesha extends Controller {
         $customer_pezesha_info = $this->model_pezesha_pezesha->getCustomer($customer_id);
 
         $data['filter_customer_id_array'] = $all_customers;
-        $data['filter_date_added'] = date("Y-m-d", strtotime("-3 Months"));
+        $log->write(date("Y-m-d", strtotime("-24 Months")));
+        $data['filter_date_added'] = date("Y-m-d", strtotime("-24 Months"));
         $data['filter_date_added_end'] = date("Y-m-d");
         /* $data['filter_paid'] = 'Y'; */
 
@@ -217,7 +218,7 @@ class ControllerPezeshaPezesha extends Controller {
         foreach ($customer_order_info as $order_info) {
             $order_transaction_info = $this->model_sale_order->getOrderTransactionId($order_info['order_id']);
             $transactions['transaction_id'] = /* $order_transaction_info['transaction_id']. */$order_info['order_id'];
-            $transactions['merchant_id'] = $customer_pezesha_info['prefix'] . '' .$customer_id;
+            $transactions['merchant_id'] = $customer_pezesha_info['prefix'] . '' . $customer_id;
             $transactions['face_amount'] = round($order_info['total']);
             $transactions['transaction_time'] = $order_info['date_added'];
             $transactions['other_details'] = array('key' => 'Organization_id', 'value' => $customer_device_info['customer_id'], 'key' => 'payee_type', 'value' => $customer_device_info['firstname'] . ' ' . $customer_device_info['lastname'] . ' ' . $customer_device_info['company_name']);
