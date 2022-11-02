@@ -115,7 +115,7 @@ class ControllerKraIntegration extends Controller {
         $invoice_data = "(CompanyName=" . $CompanyName . ",ClientPINnum=" . $ClientPINnum . ",HeadQuarters=" . $HeadQuarters . ",Address=" . $Address . ",PostalCodeAndCity=" . $PostalCodeAndCity . ",ExemptionNum=" . $ExemptionNum . ",TraderSystemInvNum=" . $TraderSystemInvNum . ")";
 
         $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, 'http://localhost:4444/Settings' . $invoice_data);
+        curl_setopt($curl, CURLOPT_URL, 'http://localhost:4444/OpenInvoiceWithFreeCustomerData' . $invoice_data);
         curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type:application/x-www-form-urlencoded'));
 
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
