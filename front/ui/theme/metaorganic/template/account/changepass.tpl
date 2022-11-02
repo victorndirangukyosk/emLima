@@ -28,14 +28,30 @@
 
 <form action="changepass" method="post"  enctype="multipart/form-data" class="form-horizontal">
 <div class="form-group required" ><label for="input-name"><?= $label_new ?></label>
- <input required type="password" class="form-control" id="newpassword"  name='newpassword'>
-
-  <?php if ($error_new) { ?>
+ <!--<input required type="password" class="form-control" id="newpassword"  name='newpassword'>-->
+<div class="input-group mb-2 mr-sm-2">
+<input required type="password" class="form-control" id="newpassword" autocomplete="off" name='newpassword'>
+<div class="input-group-prepend">
+<div class="input-group-text">
+<a href="#"><i class="fa fa-eye-slash" id="togglePassword"></i></a>
+</div>
+</div>
+</div>
+  <?php if ($error_new) { ?> 
                                         <div class="text-danger"><?php echo $error_new; ?></div>
                                         <?php } ?>
 
  </div><div class="form-group required"><label for="input-name"><?= $label_retype ?></label>
-  <input required type="password" class="form-control" id="retypepassword" name='retypepassword'>
+  <!--<input required type="password" class="form-control" id="retypepassword" name='retypepassword'>-->
+  <div class="input-group mb-2 mr-sm-2">
+<input required type="password" class="form-control" id="retypepassword" autocomplete="off" name='retypepassword'>
+<div class="input-group-prepend">
+<div class="input-group-text">
+<a href="#"><i class="fa fa-eye-slash" id="toggleRetypePassword"></i></a>
+</div>
+</div>
+</div>
+
  <div id="status"></div>
    <?php if ($error_retype) { ?>
                                         <div class="text-danger"><?php echo $error_retype; ?></div>
@@ -65,4 +81,63 @@
    </script><script src="<?= BASE_URL;?>/front/ui/theme/metaorganic/assets_landing_page/js/gsap.min.js"></script>
    <script src="<?= BASE_URL;?>/front/ui/theme/metaorganic/assets_landing_page/js/modernizr-custom.js">
 </script><script src="<?= BASE_URL;?>/front/ui/theme/metaorganic/assets_landing_page/js/scripts.min.js"></script>
+
+
+<script>const togglePassword = document.querySelector("#togglePassword");
+        const password = document.querySelector("#newpassword");
+
+        togglePassword.addEventListener("click", function (e) {
+            // toggle the type attribute
+            e.preventDefault();
+            const type = password.getAttribute("type") === "password" ? "text" : "password";
+            password.setAttribute("type", type);
+
+ 
+            
+           if($(this).hasClass('fa-eye-slash')){
+           
+          $(this).removeClass('fa-eye-slash');
+          
+          $(this).addClass('fa-eye');
+          
+            
+        }else{
+         
+          $(this).removeClass('fa-eye');
+          
+          $(this).addClass('fa-eye-slash');  
+          
+        }
+        });</script>
+
+        
+<script>const toggleRetypePassword = document.querySelector("#toggleRetypePassword");
+        const retypepassword = document.querySelector("#retypepassword");
+
+        toggleRetypePassword.addEventListener("click", function (e) {
+            // toggle the type attribute
+            e.preventDefault();
+            
+
+            const type = retypepassword.getAttribute("type") === "password" ? "text" : "password";
+            retypepassword.setAttribute("type", type);
+            
+           if($(this).hasClass('fa-eye-slash')){
+           
+          $(this).removeClass('fa-eye-slash');
+          
+          $(this).addClass('fa-eye');
+          
+            
+        }else{
+         
+          $(this).removeClass('fa-eye');
+          
+          $(this).addClass('fa-eye-slash');  
+          
+        }
+        });</script>
+
+
+
 </body></html>  
