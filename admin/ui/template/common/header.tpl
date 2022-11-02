@@ -132,9 +132,11 @@
             <h4>
                 <?php if($this->user->hasPermission('access','user/user')){ ?>
                 <a href="<?php echo $url_user ?>"><?php echo $firstname; ?> <?php echo $lastname; ?></a>
-                <?php }else{ ?>
+                <?php }else if($this->user->hasPermission('access','user/user_profile_edit')){ ?>
+                <a href="<?php echo $url_user_profile_edit ?>"><?php echo $firstname; ?> <?php echo $lastname; ?></a>
+                <?php } else {?>
                 <a><?php echo $firstname; ?> <?php echo $lastname; ?></a>
-                <?php } ?>
+                 <?php } ?>
             </h4>
             <small><?php echo $user_group; ?></small>
           </div>
