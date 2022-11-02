@@ -40,32 +40,32 @@ class ControllerKraKra extends Controller {
                  *  0x3f Insufficient conditions
                  */
                 if ($ste1 == 0x30 && $ste2 == 0x32) {
-                    alert_msg("ste1 == 0x30 - command is OK and ste2 == 0x32 - command is illegal in current context");
+                    $this->alert_msg("ste1 == 0x30 - command is OK and ste2 == 0x32 - command is illegal in current context");
                 } else if ($ste1 == 0x30 && $ste2 == 0x33) {
-                    alert_msg("ste1 == 0x30 - command is OK and ste2 == 0x32 == 0x33 - make Z report");
+                    $this->alert_msg("ste1 == 0x30 - command is OK and ste2 == 0x32 == 0x33 - make Z report");
                 } else if ($ste1 == 0x34 && $ste2 == 0x32) {
-                    alert_msg("ste1 == 0x34 - opened fiscal receipt and ste2 == 0x32 - command is illegal in current context");
+                    $this->alert_msg("ste1 == 0x34 - opened fiscal receipt and ste2 == 0x32 - command is illegal in current context");
                 } else if ($ste1 == 0x39 && $ste2 == 0x32) {
-                    alert_msg("ste1 == 0x39 - Wrong password and ste2 == 0x32 - command is illegal in current context");
+                    $this->alert_msg("ste1 == 0x39 - Wrong password and ste2 == 0x32 - command is illegal in current context");
                 } else {
-                    alert_msg($msg . "\nste1=" . $ste1 . ", ste2=" . $ste2);
+                    $this->alert_msg($msg . "\nste1=" . $ste1 . ", ste2=" . $ste2);
                 }
             } else if ($code == \Tremol\ServerErrorType::ServerDefsMismatch) {
-                alert_msg("The current library version and server definitions version do not match");
+                $this->alert_msg("The current library version and server definitions version do not match");
             } else if ($code == \Tremol\ServerErrorType::ServMismatchBetweenDefinitionAndFPResult) {
-                alert_msg("The current library version and the fiscal device firmware is not matching");
+                $this->alert_msg("The current library version and the fiscal device firmware is not matching");
             } else if ($code == \Tremol\ServerErrorType::ServerAddressNotSet) {
-                alert_msg("Specify server ServerAddress property");
+                $this->alert_msg("Specify server ServerAddress property");
             } else if ($code == \Tremol\ServerErrorType::ServerConnectionError) {
-                alert_msg("Connection from this app to the server is not established");
+                $this->alert_msg("Connection from this app to the server is not established");
             } else if ($code == \Tremol\ServerErrorType::ServSockConnectionFailed) {
-                alert_msg("When the server can not connect to the fiscal device");
+                $this->alert_msg("When the server can not connect to the fiscal device");
             } else if ($code == \Tremol\ServerErrorType::ServTCPAuth) {
-                alert_msg("Wrong device ?CP password");
+                $this->alert_msg("Wrong device ?CP password");
             } else if ($code == \Tremol\ServerErrorType::ServWaitOtherClientCmdProcessingTimeOut) {
-                alert_msg("Proccessing of other clients command is taking too long");
+                $this->alert_msg("Proccessing of other clients command is taking too long");
             } else {
-                alert_msg($msg);
+                $this->alert_msg($msg);
             }
         } else {
             $this->alert_msg($msg);
@@ -75,9 +75,9 @@ class ControllerKraKra extends Controller {
     function fpGetLibraryVersions(\Tremol\FP $fp) {
         try {
             $msg = "Core version: " . $fp->GetVersionCore() . "\nLibrary definitions: " . strval($fp->GetVersionDefinitions());
-            alert_msg($msg);
+            $this->alert_msg($msg);
         } catch (Exception $ex) {
-            handleException($ex);
+            $this->handleException($ex);
         }
     }
 
@@ -85,7 +85,7 @@ class ControllerKraKra extends Controller {
         try {
             $fp->ServerSetSettings($ServerAddress, $ServerPort);
         } catch (Exception $ex) {
-            handleException($ex);
+            $this->handleException($ex);
         }
     }
 
@@ -113,7 +113,7 @@ class ControllerKraKra extends Controller {
                 throw new Exception("Server and client versions are different!");
             }
         } catch (Exception $ex) {
-            handleException($ex);
+            $this->handleException($ex);
         }
     }
 
@@ -121,20 +121,20 @@ class ControllerKraKra extends Controller {
         try {
             $dev = $fp->ServerFindDevice(false);
             if (!$dev) {
-                alert_msg("FD not found!");
+                $this->alert_msg("FD not found!");
             } else {
-                alert_msg("FD found on " . $dev->SerialPort . " baud " . $dev->BaudRate);
+                $this->alert_msg("FD found on " . $dev->SerialPort . " baud " . $dev->BaudRate);
             }
         } catch (Exception $ex) {
-            handleException($ex);
+            $this->handleException($ex);
         }
     }
 
     function fpReadDeviceSerialNumber(\Tremol\FP $fp) {
         try {
-            alert_msg($fp->ReadSerialAndFiscalNums()->SerialNumber);
+            $this->alert_msg($fp->ReadSerialAndFiscalNums()->SerialNumber);
         } catch (Exception $ex) {
-            handleException($ex);
+            $this->handleException($ex);
         }
     }
 
@@ -142,7 +142,7 @@ class ControllerKraKra extends Controller {
         try {
             $fp->PrintDiagnostics();
         } catch (Exception $ex) {
-            handleException($ex);
+            $this->handleException($ex);
         }
     }
 
@@ -150,18 +150,18 @@ class ControllerKraKra extends Controller {
         try {
             $fp->RawWrite(array(0x1D, 0x49));
             $res = trim($fp->RawRead(0, "\n"));
-            alert_msg($res);
+            $this->alert_msg($res);
         } catch (Exception $ex) {
-            handleException($ex);
+            $this->handleException($ex);
         }
     }
 
     function fpReadVersion(\Tremol\FP $fp) {
         try {
             $v = $fp->ReadVersion();
-            alert_msg("Model: " . $v);
+            $this->alert_msg("Model: " . $v);
         } catch (Exception $ex) {
-            handleException($ex);
+            $this->handleException($ex);
         }
     }
 
@@ -169,7 +169,7 @@ class ControllerKraKra extends Controller {
         try {
             $fp->PrintDailyReport(Tremol\OptionZeroing::Not_zeroing);
         } catch (Exception $ex) {
-            handleException($ex);
+            $this->handleException($ex);
         }
     }
 
@@ -177,7 +177,7 @@ class ControllerKraKra extends Controller {
         try {
             $fp->PrintDailyReport(Tremol\OptionZeroing::Zeroing);
         } catch (Exception $ex) {
-            handleException($ex);
+            $this->handleException($ex);
         }
     }
 
@@ -185,7 +185,7 @@ class ControllerKraKra extends Controller {
         try {
             $fp->OpenReceipt(1, $Operator1password, Tremol\OptionReceiptFormat::Brief, \Tremol\OptionPrintVAT::No, Tremol\OptionFiscalReceiptPrintType::Step_by_step_printing);
         } catch (Exception $ex) {
-            handleException($ex);
+            $this->handleException($ex);
         }
     }
 
@@ -193,7 +193,7 @@ class ControllerKraKra extends Controller {
         try {
             $fp->SellPLUwithSpecifiedVAT($ArtName, Tremol\OptionVATClass::VAT_Class_B, $ArtPrice, $ArtQty);
         } catch (Exception $ex) {
-            handleException($ex);
+            $this->handleException($ex);
         }
     }
 
@@ -201,7 +201,7 @@ class ControllerKraKra extends Controller {
         try {
             $fp->CashPayCloseReceipt();
         } catch (Exception $ex) {
-            handleException($ex);
+            $this->handleException($ex);
         }
     }
 
@@ -209,7 +209,7 @@ class ControllerKraKra extends Controller {
         try {
             $fp->PrintText($FreeText);
         } catch (Exception $ex) {
-            handleException($ex);
+            $this->handleException($ex);
         }
     }
 
@@ -217,7 +217,7 @@ class ControllerKraKra extends Controller {
         try {
             $fp->CancelReceipt();
         } catch (Exception $ex) {
-            handleException($ex);
+            $this->handleException($ex);
         }
     }
 
