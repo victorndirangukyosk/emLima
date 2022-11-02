@@ -100,4 +100,40 @@ class ControllerKraIntegration extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
+    public function openinvoicewithfreecustomerdata() {
+
+        $log = new Log('error.log');
+
+        $CompanyName = isset($this->request->post['CompanyName']) && $this->request->post['CompanyName'] != NULL ? $this->request->post['CompanyName'] : NULL;
+        $ClientPINnum = isset($this->request->post['ClientPINnum']) && $this->request->post['ClientPINnum'] != NULL ? $this->request->post['ClientPINnum'] : NULL;
+        $HeadQuarters = isset($this->request->post['HeadQuarters']) && $this->request->post['HeadQuarters'] != NULL ? $this->request->post['HeadQuarters'] : NULL;
+        $Address = isset($this->request->post['Address']) && $this->request->post['Address'] != NULL ? $this->request->post['Address'] : NULL;
+        $PostalCodeAndCity = isset($this->request->post['PostalCodeAndCity']) && $this->request->post['PostalCodeAndCity'] != NULL ? $this->request->post['PostalCodeAndCity'] : NULL;
+        $ExemptionNum = isset($this->request->post['ExemptionNum']) && $this->request->post['ExemptionNum'] != NULL ? $this->request->post['ExemptionNum'] : NULL;
+        $TraderSystemInvNum = isset($this->request->post['TraderSystemInvNum']) && $this->request->post['TraderSystemInvNum'] != NULL ? $this->request->post['TraderSystemInvNum'] : NULL;
+
+        $invoice_data = "(CompanyName=" . $CompanyName . ",ClientPINnum=" . $ClientPINnum . ",HeadQuarters=" . $HeadQuarters . ",Address=" . $Address . ",PostalCodeAndCity=" . $PostalCodeAndCity . ",ExemptionNum=" . $ExemptionNum . ",TraderSystemInvNum=" . $TraderSystemInvNum . ")";
+
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, 'http://localhost:4444/Settings' . $invoice_data);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type:application/x-www-form-urlencoded'));
+
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_POST, 0);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+        $result = curl_exec($curl);
+        $xml_snippet = simplexml_load_string($result);
+        $json_convert = json_encode($xml_snippet);
+
+        $log->write($result);
+        curl_close($curl);
+        $final_result = json_decode($json_convert, true);
+        $json['status'] = true;
+        $json['data'] = $final_result;
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
 }
