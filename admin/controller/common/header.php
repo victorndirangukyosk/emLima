@@ -200,6 +200,7 @@ class ControllerCommonHeader extends Controller
             $data['url_user'] = $this->url->link('user/user/edit', 'user_id='.$this->user->getId().'&token='.$this->session->data['token'], 'SSL');
 
             $data['url_user'] = $this->url->link('user/user/edit', 'user_id='.$this->user->getId().'&token='.$this->session->data['token'], 'SSL');
+            $data['url_user_profile_edit'] = $this->url->link('user/user_profile_edit/edit', 'user_id='.$this->user->getId().'&token='.$this->session->data['token'], 'SSL');
         }
 
         $data['sitename'] = (strlen($this->config->get('config_name')) > 14) ? substr($this->config->get('config_name'), 0, 14).'...' : $this->config->get('config_name');
