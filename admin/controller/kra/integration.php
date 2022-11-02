@@ -2,17 +2,6 @@
 
 class ControllerKraIntegration extends Controller {
 
-    public function index() {
-        $data = array();
-        $data['fp'] = '';
-        $data['DevIp'] = '197.254.20.107';
-        $data['DevTcpPort'] = '8000';
-        $data['DevTcpPassword'] = 'Password';
-
-        $response = $this->load->controller('kra/kra/fpServerSetDeviceTcpSettings', $data);
-        return $response;
-    }
-
     public function settings() {
 
         $log = new Log('error.log');
@@ -116,6 +105,41 @@ class ControllerKraIntegration extends Controller {
 
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, 'http://localhost:4444/OpenInvoiceWithFreeCustomerData' . $invoice_data);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type:application/x-www-form-urlencoded'));
+
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_POST, 0);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+        $result = curl_exec($curl);
+        $xml_snippet = simplexml_load_string($result);
+        $json_convert = json_encode($xml_snippet);
+
+        $log->write($result);
+        curl_close($curl);
+        $final_result = json_decode($json_convert, true);
+        $json['status'] = true;
+        $json['data'] = $final_result;
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function sellplufromextdb() {
+        $log = new Log('error.log');
+
+        $NamePLU = isset($this->request->post['NamePLU']) && $this->request->post['NamePLU'] != NULL ? $this->request->post['NamePLU'] : NULL;
+        $OptionVATClass = isset($this->request->post['ClientPINnum']) && $this->request->post['ClientPINnum'] != NULL ? $this->request->post['ClientPINnum'] : NULL;
+        $Price = isset($this->request->post['HeadQuarters']) && $this->request->post['HeadQuarters'] != NULL ? $this->request->post['HeadQuarters'] : NULL;
+        $MeasureUnit = isset($this->request->post['Address']) && $this->request->post['Address'] != NULL ? $this->request->post['Address'] : NULL;
+        $HSCode = isset($this->request->post['PostalCodeAndCity']) && $this->request->post['PostalCodeAndCity'] != NULL ? $this->request->post['PostalCodeAndCity'] : NULL;
+        $HSName = isset($this->request->post['ExemptionNum']) && $this->request->post['ExemptionNum'] != NULL ? $this->request->post['ExemptionNum'] : NULL;
+        $VATGrRate = isset($this->request->post['TraderSystemInvNum']) && $this->request->post['TraderSystemInvNum'] != NULL ? $this->request->post['TraderSystemInvNum'] : NULL;
+
+        $products_data = "(NamePLU=" . $NamePLU . ",OptionVATClass=" . $OptionVATClass . ",Price=" . $Price . ",MeasureUnit=" . $MeasureUnit . ",HSCode=" . $HSCode . ",HSName=" . $HSName . ",VATGrRate=" . $VATGrRate . ")";
+
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, 'http://localhost:4444/SellPLUfromExtDB' . $products_data);
         curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type:application/x-www-form-urlencoded'));
 
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
