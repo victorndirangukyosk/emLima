@@ -17,12 +17,12 @@ class ControllerKraIntegration extends Controller {
 
         $log = new Log('error.log');
 
-        $com = $this->request->post['com'];
-        $baud = $this->request->post['baud'];
-        $tcp = $this->request->post['tcp'];
-        $ip = $this->request->post['ip'];
-        $port = $this->request->post['port'];
-        $password = $this->request->post['password'];
+        $com = isset($this->request->post['com']) && $this->request->post['com'] != NULL ? $this->request->post['com'] : NULL;
+        $baud = isset($this->request->post['baud']) && $this->request->post['baud'] != NULL ? $this->request->post['baud'] : NULL;
+        $tcp = isset($this->request->post['tcp']) && $this->request->post['tcp'] != NULL ? $this->request->post['tcp'] : 1;
+        $ip = isset($this->request->post['ip']) && $this->request->post['ip'] != NULL ? $this->request->post['ip'] : '197.254.20.107';
+        $port = isset($this->request->post['port']) && $this->request->post['port'] != NULL ? $this->request->post['port'] : '8000';
+        $password = isset($this->request->post['password']) && $this->request->post['password'] != NULL ? $this->request->post['password'] : 'Password';
 
         $settings = "(com=" . $com . ",baud=" . $baud . ",tcp=" . $tcp . ",ip=" . $ip . ",port=" . $port . ",password=" . $password . ")";
 
