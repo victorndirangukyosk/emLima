@@ -160,4 +160,30 @@ class ControllerKraIntegration extends Controller {
         $this->response->setOutput(json_encode($json));
     }
 
+    public function readcurrentreceiptinfo() {
+
+        $log = new Log('error.log');
+
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, 'http://localhost:4444/ReadCurrentReceiptInfo()');
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type:application/x-www-form-urlencoded'));
+
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_POST, 0);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+        $result = curl_exec($curl);
+        $xml_snippet = simplexml_load_string($result);
+        $json_convert = json_encode($xml_snippet);
+
+        $log->write($result);
+        curl_close($curl);
+        $final_result = json_decode($json_convert, true);
+        $json['status'] = true;
+        $json['data'] = $final_result;
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
 }
