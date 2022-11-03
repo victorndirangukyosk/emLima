@@ -89,7 +89,7 @@
 		  	<!--<li><a href="#tab-driver-location" data-toggle="tab">Driver Location</a></li>-->
 		  <?php } ?>
                   
-                  <?php if(!$this->user->isVendor()){ ?>
+                  <?php if(!$this->user->isVendor() && $order_status_id == 5){ ?>
 		  	<li><a href="#tab-kra" data-toggle="tab">KRA</a></li>
 		  <?php } ?>
 		  
@@ -138,12 +138,12 @@
                             <table class="table table-bordered">
 				  <tr>
 					<td>Connect To KRA Device :</td>
-                                        <td><button data-order-id="<?php echo $order_id; ?>" id="button-pezesha-terms-condtions" class="btn btn-success"><i class="fa fa-cogs"></i> Connect To KRA Device</button></td>
-				  </tr>
+                                        <td><button data-order-id="<?php echo $order_id; ?>" id="button-connect-to-kra-device" class="btn btn-success"><i class="fa fa-cogs"></i> Connect To KRA Device</button></td>
+				  </tr>button-pezesha-terms-condtions
                                   
                                   <tr>
 					<td>Open Invoice In KRA Device :</td>
-					<td><button data-order-id="<?php echo $order_id; ?>" id="button-pezesha-terms-condtions" class="btn btn-success"><i class="fa fa-cogs"></i> Open Invoice In KRA Device</button></td>
+					<td><button data-order-id="<?php echo $order_id; ?>" id="button-open-invoice-in-kra-device" class="btn btn-success"><i class="fa fa-cogs"></i> Open Invoice In KRA Device</button></td>
 				  </tr>
                                   
                                   <tr>
@@ -2672,5 +2672,55 @@ e.preventDefault();
 		}
     });
 });
+
+
+
+$('#button-connect-to-kra-device').on('click', function() {
+  
+	$.ajax({
+		url: 'index.php?path=kra/integration/settings&token=<?php echo $token; ?>',
+		type: 'post',
+		dataType: 'json',
+		data: { 'order_id' : $('#button-connect-to-kra-device').attr('data-order-id') },
+		beforeSend: function() {
+			$('#button-connect-to-kra-device').button('loading');			
+		},
+		complete: function() {
+			$('#button-connect-to-kra-device').button('reset');	
+		},
+		success: function(json) {
+                    if(json.device_status_code != 0) {
+                    alert('Unable to connect KRA device!');
+                    }
+		},			
+		error: function(xhr, ajaxOptions, thrownError) {
+			alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+		}
+	});
+});
+
+$('#button-open-invoice-in-kra-device').on('click', function() {
+  
+	$.ajax({
+		url: 'index.php?path=kra/integration/openinvoicewithfreecustomerdata&token=<?php echo $token; ?>',
+		type: 'post',
+		dataType: 'json',
+		data: { 'order_id' : $('#button-open-invoice-in-kra-device').attr('data-order-id') },
+		beforeSend: function() {
+			$('#button-open-invoice-in-kra-device').button('loading');			
+		},
+		complete: function() {
+			$('#button-open-invoice-in-kra-device').button('reset');	
+		},
+		success: function(json) {
+                    if(json.device_status_code != 0) {
+                    alert('Unable to connect KRA device!');
+                    }
+		},			
+		error: function(xhr, ajaxOptions, thrownError) {
+			alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+		}
+	});
+});
 </script>
-<?php echo $footer; ?> 
+<?php echo $footer; ?>

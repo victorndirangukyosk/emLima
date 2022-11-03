@@ -30,9 +30,12 @@ class ControllerKraIntegration extends Controller {
         $log->write($result);
         curl_close($curl);
         $final_result = json_decode($json_convert, true);
+
+        $read_status = $this->readstatuss();
+
         $json['status'] = true;
         $json['data'] = $final_result;
-
+        $json['device_status_code'] = $read_status['device_status_code'];
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
@@ -61,6 +64,32 @@ class ControllerKraIntegration extends Controller {
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
+    }
+
+    public function readstatuss() {
+
+        $log = new Log('error.log');
+
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, 'http://localhost:4444/ReadStatus()');
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type:application/x-www-form-urlencoded'));
+
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_POST, 0);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+        $result = curl_exec($curl);
+        $xml_snippet = simplexml_load_string($result);
+        $device_status_code = json_decode((json_encode($xml_snippet->attributes()->Code)), true);
+        $json_convert = json_encode($xml_snippet);
+
+        $log->write($result);
+        curl_close($curl);
+        $final_result = json_decode($json_convert, true);
+        $json['status'] = true;
+        $json['data'] = $final_result;
+        $json['device_status_code'] = $device_status_code[0];
+        return $json;
     }
 
     public function cancelreceipt() {
@@ -93,13 +122,21 @@ class ControllerKraIntegration extends Controller {
 
         $log = new Log('error.log');
 
-        $CompanyName = isset($this->request->post['CompanyName']) && $this->request->post['CompanyName'] != NULL ? $this->request->post['CompanyName'] : NULL;
-        $ClientPINnum = isset($this->request->post['ClientPINnum']) && $this->request->post['ClientPINnum'] != NULL ? $this->request->post['ClientPINnum'] : NULL;
-        $HeadQuarters = isset($this->request->post['HeadQuarters']) && $this->request->post['HeadQuarters'] != NULL ? $this->request->post['HeadQuarters'] : NULL;
-        $Address = isset($this->request->post['Address']) && $this->request->post['Address'] != NULL ? $this->request->post['Address'] : NULL;
-        $PostalCodeAndCity = isset($this->request->post['PostalCodeAndCity']) && $this->request->post['PostalCodeAndCity'] != NULL ? $this->request->post['PostalCodeAndCity'] : NULL;
-        $ExemptionNum = isset($this->request->post['ExemptionNum']) && $this->request->post['ExemptionNum'] != NULL ? $this->request->post['ExemptionNum'] : NULL;
-        $TraderSystemInvNum = isset($this->request->post['TraderSystemInvNum']) && $this->request->post['TraderSystemInvNum'] != NULL ? $this->request->post['TraderSystemInvNum'] : NULL;
+        $order_id = isset($this->request->post['order_id']) && $this->request->post['order_id'] != NULL ? $this->request->post['order_id'] : NULL;
+
+        $this->load->model('account/customer');
+        $this->load->model('sale/order');
+
+        $order_info = $this->model_sale_order->getOrder($order_id);
+        $customer_info = $this->model_account_customer->getCustomer($order_info['customer_id']);
+
+        $CompanyName = $customer_info['company_name'];
+        $ClientPINnum = NULL;
+        $HeadQuarters = NULL;
+        $Address = $customer_info['company_address'];
+        $PostalCodeAndCity = NULL;
+        $ExemptionNum = NULL;
+        $TraderSystemInvNum = $order_info['order_id'];
 
         $invoice_data = "(CompanyName=" . $CompanyName . ",ClientPINnum=" . $ClientPINnum . ",HeadQuarters=" . $HeadQuarters . ",Address=" . $Address . ",PostalCodeAndCity=" . $PostalCodeAndCity . ",ExemptionNum=" . $ExemptionNum . ",TraderSystemInvNum=" . $TraderSystemInvNum . ")";
 
