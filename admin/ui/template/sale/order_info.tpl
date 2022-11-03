@@ -138,42 +138,42 @@
                             <table class="table table-bordered">
 				  <tr>
 					<td>Connect To KRA Device :</td>
-					<td><button id="button-pezesha-terms-condtions" class="btn btn-success"><i class="fa fa-cloud-upload"></i> Connect To KRA Device</button></td>
+                                        <td><button data-order-id="<?php echo $order_id; ?>" id="button-pezesha-terms-condtions" class="btn btn-success"><i class="fa fa-cogs"></i> Connect To KRA Device</button></td>
 				  </tr>
                                   
                                   <tr>
 					<td>Open Invoice In KRA Device :</td>
-					<td><button id="button-pezesha-terms-condtions" class="btn btn-success"><i class="fa fa-cloud-upload"></i> Open Invoice In KRA Device</button></td>
+					<td><button data-order-id="<?php echo $order_id; ?>" id="button-pezesha-terms-condtions" class="btn btn-success"><i class="fa fa-cogs"></i> Open Invoice In KRA Device</button></td>
 				  </tr>
                                   
                                   <tr>
 					<td>Push Invoice Products :</td>
-					<td><button id="button-pezesha-terms-condtions" class="btn btn-success"><i class="fa fa-cloud-upload"></i> Push Invoice Products</button></td>
+					<td><button data-order-id="<?php echo $order_id; ?>" id="button-pezesha-terms-condtions" class="btn btn-success"><i class="fa fa-cogs"></i> Push Invoice Products</button></td>
 				  </tr>
                                   
                                   <tr>
 					<td>Push Invoice Products :</td>
-					<td><button id="button-pezesha-terms-condtions" class="btn btn-success"><i class="fa fa-cloud-upload"></i> Push Invoice Products</button></td>
+					<td><button data-order-id="<?php echo $order_id; ?>" id="button-pezesha-terms-condtions" class="btn btn-success"><i class="fa fa-cogs"></i> Push Invoice Products</button></td>
 				  </tr>
                                   
                                   <tr>
 					<td>Read Current Receipt Info :</td>
-					<td><button id="button-pezesha-terms-condtions" class="btn btn-success"><i class="fa fa-cloud-upload"></i> Read Current Receipt Info</button></td>
+					<td><button data-order-id="<?php echo $order_id; ?>" id="button-pezesha-terms-condtions" class="btn btn-success"><i class="fa fa-cogs"></i> Read Current Receipt Info</button></td>
 				  </tr>
                                   
                                   <tr>
 					<td>Read Current Receipt Info :</td>
-					<td><button id="button-pezesha-terms-condtions" class="btn btn-success"><i class="fa fa-cloud-upload"></i> Read Current Receipt Info</button></td>
+					<td><button data-order-id="<?php echo $order_id; ?>" id="button-pezesha-terms-condtions" class="btn btn-success"><i class="fa fa-cogs"></i> Read Current Receipt Info</button></td>
 				  </tr>
                                   
                                   <tr>
 					<td>Close Receipt :</td>
-					<td><button id="button-pezesha-terms-condtions" class="btn btn-success"><i class="fa fa-cloud-upload"></i> Close Receipt</button></td>
+					<td><button data-order-id="<?php echo $order_id; ?>" id="button-pezesha-terms-condtions" class="btn btn-success"><i class="fa fa-cogs"></i> Close Receipt</button></td>
 				  </tr>
                                   
                                   <tr>
 					<td>Read CU(KRA) Number :</td>
-					<td><button id="button-pezesha-terms-condtions" class="btn btn-success"><i class="fa fa-cloud-upload"></i> Read CU(KRA) Number</button></td>
+					<td><button data-order-id="<?php echo $order_id; ?>" id="button-pezesha-terms-condtions" class="btn btn-success"><i class="fa fa-cogs"></i> Read CU(KRA) Number</button></td>
 				  </tr>
 				  
 				</table>
