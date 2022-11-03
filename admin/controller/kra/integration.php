@@ -135,6 +135,14 @@ class ControllerKraIntegration extends Controller {
         $HSCode = isset($this->request->post['PostalCodeAndCity']) && $this->request->post['PostalCodeAndCity'] != NULL ? $this->request->post['PostalCodeAndCity'] : NULL;
         $HSName = isset($this->request->post['ExemptionNum']) && $this->request->post['ExemptionNum'] != NULL ? $this->request->post['ExemptionNum'] : NULL;
         $VATGrRate = isset($this->request->post['TraderSystemInvNum']) && $this->request->post['TraderSystemInvNum'] != NULL ? $this->request->post['TraderSystemInvNum'] : NULL;
+        $invoice_number = isset($this->request->post['invoice_number']) && $this->request->post['invoice_number'] != NULL ? $this->request->post['invoice_number'] : NULL;
+
+        $this->load->model('sale/order');
+        if ($this->model_sale_order->hasRealOrderProducts($invoice_number)) {
+            $products = $this->model_sale_order->getRealOrderProducts($invoice_number);
+        } else {
+            $products = $this->model_sale_order->getOrderProducts($invoice_number);
+        }
 
         $products_data = "(NamePLU=" . $NamePLU . ",OptionVATClass=" . $OptionVATClass . ",Price=" . $Price . ",MeasureUnit=" . $MeasureUnit . ",HSCode=" . $HSCode . ",HSName=" . $HSName . ",VATGrRate=" . $VATGrRate . ")";
 

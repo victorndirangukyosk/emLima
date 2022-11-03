@@ -86,7 +86,11 @@
 		  <?php } ?>
                   
                   <?php if(!$this->user->isVendor()){ ?>
-		  	<li><a href="#tab-driver-location" data-toggle="tab">Driver Location</a></li>
+		  	<!--<li><a href="#tab-driver-location" data-toggle="tab">Driver Location</a></li>-->
+		  <?php } ?>
+                  
+                  <?php if(!$this->user->isVendor()){ ?>
+		  	<li><a href="#tab-kra" data-toggle="tab">KRA</a></li>
 		  <?php } ?>
 		  
 		  
@@ -126,6 +130,55 @@
 
 				</div>
 
+			<?php } ?>
+                        
+                        <?php if(!$this->user->isVendor()){ ?>
+                        <div class="tab-pane" id="tab-kra">
+                            
+                            <table class="table table-bordered">
+				  <tr>
+					<td>Connect To KRA Device :</td>
+					<td><button id="button-pezesha-terms-condtions" class="btn btn-success"><i class="fa fa-cloud-upload"></i> Connect To KRA Device</button></td>
+				  </tr>
+                                  
+                                  <tr>
+					<td>Open Invoice In KRA Device :</td>
+					<td><button id="button-pezesha-terms-condtions" class="btn btn-success"><i class="fa fa-cloud-upload"></i> Open Invoice In KRA Device</button></td>
+				  </tr>
+                                  
+                                  <tr>
+					<td>Push Invoice Products :</td>
+					<td><button id="button-pezesha-terms-condtions" class="btn btn-success"><i class="fa fa-cloud-upload"></i> Push Invoice Products</button></td>
+				  </tr>
+                                  
+                                  <tr>
+					<td>Push Invoice Products :</td>
+					<td><button id="button-pezesha-terms-condtions" class="btn btn-success"><i class="fa fa-cloud-upload"></i> Push Invoice Products</button></td>
+				  </tr>
+                                  
+                                  <tr>
+					<td>Read Current Receipt Info :</td>
+					<td><button id="button-pezesha-terms-condtions" class="btn btn-success"><i class="fa fa-cloud-upload"></i> Read Current Receipt Info</button></td>
+				  </tr>
+                                  
+                                  <tr>
+					<td>Read Current Receipt Info :</td>
+					<td><button id="button-pezesha-terms-condtions" class="btn btn-success"><i class="fa fa-cloud-upload"></i> Read Current Receipt Info</button></td>
+				  </tr>
+                                  
+                                  <tr>
+					<td>Close Receipt :</td>
+					<td><button id="button-pezesha-terms-condtions" class="btn btn-success"><i class="fa fa-cloud-upload"></i> Close Receipt</button></td>
+				  </tr>
+                                  
+                                  <tr>
+					<td>Read CU(KRA) Number :</td>
+					<td><button id="button-pezesha-terms-condtions" class="btn btn-success"><i class="fa fa-cloud-upload"></i> Read CU(KRA) Number</button></td>
+				  </tr>
+				  
+				</table>
+
+                        </div>
 			<?php } ?>
 			
 
