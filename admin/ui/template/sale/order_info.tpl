@@ -148,7 +148,7 @@
                                   
                                   <tr>
 					<td>Push Invoice Products :</td>
-					<td><button data-order-id="<?php echo $order_id; ?>" id="button-pezesha-terms-condtions" class="btn btn-success"><i class="fa fa-cogs"></i> Push Invoice Products</button></td>
+					<td><button data-order-id="<?php echo $order_id; ?>" id="button-push-invoice-products" class="btn btn-success"><i class="fa fa-cogs"></i> Push Invoice Products</button></td>
 				  </tr>
                                   
                                   <tr>
@@ -2711,6 +2711,30 @@ $('#button-open-invoice-in-kra-device').on('click', function() {
 		},
 		complete: function() {
 			$('#button-open-invoice-in-kra-device').button('reset');	
+		},
+		success: function(json) {
+                    if(json.device_status_code != 0) {
+                    alert('Unable to connect KRA device!');
+                    }
+		},			
+		error: function(xhr, ajaxOptions, thrownError) {
+			alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+		}
+	});
+});
+
+$('#button-push-invoice-products').on('click', function() {
+  
+	$.ajax({
+		url: 'index.php?path=kra/integration/sellplufromextdb&token=<?php echo $token; ?>',
+		type: 'post',
+		dataType: 'json',
+		data: { 'order_id' : $('#button-push-invoice-products').attr('data-order-id') },
+		beforeSend: function() {
+			$('#button-push-invoice-products').button('loading');			
+		},
+		complete: function() {
+			$('#button-push-invoice-products').button('reset');	
 		},
 		success: function(json) {
                     if(json.device_status_code != 0) {

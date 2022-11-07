@@ -9,7 +9,7 @@ class ControllerKraIntegration extends Controller {
         $com = isset($this->request->post['com']) && $this->request->post['com'] != NULL ? $this->request->post['com'] : NULL;
         $baud = isset($this->request->post['baud']) && $this->request->post['baud'] != NULL ? $this->request->post['baud'] : NULL;
         $tcp = isset($this->request->post['tcp']) && $this->request->post['tcp'] != NULL ? $this->request->post['tcp'] : 1;
-        $ip = isset($this->request->post['ip']) && $this->request->post['ip'] != NULL ? $this->request->post['ip'] : '197.254.20.107';
+        $ip = isset($this->request->post['ip']) && $this->request->post['ip'] != NULL ? $this->request->post['ip'] : '196.207.27.42';
         $port = isset($this->request->post['port']) && $this->request->post['port'] != NULL ? $this->request->post['port'] : '8000';
         $password = isset($this->request->post['password']) && $this->request->post['password'] != NULL ? $this->request->post['password'] : 'Password';
 
@@ -167,14 +167,7 @@ class ControllerKraIntegration extends Controller {
     public function sellplufromextdb() {
         $log = new Log('error.log');
 
-        $NamePLU = isset($this->request->post['NamePLU']) && $this->request->post['NamePLU'] != NULL ? $this->request->post['NamePLU'] : NULL;
-        $OptionVATClass = isset($this->request->post['ClientPINnum']) && $this->request->post['ClientPINnum'] != NULL ? $this->request->post['ClientPINnum'] : NULL;
-        $Price = isset($this->request->post['HeadQuarters']) && $this->request->post['HeadQuarters'] != NULL ? $this->request->post['HeadQuarters'] : NULL;
-        $MeasureUnit = isset($this->request->post['Address']) && $this->request->post['Address'] != NULL ? $this->request->post['Address'] : NULL;
-        $HSCode = isset($this->request->post['PostalCodeAndCity']) && $this->request->post['PostalCodeAndCity'] != NULL ? $this->request->post['PostalCodeAndCity'] : NULL;
-        $HSName = isset($this->request->post['ExemptionNum']) && $this->request->post['ExemptionNum'] != NULL ? $this->request->post['ExemptionNum'] : NULL;
-        $VATGrRate = isset($this->request->post['TraderSystemInvNum']) && $this->request->post['TraderSystemInvNum'] != NULL ? $this->request->post['TraderSystemInvNum'] : NULL;
-        $invoice_number = isset($this->request->post['invoice_number']) && $this->request->post['invoice_number'] != NULL ? $this->request->post['invoice_number'] : NULL;
+        $invoice_number = isset($this->request->post['order_id']) && $this->request->post['order_id'] != NULL ? $this->request->post['order_id'] : NULL;
 
         $this->load->model('sale/order');
         if ($this->model_sale_order->hasRealOrderProducts($invoice_number)) {
@@ -183,10 +176,27 @@ class ControllerKraIntegration extends Controller {
             $products = $this->model_sale_order->getOrderProducts($invoice_number);
         }
 
-        $products_data = "(NamePLU=" . $NamePLU . ",OptionVATClass=" . $OptionVATClass . ",Price=" . $Price . ",MeasureUnit=" . $MeasureUnit . ",HSCode=" . $HSCode . ",HSName=" . $HSName . ",VATGrRate=" . $VATGrRate . ")";
+        $new_product_array = NULL;
+        $total_product_array = NULL;
+        foreach ($products as $product) {
+            $new_product_array['NamePLU'] = $product['name'];
+            $new_product_array['OptionVATClass'] = $product['tax'] > 0 ? 'A' : 'C';
+            $new_product_array['Price'] = $product['price'];
+            $new_product_array['MeasureUnit'] = $product['unit'];
+            $new_product_array['HSCode'] = NULL;
+            $new_product_array['HSName'] = NULL;
+            $new_product_array['VATGrRate'] = $product['tax'] > 0 ? 16 : 0;
+            $new_product_array['Quantity'] = $product['quantity'];
+            $new_product_array['DiscAddP'] = 0;
+            $total_product_array[] = $new_product_array;
+        }
+        $log->write($total_product_array);
+
+        //$products_data = "(NamePLU=" . $NamePLU . ",OptionVATClass=" . $OptionVATClass . ",Price=" . $Price . ",MeasureUnit=" . $MeasureUnit . ",HSCode=" . $HSCode . ",HSName=" . $HSName . ",VATGrRate=" . $VATGrRate . ")";
+        //$products_data = "(" . $total_product_array . ")";
 
         $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, 'http://localhost:4444/SellPLUfromExtDB' . $products_data);
+        curl_setopt($curl, CURLOPT_URL, 'http://localhost:4444/SellPLUfromExtDB' . $total_product_array);
         curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type:application/x-www-form-urlencoded'));
 
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
@@ -195,6 +205,7 @@ class ControllerKraIntegration extends Controller {
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
         $result = curl_exec($curl);
         $xml_snippet = simplexml_load_string($result);
+        $device_status_code = json_decode((json_encode($xml_snippet->attributes()->Code)), true);
         $json_convert = json_encode($xml_snippet);
 
         $log->write($result);
@@ -202,6 +213,7 @@ class ControllerKraIntegration extends Controller {
         $final_result = json_decode($json_convert, true);
         $json['status'] = true;
         $json['data'] = $final_result;
+        $json['device_status_code'] = $device_status_code;
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
