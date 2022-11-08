@@ -139,7 +139,7 @@
 				  <tr>
 					<td>Connect To KRA Device :</td>
                                         <td><button data-order-id="<?php echo $order_id; ?>" id="button-connect-to-kra-device" class="btn btn-success"><i class="fa fa-cogs"></i> Connect To KRA Device</button></td>
-				  </tr>button-pezesha-terms-condtions
+				  </tr>
                                   
                                   <tr>
 					<td>Open Invoice In KRA Device :</td>
