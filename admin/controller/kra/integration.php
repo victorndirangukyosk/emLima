@@ -9,7 +9,7 @@ class ControllerKraIntegration extends Controller {
         $com = isset($this->request->post['com']) && $this->request->post['com'] != NULL ? $this->request->post['com'] : NULL;
         $baud = isset($this->request->post['baud']) && $this->request->post['baud'] != NULL ? $this->request->post['baud'] : NULL;
         $tcp = isset($this->request->post['tcp']) && $this->request->post['tcp'] != NULL ? $this->request->post['tcp'] : 1;
-        $ip = isset($this->request->post['ip']) && $this->request->post['ip'] != NULL ? $this->request->post['ip'] : '196.207.27.42';
+        $ip = isset($this->request->post['ip']) && $this->request->post['ip'] != NULL ? $this->request->post['ip'] : '196.207.19.132';
         $port = isset($this->request->post['port']) && $this->request->post['port'] != NULL ? $this->request->post['port'] : '8000';
         $password = isset($this->request->post['password']) && $this->request->post['password'] != NULL ? $this->request->post['password'] : 'Password';
 
@@ -151,7 +151,6 @@ class ControllerKraIntegration extends Controller {
         $result = curl_exec($curl);
         $log->write($result);
         //$log->write($invoice_data);
-
         //$info = curl_getinfo($curl);
         //$log->write($info);
 
@@ -196,13 +195,15 @@ class ControllerKraIntegration extends Controller {
             $new_product_array['DiscAddP'] = 0;
             $total_product_array[] = $new_product_array;
         }
-        $log->write($total_product_array);
-
-        //$products_data = "(NamePLU=" . $NamePLU . ",OptionVATClass=" . $OptionVATClass . ",Price=" . $Price . ",MeasureUnit=" . $MeasureUnit . ",HSCode=" . $HSCode . ",HSName=" . $HSName . ",VATGrRate=" . $VATGrRate . ")";
+        //$log->write($total_product_array);
+        $HSCode = NULL;
+        $HSName = NULL;
+        $VATGrRate = 0;
+        $products_data = "(NamePLU=" . preg_replace('/[0-9\,\-\@\.\;\" "]+/', '', $products[0]['name']) . ",OptionVATClass=" . 'C' . ",Price=" . $products[0]['price'] . ",MeasureUnit=" . $products[0]['unit'] . ",HSCode=" . $HSCode . ",HSName=" . $HSName . ",VATGrRate=" . $VATGrRate . ")";
         //$products_data = "(" . $total_product_array . ")";
 
         $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, 'http://localhost:4444/SellPLUfromExtDB' . $total_product_array);
+        curl_setopt($curl, CURLOPT_URL, 'http://localhost:4444/SellPLUfromExtDB' . $products_data);
         curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type:application/x-www-form-urlencoded'));
 
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
