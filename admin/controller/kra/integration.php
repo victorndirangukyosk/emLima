@@ -152,8 +152,8 @@ class ControllerKraIntegration extends Controller {
         $log->write($result);
         //$log->write($invoice_data);
 
-        $info = curl_getinfo($curl);
-        $log->write($info);
+        //$info = curl_getinfo($curl);
+        //$log->write($info);
 
         $xml_snippet = simplexml_load_string($result);
         $device_status_code = json_decode((json_encode($xml_snippet->attributes()->Code)), true);
