@@ -184,7 +184,7 @@ class ControllerKraIntegration extends Controller {
         $new_product_array = NULL;
         $total_product_array = NULL;
         foreach ($products as $product) {
-            $new_product_array['NamePLU'] = $product['name'];
+            $new_product_array['NamePLU'] = preg_replace('/[0-9\,\-\@\.\;\" "]+/', '', $product['name']);
             $new_product_array['OptionVATClass'] = $product['tax'] > 0 ? 'A' : 'C';
             $new_product_array['Price'] = $product['price'];
             $new_product_array['MeasureUnit'] = $product['unit'];
@@ -200,7 +200,7 @@ class ControllerKraIntegration extends Controller {
         $HSName = NULL;
         $VATGrRate = 0;
         $products_data = "(NamePLU=" . preg_replace('/[0-9\,\-\@\.\;\" "]+/', '', $products[0]['name']) . ",OptionVATClass=" . 'C' . ",Price=" . $products[0]['price'] . ",MeasureUnit=" . $products[0]['unit'] . ",HSCode=" . $HSCode . ",HSName=" . $HSName . ",VATGrRate=" . $VATGrRate . ")";
-        //$products_data = "(" . $total_product_array . ")";
+        $products_data = "(" . http_build_query($total_product_array) . ")";
 
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, 'http://localhost:4444/SellPLUfromExtDB' . $products_data);
@@ -211,6 +211,9 @@ class ControllerKraIntegration extends Controller {
         curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
         $result = curl_exec($curl);
+        $info = curl_getinfo($curl);
+        $log->write($result);
+        $log->write($info);
         $xml_snippet = simplexml_load_string($result);
         $device_status_code = json_decode((json_encode($xml_snippet->attributes()->Code)), true);
         $json_convert = json_encode($xml_snippet);
