@@ -9,7 +9,7 @@ class ControllerKraIntegration extends Controller {
         $com = isset($this->request->post['com']) && $this->request->post['com'] != NULL ? $this->request->post['com'] : NULL;
         $baud = isset($this->request->post['baud']) && $this->request->post['baud'] != NULL ? $this->request->post['baud'] : NULL;
         $tcp = isset($this->request->post['tcp']) && $this->request->post['tcp'] != NULL ? $this->request->post['tcp'] : 1;
-        $ip = isset($this->request->post['ip']) && $this->request->post['ip'] != NULL ? $this->request->post['ip'] : '196.207.19.132';
+        $ip = isset($this->request->post['ip']) && $this->request->post['ip'] != NULL ? $this->request->post['ip'] : '197.254.20.107';
         $port = isset($this->request->post['port']) && $this->request->post['port'] != NULL ? $this->request->post['port'] : '8000';
         $password = isset($this->request->post['password']) && $this->request->post['password'] != NULL ? $this->request->post['password'] : 'Password';
 
@@ -200,7 +200,8 @@ class ControllerKraIntegration extends Controller {
         $HSName = NULL;
         $VATGrRate = 0;
         $products_data = "(NamePLU=" . preg_replace('/[0-9\,\-\@\.\;\" "]+/', '', $products[0]['name']) . ",OptionVATClass=" . 'C' . ",Price=" . $products[0]['price'] . ",MeasureUnit=" . $products[0]['unit'] . ",HSCode=" . $HSCode . ",HSName=" . $HSName . ",VATGrRate=" . $VATGrRate . ")";
-        $products_data = "(" . http_build_query($total_product_array) . ")";
+        $new_products_data = json_encode($total_product_array, true);
+        $new_products_data = '(' . $new_products_data . ')';
 
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, 'http://localhost:4444/SellPLUfromExtDB' . $products_data);
