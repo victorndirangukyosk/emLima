@@ -632,6 +632,30 @@ class ControllerSettingSetting extends Controller {
         } else {
             $data['config_time_restriction_for_order_edit'] = $this->config->get('config_time_restriction_for_order_edit');
         }
+        
+        if (isset($this->request->post['config_kra_tcp'])) {
+            $data['config_kra_tcp'] = $this->request->post['config_kra_tcp'];
+        } else {
+            $data['config_kra_tcp'] = $this->config->get('config_kra_tcp');
+        }
+        
+        if (isset($this->request->post['config_kra_ip'])) {
+            $data['config_kra_ip'] = $this->request->post['config_kra_ip'];
+        } else {
+            $data['config_kra_ip'] = $this->config->get('config_kra_ip');
+        }
+        
+        if (isset($this->request->post['config_kra_port'])) {
+            $data['config_kra_port'] = $this->request->post['config_kra_port'];
+        } else {
+            $data['config_kra_port'] = $this->config->get('config_kra_port');
+        }
+        
+        if (isset($this->request->post['config_kra_password'])) {
+            $data['config_kra_password'] = $this->request->post['config_kra_password'];
+        } else {
+            $data['config_kra_password'] = $this->config->get('config_kra_password');
+        }
 
         if (isset($this->request->post['config_amitruck_clientSecret'])) {
             $data['config_amitruck_clientSecret'] = $this->request->post['config_amitruck_clientSecret'];
