@@ -181,51 +181,46 @@ class ControllerKraIntegration extends Controller {
             $products = $this->model_sale_order->getOrderProducts($invoice_number);
         }
 
+        $json['status'] = true;
+
         $new_product_array = NULL;
-        $total_product_array = NULL;
         foreach ($products as $product) {
             $new_product_array['NamePLU'] = preg_replace('/[0-9\,\-\@\.\;\" "]+/', '', $product['name']);
             $new_product_array['OptionVATClass'] = $product['tax'] > 0 ? 'A' : 'C';
-            $new_product_array['Price'] = $product['price'];
+            $new_product_array['Price'] = floor($product['price']);
             $new_product_array['MeasureUnit'] = $product['unit'];
             $new_product_array['HSCode'] = NULL;
             $new_product_array['HSName'] = NULL;
             $new_product_array['VATGrRate'] = $product['tax'] > 0 ? 16 : 0;
             $new_product_array['Quantity'] = $product['quantity'];
             $new_product_array['DiscAddP'] = 0;
-            $total_product_array[] = $new_product_array;
+
+            $hs_code = '0023.11.00';
+            $hs_name = 'EdibleVegetablesandcertainrootsandtubersofChapter7excludingthoseoftariffheading0711';
+            $products_data = "(NamePLU=" . $new_product_array['NamePLU'] . ",OptionVATClass=" . $new_product_array['OptionVATClass'] . ",Price=" . $new_product_array['Price'] . ",MeasureUnit=" . $new_product_array['MeasureUnit'] . ",HSCode=" . $hs_code . ",HSName=" . $hs_name . ",VATGrRate=" . $new_product_array['VATGrRate'] . ",Quantity=" . $new_product_array['Quantity'] . ",DiscAddP=" . $new_product_array['DiscAddP'] . ")";
+
+            $curl = curl_init();
+            curl_setopt($curl, CURLOPT_URL, 'http://localhost:4444/SellPLUfromExtDB' . $products_data);
+            curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type:application/x-www-form-urlencoded'));
+
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($curl, CURLOPT_POST, 0);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+            $result = curl_exec($curl);
+            $info = curl_getinfo($curl);
+            $log->write($result);
+            $log->write($info);
+            $xml_snippet = simplexml_load_string($result);
+            $device_status_code = json_decode((json_encode($xml_snippet->attributes()->Code)), true);
+            $json_convert = json_encode($xml_snippet);
+
+            $log->write($result);
+            curl_close($curl);
+            $final_result = json_decode($json_convert, true);
+            $json['data'] = $final_result;
+            $json['device_status_code'] = $device_status_code;
         }
-        //$log->write($total_product_array);
-        $HSCode = NULL;
-        $HSName = NULL;
-        $VATGrRate = 0;
-        $products_data = "(NamePLU=" . preg_replace('/[0-9\,\-\@\.\;\" "]+/', '', $products[0]['name']) . ",OptionVATClass=" . 'C' . ",Price=" . $products[0]['price'] . ",MeasureUnit=" . $products[0]['unit'] . ",HSCode=" . $HSCode . ",HSName=" . $HSName . ",VATGrRate=" . $VATGrRate . ")";
-        $new_products_data = json_encode($total_product_array, true);
-        $new_products_data = '(' . $new_products_data . ')';
-
-        $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, 'http://localhost:4444/SellPLUfromExtDB' . $products_data);
-        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type:application/x-www-form-urlencoded'));
-
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($curl, CURLOPT_POST, 0);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
-        $result = curl_exec($curl);
-        $info = curl_getinfo($curl);
-        $log->write($result);
-        $log->write($info);
-        $xml_snippet = simplexml_load_string($result);
-        $device_status_code = json_decode((json_encode($xml_snippet->attributes()->Code)), true);
-        $json_convert = json_encode($xml_snippet);
-
-        $log->write($result);
-        curl_close($curl);
-        $final_result = json_decode($json_convert, true);
-        $json['status'] = true;
-        $json['data'] = $final_result;
-        $json['device_status_code'] = $device_status_code;
-
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }

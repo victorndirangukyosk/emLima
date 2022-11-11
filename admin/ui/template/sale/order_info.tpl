@@ -2743,12 +2743,12 @@ $('#button-read-current-receipt-info').on('click', function() {
 		url: 'index.php?path=kra/integration/readcurrentreceiptinfo&token=<?php echo $token; ?>',
 		type: 'post',
 		dataType: 'json',
-		data: { 'order_id' : $('#button-push-invoice-products').attr('data-order-id') },
+		data: { 'order_id' : $('#button-read-current-receipt-info').attr('data-order-id') },
 		beforeSend: function() {
-			$('#button-push-invoice-products').button('loading');			
+			$('#button-read-current-receipt-info').button('loading');			
 		},
 		complete: function() {
-			$('#button-push-invoice-products').button('reset');	
+			$('#button-read-current-receipt-info').button('reset');	
 		},
 		success: function(json) {
                     if(json.device_status_code != 0) {
@@ -2769,10 +2769,10 @@ $('#button-close-receipt').on('click', function() {
 		dataType: 'json',
 		data: { 'order_id' : $('#button-push-invoice-products').attr('data-order-id') },
 		beforeSend: function() {
-			$('#button-push-invoice-products').button('loading');			
+			$('#button-close-receipt').button('loading');			
 		},
 		complete: function() {
-			$('#button-push-invoice-products').button('reset');	
+			$('#button-close-receipt').button('reset');	
 		},
 		success: function(json) {
                     if(json.device_status_code != 0) {
@@ -2792,12 +2792,12 @@ $('#button-read-kra-number').on('click', function() {
 		url: 'index.php?path=kra/integration/readcunumbers&token=<?php echo $token; ?>',
 		type: 'post',
 		dataType: 'json',
-		data: { 'order_id' : $('#button-push-invoice-products').attr('data-order-id') },
+		data: { 'order_id' : $('#button-read-kra-number').attr('data-order-id') },
 		beforeSend: function() {
-			$('#button-push-invoice-products').button('loading');			
+			$('#button-read-kra-number').button('loading');			
 		},
 		complete: function() {
-			$('#button-push-invoice-products').button('reset');	
+			$('#button-read-kra-number').button('reset');	
 		},
 		success: function(json) {
                     if(json.device_status_code != 0) {
