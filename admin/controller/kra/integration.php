@@ -187,7 +187,7 @@ class ControllerKraIntegration extends Controller {
         foreach ($products as $product) {
             $new_product_array['NamePLU'] = preg_replace('/[0-9\,\-\@\.\;\" "]+/', '', $product['name']);
             $new_product_array['OptionVATClass'] = $product['tax'] > 0 ? 'A' : 'C';
-            $new_product_array['Price'] = floor($product['price']);
+            $new_product_array['Price'] = $product['price'];
             $new_product_array['MeasureUnit'] = $product['unit'];
             $new_product_array['HSCode'] = NULL;
             $new_product_array['HSName'] = NULL;
@@ -196,7 +196,7 @@ class ControllerKraIntegration extends Controller {
             $new_product_array['DiscAddP'] = 0;
 
             $hs_code = '0023.11.00';
-            $hs_name = 'EdibleVegetablesandcertainrootsandtubersofChapter7excludingthoseoftariffheading0711';
+            $hs_name = NULL;
             $products_data = "(NamePLU=" . $new_product_array['NamePLU'] . ",OptionVATClass=" . $new_product_array['OptionVATClass'] . ",Price=" . $new_product_array['Price'] . ",MeasureUnit=" . $new_product_array['MeasureUnit'] . ",HSCode=" . $hs_code . ",HSName=" . $hs_name . ",VATGrRate=" . $new_product_array['VATGrRate'] . ",Quantity=" . $new_product_array['Quantity'] . ",DiscAddP=" . $new_product_array['DiscAddP'] . ")";
 
             $curl = curl_init();
