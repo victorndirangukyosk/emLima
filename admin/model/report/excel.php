@@ -8883,7 +8883,7 @@ class ModelReportExcel extends Model {
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, 4, 'Date End');
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, 4, 'No. Orders');
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(3, 4, 'No. Products');
-            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, 4, 'Tax');
+            $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(4, 4, 'Tax + (Shipping VAT)');
             $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(5, 4, 'Total');
 
             $objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, 4)->applyFromArray($title);

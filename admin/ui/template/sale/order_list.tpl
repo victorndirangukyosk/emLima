@@ -2907,6 +2907,11 @@ function downloadOrders() {
                     }
             }
 
+            var filter_vendor = $('input[name=\'filter_vendor\']').val();
+
+            if (filter_vendor) {
+                url += '&filter_vendor=' + encodeURIComponent(filter_vendor);
+            }
 
             location = url;
             

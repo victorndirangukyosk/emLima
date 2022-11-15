@@ -1209,7 +1209,7 @@ class ModelReportSale extends Model {
     }
     
     public function getOrdersbyDeliveryDate($data = []) {
-        $sql = 'SELECT MIN(o.delivery_date) AS date_start, MAX(o.delivery_date) AS date_end, COUNT(*) AS `orders`, SUM((SELECT SUM(op.quantity) FROM `' . DB_PREFIX . 'order_product` op WHERE op.order_id = o.order_id GROUP BY op.order_id)) AS products, SUM((SELECT SUM(ot.value) FROM `' . DB_PREFIX . "order_total` ot WHERE ot.order_id = o.order_id AND ot.code = 'tax' GROUP BY ot.order_id)) AS tax, SUM((SELECT SUM(ots.value) FROM ".DB_PREFIX."order_total ots WHERE ots.order_id = o.order_id AND ots.code = 'total' GROUP BY ots.order_id)) AS totals, SUM((SELECT SUM(rop.quantity) FROM ".DB_PREFIX."real_order_product rop WHERE rop.order_id = o.order_id GROUP BY rop.order_id)) AS realproducts, SUM(o.total) AS `total` FROM `" . DB_PREFIX . 'order` o';
+        $sql = 'SELECT MIN(o.delivery_date) AS date_start, MAX(o.delivery_date) AS date_end, COUNT(*) AS `orders`, SUM((SELECT SUM(op.quantity) FROM `' . DB_PREFIX . 'order_product` op WHERE op.order_id = o.order_id GROUP BY op.order_id)) AS products, SUM((SELECT SUM(ot.value) FROM `' . DB_PREFIX . "order_total` ot WHERE ot.order_id = o.order_id AND ot.code = 'tax' GROUP BY ot.order_id)) AS tax, SUM((SELECT SUM(ot1.value) FROM `". DB_PREFIX . "order_total` ot1 WHERE ot1.order_id = o.order_id AND ot1.code = 'delivery_vat' GROUP BY ot1.order_id)) AS vat_shipping, SUM((SELECT SUM(ots.value) FROM ".DB_PREFIX."order_total ots WHERE ots.order_id = o.order_id AND ots.code = 'total' GROUP BY ots.order_id)) AS totals, SUM((SELECT SUM(rop.quantity) FROM ".DB_PREFIX."real_order_product rop WHERE rop.order_id = o.order_id GROUP BY rop.order_id)) AS realproducts, SUM(o.total) AS `total` FROM `" . DB_PREFIX . 'order` o';
 
         $sql .= ' INNER JOIN `' . DB_PREFIX . 'store` st on st.store_id = o.store_id ';
 
@@ -1285,7 +1285,7 @@ class ModelReportSale extends Model {
             $sql .= ' LIMIT ' . (int) $data['start'] . ',' . (int) $data['limit'];
         }
 
-        //echo $sql;die;
+        // echo $sql;die;
 
         $query = $this->db->query($sql);
 

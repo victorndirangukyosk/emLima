@@ -545,9 +545,9 @@ class ModelCheckoutOrder extends Model {
 
                 $risk_score = $this->model_checkout_fraud->getFraudScore($order_info);
 
-                if (!$safe && $risk_score > $this->config->get('config_fraud_score')) {
-                    $order_status_id = $this->config->get('config_fraud_status_id');
-                }
+                // if (!$safe && $risk_score > $this->config->get('config_fraud_score')) {
+                //     $order_status_id = $this->config->get('config_fraud_status_id');
+                // }
             }
 
             $log->write($safe);
