@@ -109,10 +109,11 @@ class ControllerReportSaleOrder extends Controller {
         $order_total = $this->model_report_sale->getTotalOrdersbyDeliveryDate($filter_data);
 
         $results = $this->model_report_sale->getOrdersbyDeliveryDate($filter_data);
-        //echo "<pre>" . print_r($results) . "</pre>";
+        // echo "<pre>" . print_r($results) . "</pre>";
         //die;
 
         foreach ($results as $result) {
+            $final_tax=($result['tax']??0)+($result['vat_shipping']??0);
             $data['orders'][] = [
                 'date_start' => date($this->language->get('date_format_short'), strtotime($result['date_start'])),
                 'date_end' => date($this->language->get('date_format_short'), strtotime($result['date_end'])),
@@ -122,7 +123,8 @@ class ControllerReportSaleOrder extends Controller {
                 'products' => $result['realproducts'] != NULL && $result['realproducts'] > 0 ? $result['realproducts'] : $result['products'],
                 //'tax' => $this->currency->format($result['tax'], $this->config->get('config_currency')),
                 //'total' => $this->currency->format($result['total'], $this->config->get('config_currency')),
-                'tax' => $this->currency->format($result['tax'], $this->config->get('config_currency')),
+                // 'tax' => $this->currency->format($result['tax'], $this->config->get('config_currency')),
+                'tax' => $this->currency->format($final_tax, $this->config->get('config_currency')),
                 'total' => $this->currency->format($result['totals'], $this->config->get('config_currency')),
             ];
         }
@@ -295,7 +297,12 @@ class ControllerReportSaleOrder extends Controller {
 
         $results = $this->model_report_sale->getOrdersbyDeliveryDate($filter_data);
 
+       
+
         foreach ($results as $result) {
+
+            $final_tax=($result['tax']??0)+($result['vat_shipping']??0);
+
             $data['orders'][] = [
                 'date_start' => date($this->language->get('date_format_short'), strtotime($result['date_start'])),
                 'date_end' => date($this->language->get('date_format_short'), strtotime($result['date_end'])),
@@ -304,14 +311,17 @@ class ControllerReportSaleOrder extends Controller {
                 'orders' => $result['orders'],
                 //'products' => $result['products'],
                 'products' => $result['realproducts'] != NULL && $result['realproducts'] > 0 ? $result['realproducts'] : $result['products'],
-                'tax' => $this->currency->format($result['tax'], $this->config->get('config_currency')),
-                'tax_value' => $result['tax']??0,
+                'tax' => $this->currency->format($final_tax, $this->config->get('config_currency')),
+                'tax_value' => $final_tax??0,
                 //'total' => $this->currency->format($result['total'], $this->config->get('config_currency')),
                 'total' => $this->currency->format($result['totals'], $this->config->get('config_currency')),
                 'totalvalue' => $result['totals'],
                 //'totalvalue' => $result['total'],
             ];
         }
+
+        // echo "<pre>" . print_r($data) . "</pre>";
+        // die;
 
         $data['filter_date_start'] = $filter_date_start;
         $data['filter_date_end'] = $filter_date_end;

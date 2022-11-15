@@ -92,7 +92,7 @@
                 <td class="text-left"><?php echo $column_date_end; ?></td>
                 <td class="text-right"><?php echo $column_orders; ?></td>
                 <td class="text-right"><?php echo $column_products; ?></td>
-                <td class="text-right"><?php echo $column_tax; ?></td>
+                <td class="text-right"><?php echo $column_tax; ?> + (Shipping VAT) </td>
                 <td class="text-right"><?php echo $column_total; ?></td>
                 <td class="text-center"><?php echo $column_action; ?></td>
               </tr>
