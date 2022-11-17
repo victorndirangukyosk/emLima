@@ -459,6 +459,16 @@ class ControllerAccountAccount extends Controller {
             $data['firstname'] = '';
         }
 
+
+        // if (isset($this->request->post['paybill_act'])) {
+        //     $data['paybill_act'] = $this->request->post['paybill_act'];
+        // } else
+        if (!empty($customer_info)) {
+            $data['paybill_act'] = $customer_info['paybill_act'];
+        } else {
+            $data['paybill_act'] = '';
+        }
+
         if (isset($this->request->post['national_id'])) {
             $data['national_id'] = $this->request->post['national_id'];
         } elseif (!empty($customer_info)) {
@@ -1022,6 +1032,8 @@ class ControllerAccountAccount extends Controller {
                 'delivery_timeslot' => $order_query->row['delivery_timeslot'],
                     /* 'date_modified' => $order_query->row['date_modified'],
                       'date_added' => $order_query->row['date_added'] */
+                'paybill_act' => $order_query->row['paybill_act'],
+
             ];
         } else {
             return false;

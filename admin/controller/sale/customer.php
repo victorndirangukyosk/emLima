@@ -3543,6 +3543,15 @@ class ControllerSaleCustomer extends Controller {
             $data['SAP_customer_no'] = '';
         }
 
+        // if (isset($this->request->post['paybill_act'])) {
+        //     $data['paybill_act'] = $this->request->post['paybill_act'];
+        // } else
+        if (!empty($customer_info)) {
+            $data['paybill_act'] = $customer_info['paybill_act'];
+        } else {
+            $data['paybill_act'] = '';
+        }
+
         if (isset($this->request->post['account_manager'])) {
             $data['account_manager'] = $this->request->post['account_manager'];
         } elseif (!empty($customer_info)) {
@@ -5235,6 +5244,7 @@ class ControllerSaleCustomer extends Controller {
         $data['safe'] = $customer_info['safe'];
         $data['source'] = $customer_info['source'];
         $data['SAP_customer_no'] = $customer_info['SAP_customer_no'];
+        $data['paybill_act'] = $customer_info['paybill_act'];
         $data['latitude'] = $customer_info['latitude'];
         $data['longitude'] = $customer_info['longitude'];
         $data['payment_terms'] = $customer_info['payment_terms'];
@@ -6282,6 +6292,16 @@ class ControllerSaleCustomer extends Controller {
             $data['SAP_customer_no'] = $customer_info['SAP_customer_no'];
         } else {
             $data['SAP_customer_no'] = '';
+        }
+
+
+        // if (isset($this->request->post['paybill_act'])) {
+        //     $data['paybill_act'] = $this->request->post['paybill_act'];
+        // } else
+        if (!empty($customer_info)) {
+            $data['paybill_act'] = $customer_info['paybill_act'];
+        } else {
+            $data['paybill_act'] = '';
         }
 
         if (isset($this->request->post['account_manager'])) {
