@@ -146,6 +146,23 @@ class ModelAccountCustomer extends Model {
             $this->db->query('UPDATE ' . DB_PREFIX . "customer SET email = '" . $temp_email . "' WHERE customer_id = '" . (int) $customer_id . "'");
         }
 
+
+        if ($customer_paybill_act == null || empty($customer_paybill_act)) {
+            // $log = new Log('error.log');
+            // $log->write("customer_paybill_act");
+            $customer_reg_date = $this->db->query('select date_added from  ' . DB_PREFIX . "customer WHERE customer_id = '" . (int) $customer_id . "'")->row;
+            // $log->write($customer_reg_date);            
+            $customer_reg_date_value = $customer_reg_date['date_added'] ?? date("Y-m-d H:i:s");
+            // $log->write($customer_reg_date_value);
+            $customer_paybill_act = $customer_id . strtotime($customer_reg_date_value);
+            // $log->write($customer_paybill_act); 
+            // $log->write("customer_paybill_act");
+            $this->db->query('UPDATE ' . DB_PREFIX . "customer SET paybill_act = '" . $customer_paybill_act . "' WHERE customer_id = '" . (int) $customer_id . "'");
+            // echo "<pre>";print_r('UPDATE ' . DB_PREFIX . "customer SET paybill_act = '" . $customer_paybill_act . "' WHERE customer_id = '" . (int) $customer_id . "'");die;
+        }
+
+
+
         if (!empty($data['country_id'])) {
             $this->db->query('INSERT INTO ' . DB_PREFIX . "address SET customer_id = '" . (int) $customer_id . "', firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', dob = '" . $data['dob'] . "', company = '" . $this->db->escape($data['company']) . "', address_1 = '" . $this->db->escape($data['address_1']) . "', address_2 = '" . $this->db->escape($data['address_2']) . "', city_id = '" . $this->db->escape($data['cityid']) . "', postcode = '" . $this->db->escape($data['postcode']) . "', country_id = '" . (int) $data['country_id'] . "', zone_id = '" . (int) $data['zone_id'] . "', custom_field = '" . $this->db->escape(isset($data['custom_field']['address']) ? serialize($data['custom_field']['address']) : '') . "'");
 
@@ -232,20 +249,20 @@ class ModelAccountCustomer extends Model {
 
 
 
-// Send to main admin email if new account email is enabled
-//commented as particular message is not required.
-// if ($this->config->get('config_account_mail')) {
-//     $mail = new Mail($this->config->get('config_mail'));
-//     $mail->setTo($this->config->get('config_email'));
-//     $mail->send();
-//     $emails = explode(',', $this->config->get('config_alert_emails'));
-//     foreach ($emails as $email) {
-//         if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
-//             $mail->setTo($email);
-//             $mail->send();
-//         }
-//     }
-// }
+        // Send to main admin email if new account email is enabled
+        //commented as particular message is not required.
+        // if ($this->config->get('config_account_mail')) {
+        //     $mail = new Mail($this->config->get('config_mail'));
+        //     $mail->setTo($this->config->get('config_email'));
+        //     $mail->send();
+        //     $emails = explode(',', $this->config->get('config_alert_emails'));
+        //     foreach ($emails as $email) {
+        //         if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        //             $mail->setTo($email);
+        //             $mail->send();
+        //         }
+        //     }
+        // }
 
         $this->trigger->fire('post.customer.add', $customer_id);
 
@@ -253,13 +270,13 @@ class ModelAccountCustomer extends Model {
     }
 
     public function editCustomer($data) {
-// echo "<pre>";print_r($data);die;
+        // echo "<pre>";print_r($data);die;
         $this->trigger->fire('pre.customer.edit', $data);
 
         $customer_id = $this->customer->getId();
 
         if (isset($data['telephone'])) {
-//(21) 42353-5255
+            //(21) 42353-5255
             $data['telephone'] = preg_replace('/[^0-9]/', '', $data['telephone']);
         }
 
@@ -270,9 +287,9 @@ class ModelAccountCustomer extends Model {
         if (!isset($data['gender'])) {
             $data['gender'] = null;
         }
-//if(isset($data['dob'])) {
+        //if(isset($data['dob'])) {
         //$this->db->query('UPDATE ' . DB_PREFIX . "customer SET  customer_group_id = '" . (int) $data['customer_group_id'] . "' , firstname = '" . $this->db->escape($data['firstname']) . "', dob = '" . $data['dob'] . "', gender = '" . $this->db->escape($data['gender']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', company_name = '" . $this->db->escape($data['companyname']) . "', company_address = '" . $this->db->escape($data['companyaddress']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', fax = '" . $this->db->escape($data['fax']) . "', custom_field = '" . $this->db->escape(isset($data['custom_field']) ? serialize($data['custom_field']) : '') . "', modified_by = '" . $this->customer->getId() . "', modifier_role = 'customer', date_modified = NOW() WHERE customer_id = '" . (int) $customer_id . "'");
-//}
+        //}
         $this->db->query('UPDATE ' . DB_PREFIX . "customer SET firstname = '" . $this->db->escape($data['firstname']) . "', dob = '" . $data['dob'] . "', national_id = '" . $data['national_id'] . "', kra = '" . $data['kra'] . "', gender = '" . $this->db->escape($data['gender']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', company_name = '" . $this->db->escape($data['companyname']) . "', company_address = '" . $this->db->escape($data['companyaddress']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', fax = '" . $this->db->escape($data['fax']) . "', custom_field = '" . $this->db->escape(isset($data['custom_field']) ? serialize($data['custom_field']) : '') . "', modified_by = '" . $this->customer->getId() . "', modifier_role = 'customer', date_modified = NOW() WHERE customer_id = '" . (int) $customer_id . "'");
 
         $this->trigger->fire('post.customer.edit', $customer_id);
@@ -302,10 +319,10 @@ class ModelAccountCustomer extends Model {
     }
 
     public function resetPassword($email, $password) {
-//echo "<pre>";print_r($password);die;, ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "'
+        //echo "<pre>";print_r($password);die;, ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "'
 
         if ($password && 'default' != $password) {
-// echo "<pre>";print_r($this->db->escape($this->request->server['REMOTE_ADDR']));die;
+            // echo "<pre>";print_r($this->db->escape($this->request->server['REMOTE_ADDR']));die;
 
             $this->trigger->fire('pre.customer.edit.password');
 
@@ -330,10 +347,10 @@ class ModelAccountCustomer extends Model {
     }
 
     public function editPassword($email, $password) {
-//  echo "<pre>";print_r($password);die;
+        //  echo "<pre>";print_r($password);die;
 
         if ($password && 'default' != $password) {
-// echo "<pre>";print_r($password);die;
+            // echo "<pre>";print_r($password);die;
 
             $this->trigger->fire('pre.customer.edit.password');
 
@@ -381,7 +398,7 @@ class ModelAccountCustomer extends Model {
     public function getTotalOrders($customer_id) {
         $query = $this->db->query('SELECT COUNT(*) AS total FROM `' . DB_PREFIX . "order` o WHERE customer_id = '" . (int) $customer_id . "' AND o.order_status_id > '0' ");
 
-//return $query;
+        //return $query;
         return $query->row['total'];
     }
 
@@ -425,7 +442,7 @@ class ModelAccountCustomer extends Model {
     }
 
     public function deleteOTP($customer_id, $otp, $type) {
-//echo "<pre>";print_r($customer_id.$otp.$type);die;
+        //echo "<pre>";print_r($customer_id.$otp.$type);die;
         $query = $this->db->query('DELETE FROM ' . DB_PREFIX . "otp WHERE otp='" . $this->db->escape($otp) . "' AND customer_id = '" . $customer_id . "' and type='" . $type . "'");
 
         return true;
@@ -1664,6 +1681,66 @@ class ModelAccountCustomer extends Model {
 
     public function updatecustomerinfo($customer_id, $data) {
         $this->db->query('UPDATE ' . DB_PREFIX . "customer SET dob = '" . $data['dob'] . "', gender = '" . $this->db->escape($data['gender']) . "', national_id = '" . $data['national_id'] . "', kra = '" . $data['kra'] . "' WHERE customer_id = '" . (int) $customer_id . "'");
+    }
+
+    public function getCustomerByPayBillAccountNumber($paybillaccountnumber) {
+        $customer_info = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer WHERE paybill_act = '" . (int) $paybillaccountnumber . "'");
+        return $customer_info->row;
+    }
+
+    public function getCustomerByPayBillAccountDetails($paybillaccountnumber, $customer_id) {
+        $customer_info = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer_unallocated_fund_totals WHERE paybill_act = '" . (int) $paybillaccountnumber . "' AND customer_id = '" . (int) $customer_id . "'");
+        return $customer_info->row;
+    }
+
+    public function addAmountToCustomerByPayBillAccountNumber($paybillaccountnumber, $customer_id, $amount) {
+        $this->db->query('INSERT INTO ' . DB_PREFIX . "customer_unallocated_fund_totals SET customer_id = '" . (int) $customer_id . "', paybill_act = '" . (int) $paybillaccountnumber . "', amount = '" . (int) $amount . "'");
+        $last_inserted_id = $this->db->getLastId();
+        return $last_inserted_id;
+    }
+
+    public function addCustomerActivity($paybillaccountnumber, $customer_id, $amount) {
+        $customer_info = $this->getCustomer($customer_id);
+
+        $activity_data = [
+            'name' => $customer_info['firstname'] . ' ' . $customer_info['lastname'],
+            'customer_id' => $customer_info['customer_id'],
+            'amount' => $amount,
+            'paybillaccountnumber' => $paybillaccountnumber
+        ];
+
+        $this->db->query('INSERT INTO `' . DB_PREFIX . "customer_activity` SET `customer_id` = '" . (int) $customer_id . "', `key` = 'unallocated_funds', `data` = '" . $this->db->escape(serialize($activity_data)) . "', `ip` = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "', `date_added` = NOW()");
+        $last_inserted_id = $this->db->getLastId();
+        return $last_inserted_id;
+    }
+
+    public function updateAmountToCustomerByPayBillAccountNumber($paybillaccountnumber, $customer_id, $amount) {
+        $this->db->query('UPDATE ' . DB_PREFIX . "customer_unallocated_fund_totals SET amount = '" . (int) $amount . "', updated_at = NOW() WHERE customer_id = '" . (int) $customer_id . "' AND paybill_act = '" . (int) $paybillaccountnumber . "'");
+    }
+
+    public function addCustomerAccountNumberPayBillTransaction($data, $customer) {
+        $log = new Log('error.log');
+
+        $log->write('addCustomerAccountNumberPayBillTransaction');
+        $log->write($data);
+        $log->write('addCustomerAccountNumberPayBillTransaction');
+
+        $transaction_details = $this->findTransactionDetailsByTransactionID($data->TransID);
+
+        $log->write('transaction_details');
+        $log->write($transaction_details);
+        $log->write('transaction_details');
+
+        if ($transaction_details == NULL) {
+            $this->db->query('INSERT INTO ' . DB_PREFIX . "customer_unallocated_fund SET customer_id = '" . (int) $customer['customer_id'] . "', transaction_time = '" . $data->TransTime . "', business_short_code = '" . $data->BusinessShortCode . "', org_account_balance = '" . $data->OrgAccountBalance . "', msisdn = '" . $data->MSISDN . "', firstname = '" . $data->FirstName . "', description = '" . $data->TransactionType . "', amount = '" . (int) $data->TransAmount . "', transaction_id = '" . (int) $data->TransID . "', available_balance = '" . (int) $data->TransAmount . "'");
+            $last_inserted_id = $this->db->getLastId();
+            return $last_inserted_id;
+        }
+    }
+
+    public function findTransactionDetailsByTransactionID($transaction_id) {
+        $transaction_details = $this->db->query('SELECT * FROM ' . DB_PREFIX . "customer_unallocated_fund WHERE transaction_id = '" . $transaction_id . "'");
+        return $transaction_details;
     }
 
 }

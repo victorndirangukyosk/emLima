@@ -6,7 +6,7 @@ class ModelSaleCustomer extends Model {
 
         //  echo "<pre>";print_r($data); 
         //   echo "<pre>";print_r('INSERT INTO ' . DB_PREFIX . "customer SET customer_group_id = '" . (int) $data['customer_group_id'] . "', firstname = '" . $this->db->escape($data['firstname']) . "', gender = '" . $this->db->escape($data['sex']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "',company_name = '" . $this->db->escape($data['company_name']) . "',company_address = '" . $this->db->escape($data['company_address']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', fax = '" . $this->db->escape($data['fax']) . "', custom_field = '" . $this->db->escape(isset($data['custom_field']) ? serialize($data['custom_field']) : '') . "', newsletter = '" . (int) $data['newsletter'] . "', salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', status = '" . (int) $data['status'] . "', approved = '" . (int) $data['approved'] . "', safe = '" . (int) $data['safe'] . "', customer_category = '" . $data['customer_category'] . "', SAP_customer_no = '" . $data['SAP_customer_no'] . "', date_added = NOW()");die;
-        if ($data['SAP_customer_no'] && NULL != $data['SAP_customer_no']) {
+         if ($data['SAP_customer_no'] && NULL != $data['SAP_customer_no']) {
             $this->db->query('INSERT INTO ' . DB_PREFIX . "customer SET customer_group_id = '" . (int) $data['customer_group_id'] . "', firstname = '" . $this->db->escape($data['firstname']) . "', gender = '" . $this->db->escape($data['sex']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', dob = '" . $data['dob'] . "', national_id = '" . $data['national_id'] . "', email = '" . $this->db->escape($data['email']) . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "',company_name = '" . $this->db->escape($data['company_name']) . "',company_address = '" . $this->db->escape($data['company_address']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', fax = '" . $this->db->escape($data['fax']) . "', custom_field = '" . $this->db->escape(isset($data['custom_field']) ? serialize($data['custom_field']) : '') . "', newsletter = '" . (int) $data['newsletter'] . "', salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', status = '" . (int) $data['status'] . "', approved = '" . (int) $data['approved'] . "', safe = '" . (int) $data['safe'] . "', account_manager_id = '" . $data['account_manager'] . "', customer_experience_id = '" . $data['customer_experience'] . "', customer_category = '" . $data['customer_category'] . "', SAP_customer_no = '" . $data['SAP_customer_no'] . "', source = '" . $data['source'] . "', payment_terms = '" . $data['payment_terms'] . "', statement_duration = '" . $data['statement_duration'] . "', date_added = NOW()");
         } else {
             $this->db->query('INSERT INTO ' . DB_PREFIX . "customer SET customer_group_id = '" . (int) $data['customer_group_id'] . "', firstname = '" . $this->db->escape($data['firstname']) . "', gender = '" . $this->db->escape($data['sex']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', dob = '" . $data['dob'] . "', national_id = '" . $data['national_id'] . "', email = '" . $this->db->escape($data['email']) . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "',company_name = '" . $this->db->escape($data['company_name']) . "',company_address = '" . $this->db->escape($data['company_address']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', fax = '" . $this->db->escape($data['fax']) . "', custom_field = '" . $this->db->escape(isset($data['custom_field']) ? serialize($data['custom_field']) : '') . "', newsletter = '" . (int) $data['newsletter'] . "', salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', status = '" . (int) $data['status'] . "', approved = '" . (int) $data['approved'] . "', safe = '" . (int) $data['safe'] . "', account_manager_id = '" . $data['account_manager'] . "', customer_experience_id = '" . $data['customer_experience'] . "', customer_category = '" . $data['customer_category'] . "', source = '" . $data['source'] . "', payment_terms = '" . $data['payment_terms'] . "', statement_duration = '" . $data['statement_duration'] . "', date_added = NOW()");
@@ -25,7 +25,21 @@ class ModelSaleCustomer extends Model {
                 }
             }
         }
-//moved mail sending code to controller as , it is givin error from model
+
+        if ($customer_paybill_act == null || empty($customer_paybill_act) ) {
+            // $log = new Log('error.log');
+            // $log->write("customer_paybill_act");
+            $customer_reg_date=$this->db->query('select date_added from  ' . DB_PREFIX . "customer WHERE customer_id = '" . (int) $customer_id . "'")->row;
+            // $log->write($customer_reg_date);            
+            $customer_reg_date_value=$customer_reg_date['date_added']??date("Y-m-d H:i:s");
+            // $log->write($customer_reg_date_value);
+            $customer_paybill_act = $customer_id.strtotime($customer_reg_date_value);
+            // $log->write($customer_paybill_act); 
+            // $log->write("customer_paybill_act");
+            $this->db->query('UPDATE ' . DB_PREFIX . "customer SET paybill_act = '" . $customer_paybill_act . "' WHERE customer_id = '" . (int) $customer_id . "'");
+            // echo "<pre>";print_r('UPDATE ' . DB_PREFIX . "customer SET paybill_act = '" . $customer_paybill_act . "' WHERE customer_id = '" . (int) $customer_id . "'");die;
+        }
+       //moved mail sending code to controller as , it is givin error from model
 
         return $customer_id;
     }
@@ -65,6 +79,22 @@ class ModelSaleCustomer extends Model {
                     $this->db->query('UPDATE ' . DB_PREFIX . "customer SET address_id = '" . (int) $address_id . "' WHERE customer_id = '" . (int) $customer_id . "'");
                 }
             }
+        }
+        
+            $log = new Log('error.log');
+            $log->write("customer_paybill_act");
+        $customer_reg_date=$this->db->query('select date_added,paybill_act from  ' . DB_PREFIX . "customer WHERE customer_id = '" . (int) $customer_id . "'")->row;
+        $customer_paybill_act=   $customer_reg_date['paybill_act']??"";
+        if ($customer_paybill_act == null || empty($customer_paybill_act) )
+         {
+
+            $customer_reg_date_value=$customer_reg_date['date_added']??date("Y-m-d H:i:s");
+            $log->write($customer_reg_date_value);
+            $customer_paybill_act = $customer_id.strtotime($customer_reg_date_value);
+            $log->write($customer_paybill_act); 
+            $log->write("customer_paybill_act");
+            $this->db->query('UPDATE ' . DB_PREFIX . "customer SET paybill_act = '" . $customer_paybill_act . "' WHERE customer_id = '" . (int) $customer_id . "'");
+            // echo "<pre>";print_r('UPDATE ' . DB_PREFIX . "customer SET paybill_act = '" . $customer_paybill_act . "' WHERE customer_id = '" . (int) $customer_id . "'");die;
         }
     }
 

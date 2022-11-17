@@ -199,7 +199,7 @@ class ModelSchedulerDbupdates extends Model {
         //  echo "<pre>";print_r($sql);die;
 
         return $query->rows;
-     }
+    }
 
      
      public function updateUnapprovedOrdersTimeslot($timeslot,$new_timeslot,$delivery_date) {
@@ -232,5 +232,121 @@ class ModelSchedulerDbupdates extends Model {
         // return $query->rows;
      }
 
+     public function GetUnallocatedFundCustomers() {
+        try{
+            $log = new Log('error.log'); 
+            $sqlSelect = 'select distinct customer_id from  ' . DB_PREFIX . "customer_unallocated_fund WHERE closed = 0 ";// || available_balance>0
+            $customer_ids= $this->db->query($sqlSelect)->rows;
+            // echo "<pre>";print_r($customer_ids); 
+            return $customer_ids;
+        }
+        catch(exception $ex)
+        {
+            $log = new Log('error.log'); 
+            $log->write('GetUnallocatedFundCustomers - error');
+            $log->write($ex);
+            return null;
+        }       
+
+    }
+
+
+
+    public function GetCustomerPendingOrders($customer_id) {
+        try{
+            $log = new Log('error.log'); 
+            $sqlSelect = 'select o.order_id,ot.value as total,o.amount_partialy_paid,o.delivery_date from  ' . DB_PREFIX . "order o join hf7_order_total ot on o.order_id=ot.order_id  WHERE  o.customer_id = ".$customer_id ." and ot.code = 'total' and o.paid!='Y' and o.order_status_id = 18   order by o.delivery_date asc";// || not in (0,6,7,8,15,16,9,10,11,12) available_balance>0
+            // echo "<pre>";print_r($sqlSelect); 
+            
+            $order_data= $this->db->query($sqlSelect)->rows;
+            // echo "<pre>";print_r($order_data); 
+            return $order_data;
+        }
+        catch(exception $ex)
+        {
+            $log = new Log('error.log'); 
+            $log->write('GetCustomerPendingOrders - error');
+            $log->write($ex);
+            return null;
+        }       
+
+    }
+
+
+    public function GetUnallocatedFunds() {
+        try{
+            $log = new Log('error.log'); 
+            $sqlSelect = 'select customer_fund_id,customer_id,amount,transaction_id,available_balance, amount_used from  ' . DB_PREFIX . "customer_unallocated_fund WHERE closed = 0 ";// || available_balance>0
+            $fund_data= $this->db->query($sqlSelect)->rows;
+            // echo "<pre>";print_r($fund_data); 
+            return $fund_data;
+        }
+        catch(exception $ex)
+        {
+            $log = new Log('error.log'); 
+            $log->write('GetUnallocatedFunds - error');
+            $log->write($ex);
+            return null;
+        }       
+
+    }
+
+    public function confirmPaymentReceived($paid_order_id, $transaction_id, $amount_received = 0,$amount_partialy_paid=0,$paid_to = '',$grand_total=0,$partial_amount_applied=0) {
+  
+
+        $this->db->query('update `' . DB_PREFIX . 'order` SET paid="Y" , amount_partialy_paid = 0,paid_to="'.$paid_to.'" WHERE order_id="' . $paid_order_id . '"');
+        //insert  payments history
+        $sql = 'INSERT into ' . DB_PREFIX . "payment_history SET order_id = '" . $paid_order_id . "', transaction_id = '" . $transaction_id . "', partial_amount = '" . $amount_partialy_paid . "',amount_received='".$amount_received."',grand_total='".$grand_total."', added_by = '" . $this->user->getId() . "',ip='".$this->db->escape($this->request->server['REMOTE_ADDR'])."',patial_amount_applied='".$partial_amount_applied."'" ;
+        $query = $this->db->query($sql);
+
+        $sql = 'INSERT into ' . DB_PREFIX . "order_transaction_id SET order_id = '" . $paid_order_id . "', transaction_id = '" . $transaction_id . "'";
+
+        $query = $this->db->query($sql);
+
+    }
+
+
+    public function confirmPaymentReceived_credit($customer_id, $transaction_id, $amount_received = 0,$amount_partialy_paid=0,$paid_to = '',$grand_total=0,$partial_amount_applied=0,$credit_id=0) {
+        //insert  payments history
+      $sql = 'INSERT into ' . DB_PREFIX . "payment_history SET customer_id = '" . $customer_id . "', transaction_id = '" . $transaction_id . "', partial_amount = '" . $amount_partialy_paid . "',amount_received='".$amount_received."',grand_total='".$grand_total."', added_by = '" . $this->user->getId() . "',ip='".$this->db->escape($this->request->server['REMOTE_ADDR'])."',credit_id='".$credit_id."',patial_amount_applied='".$partial_amount_applied."'" ;
+
+      $query = $this->db->query($sql);
+    }
     
+    public function confirmPartialPaymentReceived($paid_order_id, $transaction_id='', $amount_received = '',$amount_partialy_paid=0,$paid_to='',$grand_total=0,$partial_amount_applied=0) {
+
+      // $this->db->query('update `' . DB_PREFIX . 'order` SET amount_partialy_paid='" .  $amount_partialy_paid . "'  WHERE order_id="' . $paid_order_id . '"');
+      $sql = 'UPDATE ' . DB_PREFIX . "order SET amount_partialy_paid = '" . $amount_partialy_paid . "', paid = 'P',paid_to='".$paid_to."' WHERE order_id = '" . (int) $paid_order_id . "'";
+
+      $query = $this->db->query($sql);
+       // $sql = 'DELETE FROM ' . DB_PREFIX . "order_transaction_id WHERE order_id = '" . (int) $paid_order_id . "'";
+
+       // $query = $this->db->query($sql);
+
+       //insert  payments history
+         //  $sql = 'INSERT into ' . DB_PREFIX . "payment_history SET order_id = '" . $paid_order_id . "', transaction_id = '" . $transaction_id . "', partial_amount = '" . $amount_partialy_paid . "'";
+       $sql = 'INSERT into ' . DB_PREFIX . "payment_history SET order_id = '" . $paid_order_id . "', transaction_id = '" . $transaction_id . "', partial_amount = '" . $amount_partialy_paid . "',amount_received='".$amount_received."',grand_total='".$grand_total."', added_by = '" . $this->user->getId() . "',ip='".$this->db->escape($this->request->server['REMOTE_ADDR'])."',patial_amount_applied='".$partial_amount_applied."'" ;
+
+        // echo $sql;die;
+     
+         $query = $this->db->query($sql);
+
+
+        $sql = 'INSERT into ' . DB_PREFIX . "order_transaction_id SET order_id = '" . $paid_order_id . "', transaction_id = '" . $transaction_id . "'";
+
+        $query = $this->db->query($sql);
+
+   }
+
+
+   public function updateFundAndTotals($customer_fund_id, $closed, $available_balance,$amount_used,$amount_used_single,$customer_id) {
+    $this->db->query('update `' . DB_PREFIX . 'customer_unallocated_fund` SET available_balance="'.$available_balance.'" , amount_used = "'.$amount_used.'",closed="'.$closed.'" WHERE customer_fund_id="' . $customer_fund_id . '"');
+    $sqlSelect = 'select amount from  ' . DB_PREFIX . 'customer_unallocated_fund_totals WHERE customer_id = "' . $customer_id . '"';// || available_balance>0
+    $total= $this->db->query($sqlSelect)->row['amount']??0;
+    $updated_total=$total-$amount_used_single;
+
+    $this->db->query('update `' . DB_PREFIX . 'customer_unallocated_fund_totals` SET amount="'.$updated_total.'" WHERE customer_id="' . $customer_id . '"');
+     
+  }
+
 }
