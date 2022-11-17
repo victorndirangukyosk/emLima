@@ -1681,6 +1681,7 @@ class ControllerCheckoutConfirm extends Controller {
         $log = new Log('error.log');
         $json['delivery_charge_terms'] = $this->request->post['accept_terms'];
         $this->session->data['delivery_charge_terms'] = $this->request->post['accept_terms'];
+        $this->session->data['delivery_charges_value'] =  $this->config->get('config_active_store_delivery_charge');
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }

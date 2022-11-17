@@ -81,6 +81,7 @@ class ControllerErrorPermission extends Controller
                 'common/scheduler',
                 'common/scheduleraws',
                 'common/schedulerpayment',
+                'common/productentry',
                 'common/loginAPI',
                 'amitruck/amitruckstatus',
                 'amitruck/amitruckquotes',

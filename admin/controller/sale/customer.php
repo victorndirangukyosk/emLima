@@ -1658,6 +1658,7 @@ class ControllerSaleCustomer extends Controller {
 
         $data['customer_groups'] = $this->model_sale_customer_group->getCustomerGroups();
         $data['price_categories'] = $this->model_sale_customer_group->getPriceCategories();
+        $data['price_discount_categories'] = $this->model_sale_customer_group->getDiscountPriceCategories();
 
         $this->load->model('setting/store');
 
@@ -2311,6 +2312,7 @@ class ControllerSaleCustomer extends Controller {
 
         $data['customer_groups'] = $this->model_sale_customer_group->getCustomerGroups();
         $data['price_categories'] = $this->model_sale_customer_group->getPriceCategories();
+        $data['price_discount_categories'] = $this->model_sale_customer_group->getDiscountPriceCategories();
 
         $this->load->model('setting/store');
 
@@ -3310,6 +3312,7 @@ class ControllerSaleCustomer extends Controller {
         $data['sub_users'] = $this->model_sale_customer->getSubCustomers($filter_data);
         $data['customer_groups'] = $this->model_sale_customer_group->getCustomerGroups();
         $data['price_categories'] = $this->model_sale_customer_group->getPriceCategories();
+        $data['price_discount_categories'] = $this->model_sale_customer_group->getDiscountPriceCategories();
         $data['account_managers_list'] = $this->model_user_accountmanager->getAccountManagers();
         $data['customer_experience_list'] = $this->model_user_customerexperience->getCustomerExperience();
         $data['customer_otp_list'] = $this->model_account_customer->getCustomerOTP($this->request->get['customer_id']);
@@ -3344,6 +3347,12 @@ class ControllerSaleCustomer extends Controller {
             $data['customer_category'] = $this->request->post['customer_category'];
         } elseif (!empty($customer_info) && $customer_parent_info == NULL) {
             $data['customer_category'] = $customer_info['customer_category'];
+        }
+
+        if (isset($this->request->post['customer_discount_category'])) {
+            $data['customer_discount_category'] = $this->request->post['customer_discount_category'];
+        } elseif (!empty($customer_info) && $customer_parent_info == NULL) {
+            $data['customer_discount_category'] = $customer_info['customer_discount_category'];
         }
 
         if (isset($this->request->post['firstname'])) {
@@ -3461,7 +3470,7 @@ class ControllerSaleCustomer extends Controller {
         if (isset($this->request->post['customer_price_category'])) {
             $data['customer_price_category'] = $this->request->post['customer_price_category'];
         } elseif (!empty($customer_info)) {
-            $data['customer_price_category'] = $customer_info['customer_price_category'];
+            $data['customer_price_category'] = $customer_info['customer_category'];
         } else {
             $data['customer_price_category'] = true;
         }
@@ -3570,7 +3579,7 @@ class ControllerSaleCustomer extends Controller {
         if (isset($this->request->post['customer_price_category'])) {
             $data['customer_price_category'] = $this->request->post['customer_price_category'];
         } elseif (!empty($customer_info)) {
-            $data['customer_price_category'] = $customer_info['customer_price_category'];
+            $data['customer_price_category'] = $customer_info['customer_category'];
         } else {
             $data['customer_price_category'] = '';
         }
@@ -4058,6 +4067,7 @@ class ControllerSaleCustomer extends Controller {
         $data = [];
         $this->load->model('sale/customer');
         $data['customer_category'] = $this->request->post['customer_category'];
+        $data['customer_discount_category'] = $this->request->post['customer_discount_category'];
         $data['account_manager'] = $this->request->post['account_manager'];
         $data['customer_experience'] = $this->request->post['customer_experience'];
         $data['payment_terms'] = $this->request->post['payment_terms'];
@@ -5171,7 +5181,9 @@ class ControllerSaleCustomer extends Controller {
         if (isset($this->request->get['customer_id']) && ('POST' != $this->request->server['REQUEST_METHOD'])) {
             $customer_info = $this->model_sale_customer->getCustomer($this->request->get['customer_id']);
             $data['customer_category'] = $customer_info['customer_category'];
+            $data['customer_discount_category'] = $customer_info['customer_discount_category'];
             $data['customer_category_disabled'] = '';
+            $data['customer_discount_category_disabled'] = '';
             $customer_parent_info = $this->model_sale_customer->getCustomerParentDetails($this->request->get['customer_id']);
             $customer_account_manager_info = $this->model_sale_customer->getCustomerAccountManagerDetails($this->request->get['customer_id']);
             if ($customer_parent_info != NULL) {
@@ -5179,7 +5191,9 @@ class ControllerSaleCustomer extends Controller {
                 $data['parent_user_email'] = $customer_parent_info['email'];
                 $data['parent_user_phone'] = $customer_parent_info['telephone'];
                 $data['customer_category'] = $customer_parent_info['customer_category'];
+                $data['customer_discount_category'] = $customer_parent_info['customer_discount_category'];
                 $data['customer_category_disabled'] = 'disabled';
+                $data['customer_discount_category_disabled'] = 'disabled';
             }
 
             if ($customer_account_manager_info != NULL) {
@@ -5203,6 +5217,7 @@ class ControllerSaleCustomer extends Controller {
         $data['sub_users'] = $this->model_sale_customer->getSubCustomers($filter_data);
         $data['customer_groups'] = $this->model_sale_customer_group->getCustomerGroups();
         $data['price_categories'] = $this->model_sale_customer_group->getPriceCategories();
+        $data['price_discount_categories'] = $this->model_sale_customer_group->getDiscountPriceCategories();
         $data['customer_otp_list'] = $this->model_account_customer->getCustomerOTP($this->request->get['customer_id']);
         $data['customer_otp_list_phone'] = $this->model_account_customer->getCustomerOTPByPhone($customer_info['telephone']);
 
@@ -6063,6 +6078,7 @@ class ControllerSaleCustomer extends Controller {
         $data['sub_users'] = $this->model_sale_customer->getSubCustomers($filter_data);
         $data['customer_groups'] = $this->model_sale_customer_group->getCustomerGroups();
         $data['price_categories'] = $this->model_sale_customer_group->getPriceCategories();
+        $data['price_discount_categories'] = $this->model_sale_customer_group->getDiscountPriceCategories();
         $data['account_managers_list'] = $this->model_user_accountmanager->getAccountManagers();
         $data['customer_experience_list'] = $this->model_user_customerexperience->getCustomerExperience();
         $data['customer_otp_list'] = $this->model_account_customer->getCustomerOTP($this->request->get['customer_id']);

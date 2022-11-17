@@ -88,6 +88,26 @@
                             </div> 
 
 
+                            <div class="form-group required">
+                                <label class="col-sm-2 control-label" for="input-feedbackalert">Feedback Alert</label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="config_feedbackalert" value="<?php echo $config_feedbackalert; ?>" placeholder="Email ID" id="input-feedbackalert" class="form-control" />
+                                    <?php if ($error_feedbackalert) { ?>
+                                    <div class="text-danger"><?php echo $error_feedbackalert; ?></div>
+                                    <?php } ?>
+                                </div>
+                            </div> 
+
+                             <div class="form-group required">
+                                <label class="col-sm-2 control-label" for="input-missingitem">Missing Items</label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="config_missingitem" value="<?php echo $config_missingitem; ?>" placeholder="Email ID" id="input-missingitem" class="form-control" />
+                                    <?php if ($error_missingitem) { ?>
+                                    <div class="text-danger"><?php echo $error_missingitem; ?></div>
+                                    <?php } ?>
+                                </div>
+                            </div> 
+
                               <div class="form-group required">
                                 <label class="col-sm-2 control-label" for="input-meatcheckingteam">Meat Checking Team</label>
                                 <div class="col-sm-10">

@@ -167,6 +167,10 @@ class ModelCheckoutOrder extends Model {
                     $this->db->query("UPDATE `" . DB_PREFIX . "order` SET isadmin_login = 1, admin_id = '" . $this->session->data['adminlogin_id'] . "'  WHERE order_id='" . $order_id . "'");
                 }
 
+                if ($this->session->data['add_delivery_charges'] && $this->session->data['add_delivery_charges'] == 'true') {
+                    $this->db->query("UPDATE `" . DB_PREFIX . "order` SET isadmin_delivery_charge = 1, delivery_charges = '" . $this->session->data['delivery_charges_value'] . "'  WHERE order_id='" . $order_id . "'");
+                }
+
                 $this->db->query("UPDATE `" . DB_PREFIX . "order` SET "
                         . "shipping_city_id = '" . $this->db->escape((array_key_exists('shipping_city_id', $data) ? $data['shipping_city_id'] : '')) . "', "
                         . "shipping_contact_no = '" . $this->db->escape($data['shipping_contact_no']) . "', "
@@ -541,9 +545,9 @@ class ModelCheckoutOrder extends Model {
 
                 $risk_score = $this->model_checkout_fraud->getFraudScore($order_info);
 
-                if (!$safe && $risk_score > $this->config->get('config_fraud_score')) {
-                    $order_status_id = $this->config->get('config_fraud_status_id');
-                }
+                // if (!$safe && $risk_score > $this->config->get('config_fraud_score')) {
+                //     $order_status_id = $this->config->get('config_fraud_status_id');
+                // }
             }
 
             $log->write($safe);

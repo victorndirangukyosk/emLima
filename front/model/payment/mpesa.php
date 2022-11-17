@@ -192,6 +192,14 @@ class ModelPaymentMpesa extends Model {
         return $res;
     }
 
+    public function getMpesaWalletByCustomerId($customer_id, $mpesa_checkout_request_id) {
+        $result = $this->db->query('SELECT * FROM `' . DB_PREFIX . "order_transaction_id` WHERE `order_id` = 0 and customer_id='" . $this->db->escape($customer_id) . "' and checkout_request_id='" . $this->db->escape($mpesa_checkout_request_id) . "' order by created_at asc");
+        $log = new Log('error.log');
+
+        $log->write($result);
+        return $result->row;
+    }
+
     public function getMpesaByOrderIdApi($order_id) {
         $result = $this->db->query('SELECT * FROM `' . DB_PREFIX . "mpesa_order` WHERE `mpesa_receipt_number` = '" . $this->db->escape($order_id) . "'")->rows;
 
@@ -269,15 +277,43 @@ class ModelPaymentMpesa extends Model {
         //$this->insertOrderTransactionFee($order_id, $order_status_id);
     }
 
-    public function insertCustomerTransactionId($customer_id, $transaction_id, $merchant_requestid = 0, $amount = '') {
+    public function insertCustomerTransactionId($customer_id, $checkout_request_id, $merchant_requestid = 0, $amount = '') {
         /* $sql = 'DELETE FROM ' . DB_PREFIX . "order_transaction_id WHERE order_id = 0 and customer_id='" . (int) $customer_id . "'and merchant_request_id ='" . $merchant_requestid . "'";
 
           $query = $this->db->query($sql); */
         // $this->deleteCustomerTransactionId($customer_id, $transaction_id);
 
-        $sql = 'INSERT into ' . DB_PREFIX . "order_transaction_id SET order_id = 0 ,customer_id='" . $customer_id . "', amount = '" . $amount . "', transaction_id = '" . $transaction_id . "', merchant_request_id = '" . $merchant_requestid . "', created_at = NOW()";
+        $sql = 'INSERT into ' . DB_PREFIX . "order_transaction_id SET order_id = 0 ,customer_id='" . $customer_id . "', amount = '" . $amount . "', transaction_id = '" . $checkout_request_id . "', checkout_request_id = '" . $checkout_request_id . "', merchant_request_id = '" . $merchant_requestid . "', created_at = NOW()";
 
         $query = $this->db->query($sql);
+    }
+
+    public function addupdateOrderTransactionId($customer_id, $mpesa_receipt_number, $merchant_request_id, $checkout_request_id, $order_id, $amount_topup) {
+        $sql1 = 'SELECT * FROM ' . DB_PREFIX . "order_transaction_id WHERE order_id = 0 and customer_id= '" . (int) $customer_id . "'and merchant_request_id = '" . $merchant_request_id . "'";
+        $result = $this->db->query($sql1);
+        $result = $result->row;
+
+        if ($result && isset($result['merchant_request_id']) && $result['merchant_request_id'] != NULL) {
+            $this->db->query('UPDATE `' . DB_PREFIX . 'order_transaction_id` SET `transaction_id` = "' . $this->db->escape($mpesa_receipt_number) . '" where merchant_request_id="' . $result['merchant_request_id'] . '" AND checkout_request_id="' . $result['checkout_request_id'] . '" AND order_id =' . (int) $order_id);
+        } else {
+            $sql = 'INSERT into ' . DB_PREFIX . "order_transaction_id SET order_id = 0 ,customer_id='" . $customer_id . "', amount = '" . $amount_topup . "', transaction_id = '" . $mpesa_receipt_number . "', checkout_request_id = '" . $checkout_request_id . "', merchant_request_id = '" . $checkout_request_id . "', created_at = NOW()";
+            $query = $this->db->query($sql);
+        }
+    }
+
+    public function updatempesareceiptnumber($mpesa_receipt_number, $merchant_request_id, $checkout_request_id, $order_id) {
+        $log = new Log('error.log');
+        $sql1 = 'SELECT * FROM ' . DB_PREFIX . "order_transaction_id WHERE order_id = 0 and checkout_request_id= '" . $checkout_request_id . "'and merchant_request_id = '" . $merchant_request_id . "'";
+        $result = $this->db->query($sql1);
+        $result = $result->row;
+
+        $log->write($sql1);
+        $log->write($result);
+
+        if ($result && isset($result['merchant_request_id']) && $result['merchant_request_id'] != NULL) {
+            $log->write('UPDATING');
+            $this->db->query('UPDATE `' . DB_PREFIX . 'order_transaction_id` SET `transaction_id` = "' . $this->db->escape($mpesa_receipt_number) . '" where merchant_request_id="' . $result['merchant_request_id'] . '" AND checkout_request_id="' . $result['checkout_request_id'] . '" AND order_id =' . (int) $order_id);
+        }
     }
 
     public function addCustomerHistoryTransaction($customer_id, $order_status_id, $amount_topup, $payment_method, $payment_code, $merchant_request_id, $added_by = '', $added_by_role = '') {
@@ -290,6 +326,18 @@ class ModelPaymentMpesa extends Model {
         // if ($order_status_id == 1) {
         $this->db->query('INSERT INTO ' . DB_PREFIX . "customer_credit SET customer_id = '" . (int) $customer_id . "', order_id = 0, description = 'Topup from mpesa', amount = '" . (float) $amount_topup . "', date_added = NOW(),transaction_id='" . $merchant_request_id . "'");
         // } 
+    }
+
+    public function findCustomerCredit($customer_id, $merchant_request_id) {
+        $sql1 = 'SELECT * FROM ' . DB_PREFIX . "customer_credit WHERE order_id = 0 and customer_id= '" . (int) $customer_id . "'and transaction_id = '" . $merchant_request_id . "'";
+        $query = $this->db->query($sql1);
+        return $query;
+    }
+
+    public function findCustomerCreditTransaction($customer_id, $merchant_request_id) {
+        $sql1 = 'SELECT * FROM ' . DB_PREFIX . "order_transaction_id WHERE order_id = 0 and customer_id= '" . (int) $customer_id . "'and transaction_id = '" . $merchant_request_id . "'";
+        $query = $this->db->query($sql1);
+        return $query;
     }
 
     public function getMpesaCustomer($request_id) {
@@ -440,11 +488,15 @@ class ModelPaymentMpesa extends Model {
                 }
 
                 if ($pending_amount > $data->TransAmount) {
-                    $sql = 'INSERT into ' . DB_PREFIX . "order_transaction_id SET order_id = '" . (int) $result['order_id'] . "', transaction_id = '" . $this->db->escape($data->TransID) . "', pending_amount = '" . (int) ((int) $result['amount_partialy_paid']) - ((int) $data->TransAmount) . "', amount = '" . (int) $data->TransAmount . "', customer_id = '" . $result['customer_id'] . "', created_at = NOW()";
+                    $pending_amount = ((int) $result['amount_partialy_paid']) - ((int) $data->TransAmount);
+
+                    $sql = 'INSERT into ' . DB_PREFIX . "order_transaction_id SET order_id = '" . (int) $result['order_id'] . "', transaction_id = '" . $this->db->escape($data->TransID) . "', pending_amount = '" . (int) $pending_amount . "', amount = '" . (int) $data->TransAmount . "', customer_id = '" . $result['customer_id'] . "', created_at = NOW()";
                     $query = $this->db->query($sql);
 
+                    $amount_partialy_paid = ((int) $result['amount_partialy_paid']) + ((int) $data->TransAmount);
+
                     //$this->db->query('UPDATE `' . DB_PREFIX . "order` SET payment_method = 'mPesa On Delivery', payment_code = 'mod', paid = 'P', amount_partialy_paid = '" . (int) ((int) $result['amount_partialy_paid']) + ((int) $data->TransAmount) . "', date_modified = NOW() WHERE order_id = '" . (int) $result['order_id'] . "'");
-                    $this->db->query('UPDATE ' . DB_PREFIX . 'order SET payment_method="mPesa On Delivery",payment_code="mod",paid="P",amount_partialy_paid ="' . ((int) $result['amount_partialy_paid']) + ((int) $data->TransAmount) . '",date_modified=NOW() where  order_id = "' . (int) $result['order_id'] . '"');
+                    $this->db->query('UPDATE ' . DB_PREFIX . 'order SET payment_method="mPesa On Delivery",payment_code="mod",paid="P",amount_partialy_paid ="' . (int) $amount_partialy_paid . '",date_modified=NOW() where  order_id = "' . (int) $result['order_id'] . '"');
                 }
 
                 if ($pending_amount < $data->TransAmount) {
@@ -475,8 +527,10 @@ class ModelPaymentMpesa extends Model {
                 $sql = 'INSERT into ' . DB_PREFIX . "order_transaction_id SET order_id = '" . (int) $result['order_id'] . "', transaction_id = '" . $this->db->escape($data->TransID) . "', pending_amount = '" . (int) (($result['total']) - ($data->TransAmount)) . "', amount = '" . (int) $data->TransAmount . "', customer_id = '" . $result['customer_id'] . "', created_at = NOW()";
                 $query = $this->db->query($sql);
 
+                $amount_partialy_paid = ((int) $result['amount_partialy_paid']) + ((int) $data->TransAmount);
+
                 //$this->db->query('UPDATE `' . DB_PREFIX . "order` SET payment_method = 'mPesa On Delivery', payment_code = 'mod', paid = 'P', amount_partialy_paid = '" . (int) ((int) $result['amount_partialy_paid']) + ((int) $data->TransAmount) . "', date_modified = NOW() WHERE order_id = '" . (int) $result['order_id'] . "'");
-                $this->db->query('UPDATE ' . DB_PREFIX . 'order SET payment_method="mPesa On Delivery",payment_code="mod",paid="P",amount_partialy_paid ="' . ((int) $result['amount_partialy_paid']) + ((int) $data->TransAmount) . '",date_modified=NOW() where  order_id = "' . (int) $result['order_id'] . '"');
+                $this->db->query('UPDATE ' . DB_PREFIX . 'order SET payment_method="mPesa On Delivery",payment_code="mod",paid="P",amount_partialy_paid ="' . (int) $amount_partialy_paid . '",date_modified=NOW() where  order_id = "' . (int) $result['order_id'] . '"');
 
                 // Add to activity log
                 $this->load->model('account/activity');

@@ -562,7 +562,7 @@ class Controlleraccounttransactions extends Controller {
         $transaction_fee = 0;
         $percentage = 3.5;
         $transaction_fee = ($percentage / 100) * $amount;
-        $amount = str_replace(',', '', $amount + + $transaction_fee);
+        $amount = str_replace(',', '', $amount + $transaction_fee);
         $log->write('TRANSACTION FEE');
         $log->write($transaction_fee);
         $log->write($amount);

@@ -881,9 +881,6 @@
                                 </div>
                             </div>
                            
-
-                            
-
                               <div class="form-group">
                                 <label class="col-sm-2 control-label"><span data-toggle="tooltip" title="Assign wallet to Sub user">Assign Wallet to Sub User</span></label>
                                 <div class="col-sm-10">
@@ -907,8 +904,97 @@
                                     </label>
                                 </div>
                             </div>
+                            
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label"><span data-toggle="tooltip" title="Assign wallet to Sub user">Order Edit In Customer Login</span></label>
+                                <div class="col-sm-10">
+                                    <label class="radio-inline">
+                                        <?php if ($config_order_edit_in_customer_login) { ?>
+                                        <input type="radio" name="config_order_edit_in_customer_login" value="1" checked="checked" />
+                                        <?php echo $text_yes; ?>
+                                        <?php } else { ?>
+                                        <input type="radio" name="config_order_edit_in_customer_login" value="1" />
+                                        <?php echo $text_yes; ?>
+                                        <?php } ?>
+                                    </label>
+                                    <label class="radio-inline">
+                                        <?php if (!$config_order_edit_in_customer_login) { ?>
+                                        <input type="radio" name="config_order_edit_in_customer_login" value="0" checked="checked" />
+                                        <?php echo $text_no; ?>
+                                        <?php } else { ?>
+                                        <input type="radio" name="config_order_edit_in_customer_login" value="0" />
+                                        <?php echo $text_no; ?>
+                                        <?php } ?>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group required">
+                                <label class="col-sm-2 control-label" for="input-edit-order-duration">Time(Hours) Restriction For Order Edit</label>
+                                <div class="col-sm-10">
+                                    <input type="number" min="1" step="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" name="config_time_restriction_for_order_edit" value="<?php echo $config_time_restriction_for_order_edit; ?>" placeholder="Time Restriction For Order Edit" id="input-time-restriction-for-order-edit" class="form-control" />
+                                    <?php if ($error_time_restriction_for_order_edit) { ?>
+                                    <div class="text-danger"><?php echo $error_time_restriction_for_order_edit; ?></div>
+                                    <?php } ?>
+                                </div>
+                            </div>
 
-
+                            <div class="form-group required">
+                                <label class="col-sm-2 control-label" for="input-kra-tcp">
+                                    <span data-toggle="tooltip" data-container="#tab-general" title="KRA TCP">
+                                        KRA TCP
+                                    </span>    
+                                </label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="config_kra_tcp" value="<?php echo $config_kra_tcp; ?>" placeholder="Enter KRA TCP" id="input-kra-tcp" class="form-control" />
+                                    <?php if ($error_kra_tcp) { ?>
+                                    <div class="text-danger"><?php echo $error_kra_tcp; ?></div>
+                                    <?php } ?>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group required">
+                                <label class="col-sm-2 control-label" for="input-kra-ip">
+                                    <span data-toggle="tooltip" data-container="#tab-general" title="KRA IP">
+                                        KRA IP
+                                    </span>    
+                                </label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="config_kra_ip" value="<?php echo $config_kra_ip; ?>" placeholder="Enter KRA IP" id="input-kra-ip" class="form-control" />
+                                    <?php if ($error_kra_ip) { ?>
+                                    <div class="text-danger"><?php echo $error_kra_ip; ?></div>
+                                    <?php } ?>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group required">
+                                <label class="col-sm-2 control-label" for="input-kra-port">
+                                    <span data-toggle="tooltip" data-container="#tab-general" title="KRA PORT">
+                                        KRA PORT
+                                    </span>    
+                                </label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="config_kra_port" value="<?php echo $config_kra_port; ?>" placeholder="Enter KRA PORT" id="input-kra-port" class="form-control" />
+                                    <?php if ($error_kra_port) { ?>
+                                    <div class="text-danger"><?php echo $error_kra_port; ?></div>
+                                    <?php } ?>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group required">
+                                <label class="col-sm-2 control-label" for="input-kra-password">
+                                    <span data-toggle="tooltip" data-container="#tab-general" title="KRA PASSWORD">
+                                        KRA PASSWORD
+                                    </span>    
+                                </label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="config_kra_password" value="<?php echo $config_kra_password; ?>" placeholder="Enter KRA PASSWORD" id="input-kra-password" class="form-control" />
+                                    <?php if ($error_kra_password) { ?>
+                                    <div class="text-danger"><?php echo $error_kra_password; ?></div>
+                                    <?php } ?>
+                                </div>
+                            </div>
+                            
                             <div class="form-group required">
                                 <label class="col-sm-2 control-label" for="input-kibandas-customer-group-id">
                                     <span data-toggle="tooltip" data-container="#tab-general" title="Kibandas Customer Group ID">

@@ -636,6 +636,8 @@
                             <?= $order['delivery_timeslot']?>      
                         </td>
                     </tr>
+                    <?php if (!$this->user->isVendor()): ?>
+
                     <tr>
                         <td>
                             COMPANY NAME
@@ -652,6 +654,8 @@
                             <?= $order['shipping_address']?>        
                         </td>
                     </tr>
+                    <?php endif ?> 
+
                     <tr>
                         <td>
                             ORDER NOTES

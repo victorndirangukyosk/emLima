@@ -945,6 +945,10 @@ class Cart {
 
             $shipping_charge = $this->config->get('config_active_store_delivery_charge') > 0 ? $this->config->get('config_active_store_delivery_charge') : 0;
             if (isset($this->session->data['adminlogin']) && $this->session->data['adminlogin'] && isset($this->session->data['add_delivery_charges'])) {
+                if(isset($this->session->data['delivery_charges_value']))
+                {
+                    $shipping_charge =$this->session->data['delivery_charges_value'];
+                }
                 $shipping_charge = isset($this->session->data['add_delivery_charges']) && $this->session->data['add_delivery_charges'] == 'true' ? $shipping_charge : 0;
                 $log->write('admin login delivery charge, cart library, get order Total with shipping');
             }
@@ -977,6 +981,10 @@ class Cart {
         $log->write('Shipping 2 , cart library');
 
         $shipping_charge = $this->config->get('config_active_store_delivery_charge') > 0 ? $this->config->get('config_active_store_delivery_charge') : 0;
+        if(isset($this->session->data['delivery_charges_value']))
+        {
+            $shipping_charge =$this->session->data['delivery_charges_value'];
+        }
         $shipping_charge = $this->session->data['add_delivery_charges'] == 'true' ? $shipping_charge : 0;
         $shipping_charge_VAT = ($shipping_charge * 0.16);       
         // echo "<pre>";print_r($total_data);die;

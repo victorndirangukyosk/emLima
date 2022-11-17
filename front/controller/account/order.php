@@ -257,7 +257,7 @@ class ControllerAccountOrder extends Controller {
                 'edit_order' => 15 == $result['order_status_id'] && (empty($_SESSION['parent']) || $order_appoval_access) ? $this->url->link('account/order/edit_order', 'order_id=' . $result['order_id'], 'SSL') : '',
                 'order_company' => isset($customer_info) && null != $customer_info['company_name'] ? $customer_info['company_name'] : null,
                 //'edit_own_order' => $this->url->link('checkout/edit_order/index_new', 'order_id=' . $result['order_id'], 'SSL'),
-                'edit_own_order' => (($result['order_status_id'] == 15 || $result['order_status_id'] == 14) && $hours <= 2 && $result['paid'] == 'N' && $result['payment_code'] == 'cod') ? $this->url->link('account/order/edit_your_order', 'order_id=' . $result['order_id'], 'SSL') : NULL,
+                'edit_own_order' => (($result['order_status_id'] == 15 || $result['order_status_id'] == 14) && $hours <= $this->config->get('config_time_restriction_for_order_edit') && $result['paid'] == 'N' && ($result['payment_code'] == 'cod' || $result['payment_code'] == 'mod')) ? $this->url->link('account/order/edit_your_order', 'order_id=' . $result['order_id'], 'SSL') : NULL,
                 'paid' => $result['paid'],
                 'paid_status' => $result['paid'] =='P' ? 'Partially Paid' : ($result['paid'] =='Y' ? 'Paid' : 'Pending'),
 
@@ -5630,7 +5630,7 @@ class ControllerAccountOrder extends Controller {
         $log->write($hours);
         $log->write('hours');
 
-        if ($order_info && $order_info['customer_id'] == $this->customer->getId() && ($order_info['order_status_id'] == 15 || $order_info['order_status_id'] == 14) && $hours <= 5 && $order_info['payment_code'] == 'cod') {
+        if ($order_info && $order_info['customer_id'] == $this->customer->getId() && ($order_info['order_status_id'] == 15 || $order_info['order_status_id'] == 14) && $hours <= $this->config->get('config_time_restriction_for_order_edit') && ($order_info['payment_code'] == 'cod' || $order_info['payment_code'] == 'mod')) {
             $data['cashbackAmount'] = $this->currency->format(0);
 
             $coupon_history_data = $this->model_account_order->getCashbackAmount($order_id);
@@ -5997,8 +5997,8 @@ class ControllerAccountOrder extends Controller {
             $store_info = $this->model_account_address->getStoreData($order_info['store_id']);
             $log->write($store_info);
             $data['store_warning'] = '';
-            if ($this->config->get('config_active_store_minimum_order_amount') > $this->cart->getSubTotal()) {
-                $currentprice = $this->config->get('config_active_store_minimum_order_amount') - $this->cart->getSubTotal();
+            if ($this->config->get('config_active_store_minimum_order_amount') > $order_info['total']) {
+                $currentprice = $this->config->get('config_active_store_minimum_order_amount') - $order_info['total'];
                 $data['store_warning'] = "<center style='background-color:#ee4054;color:#fff'>" . $this->currency->format($currentprice) . ' away from minimum order value </center>';
             }
 

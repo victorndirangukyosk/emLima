@@ -154,7 +154,7 @@
                             <thead>
                                 <tr>
                                     <td style="width: 1px;" class="text-center"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" /></td>
-                                    <td class="text-center"><?php echo $column_image; ?></td>
+                                    <!--<td class="text-center"><?php echo $column_image; ?></td>-->
                                     <!-- <td class="text-left"><?= $column_product_id ?></td> -->
                                     
 
@@ -220,6 +220,7 @@
                                      <td class="text-left"><?php echo 'Rejected Qty'; ?></td>
 									 <td class="text-right"><?php echo 'Total Qty'; ?></td>
                                      <td class="text-left">GRN</td>
+                                     <td class="text-left">Remarks</td>
                                      <td class="text-right"><?php echo $column_action; ?></td>
                                      
                                     
@@ -234,11 +235,11 @@
                                         <?php } else { ?>
                                         <input type="checkbox" name="selected[]" value="<?php echo $product['product_store_id']; ?>" />
                                         <?php } ?></td>
-                                    <td class="text-center"><?php if ($product['image']) { ?>
+                                    <!--<td class="text-center"><?php if ($product['image']) { ?>
                                         <a href="<?php echo $product['bigimage']; ?>" target="_blank"><img src="<?php echo $product['image']; ?>" alt="<?php echo $product['name']; ?>" class="img-thumbnail" /></a>
                                         <?php } else { ?>
                                         <span class="img-thumbnail list"><i class="fa fa-camera fa-2x"></i></span>
-                                        <?php } ?></td>
+                                        <?php } ?></td>-->
                                     <td class="text-right"><?php echo $product['product_id']; ?></td>
                                     <td class="text-right"><?php echo $product['product_store_id']; ?></td>
                                     <td class="text-left"><?php echo $product['name']; ?></td>
@@ -291,6 +292,10 @@
                                     </td>
                                     <td class="text-left">
                                         <input style="max-width: 75px !important;" type="text" class="source" id="grn_<?php echo $product['product_store_id'];?>"   value="<?php echo $product['grn']; ?>">
+                                    </td>
+
+                                    <td class="text-left">
+                                        <input style="max-width: 75px !important;" type="text" class="source" id="notes_<?php echo $product['product_store_id'];?>"   value="<?php echo $product['notes']; ?>">
                                     </td>
                                     <td class="text-right"><?php if($this->user->getId() == 174) { ?><button type="button" onclick="ChangeProductInventory('<?php echo $product['product_store_id']; ?>');" data-toggle="tooltip" title="" class="btn btn-default" data-original-title="Save"><i class="fa fa-check-circle text-success"></i></button><?php } ?>
 									<button type="button" onclick="getProductInventoryHistory('<?php echo $product['product_store_id']; ?>');" 
@@ -422,6 +427,14 @@
                            
                                 <label for="grn" class="col control-label">Goods Receipt Note</label>
                                 <input placeholder="Goods Receipt Note" type="text" class="form-control" id="grn" name="grn" style="max-width: 568px !important;">
+                            </div>   
+                        </div>
+
+                         <div class="col-sm-6">
+                            <div class="form-group ">
+                           
+                                <label for="notes" class="col control-label">Remarks</label>
+                                <input placeholder="Remarks" type="text" class="form-control" id="notes" name="notes" style="max-width: 568px !important;">
                             </div>   
                         </div>
 
@@ -912,6 +925,7 @@ var total_procured_qty = $('#total_procured_qty_'+vendor_product_id).val();
 var rejected_qty = $('#rejected_qty_'+vendor_product_id).val();  
 var total_qty = $('#total_qty_'+vendor_product_id).val(); 
 var grn = $('#grn_'+vendor_product_id).val();
+var notes = $('#notes_'+vendor_product_id).val();
 if(grn==null || grn=="")
 {
 alert('Please enter the goods receipt note (GRN) in all selected rows!');
@@ -923,7 +937,7 @@ return false;
 var general_product_id = $('#buying_price_'+vendor_product_id).attr('data-general_product_id');
 var product_name = $('#buying_price_'+vendor_product_id).attr('data-name');
 
-data_inventory[vendor_product_id] = { 'vendor_product_id' : vendor_product_id, 'buying_price' : buying_price, 'source' : source, 'current_qty' : current_qty, 'total_procured_qty' : total_procured_qty, 'rejected_qty' : rejected_qty, 'total_qty' : total_qty, 'product_id' : general_product_id, 'product_name' : product_name,'grn':grn};
+data_inventory[vendor_product_id] = { 'vendor_product_id' : vendor_product_id, 'buying_price' : buying_price, 'source' : source, 'current_qty' : current_qty, 'total_procured_qty' : total_procured_qty, 'rejected_qty' : rejected_qty, 'total_qty' : total_qty, 'product_id' : general_product_id, 'product_name' : product_name,'grn':grn,'notes':notes};
 console.log(data_inventory);
 data_array.push(data_inventory);
 console.log(data_array);
@@ -1027,6 +1041,7 @@ var vendor_product_name = $('#new_vendor_product_name').attr('data-vendor-produc
 
 var buying_source_id = $('input[name=\'new_buying_source\']').attr('data-new-buying-source-id');
 var grn = $('#grn').val();
+var notes = $('#notes').val();
 
 $('.alert.alert-success').html('');
 $('.alert.alert-success.download').html('');
@@ -1037,7 +1052,7 @@ $('.alert.alert-danger').hide();
 $.ajax({
         url: 'index.php?path=catalog/product/updateInventorysingle&token=<?= $token ?>',
         dataType: 'json',
-        data: { 'vendor_product_uom' : vendor_product_uom, 'buying_price' : buying_price, 'buying_source' : buying_source, 'buying_source_id' : buying_source_id, 'procured_quantity' : procured_quantity, 'rejected_quantity' : rejected_quantity, 'vendor_product_name' : vendor_product_name,'grn':grn  },
+        data: { 'vendor_product_uom' : vendor_product_uom, 'buying_price' : buying_price, 'buying_source' : buying_source, 'buying_source_id' : buying_source_id, 'procured_quantity' : procured_quantity, 'rejected_quantity' : rejected_quantity, 'vendor_product_name' : vendor_product_name,'grn':grn ,'notes':notes },
         async: true,
         beforeSend: function() {
         $('#update_inventory_form').prop('disabled', true);

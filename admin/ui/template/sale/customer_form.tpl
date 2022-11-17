@@ -757,6 +757,22 @@
                           </select>
                         </div>
                     </div>
+                            
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="input-discount-price-category">Discount Price Category</label>
+                        <div class="col-sm-10">
+                            <select name="customer_discount_category" id="input-discount-price-category" class="form-control" <?php echo $customer_discount_category_disabled; ?> >
+                            <option value="">Select Discount Price Category</option>
+                            <?php foreach ($price_discount_categories as $category) { ?>
+                            <?php if(isset($customer_discount_category) && ($customer_discount_category== $category['price_category'])){?>
+                            <option selected="selected" value="<?php echo $category['price_category']; ?>"><?php echo $category['price_category']; ?></option>
+                            <?php }else {?>
+                             <option  value="<?php echo $category['price_category']; ?>"><?php echo $category['price_category']; ?></option>
+                             <?php } ?>
+                            <?php } ?>
+                          </select>
+                        </div>
+                    </div>        
                     
                     <div class="form-group">
                         <label class="col-sm-2 control-label" for="input-account-manager">Account Manager Name</label>
@@ -2136,7 +2152,7 @@ $.ajax({
     url: 'index.php?path=sale/customer/configuration&token=<?php echo $token; ?>&customer_id=<?php echo $customer_id; ?>',
     type: 'post',
     dataType: 'json',
-    data: 'customer_category=' + encodeURIComponent($('#tab-configuration select[name=\'customer_category\']').val()) + '&account_manager=' + encodeURIComponent($('#tab-configuration select[name=\'account_manager\']').val())+ '&customer_experience=' + encodeURIComponent($('#tab-configuration select[name=\'customer_experience\']').val())+'&payment_terms=' + encodeURIComponent($('#tab-configuration select[name=\'payment_terms\']').val())+'&statement_duration=' + encodeURIComponent($('#tab-configuration select[name=\'statement_duration\']').val())+'&customer_categories=' + encodeURIComponent($('#tab-configuration select[name=\'storeCategories[]\']').val())+'&customer_id=<?php echo $customer_id; ?>',
+    data: 'customer_discount_category=' + encodeURIComponent($('#tab-configuration select[name=\'customer_discount_category\']').val()) + '&customer_category=' + encodeURIComponent($('#tab-configuration select[name=\'customer_category\']').val()) + '&account_manager=' + encodeURIComponent($('#tab-configuration select[name=\'account_manager\']').val())+ '&customer_experience=' + encodeURIComponent($('#tab-configuration select[name=\'customer_experience\']').val())+'&payment_terms=' + encodeURIComponent($('#tab-configuration select[name=\'payment_terms\']').val())+'&statement_duration=' + encodeURIComponent($('#tab-configuration select[name=\'statement_duration\']').val())+'&customer_categories=' + encodeURIComponent($('#tab-configuration select[name=\'storeCategories[]\']').val())+'&customer_id=<?php echo $customer_id; ?>',
     beforeSend: function() {
       $('#button-configuration').button('loading');
          },

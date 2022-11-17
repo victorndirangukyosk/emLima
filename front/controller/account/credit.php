@@ -1,10 +1,12 @@
 <?php
 
-class ControllerAccountCredit extends Controller
-{
-    public function updateBarcode()
-    {
-        $allProducts = $this->db->query('SELECT * from '.DB_PREFIX.'product')->rows;
+require_once DIR_SYSTEM . '/vendor/pesapal/OAuth.php';
+require_once DIR_SYSTEM . '/vendor/mpesa-php-sdk-master/vendor/autoload.php';
+
+class ControllerAccountCredit extends Controller {
+
+    public function updateBarcode() {
+        $allProducts = $this->db->query('SELECT * from ' . DB_PREFIX . 'product')->rows;
 
         //echo "<pre>";print_r($allProducts);die;
 
@@ -17,22 +19,21 @@ class ControllerAccountCredit extends Controller
                 $randomString .= $characters[rand(0, strlen($characters) - 1)];
             }
 
-            $this->db->query('UPDATE '.DB_PREFIX."product SET model = '".(int) $randomString."' WHERE product_id = '".(int) $product['product_id']."'");
+            $this->db->query('UPDATE ' . DB_PREFIX . "product SET model = '" . (int) $randomString . "' WHERE product_id = '" . (int) $product['product_id'] . "'");
             //die;
         }
     }
 
-    public function index()
-    {
+    public function index() {
         /* $x = 'Second Parklands Avenuez';
-         $data['building_name'] = explode(",",$x)[0];
-         echo "<pre>";print_r($data['building_name']);die;*/
+          $data['building_name'] = explode(",",$x)[0];
+          echo "<pre>";print_r($data['building_name']);die; */
         /* $value = "Test a";
-         echo strtok($value, " "); // Test
-         die;*/
+          echo strtok($value, " "); // Test
+          die; */
         //echo "<pre>";print_r(floor(1.234));die;
         //echo "<pre>";print_r(date($this->language->get('full_datetime_format'), strtotime(date("Y-m-d H:i:s"))));die;
-        $this->document->addStyle('front/ui/theme/'.$this->config->get('config_template').'/stylesheet/layout_login.css');
+        $this->document->addStyle('front/ui/theme/' . $this->config->get('config_template') . '/stylesheet/layout_login.css');
 
         if (!$this->customer->isLogged()) {
             $this->session->data['redirect'] = $this->url->link('account/credit', '', 'SSL');
@@ -108,15 +109,14 @@ class ControllerAccountCredit extends Controller
         $results = $this->model_account_credit->getCredits($filter_data);
 
         foreach ($results as $result) {
-            $transaction_ID="";
-            if(isset($result['transaction_id']) && $result['transaction_id']!="" )
-            {
-                $transaction_ID='#Transaction ID '.$result['transaction_id'];
+            $transaction_ID = "";
+            if (isset($result['transaction_id']) && $result['transaction_id'] != "") {
+                $transaction_ID = '#Transaction ID ' . $result['transaction_id'];
             }
             $data['credits'][] = [
                 'amount' => $this->currency->format($result['amount'], $this->config->get('config_currency')),
                 'plain_amount' => $result['amount'],
-                'description' => $result['description'].' ' .$transaction_ID,
+                'description' => $result['description'] . ' ' . $transaction_ID,
                 'date_added' => date($this->language->get('date_format_medium'), strtotime($result['date_added'])),
             ];
         }
@@ -163,26 +163,727 @@ class ControllerAccountCredit extends Controller
         $data['header'] = $this->load->controller('common/header/information');
 
         // echo "<pre>";print_r($data['credits']);die;
-        if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/account/credit.tpl')) {
-            $this->response->setOutput($this->load->view($this->config->get('config_template').'/template/account/credit.tpl', $data));
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/credit.tpl')) {
+            $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/account/credit.tpl', $data));
         } else {
             $this->response->setOutput($this->load->view('default/template/account/credit.tpl', $data));
         }
     }
 
-
     public function getWalletTotal() {
         $total = 0;
         // if (!$this->customer->isLogged()) {
         //     $this->session->data['redirect'] = $this->url->link('account/credit', '', 'SSL');
-
         //     $this->response->redirect($this->url->link('account/login', '', 'SSL'));
         // } 
-        $this->load->model('account/credit');         
+        $this->load->model('account/credit');
 
-        $result = $this->model_account_credit->getTotalAmount();       
-        $total=$this->currency->format($result, $this->config->get('config_currency'));
+        $result = $this->model_account_credit->getTotalAmount();
+        $total = $this->currency->format($result, $this->config->get('config_currency'));
         return $total;
+    }
+
+    public function pesapal() {
+
+        $log = new Log('error.log');
+
+        $this->load->language('payment/pesapal');
+        $this->load->model('setting/setting');
+        $this->load->model('payment/pesapal');
+        $this->load->model('account/customer');
+
+        $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
+        $amount = $this->request->post['amount'];
+        $pesapal_creds = $this->model_setting_setting->getSetting('pesapal', 0);
+        //pesapal params
+        $token = $params = null;
+
+        /*
+          PesaPal Sandbox is at https://demo.pesapal.com. Use this to test your developement and
+          when you are ready to go live change to https://www.pesapal.com.
+         */
+        $consumer_key = $pesapal_creds['pesapal_consumer_key']; //Register a merchant account on
+        //demo.pesapal.com and use the merchant key for testing.
+        //When you are ready to go live make sure you change the key to the live account
+        //registered on www.pesapal.com!
+        $consumer_secret = $pesapal_creds['pesapal_consumer_secret']; // Use the secret from your test
+        //account on demo.pesapal.com. When you are ready to go live make sure you
+        //change the secret to the live account registered on www.pesapal.com!
+        $signature_method = new OAuthSignatureMethod_HMAC_SHA1();
+        $iframelink = 'https://www.pesapal.com/api/PostPesapalDirectOrderV4'; //change to
+        //https://www.pesapal.com/API/PostPesapalDirectOrderV4 when you are ready to go live!
+        //get form details
+        $transaction_fee = 0;
+        $percentage = 3.5;
+        $transaction_fee = ($percentage / 100) * $amount;
+        $amount = $amount + $transaction_fee;
+        $log->write('TRANSACTION FEE');
+        $log->write($transaction_fee);
+        $log->write($amount);
+        //$amount = 100;
+        $amount = number_format($amount, 2); //format amount to 2 decimal places
+
+        $desc = $customer_info['company_name'] . '-' . $customer_info['firstname'] . '-' . $customer_info['lastname'] . '-' . $amount . '-' . time() . '-' . $this->customer->getId();
+        $type = 'MERCHANT'; //default value = MERCHANT
+        $reference = 'WALLET_TOPUP' . '_' . $amount . '_' . time() . '_' . $this->customer->getId(); //unique order id of the transaction, generated by merchant
+
+        $first_name = $customer_info['firstname'];
+        $last_name = $customer_info['lastname'];
+        $email = $customer_info['email'];
+        $phonenumber = '+254' . $customer_info['telephone']; //ONE of email or phonenumber is required
+        $Currency = 'KES';
+
+        $callback_url = $this->url->link('account/credit/status', '', 'SSL'); //redirect url, the page that will handle the response from pesapal.
+
+        $post_xml = '<?xml version="1.0" encoding="utf-8"?><PesapalDirectOrderInfo xmlns:xsi="http://www.w3.org/2001/XMLSchemainstance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Amount="' . $amount . '" Description="' . $desc . '" Type="' . $type . '" Reference="' . $reference . '" FirstName="' . $first_name . '" LastName="' . $last_name . '" Email="' . $email . '" PhoneNumber="' . $phonenumber . '" xmlns="http://www.pesapal.com" />';
+        $post_xml = htmlentities($post_xml);
+
+        $consumer = new OAuthConsumer($consumer_key, $consumer_secret, $callback_url);
+        //print_r($consumer);
+        //post transaction to pesapal
+        $iframe_src = OAuthRequest::from_consumer_and_token($consumer, $token, 'GET', $iframelink, $params);
+        $iframe_src->set_parameter('oauth_callback', $callback_url);
+        $iframe_src->set_parameter('pesapal_request_data', $post_xml);
+        $iframe_src->sign_request($signature_method, $consumer, $token);
+        //display pesapal - iframe and pass iframe_src
+        $log->write($iframe_src);
+
+        // Add to activity log
+        $this->load->model('account/activity');
+        $activity_data = [
+            'customer_id' => $this->customer->getId(),
+            'name' => $this->customer->getFirstName() . ' ' . $this->customer->getLastName(),
+            'amount' => $amount,
+            'frame' => json_encode($iframe_src)
+        ];
+
+        $this->model_account_activity->addActivity('WALLET_TOPUP_PESAPAL_INITIALIZE', $activity_data);
+        // Add to activity log
+
+
+        $data['iframe'] = $iframe_src;
+
+        echo '<iframe src=' . $iframe_src . ' width="100%" height="700px"  scrolling="no" frameBorder="0"><p>Browser unable to load iFrame</p></iframe>';
+    }
+
+    public function status() {
+        $log = new Log('error.log');
+        $status = NULL;
+        $amount = NULL;
+
+        $this->load->language('payment/pesapal');
+        $this->load->model('setting/setting');
+        $this->load->model('payment/pesapal');
+        $this->load->model('account/customer');
+
+        $log->write('PESAPAL WALLET CALL BACK');
+        $transaction_tracking_id = $this->request->get['pesapal_transaction_tracking_id'];
+        $merchant_reference = $this->request->get['pesapal_merchant_reference'];
+        $log->write($transaction_tracking_id);
+        $log->write($merchant_reference);
+        $wallet_topup_details = explode('_', $merchant_reference);
+        if (is_array($wallet_topup_details)) {
+            $amount = $wallet_topup_details[0];
+        }
+        $log->write('PESAPAL WALLET CALL BACK');
+        $status = $this->ipinlistenercustom('CHANGE', $transaction_tracking_id, $merchant_reference);
+
+        // Add to activity log
+        $this->load->model('account/activity');
+        $activity_data = [
+            'customer_id' => $this->customer->getId(),
+            'name' => $this->customer->getFirstName() . ' ' . $this->customer->getLastName(),
+            'transaction_tracking_id' => $transaction_tracking_id,
+            'merchant_reference' => $merchant_reference,
+            'status' => $status,
+            'amount' => $amount
+        ];
+
+        $this->model_account_activity->addActivity('WALLET_TOPUP_CHECKING_STATUS', $activity_data);
+        // Add to activity log
+
+        if ('COMPLETED' == $status) {
+            $this->response->redirect($this->url->link('account/credit/pesapalsuccess'));
+        }
+
+        if ('COMPLETED' != $status || NULL == $status) {
+            $this->response->redirect($this->url->link('account/credit/pesapalfailed'));
+        }
+    }
+
+    public function ipinlistenercustom($pesapalNotification, $pesapalTrackingId, $pesapal_merchant_reference) {
+
+        $amount = NULL;
+        $status = null;
+        $log = new Log('error.log');
+        $log->write('ipinlistener');
+        $this->load->model('setting/setting');
+        $this->load->model('payment/pesapal');
+        $this->load->model('checkout/order');
+        $this->load->model('account/customer');
+        $pesapal_creds = $this->model_setting_setting->getSetting('pesapal', 0);
+
+        $customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
+        $customer_id = $customer_info['customer_id'];
+
+        $consumer_key = $pesapal_creds['pesapal_consumer_key']; //Register a merchant account on
+        //demo.pesapal.com and use the merchant key for testing.
+        //When you are ready to go live make sure you change the key to the live account
+        //registered on www.pesapal.com!
+        $consumer_secret = $pesapal_creds['pesapal_consumer_secret']; // Use the secret from your test
+        //account on demo.pesapal.com. When you are ready to go live make sure you
+        //change the secret to the live account registered on www.pesapal.com!
+        $statusrequestAPI = 'https://www.pesapal.com/api/querypaymentstatus';
+        //'https://demo.pesapal.com/api/querypaymentstatus'; //change to
+        //https://www.pesapal.com/api/querypaymentstatus' when you are ready to go live!
+        // Parameters sent to you by PesaPal IPN
+        $pesapalNotification = $pesapalNotification;
+        $pesapalTrackingId = $pesapalTrackingId;
+        $pesapal_merchant_reference = $pesapal_merchant_reference;
+
+        /* $pesapalNotification = $this->request->get['pesapal_notification_type'];
+          $pesapalTrackingId = $this->request->get['pesapal_transaction_tracking_id'];
+          $pesapal_merchant_reference = $this->request->get['pesapal_merchant_reference']; */
+
+        if ('CHANGE' == $pesapalNotification && '' != $pesapalTrackingId) {
+            $log->write('PESAPAL WALLET STATUS ipinlistener');
+            $token = $params = null;
+            $consumer = new OAuthConsumer($consumer_key, $consumer_secret);
+            $signature_method = new OAuthSignatureMethod_HMAC_SHA1();
+
+            //get transaction status
+            $request_status = OAuthRequest::from_consumer_and_token($consumer, $token, 'GET', $statusrequestAPI, $params);
+            $request_status->set_parameter('pesapal_merchant_reference', $pesapal_merchant_reference);
+            $request_status->set_parameter('pesapal_transaction_tracking_id', $pesapalTrackingId);
+            $request_status->sign_request($signature_method, $consumer, $token);
+
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $request_status);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_HEADER, 1);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+            if (defined('CURL_PROXY_REQUIRED')) {
+                if (CURL_PROXY_REQUIRED == 'True') {
+                    $proxy_tunnel_flag = (defined('CURL_PROXY_TUNNEL_FLAG') && 'FALSE' == strtoupper(CURL_PROXY_TUNNEL_FLAG)) ? false : true;
+                    curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, $proxy_tunnel_flag);
+                    curl_setopt($ch, CURLOPT_PROXYTYPE, CURLPROXY_HTTP);
+                    curl_setopt($ch, CURLOPT_PROXY, CURL_PROXY_SERVER_DETAILS);
+                }
+            }
+
+            $response = curl_exec($ch);
+            $log->write('PESAPAL WALLET RESPONSE');
+            $log->write($response);
+            $log->write('PESAPAL WALLET RESPONSE');
+
+            $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+            $raw_header = substr($response, 0, $header_size - 4);
+            $headerArray = explode("\r\n\r\n", $raw_header);
+            $header = $headerArray[count($headerArray) - 1];
+
+            //transaction status
+            $elements = preg_split('/=/', substr($response, $header_size));
+            $status = $elements[1];
+            $log->write('PESAPAL WALLET STATUS');
+            $log->write($status);
+
+            $log->write($pesapalTrackingId);
+            $log->write($pesapal_merchant_reference);
+            $wallet_topup_details = explode('_', $pesapal_merchant_reference);
+            if (is_array($wallet_topup_details)) {
+                $amount = $wallet_topup_details[2];
+            }
+            $log->write($amount);
+            $amount = (int) ($amount);
+            $log->write('PESAPAL WALLET STATUS');
+            curl_close($ch);
+
+            if ('COMPLETED' == $status) {
+                $this->load->model('account/credit');
+                $last_inserted_id = $this->model_account_credit->addCustomerCredit($this->customer->getId(), 'WALLET TOPUP USING PESAPAL', $amount, $pesapalTrackingId, $pesapal_merchant_reference, 0);
+                $last_inserted_second_id = $this->model_account_credit->addCustomerCredits($this->customer->getId(), 'WALLET TOPUP USING PESAPAL', $amount, $pesapalTrackingId, $pesapal_merchant_reference, 0);
+                $log->write('last_inserted_second_id');
+                $log->write($last_inserted_id);
+                $log->write($last_inserted_second_id);
+                $log->write('last_inserted_second_id');
+            } else {
+                
+            }
+        }
+        echo $status;
+    }
+
+    public function pesapalsuccess() {
+
+        $this->load->language('credit/success');
+
+        $this->document->addStyle('front/ui/theme/' . $this->config->get('config_template') . '/stylesheet/layout_checkout.css');
+
+        if (!empty($_SESSION['parent'])) {
+            $this->document->setTitle($this->language->get('heading_title_sub_user'));
+        }
+        if (empty($_SESSION['parent'])) {
+            $this->document->setTitle($this->language->get('heading_title'));
+        }
+
+        $data['breadcrumbs'] = [];
+
+        $data['breadcrumbs'][] = [
+            'text' => $this->language->get('text_home'),
+            'href' => $this->url->link('common/home'),
+        ];
+
+        $data['breadcrumbs'][] = [
+            'text' => $this->language->get('text_basket'),
+            'href' => $this->url->link('checkout/cart'),
+        ];
+
+        $data['breadcrumbs'][] = [
+            'text' => $this->language->get('text_checkout'),
+            'href' => $this->url->link('checkout/checkout', '', 'SSL'),
+        ];
+
+        $data['breadcrumbs'][] = [
+            'text' => $this->language->get('text_success'),
+            'href' => $this->url->link('checkout/success'),
+        ];
+
+        $data['referral_description'] = $this->language->get('referral_description');
+        if (!empty($_SESSION['parent'])) {
+            $data['heading_title'] = $this->language->get('heading_title_sub_user');
+        }
+        if (empty($_SESSION['parent'])) {
+            $data['heading_title'] = $this->language->get('heading_title');
+        }
+
+        $data['text_basket'] = $this->language->get('text_basket');
+        if (empty($_SESSION['parent'])) {
+            $data['text_customer'] = $this->language->get('text_customer');
+        }
+        if (!empty($_SESSION['parent'])) {
+            $data['text_customer'] = $this->language->get('text_customer_sub_user');
+        }
+        $data['text_guest'] = $this->language->get('text_guest');
+        $data['text_order_id'] = $this->language->get('text_order_id');
+
+        // Get Order Status enter Message
+        if ($this->customer->isLogged() && empty($_SESSION['parent'])) {
+            $data['text_message'] = sprintf($this->language->get('text_customer'), $this->url->link('account/credit', '', 'SSL'), $this->url->link('account/account', '', 'SSL'));
+        } elseif ($this->customer->isLogged() && !empty($_SESSION['parent'])) {
+            $data['text_message'] = sprintf($this->language->get('text_customer_sub_user'), $this->url->link('account/credit', '', 'SSL'), $this->url->link('account/account', '', 'SSL'));
+        } else {
+            $data['text_message'] = sprintf($this->language->get('text_guest'), $this->url->link('information/contact'));
+        }
+
+        $data['konduto_public_key'] = $this->config->get('config_konduto_public_key');
+
+        $data['button_continue'] = $this->language->get('button_continue');
+
+        $data['continue'] = $this->url->link('common/home');
+
+        $data['column_left'] = $this->load->controller('common/column_left');
+        $data['column_right'] = $this->load->controller('common/column_right');
+        $data['content_top'] = $this->load->controller('common/content_top');
+        $data['content_bottom'] = $this->load->controller('common/content_bottom');
+        $data['footer'] = $this->load->controller('common/footer');
+        $data['header'] = $this->load->controller('common/header/onlyHeader');
+
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/wallet_success.tpl')) {
+            $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/common/wallet_success.tpl', $data));
+        } else {
+            $this->response->setOutput($this->load->view('default/template/common/wallet_success.tpl', $data));
+        }
+    }
+
+    public function pesapalfailed() {
+
+        $this->load->language('credit/success');
+
+        $this->document->addStyle('front/ui/theme/' . $this->config->get('config_template') . '/stylesheet/layout_checkout.css');
+
+        $this->document->setTitle($this->language->get('heading_title_failed'));
+
+        $data['breadcrumbs'] = [];
+
+        $data['breadcrumbs'][] = [
+            'text' => $this->language->get('text_home'),
+            'href' => $this->url->link('common/home'),
+        ];
+
+        $data['breadcrumbs'][] = [
+            'text' => $this->language->get('text_basket'),
+            'href' => $this->url->link('checkout/cart'),
+        ];
+
+        $data['breadcrumbs'][] = [
+            'text' => $this->language->get('text_checkout'),
+            'href' => $this->url->link('checkout/checkout', '', 'SSL'),
+        ];
+
+        $data['breadcrumbs'][] = [
+            'text' => $this->language->get('text_success'),
+            'href' => $this->url->link('checkout/success'),
+        ];
+
+        $data['referral_description'] = $this->language->get('referral_description');
+        $data['heading_title'] = $this->language->get('heading_title_failed');
+        $data['text_basket'] = $this->language->get('text_basket');
+        $data['text_customer'] = $this->language->get('text_customer_failed');
+        $data['text_guest'] = $this->language->get('text_guest');
+        $data['text_order_id'] = $this->language->get('text_order_id');
+
+        // Get Order Status enter Message
+        if ($this->customer->isLogged()) {
+            $data['text_message'] = sprintf($this->language->get('text_customer_failed'), $this->url->link('account/credit', '', 'SSL'), $this->url->link('account/account', '', 'SSL'));
+        } else {
+            $data['text_message'] = sprintf($this->language->get('text_customer_failed'), $this->url->link('information/contact'));
+        }
+
+        $data['konduto_public_key'] = $this->config->get('config_konduto_public_key');
+
+        $data['button_continue'] = $this->language->get('button_continue');
+
+        $data['continue'] = $this->url->link('common/home');
+
+        $data['column_left'] = $this->load->controller('common/column_left');
+        $data['column_right'] = $this->load->controller('common/column_right');
+        $data['content_top'] = $this->load->controller('common/content_top');
+        $data['content_bottom'] = $this->load->controller('common/content_bottom');
+        $data['footer'] = $this->load->controller('common/footer');
+        $data['header'] = $this->load->controller('common/header/onlyHeader');
+
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/wallet_success.tpl')) {
+            $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/common/wallet_success.tpl', $data));
+        } else {
+            $this->response->setOutput($this->load->view('default/template/common/wallet_success.tpl', $data));
+        }
+    }
+
+    public function confirmtransaction() {
+        $log = new Log('error.log');
+        $json['processed'] = false;
+
+        if ('mpesa' == $this->request->post['payment_method']) {
+            $this->load->language('payment/mpesa');
+            $this->load->model('payment/mpesa');
+            $this->load->model('checkout/order');
+
+            $log->write($this->request->post['mobile']);
+            $log->write($this->request->post['order_id']);
+            $log->write($this->request->post['amount']);
+            $log->write($this->request->post['payment_type']);
+            $log->write($this->request->post['payment_method']);
+
+            $live = 'true';
+            $mpesa = new \Safaricom\Mpesa\Mpesa($this->config->get('mpesa_customer_key'), $this->config->get('mpesa_customer_secret'), $this->config->get('mpesa_environment'), $live);
+            $sta = false;
+            $log->write('STKPushSimulation confirm for wallet topup from mpesa');
+            $log->write($sta);
+
+            if (!$sta) {
+                $PartyA = $this->config->get('config_telephone_code') . '' . $this->request->post['mobile'];
+
+                $BusinessShortCode = $this->config->get('mpesa_business_short_code');
+                $LipaNaMpesaPasskey = $this->config->get('mpesa_lipanampesapasskey');
+                $TransactionType = 'CustomerPayBillOnline'; //'CustomerBuyGoodsOnline';
+
+                $CallBackURL = $this->url->link('deliversystem/deliversystem/mpesaWalletStatus', '', 'SSL');
+                $Amount = $this->request->post['amount'];
+                $PartyB = $this->config->get('mpesa_business_short_code');
+
+                $PhoneNumber = $this->config->get('config_telephone_code') . '' . $this->request->post['mobile'];
+                $AccountReference = $this->customer->getId() . 'WALLET_TOPUP'; //$this->config->get('config_name');
+                $TransactionDesc = $this->customer->getId() . 'WALLET_TOPUP';
+                $Remarks = 'PAYMENT';
+            }
+
+            $log->write($BusinessShortCode . 'x' . $LipaNaMpesaPasskey . 'x' . $TransactionType . 'amount' . $Amount . 'x' . $PartyA . 'x' . $PartyB . 'x' . $PhoneNumber . 'x' . $CallBackURL . 'x' . $AccountReference . 'x' . $TransactionDesc . 'x' . $Remarks);
+            $stkPushSimulation = $mpesa->STKPushSimulation($BusinessShortCode, $LipaNaMpesaPasskey, $TransactionType, $Amount, $PartyA, $PartyB, $PhoneNumber, $CallBackURL, $AccountReference, $TransactionDesc, $Remarks);
+
+            $log->write('STKPushSimulation');
+            $log->write($stkPushSimulation);
+            $log->write('STKPushSimulation');
+
+            $stkPushSimulation = json_decode($stkPushSimulation);
+
+            if (isset($stkPushSimulation->ResponseCode) && 0 == $stkPushSimulation->ResponseCode) {
+
+                // Add to activity log
+                $this->load->model('account/activity');
+                $activity_data = [
+                    'customer_id' => $this->customer->getId(),
+                    'name' => $this->customer->getFirstName() . ' ' . $this->customer->getLastName(),
+                    'amount' => $this->request->post['amount'],
+                    'result_code' => $stkPushSimulation->ResponseCode,
+                    'result_description' => $stkPushSimulation->ResponseDescription,
+                    'merchant_request_id' => $stkPushSimulation->MerchantRequestID,
+                    'checkout_request_id' => $stkPushSimulation->CheckoutRequestID
+                ];
+
+                $this->model_account_activity->addActivity('WALLET_TOPUP_MPESA_INITIALIZE', $activity_data);
+                // Add to activity log
+
+                $this->model_payment_mpesa->insertCustomerTransactionId($this->customer->getId(), $stkPushSimulation->CheckoutRequestID, $stkPushSimulation->MerchantRequestID, $this->request->post['amount']);
+                $json['checkout_request_id'] = $stkPushSimulation->CheckoutRequestID;
+                $json['merchant_request_id'] = $stkPushSimulation->MerchantRequestID;
+                $json['processed'] = true;
+            } else {
+
+                // Add to activity log
+                $this->load->model('account/activity');
+                $activity_data = [
+                    'customer_id' => $this->customer->getId(),
+                    'name' => $this->customer->getFirstName() . ' ' . $this->customer->getLastName(),
+                    'amount' => $this->request->post['amount'],
+                    'result_code' => $stkPushSimulation->errorCode,
+                    'result_description' => $stkPushSimulation->errorMessage,
+                    'request_id' => $stkPushSimulation->requestId,
+                ];
+
+                $this->model_account_activity->addActivity('WALLET_TOPUP_MPESA_INITIALIZE', $activity_data);
+                // Add to activity log
+
+                $json['error'] = $stkPushSimulation->errorMessage;
+                $json['checkout_request_id'] = '';
+                $json['merchant_request_id'] = '';
+                $json['processed'] = false;
+            }
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function completetransaction() {
+        $log = new Log('error.log');
+        $json['processed'] = false;
+        $json['status'] = false;
+
+        $json['error'] = 'Transaction Failed. Please Try again.';
+
+        if ('mpesa' == $this->request->post['payment_method']) {
+            $this->load->language('payment/mpesa');
+            $this->load->model('payment/mpesa');
+            $this->load->model('checkout/order');
+            $this->load->model('account/customer');
+
+            $amount = 0;
+            $amount = $this->request->post['amount'];
+
+            // for topup $this->request->post['order_id'] will be null
+            if ($this->request->post['payment_type'] == 'topup') {
+
+                $mpesaDetails = $this->model_payment_mpesa->getMpesaWalletByCustomerId($this->customer->getId(), $this->request->post['mpesa_checkout_request_id']);
+                $log->write('GET CUSTOMER RECENT MPESA REQUESTS');
+                $log->write($mpesaDetails);
+                $log->write('GET CUSTOMER RECENT MPESA REQUESTS');
+
+                $live = true;
+
+                $mpesa = new \Safaricom\Mpesa\Mpesa($this->config->get('mpesa_customer_key'), $this->config->get('mpesa_customer_secret'), $this->config->get('mpesa_environment'), $live);
+                $customer_id = $this->customer->getId();
+                $amount_topup = $this->request->post['amount'];
+                if ($mpesaDetails) {
+
+                    $BusinessShortCode = $this->config->get('mpesa_business_short_code');
+                    $LipaNaMpesaPasskey = $this->config->get('mpesa_lipanampesapasskey');
+
+                    $checkoutRequestID = $mpesaDetails['checkout_request_id']; //'ws_CO_28032018142406660';
+                    $timestamp = '20' . date('ymdhis');
+                    $password = base64_encode($BusinessShortCode . $LipaNaMpesaPasskey . $timestamp);
+
+                    $stkPushSimulation = $mpesa->STKPushQuery($live, $checkoutRequestID, $BusinessShortCode, $password, $timestamp);
+
+                    $errorCode = NULL;
+                    if (array_key_exists('errorCode', $stkPushSimulation)) {
+                        $errorCode = $stkPushSimulation['errorCode'];
+                    }
+
+                    $errorMessage = NULL;
+                    if (array_key_exists('errorMessage', $stkPushSimulation)) {
+                        $errorMessage = $stkPushSimulation['errorMessage'];
+                    }
+
+                    // Void the order first
+                    $log->write('STKPushSimulation WALLET');
+                    $log->write($stkPushSimulation);
+
+                    $stkPushSimulation = json_decode($stkPushSimulation, true);
+                    $log->write('STKPushSimulation WALLET JSON ARRAY');
+                    $log->write($stkPushSimulation);
+
+                    if (array_key_exists('MerchantRequestID', $stkPushSimulation)) {
+                        $MerchantRequestID = $stkPushSimulation['MerchantRequestID'];
+                    }
+
+                    if (array_key_exists('Body', $stkPushSimulation) && array_key_exists('stkCallback', $stkPushSimulation['Body'])) {
+                        $MerchantRequestID = $stkPushSimulation['Body']['stkCallback']['MerchantRequestID'];
+                    }
+
+                    if (array_key_exists('CheckoutRequestID', $stkPushSimulation)) {
+                        $CheckoutRequestID = $stkPushSimulation['CheckoutRequestID'];
+                    }
+
+                    if (array_key_exists('Body', $stkPushSimulation) && array_key_exists('stkCallback', $stkPushSimulation['Body'])) {
+                        $CheckoutRequestID = $stkPushSimulation['Body']['stkCallback']['CheckoutRequestID'];
+                    }
+
+                    if (array_key_exists('CheckoutRequestID', $stkPushSimulation)) {
+                        $mpesa_receipt_number = $stkPushSimulation['CheckoutRequestID'];
+                    }
+
+                    if (array_key_exists('Body', $stkPushSimulation) && array_key_exists('stkCallback', $stkPushSimulation['Body']) && array_key_exists('CallbackMetadata', $stkPushSimulation['Body']['stkCallback'])) {
+
+                        foreach ($stkPushSimulation['Body']['stkCallback']['CallbackMetadata']['Item'] as $item) {
+                            if ($item['Name'] == 'MpesaReceiptNumber') {
+                                $mpesa_receipt_number = $item['Value'];
+                            }
+                        }
+                        $mpesa_receipt_number = $stkPushSimulation['Body']['stkCallback']['CheckoutRequestID'];
+                    }
+
+                    if (array_key_exists('ResponseCode', $stkPushSimulation)) {
+                        $ResponseCode = $stkPushSimulation['ResponseCode'];
+                    }
+
+                    if (array_key_exists('ResultCode', $stkPushSimulation)) {
+                        $ResultCode = $stkPushSimulation['ResultCode'];
+                    }
+
+                    if (array_key_exists('Body', $stkPushSimulation) && array_key_exists('stkCallback', $stkPushSimulation['Body'])) {
+                        $ResultCode = $stkPushSimulation['Body']['stkCallback']['ResultCode'];
+                    }
+
+                    if (array_key_exists('ResponseDescription', $stkPushSimulation)) {
+                        $ResponseDescription = $stkPushSimulation['ResponseDescription'];
+                    }
+
+                    if (array_key_exists('Body', $stkPushSimulation) && array_key_exists('stkCallback', $stkPushSimulation['Body']['stkCallback'])) {
+                        $ResponseDescription = $stkPushSimulation['Body']['stkCallback']['ResultDesc'];
+                    }
+
+                    if ($ResultCode != 0 || $errorCode) {
+                        $json['status'] = false;
+                        $json['error'] = $json['error'];
+                    }
+
+                    if ($ResultCode == 0 && $errorMessage == NULL && $errorCode == NULL) {
+                        $this->model_payment_mpesa->addupdateOrderTransactionId($this->customer->getId(), $mpesa_receipt_number, $MerchantRequestID, $CheckoutRequestID, 0, $amount_topup);
+                        $this->model_payment_mpesa->addCustomerHistoryTransaction($this->customer->getId(), $this->config->get('mpesa_order_status_id'), $amount_topup, 'mPesa Online', 'mpesa', $mpesa_receipt_number);
+                        $json['status'] = true;
+                        $json['redirect'] = $this->url->link('account/credit');
+                    }
+                }
+            }
+        }
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function mpesatopupautoupdate() {
+
+        $log = new Log('error.log');
+        $live = true;
+        $mpesa = new \Safaricom\Mpesa\Mpesa($this->config->get('mpesa_customer_key'), $this->config->get('mpesa_customer_secret'), $this->config->get('mpesa_environment'), $live);
+
+        $BusinessShortCode = $this->config->get('mpesa_business_short_code');
+        $LipaNaMpesaPasskey = $this->config->get('mpesa_lipanampesapasskey');
+
+        $checkoutRequestID = $this->request->post['mpesa_checkout_request_id'];
+        $amount_topup = $this->request->post['amount_topup'];
+        $timestamp = '20' . date('ymdhis');
+        $password = base64_encode($BusinessShortCode . $LipaNaMpesaPasskey . $timestamp);
+
+        $stkPushSimulation = $mpesa->STKPushQuery($live, $checkoutRequestID, $BusinessShortCode, $password, $timestamp);
+        // Void the order first
+        $log->write('STKPushSimulation WALLET');
+        $log->write($stkPushSimulation);
+
+        $stkPushSimulation = json_decode($stkPushSimulation, true);
+        $log->write('STKPushSimulation WALLET JSON ARRAY');
+        $log->write($stkPushSimulation);
+        $log->write($stkPushSimulation['ResultDesc']);
+
+        $errorCode = NULL;
+        if (array_key_exists('errorCode', $stkPushSimulation)) {
+            $errorCode = $stkPushSimulation['errorCode'];
+        }
+
+        $errorMessage = NULL;
+        if (array_key_exists('errorMessage', $stkPushSimulation)) {
+            $errorMessage = $stkPushSimulation['errorMessage'];
+        }
+
+        if (array_key_exists('MerchantRequestID', $stkPushSimulation)) {
+            $MerchantRequestID = $stkPushSimulation['MerchantRequestID'];
+        }
+
+        if (array_key_exists('Body', $stkPushSimulation) && array_key_exists('stkCallback', $stkPushSimulation['Body'])) {
+            $MerchantRequestID = $stkPushSimulation['Body']['stkCallback']['MerchantRequestID'];
+        }
+
+        if (array_key_exists('CheckoutRequestID', $stkPushSimulation)) {
+            $CheckoutRequestID = $stkPushSimulation['CheckoutRequestID'];
+        }
+
+        if (array_key_exists('Body', $stkPushSimulation) && array_key_exists('stkCallback', $stkPushSimulation['Body'])) {
+            $CheckoutRequestID = $stkPushSimulation['Body']['stkCallback']['CheckoutRequestID'];
+        }
+
+        if (array_key_exists('CheckoutRequestID', $stkPushSimulation)) {
+            $mpesa_receipt_number = $stkPushSimulation['CheckoutRequestID'];
+        }
+
+        if (array_key_exists('Body', $stkPushSimulation) && array_key_exists('stkCallback', $stkPushSimulation['Body']) && array_key_exists('CallbackMetadata', $stkPushSimulation['Body']['stkCallback'])) {
+
+            foreach ($stkPushSimulation['Body']['stkCallback']['CallbackMetadata']['Item'] as $item) {
+                if ($item['Name'] == 'MpesaReceiptNumber') {
+                    $mpesa_receipt_number = $item['Value'];
+                }
+            }
+            $mpesa_receipt_number = $stkPushSimulation['Body']['stkCallback']['CheckoutRequestID'];
+        }
+
+        if (array_key_exists('ResponseCode', $stkPushSimulation)) {
+            $ResponseCode = $stkPushSimulation['ResponseCode'];
+        }
+
+        if (array_key_exists('ResultCode', $stkPushSimulation)) {
+            $ResultCode = $stkPushSimulation['ResultCode'];
+        }
+
+        if (array_key_exists('Body', $stkPushSimulation) && array_key_exists('stkCallback', $stkPushSimulation['Body'])) {
+            $ResultCode = $stkPushSimulation['Body']['stkCallback']['ResultCode'];
+        }
+
+        if (array_key_exists('ResponseDescription', $stkPushSimulation)) {
+            $ResponseDescription = $stkPushSimulation['ResponseDescription'];
+        }
+
+        if (array_key_exists('Body', $stkPushSimulation) && array_key_exists('stkCallback', $stkPushSimulation['Body']['stkCallback'])) {
+            $ResponseDescription = $stkPushSimulation['Body']['stkCallback']['ResultDesc'];
+        }
+
+        if ($ResultCode == 0 && $errorCode == NULL && $errorMessage == NULL) {
+
+            $this->load->model('payment/mpesa');
+
+            $this->model_payment_mpesa->addupdateOrderTransactionId($this->customer->getId(), $mpesa_receipt_number, $MerchantRequestID, $CheckoutRequestID, 0, $amount_topup);
+            $this->model_payment_mpesa->addCustomerHistoryTransaction($this->customer->getId(), $this->config->get('mpesa_order_status_id'), $amount_topup, 'mPesa Online', 'mpesa', $mpesa_receipt_number);
+
+            $json['processed'] = true;
+            $json['description'] = $ResponseDescription;
+            $json['redirect'] = $this->url->link('account/credit');
+            $json['response'] = $stkPushSimulation;
+        } else {
+            $json['processed'] = false;
+            $json['description'] = $ResponseDescription;
+            $json['response'] = $stkPushSimulation;
+            $json['redirect'] = NULL;
+        }
+
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
     }
 
 }
