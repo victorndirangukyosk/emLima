@@ -633,6 +633,12 @@ class ControllerSettingSetting extends Controller {
             $data['config_time_restriction_for_order_edit'] = $this->config->get('config_time_restriction_for_order_edit');
         }
         
+        if (isset($this->request->post['config_kra_url'])) {
+            $data['config_kra_url'] = $this->request->post['config_kra_url'];
+        } else {
+            $data['config_kra_url'] = $this->config->get('config_kra_url');
+        }
+        
         if (isset($this->request->post['config_kra_tcp'])) {
             $data['config_kra_tcp'] = $this->request->post['config_kra_tcp'];
         } else {
