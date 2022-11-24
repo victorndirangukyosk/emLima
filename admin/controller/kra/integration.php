@@ -16,7 +16,7 @@ class ControllerKraIntegration extends Controller {
         $settings = "(com=" . $com . ",baud=" . $baud . ",tcp=" . $tcp . ",ip=" . $ip . ",port=" . $port . ",password=" . $password . ")";
 
         $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, 'http://localhost:4444/Settings' . $settings);
+        curl_setopt($curl, CURLOPT_URL, $this->config->get('config_kra_url') . 'Settings' . $settings);
         curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type:application/x-www-form-urlencoded'));
 
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
@@ -45,7 +45,7 @@ class ControllerKraIntegration extends Controller {
         $log = new Log('error.log');
 
         $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, 'http://localhost:4444/ReadStatus()');
+        curl_setopt($curl, CURLOPT_URL, $this->config->get('config_kra_url') . 'ReadStatus()');
         curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type:application/x-www-form-urlencoded'));
 
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
@@ -71,7 +71,7 @@ class ControllerKraIntegration extends Controller {
         $log = new Log('error.log');
 
         $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, 'http://localhost:4444/ReadStatus()');
+        curl_setopt($curl, CURLOPT_URL, $this->config->get('config_kra_url') . 'ReadStatus()');
         curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type:application/x-www-form-urlencoded'));
 
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
@@ -97,7 +97,7 @@ class ControllerKraIntegration extends Controller {
         $log = new Log('error.log');
 
         $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, 'http://localhost:4444/CancelReceipt()');
+        curl_setopt($curl, CURLOPT_URL, $this->config->get('config_kra_url') . 'CancelReceipt()');
         curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type:application/x-www-form-urlencoded'));
 
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
@@ -141,7 +141,7 @@ class ControllerKraIntegration extends Controller {
         $invoice_data = "(CompanyName=" . $CompanyName . ",ClientPINnum=" . $ClientPINnum . ",HeadQuarters=" . $HeadQuarters . ",Address=" . $Address . ",PostalCodeAndCity=" . $PostalCodeAndCity . ",ExemptionNum=" . $ExemptionNum . ",TraderSystemInvNum=" . $TraderSystemInvNum . ")";
 
         $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, 'http://localhost:4444/OpenInvoiceWithFreeCustomerData' . $invoice_data);
+        curl_setopt($curl, CURLOPT_URL, $this->config->get('config_kra_url') . 'OpenInvoiceWithFreeCustomerData' . $invoice_data);
         curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type:application/x-www-form-urlencoded'));
 
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
@@ -150,9 +150,9 @@ class ControllerKraIntegration extends Controller {
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
         $result = curl_exec($curl);
         $log->write($result);
-        //$log->write($invoice_data);
-        //$info = curl_getinfo($curl);
-        //$log->write($info);
+        $log->write($invoice_data);
+        $info = curl_getinfo($curl);
+        $log->write($info);
 
         $xml_snippet = simplexml_load_string($result);
         $device_status_code = json_decode((json_encode($xml_snippet->attributes()->Code)), true);
@@ -200,7 +200,7 @@ class ControllerKraIntegration extends Controller {
             $products_data = "(NamePLU=" . $new_product_array['NamePLU'] . ",OptionVATClass=" . $new_product_array['OptionVATClass'] . ",Price=" . $new_product_array['Price'] . ",MeasureUnit=" . $new_product_array['MeasureUnit'] . ",HSCode=" . $hs_code . ",HSName=" . $hs_name . ",VATGrRate=" . $new_product_array['VATGrRate'] . ",Quantity=" . $new_product_array['Quantity'] . ",DiscAddP=" . $new_product_array['DiscAddP'] . ")";
 
             $curl = curl_init();
-            curl_setopt($curl, CURLOPT_URL, 'http://localhost:4444/SellPLUfromExtDB' . $products_data);
+            curl_setopt($curl, CURLOPT_URL, $this->config->get('config_kra_url') . 'SellPLUfromExtDB' . $products_data);
             curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type:application/x-www-form-urlencoded'));
 
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
@@ -230,7 +230,7 @@ class ControllerKraIntegration extends Controller {
         $log = new Log('error.log');
 
         $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, 'http://localhost:4444/ReadCurrentReceiptInfo()');
+        curl_setopt($curl, CURLOPT_URL, $this->config->get('config_kra_url') . 'ReadCurrentReceiptInfo()');
         curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type:application/x-www-form-urlencoded'));
 
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
@@ -256,7 +256,7 @@ class ControllerKraIntegration extends Controller {
         $log = new Log('error.log');
 
         $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, 'http://localhost:4444/CloseReceipt()');
+        curl_setopt($curl, CURLOPT_URL, $this->config->get('config_kra_url') . 'CloseReceipt()');
         curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type:application/x-www-form-urlencoded'));
 
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
@@ -282,7 +282,7 @@ class ControllerKraIntegration extends Controller {
         $log = new Log('error.log');
 
         $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, 'http://localhost:4444/ReadCUnumbers()');
+        curl_setopt($curl, CURLOPT_URL, $this->config->get('config_kra_url') . 'ReadCUnumbers()');
         curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type:application/x-www-form-urlencoded'));
 
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
@@ -308,7 +308,7 @@ class ControllerKraIntegration extends Controller {
         $log = new Log('error.log');
 
         $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, 'http://localhost:4444/ReadDateTime()');
+        curl_setopt($curl, CURLOPT_URL, $this->config->get('config_kra_url') . 'ReadDateTime()');
         curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type:application/x-www-form-urlencoded'));
 
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
