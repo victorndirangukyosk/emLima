@@ -185,7 +185,7 @@ class ControllerKraIntegration extends Controller {
 
         $new_product_array = NULL;
         foreach ($products as $product) {
-            $new_product_array['NamePLU'] = preg_replace('/[0-9\,\-\@\.\;\" "]+/', '', $product['name']);
+            $new_product_array['NamePLU'] = preg_replace('/[0-9\,\(\)\-\@\.\;\" "]+/', '', $product['name']);
             $new_product_array['OptionVATClass'] = $product['tax'] > 0 ? 'A' : 'C';
             $new_product_array['Price'] = number_format((float) $product['price'], 2, '.', '');
             $new_product_array['MeasureUnit'] = $product['unit'];
@@ -195,7 +195,8 @@ class ControllerKraIntegration extends Controller {
             $new_product_array['Quantity'] = $product['quantity'];
             $new_product_array['DiscAddP'] = 0;
 
-            $hs_code = '0023.11.00';
+            //$hs_code = '0023.11.00';
+            $hs_code = NULL;
             $hs_name = NULL;
             $products_data = "(NamePLU=" . $new_product_array['NamePLU'] . ",OptionVATClass=" . $new_product_array['OptionVATClass'] . ",Price=" . $new_product_array['Price'] . ",MeasureUnit=" . $new_product_array['MeasureUnit'] . ",HSCode=" . $hs_code . ",HSName=" . $hs_name . ",VATGrRate=" . $new_product_array['VATGrRate'] . ",Quantity=" . $new_product_array['Quantity'] . ",DiscAddP=" . $new_product_array['DiscAddP'] . ")";
 
