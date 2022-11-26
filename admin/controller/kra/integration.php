@@ -187,7 +187,7 @@ class ControllerKraIntegration extends Controller {
         foreach ($products as $product) {
             $new_product_array['NamePLU'] = preg_replace('/[0-9\,\-\@\.\;\" "]+/', '', $product['name']);
             $new_product_array['OptionVATClass'] = $product['tax'] > 0 ? 'A' : 'C';
-            $new_product_array['Price'] = $product['price'];
+            $new_product_array['Price'] = number_format((float) $product['price'], 2, '.', '');
             $new_product_array['MeasureUnit'] = $product['unit'];
             $new_product_array['HSCode'] = NULL;
             $new_product_array['HSName'] = NULL;
