@@ -147,6 +147,11 @@
 				  </tr>
                                   
                                   <tr>
+					<td>Cancel Invoice In KRA Device :</td>
+					<td><button data-order-id="<?php echo $order_id; ?>" id="button-cancel-invoice-in-kra-device" class="btn btn-success"><i class="fa fa-cogs"></i> Cancel Invoice In KRA Device</button></td>
+				  </tr>
+                                  
+                                  <tr>
 					<td>Push Invoice Products :</td>
 					<td><button data-order-id="<?php echo $order_id; ?>" id="button-push-invoice-products" class="btn btn-success"><i class="fa fa-cogs"></i> Push Invoice Products</button></td>
 				  </tr>
@@ -2701,6 +2706,30 @@ $('#button-open-invoice-in-kra-device').on('click', function() {
 		},
 		complete: function() {
 			$('#button-open-invoice-in-kra-device').button('reset');	
+		},
+		success: function(json) {
+                    if(json.device_status_code != 0) {
+                    alert('Unable to connect KRA device!');
+                    }
+		},			
+		error: function(xhr, ajaxOptions, thrownError) {
+			alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+		}
+	});
+});
+
+$('#button-cancel-invoice-in-kra-device').on('click', function() {
+  
+	$.ajax({
+		url: 'index.php?path=kra/integration/cancelreceipt&token=<?php echo $token; ?>',
+		type: 'post',
+		dataType: 'json',
+		data: { 'order_id' : $('#button-cancel-invoice-in-kra-device').attr('data-order-id') },
+		beforeSend: function() {
+			$('#button-cancel-invoice-in-kra-device').button('loading');			
+		},
+		complete: function() {
+			$('#button-cancel-invoice-in-kra-device').button('reset');	
 		},
 		success: function(json) {
                     if(json.device_status_code != 0) {
