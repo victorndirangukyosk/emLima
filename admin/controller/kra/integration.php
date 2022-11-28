@@ -323,7 +323,7 @@ class ControllerKraIntegration extends Controller {
             'order_id' => $this->request->post['order_id'],
             'service' => 'READ_RECEIPT_ON_KRA_DEVICE',
         ];
-        $log->write('push invoice products to kra device');
+        $log->write('read receipt on kra device');
 
         $this->model_user_user_activity->addActivity('read_receipt_on_kra_device', $activity_data);
 
@@ -355,6 +355,22 @@ class ControllerKraIntegration extends Controller {
         $json['status'] = true;
         $json['data'] = $final_result;
 
+        // Add to activity log
+        $this->load->model('user/user_activity');
+
+        $activity_data = [
+            'user_id' => $this->user->getId(),
+            'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+            'user_group_id' => $this->user->getGroupId(),
+            'order_id' => $this->request->post['order_id'],
+            'service' => 'CLOSE_RECEIPT_ON_KRA_DEVICE',
+        ];
+        $log->write('close receipt on kra device');
+
+        $this->model_user_user_activity->addActivity('close_receipt_on_kra_device', $activity_data);
+
+        $log->write('close receipt on kra device');
+
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
     }
@@ -380,6 +396,22 @@ class ControllerKraIntegration extends Controller {
         $final_result = json_decode($json_convert, true);
         $json['status'] = true;
         $json['data'] = $final_result;
+
+        // Add to activity log
+        $this->load->model('user/user_activity');
+
+        $activity_data = [
+            'user_id' => $this->user->getId(),
+            'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+            'user_group_id' => $this->user->getGroupId(),
+            'order_id' => $this->request->post['order_id'],
+            'service' => 'GET_KRA_DETAILS',
+        ];
+        $log->write('get kra details');
+
+        $this->model_user_user_activity->addActivity('get_kra_details', $activity_data);
+
+        $log->write('get kra details');
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
