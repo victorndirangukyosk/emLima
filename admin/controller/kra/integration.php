@@ -441,6 +441,7 @@ class ControllerKraIntegration extends Controller {
             $log->write($InvoiceNum);
             $log->write($QRcode);
             $log->write('device_data');
+            $this->model_kra_kra->addKraDetails($this->request->post['order_id'], $InvoiceNum, $QRcode, NULL, NULL);
         }
 
         $this->response->addHeader('Content-Type: application/json');
@@ -517,6 +518,7 @@ class ControllerKraIntegration extends Controller {
                 $log->write($SerialNumber);
                 $log->write($PINnumber);
                 $log->write('device_data');
+                $this->model_kra_kra->addKraDetails($this->request->post['order_id'], NULL, NULL, $SerialNumber, $PINnumber);
             }
         }
 
