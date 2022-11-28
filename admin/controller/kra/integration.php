@@ -104,7 +104,7 @@ class ControllerKraIntegration extends Controller {
         $final_result = json_decode($json_convert, true);
         $json['status'] = true;
         $json['data'] = $final_result;
-        $json['device_status_code'] = $device_status_code[0];
+        $json['device_status_code'] = $device_status_code;
         return $json;
     }
 
@@ -213,18 +213,21 @@ class ControllerKraIntegration extends Controller {
         ];
         $this->model_kra_kra->addKraActivity('open_invoice_on_kra_device', $kra_activity_data);
 
-        $activity_data = [
-            'user_id' => $this->user->getId(),
-            'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
-            'user_group_id' => $this->user->getGroupId(),
-            'order_id' => $this->request->post['order_id'],
-            'service' => 'OPEN_INVOICE_ON_KRA_DEVICE',
-        ];
-        $log->write('open invoice on kra device');
+        if (is_array($device_status_code) && $device_status_code[0] == 0) {
 
-        $this->model_user_user_activity->addActivity('open_invoice_on_kra_device', $activity_data);
+            $activity_data = [
+                'user_id' => $this->user->getId(),
+                'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+                'user_group_id' => $this->user->getGroupId(),
+                'order_id' => $this->request->post['order_id'],
+                'service' => 'OPEN_INVOICE_ON_KRA_DEVICE',
+            ];
+            $log->write('open invoice on kra device');
 
-        $log->write('open invoice on kra device');
+            $this->model_user_user_activity->addActivity('open_invoice_on_kra_device', $activity_data);
+
+            $log->write('open invoice on kra device');
+        }
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
@@ -296,18 +299,21 @@ class ControllerKraIntegration extends Controller {
         ];
         $this->model_kra_kra->addKraActivity('push_invoice_products_to_kra_device', $kra_activity_data);
 
-        $activity_data = [
-            'user_id' => $this->user->getId(),
-            'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
-            'user_group_id' => $this->user->getGroupId(),
-            'order_id' => $this->request->post['order_id'],
-            'service' => 'PUSH_INVOICE_PRODUCTS_TO_KRA_DEVICE',
-        ];
-        $log->write('push invoice products to kra device');
+        if (is_array($device_status_code) && $device_status_code[0] == 0) {
 
-        $this->model_user_user_activity->addActivity('push_invoice_products_to_kra_device', $activity_data);
+            $activity_data = [
+                'user_id' => $this->user->getId(),
+                'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+                'user_group_id' => $this->user->getGroupId(),
+                'order_id' => $this->request->post['order_id'],
+                'service' => 'PUSH_INVOICE_PRODUCTS_TO_KRA_DEVICE',
+            ];
+            $log->write('push invoice products to kra device');
 
-        $log->write('push invoice products to kra device');
+            $this->model_user_user_activity->addActivity('push_invoice_products_to_kra_device', $activity_data);
+
+            $log->write('push invoice products to kra device');
+        }
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
@@ -348,19 +354,21 @@ class ControllerKraIntegration extends Controller {
             'response' => $kra_json
         ];
         $this->model_kra_kra->addKraActivity('read_receipt_on_kra_device', $kra_activity_data);
+        if (is_array($device_status_code) && $device_status_code[0] == 0) {
 
-        $activity_data = [
-            'user_id' => $this->user->getId(),
-            'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
-            'user_group_id' => $this->user->getGroupId(),
-            'order_id' => $this->request->post['order_id'],
-            'service' => 'READ_RECEIPT_ON_KRA_DEVICE',
-        ];
-        $log->write('read receipt on kra device');
+            $activity_data = [
+                'user_id' => $this->user->getId(),
+                'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+                'user_group_id' => $this->user->getGroupId(),
+                'order_id' => $this->request->post['order_id'],
+                'service' => 'READ_RECEIPT_ON_KRA_DEVICE',
+            ];
+            $log->write('read receipt on kra device');
 
-        $this->model_user_user_activity->addActivity('read_receipt_on_kra_device', $activity_data);
+            $this->model_user_user_activity->addActivity('read_receipt_on_kra_device', $activity_data);
 
-        $log->write('read receipt on kra device');
+            $log->write('read receipt on kra device');
+        }
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
@@ -401,19 +409,39 @@ class ControllerKraIntegration extends Controller {
             'response' => $kra_json
         ];
         $this->model_kra_kra->addKraActivity('close_receipt_on_kra_device', $kra_activity_data);
+        if (is_array($device_status_code) && $device_status_code[0] == 0) {
 
-        $activity_data = [
-            'user_id' => $this->user->getId(),
-            'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
-            'user_group_id' => $this->user->getGroupId(),
-            'order_id' => $this->request->post['order_id'],
-            'service' => 'CLOSE_RECEIPT_ON_KRA_DEVICE',
-        ];
-        $log->write('close receipt on kra device');
+            $activity_data = [
+                'user_id' => $this->user->getId(),
+                'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+                'user_group_id' => $this->user->getGroupId(),
+                'order_id' => $this->request->post['order_id'],
+                'service' => 'CLOSE_RECEIPT_ON_KRA_DEVICE',
+            ];
+            $log->write('close receipt on kra device');
 
-        $this->model_user_user_activity->addActivity('close_receipt_on_kra_device', $activity_data);
+            $this->model_user_user_activity->addActivity('close_receipt_on_kra_device', $activity_data);
 
-        $log->write('close receipt on kra device');
+            $log->write('close receipt on kra device');
+
+            $device_data = json_decode((json_encode($xml_snippet)), true);
+            $log->write($device_data);
+            $InvoiceNum = NULL;
+            $QRcode = NULL;
+            foreach ($device_data['Res'] as $key => $value) {
+                if ($value['@attributes']['Name'] == 'InvoiceNum') {
+                    $InvoiceNum = $value['@attributes']['Value'];
+                }
+
+                if ($value['@attributes']['Name'] == 'QRcode') {
+                    $QRcode = $value['@attributes']['Value'];
+                }
+            }
+            $log->write('device_data');
+            $log->write($InvoiceNum);
+            $log->write($QRcode);
+            $log->write('device_data');
+        }
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
@@ -456,18 +484,41 @@ class ControllerKraIntegration extends Controller {
         ];
         $this->model_kra_kra->addKraActivity('get_kra_details', $kra_activity_data);
 
-        $activity_data = [
-            'user_id' => $this->user->getId(),
-            'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
-            'user_group_id' => $this->user->getGroupId(),
-            'order_id' => $this->request->post['order_id'],
-            'service' => 'GET_KRA_DETAILS',
-        ];
-        $log->write('get kra details');
+        if (is_array($device_status_code) && $device_status_code[0] == 0) {
 
-        $this->model_user_user_activity->addActivity('get_kra_details', $activity_data);
+            $activity_data = [
+                'user_id' => $this->user->getId(),
+                'name' => $this->user->getFirstName() . ' ' . $this->user->getLastName(),
+                'user_group_id' => $this->user->getGroupId(),
+                'order_id' => $this->request->post['order_id'],
+                'service' => 'GET_KRA_DETAILS',
+            ];
+            $log->write('get kra details');
 
-        $log->write('get kra details');
+            $this->model_user_user_activity->addActivity('get_kra_details', $activity_data);
+
+            $log->write('get kra details');
+
+            if (is_array($device_status_code) && $device_status_code[0] == 0) {
+                $SerialNumber = NULL;
+                $PINnumber = NULL;
+                $device_data = json_decode((json_encode($xml_snippet)), true);
+                $log->write($device_data);
+                foreach ($device_data['Res'] as $key => $value) {
+                    if ($value['@attributes']['Name'] == 'SerialNumber') {
+                        $SerialNumber = $value['@attributes']['Value'];
+                    }
+
+                    if ($value['@attributes']['Name'] == 'PINnumber') {
+                        $PINnumber = $value['@attributes']['Value'];
+                    }
+                }
+                $log->write('device_data');
+                $log->write($SerialNumber);
+                $log->write($PINnumber);
+                $log->write('device_data');
+            }
+        }
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
