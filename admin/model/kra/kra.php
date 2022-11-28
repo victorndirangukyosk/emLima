@@ -50,4 +50,14 @@ class ModelKraKra extends Model {
         return $query->row;
     }
 
+    public function getOrderDeliveryVatTotal($order_id) {
+        $query = $this->db->query('SELECT `value` FROM `' . DB_PREFIX . 'order_total` WHERE `order_id` = ' . (int) $order_id . " AND `code` = 'delivery_vat'");
+        return $query->row;
+    }
+
+    public function getOrderDeliveryTotal($order_id) {
+        $query = $this->db->query('SELECT `value` FROM `' . DB_PREFIX . 'order_total` WHERE `order_id` = ' . (int) $order_id . " AND `code` = 'shipping'");
+        return $query->row;
+    }
+
 }
