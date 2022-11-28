@@ -187,6 +187,7 @@ class ControllerKraIntegration extends Controller {
         $log->write($info);
 
         $xml_snippet = simplexml_load_string($result);
+        $kra_json = json_encode($xml_snippet);
         $device_status_code = json_decode((json_encode($xml_snippet->attributes()->Code)), true);
         $json_convert = json_encode($xml_snippet);
 
@@ -199,6 +200,14 @@ class ControllerKraIntegration extends Controller {
 
         // Add to activity log
         $this->load->model('user/user_activity');
+        $this->load->model('kra/kra');
+
+        $kra_activity_data = [
+            'order_id' => $this->request->post['order_id'],
+            'service' => 'OPEN_INVOICE_ON_KRA_DEVICE',
+            'response' => $kra_json
+        ];
+        $this->model_kra_kra_activity->addKraActivity('open_invoice_on_kra_device', $kra_activity_data);
 
         $activity_data = [
             'user_id' => $this->user->getId(),
@@ -261,6 +270,7 @@ class ControllerKraIntegration extends Controller {
             $log->write($result);
             $log->write($info);
             $xml_snippet = simplexml_load_string($result);
+            $kra_json = json_encode($xml_snippet);
             $device_status_code = json_decode((json_encode($xml_snippet->attributes()->Code)), true);
             $json_convert = json_encode($xml_snippet);
 
@@ -273,6 +283,14 @@ class ControllerKraIntegration extends Controller {
 
         // Add to activity log
         $this->load->model('user/user_activity');
+        $this->load->model('kra/kra');
+
+        $kra_activity_data = [
+            'order_id' => $this->request->post['order_id'],
+            'service' => 'PUSH_INVOICE_PRODUCTS_TO_KRA_DEVICE',
+            'response' => $kra_json
+        ];
+        $this->model_kra_kra_activity->addKraActivity('push_invoice_products_to_kra_device', $kra_activity_data);
 
         $activity_data = [
             'user_id' => $this->user->getId(),
@@ -315,6 +333,15 @@ class ControllerKraIntegration extends Controller {
 
         // Add to activity log
         $this->load->model('user/user_activity');
+        $this->load->model('kra/kra');
+
+        $kra_json = json_encode($xml_snippet);
+        $kra_activity_data = [
+            'order_id' => $this->request->post['order_id'],
+            'service' => 'READ_RECEIPT_ON_KRA_DEVICE',
+            'response' => $kra_json
+        ];
+        $this->model_kra_kra_activity->addKraActivity('read_receipt_on_kra_device', $kra_activity_data);
 
         $activity_data = [
             'user_id' => $this->user->getId(),
@@ -357,6 +384,15 @@ class ControllerKraIntegration extends Controller {
 
         // Add to activity log
         $this->load->model('user/user_activity');
+        $this->load->model('kra/kra');
+
+        $kra_json = json_encode($xml_snippet);
+        $kra_activity_data = [
+            'order_id' => $this->request->post['order_id'],
+            'service' => 'CLOSE_RECEIPT_ON_KRA_DEVICE',
+            'response' => $kra_json
+        ];
+        $this->model_kra_kra_activity->addKraActivity('close_receipt_on_kra_device', $kra_activity_data);
 
         $activity_data = [
             'user_id' => $this->user->getId(),
@@ -399,6 +435,15 @@ class ControllerKraIntegration extends Controller {
 
         // Add to activity log
         $this->load->model('user/user_activity');
+        $this->load->model('kra/kra');
+
+        $kra_json = json_encode($xml_snippet);
+        $kra_activity_data = [
+            'order_id' => $this->request->post['order_id'],
+            'service' => 'GET_KRA_DETAILS',
+            'response' => $kra_json
+        ];
+        $this->model_kra_kra_activity->addKraActivity('get_kra_details', $kra_activity_data);
 
         $activity_data = [
             'user_id' => $this->user->getId(),
