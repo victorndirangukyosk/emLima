@@ -130,7 +130,7 @@ class ControllerKraIntegration extends Controller {
         $final_result = json_decode($json_convert, true);
         $json['status'] = true;
         $json['data'] = $final_result;
-        $json['device_status_code'] = $device_status_code[0];
+        $json['device_status_code'] = $device_status_code;
 
         // Add to activity log
         $this->load->model('user/user_activity');
@@ -148,9 +148,9 @@ class ControllerKraIntegration extends Controller {
 
         $log->write('cancel receipt on kra device');
 
-        return $json;
-        /* $this->response->addHeader('Content-Type: application/json');
-          $this->response->setOutput(json_encode($json)); */
+        //return $json;
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
     }
 
     public function openinvoicewithfreecustomerdata() {
@@ -256,8 +256,8 @@ class ControllerKraIntegration extends Controller {
             $new_product_array['Quantity'] = $product['quantity'];
             $new_product_array['DiscAddP'] = 0;
 
-            $hs_code = '0024.11.00';
-            //$hs_code = NULL;
+            //$hs_code = '0024.11.00';
+            $hs_code = NULL;
             $hs_name = NULL;
             $products_data = "(NamePLU=" . $new_product_array['NamePLU'] . ",OptionVATClass=" . $new_product_array['OptionVATClass'] . ",Price=" . $new_product_array['Price'] . ",MeasureUnit=" . $new_product_array['MeasureUnit'] . ",HSCode=" . $hs_code . ",HSName=" . $hs_name . ",VATGrRate=" . $new_product_array['VATGrRate'] . ",Quantity=" . $new_product_array['Quantity'] . ",DiscAddP=" . $new_product_array['DiscAddP'] . ")";
 
@@ -327,6 +327,7 @@ class ControllerKraIntegration extends Controller {
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
         $result = curl_exec($curl);
         $xml_snippet = simplexml_load_string($result);
+        $device_status_code = json_decode((json_encode($xml_snippet->attributes()->Code)), true);
         $json_convert = json_encode($xml_snippet);
 
         $log->write($result);
@@ -334,6 +335,7 @@ class ControllerKraIntegration extends Controller {
         $final_result = json_decode($json_convert, true);
         $json['status'] = true;
         $json['data'] = $final_result;
+        $json['device_status_code'] = $device_status_code;
 
         // Add to activity log
         $this->load->model('user/user_activity');
@@ -378,6 +380,7 @@ class ControllerKraIntegration extends Controller {
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
         $result = curl_exec($curl);
         $xml_snippet = simplexml_load_string($result);
+        $device_status_code = json_decode((json_encode($xml_snippet->attributes()->Code)), true);
         $json_convert = json_encode($xml_snippet);
 
         $log->write($result);
@@ -385,6 +388,7 @@ class ControllerKraIntegration extends Controller {
         $final_result = json_decode($json_convert, true);
         $json['status'] = true;
         $json['data'] = $final_result;
+        $json['device_status_code'] = $device_status_code;
 
         // Add to activity log
         $this->load->model('user/user_activity');
@@ -429,13 +433,16 @@ class ControllerKraIntegration extends Controller {
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
         $result = curl_exec($curl);
         $xml_snippet = simplexml_load_string($result);
+        $device_status_code = json_decode((json_encode($xml_snippet->attributes()->Code)), true);
         $json_convert = json_encode($xml_snippet);
 
         $log->write($result);
+        $log->write($device_status_code);
         curl_close($curl);
         $final_result = json_decode($json_convert, true);
         $json['status'] = true;
         $json['data'] = $final_result;
+        $json['device_status_code'] = $device_status_code;
 
         // Add to activity log
         $this->load->model('user/user_activity');
