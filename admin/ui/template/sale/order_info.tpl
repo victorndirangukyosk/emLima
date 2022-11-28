@@ -148,7 +148,7 @@
                                   
                                   <tr>
 					<td>Cancel Invoice In KRA Device :</td>
-					<td><button data-order-id="<?php echo $order_id; ?>" id="button-cancel-invoice-in-kra-device" class="btn btn-success"><i class="fa fa-cogs"></i> Cancel Invoice In KRA Device</button></td>
+					<td><button data-order-id="<?php echo $order_id; ?>" id="button-cancel-invoice-in-kra-device" class="btn btn-danger"><i class="fa fa-cogs"></i> Cancel Invoice In KRA Device</button></td>
 				  </tr>
                                   
                                   <tr>
