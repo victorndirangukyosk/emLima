@@ -122,6 +122,7 @@ class ControllerKraIntegration extends Controller {
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
         $result = curl_exec($curl);
         $xml_snippet = simplexml_load_string($result);
+        $device_status_code = json_decode((json_encode($xml_snippet->attributes()->Code)), true);
         $json_convert = json_encode($xml_snippet);
 
         $log->write($result);
@@ -129,6 +130,7 @@ class ControllerKraIntegration extends Controller {
         $final_result = json_decode($json_convert, true);
         $json['status'] = true;
         $json['data'] = $final_result;
+        $json['device_status_code'] = $device_status_code[0];
 
         // Add to activity log
         $this->load->model('user/user_activity');
@@ -146,8 +148,9 @@ class ControllerKraIntegration extends Controller {
 
         $log->write('cancel receipt on kra device');
 
-        $this->response->addHeader('Content-Type: application/json');
-        $this->response->setOutput(json_encode($json));
+        return $json;
+        /* $this->response->addHeader('Content-Type: application/json');
+          $this->response->setOutput(json_encode($json)); */
     }
 
     public function openinvoicewithfreecustomerdata() {
