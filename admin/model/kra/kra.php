@@ -45,4 +45,9 @@ class ModelKraKra extends Model {
         }
     }
 
+    public function getKraDetails($order_id) {
+        $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "order_kra_details WHERE order_id = '" . (int) $order_id . "'");
+        return $query->row;
+    }
+
 }

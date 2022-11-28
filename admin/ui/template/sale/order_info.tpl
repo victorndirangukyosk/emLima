@@ -374,7 +374,22 @@
 					</td>
 				  </tr>
 				  <?php } ?>
-				 
+				  <tr>
+					<td>KRA Invoice Number:</td>
+					<td><?php echo is_array($order_kra_details) && isset($order_kra_details['invoice_number']) ? $order_kra_details['invoice_number'] : NULL; ?></td>
+				  </tr>
+                                  <tr>
+					<td>KRA QR Code:</td>
+					<td><?php echo is_array($order_kra_details) && isset($order_kra_details['qr_code']) ? $order_kra_details['qr_code'] : NULL; ?></td>
+				  </tr>
+                                  <tr>
+					<td>KRA Serial Number:</td>
+					<td><?php echo is_array($order_kra_details) && isset($order_kra_details['serial_number']) ? $order_kra_details['serial_number'] : NULL; ?></td>
+				  </tr>
+                                  <tr>
+					<td>KRA PIN Number:</td>
+					<td><?php echo is_array($order_kra_details) && isset($order_kra_details['pin_number']) ? $order_kra_details['pin_number'] : NULL; ?></td>
+				  </tr>
 			</table>
 		  </div>
 		  <?php if(!$this->user->isVendor()){ ?>
