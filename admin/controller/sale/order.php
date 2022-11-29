@@ -5121,6 +5121,7 @@ class ControllerSaleOrder extends Controller {
                 }
 
                 $this->load->model('kra/kra');
+                $data['order_kra_details'] = $this->model_kra_kra->getKraDetails($order_id);
                 $data['orders'][] = [
                     'order_id' => $order_id,
                     'invoice_no' => $invoice_no,
@@ -5166,8 +5167,7 @@ class ControllerSaleOrder extends Controller {
                     'paid' => $order_info['paid'],
                     'order_transcation_id' => $transaction_id,
                     'show_discount' => $show,
-                    'paybill_act' => $paybill_act,
-                    'order_kra_details' => $this->model_kra_kra->getKraDetails($order_id)
+                    'paybill_act' => $paybill_act
                 ];
             }
         }
