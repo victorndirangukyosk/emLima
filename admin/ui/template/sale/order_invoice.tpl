@@ -78,6 +78,12 @@
                                 <?php if($order['po_number']) { ?>
                                     <h6 class="bold">P.O. NUMBER <?= $order['po_number'] ?></h6>
                                 <?php } ?>
+                                <?php if(isset($order_kra_details) && count($order_kra_details) > 0) { ?>
+                                <h6 class="bold">KRA INVOICE # <?= $order_kra_details['invoice_number'] ?></h6>
+                                <h6 class="bold">KRA QR CODE # <?= $order_kra_details['qr_code'] ?></h6>
+                                <h6 class="bold">KRA SERAIL NUMBER # <?= $order_kra_details['serial_number'] ?></h6>
+                                <h6 class="bold">KRA PIN NUMBER # <?= $order_kra_details['pin_number'] ?></h6>
+                                <?php } ?>
                                 <h6><?= $order['delivery_date'] ?></h6>
 
                                 

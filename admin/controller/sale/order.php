@@ -5119,6 +5119,8 @@ class ControllerSaleOrder extends Controller {
                         $shipping_address_value = $order_info['shipping_landmark'];
                     }
                 }
+
+                $this->load->model('kra/kra');
                 $data['orders'][] = [
                     'order_id' => $order_id,
                     'invoice_no' => $invoice_no,
@@ -5165,6 +5167,7 @@ class ControllerSaleOrder extends Controller {
                     'order_transcation_id' => $transaction_id,
                     'show_discount' => $show,
                     'paybill_act' => $paybill_act,
+                    'order_kra_details' => $this->model_kra_kra->getKraDetails($order_id)
                 ];
             }
         }

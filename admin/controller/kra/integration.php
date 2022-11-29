@@ -234,11 +234,15 @@ class ControllerKraIntegration extends Controller {
     }
 
     public function sellplufromextdb() {
+
+        ini_set('max_execution_time', 0);
         $log = new Log('error.log');
 
         $invoice_number = isset($this->request->post['order_id']) && $this->request->post['order_id'] != NULL ? $this->request->post['order_id'] : NULL;
 
         $this->load->model('sale/order');
+        $this->load->model('kra/kra');
+
         if ($this->model_sale_order->hasRealOrderProducts($invoice_number)) {
             $products = $this->model_sale_order->getRealOrderProducts($invoice_number);
         } else {
@@ -247,16 +251,28 @@ class ControllerKraIntegration extends Controller {
 
         $json['status'] = true;
 
-        $new_product_array = NULL;
-        foreach ($products as $product) {
-            $new_product_array['NamePLU'] = preg_replace('/[0-9\,\(\)\-\@\.\;\" "]+/', '', $product['name']);
-            $new_product_array['OptionVATClass'] = $product['tax'] > 0 ? 'A' : 'C';
-            $new_product_array['Price'] = number_format((float) $product['price'], 2, '.', '');
-            $new_product_array['MeasureUnit'] = $product['unit'];
+        $delivery_charges_vat = $this->model_kra_kra->getOrderDeliveryVatTotal($invoice_number);
+        $delivery_charges = $this->model_kra_kra->getOrderDeliveryTotal($invoice_number);
+
+        $order_delivery_charges = NULL;
+        if (is_array($delivery_charges) && count($delivery_charges) > 0) {
+            $order_delivery_charges = $delivery_charges['value'];
+        }
+
+        $order_delivery_vat_charges = NULL;
+        if (is_array($delivery_charges_vat) && count($delivery_charges_vat) > 0) {
+            $order_delivery_vat_charges = $delivery_charges_vat['value'];
+        }
+
+        if ($order_delivery_charges > 0) {
+            $new_product_array['NamePLU'] = 'DeliveryCharges';
+            $new_product_array['OptionVATClass'] = $order_delivery_vat_charges > 0 ? 'A' : 'C';
+            $new_product_array['Price'] = $order_delivery_charges;
+            $new_product_array['MeasureUnit'] = 'Piece';
             $new_product_array['HSCode'] = NULL;
             $new_product_array['HSName'] = NULL;
-            $new_product_array['VATGrRate'] = $product['tax'] > 0 ? 16 : 0;
-            $new_product_array['Quantity'] = $product['quantity'];
+            $new_product_array['VATGrRate'] = $order_delivery_vat_charges > 0 ? 16 : 0;
+            $new_product_array['Quantity'] = 1;
             $new_product_array['DiscAddP'] = 0;
 
             //$hs_code = '0024.11.00';
@@ -286,6 +302,49 @@ class ControllerKraIntegration extends Controller {
             $final_result = json_decode($json_convert, true);
             $json['data'] = $final_result;
             $json['device_status_code'] = $device_status_code;
+        }
+
+        if (is_array($device_status_code) && $device_status_code[0] == 0) {
+            $new_product_array = NULL;
+            foreach ($products as $product) {
+                $new_product_array['NamePLU'] = preg_replace('/[0-9\,\(\)\-\@\.\;\" "]+/', '', $product['name']);
+                $new_product_array['OptionVATClass'] = $product['tax'] > 0 ? 'A' : 'C';
+                $new_product_array['Price'] = number_format((float) $product['price'], 2, '.', '');
+                $new_product_array['MeasureUnit'] = preg_replace('/[0-9\,\(\)\-\@\.\;\" "]+/', '', $product['unit']);
+                $new_product_array['HSCode'] = NULL;
+                $new_product_array['HSName'] = NULL;
+                $new_product_array['VATGrRate'] = $product['tax'] > 0 ? 16 : 0;
+                $new_product_array['Quantity'] = $product['quantity'];
+                $new_product_array['DiscAddP'] = 0;
+
+                //$hs_code = '0024.11.00';
+                $hs_code = NULL;
+                $hs_name = NULL;
+                $products_data = "(NamePLU=" . $new_product_array['NamePLU'] . ",OptionVATClass=" . $new_product_array['OptionVATClass'] . ",Price=" . $new_product_array['Price'] . ",MeasureUnit=" . $new_product_array['MeasureUnit'] . ",HSCode=" . $hs_code . ",HSName=" . $hs_name . ",VATGrRate=" . $new_product_array['VATGrRate'] . ",Quantity=" . $new_product_array['Quantity'] . ",DiscAddP=" . $new_product_array['DiscAddP'] . ")";
+
+                $curl = curl_init();
+                curl_setopt($curl, CURLOPT_URL, $this->config->get('config_kra_url') . 'SellPLUfromExtDB' . $products_data);
+                curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type:application/x-www-form-urlencoded'));
+
+                curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+                curl_setopt($curl, CURLOPT_POST, 0);
+                curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+                curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+                $result = curl_exec($curl);
+                $info = curl_getinfo($curl);
+                $log->write($result);
+                $log->write($info);
+                $xml_snippet = simplexml_load_string($result);
+                $kra_json = json_encode($xml_snippet);
+                $device_status_code = json_decode((json_encode($xml_snippet->attributes()->Code)), true);
+                $json_convert = json_encode($xml_snippet);
+
+                $log->write($result);
+                curl_close($curl);
+                $final_result = json_decode($json_convert, true);
+                $json['data'] = $final_result;
+                $json['device_status_code'] = $device_status_code;
+            }
         }
 
         // Add to activity log
