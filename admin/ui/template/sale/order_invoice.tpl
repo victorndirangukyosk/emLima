@@ -270,6 +270,7 @@
                                     <ul class="list-block">
                                         <li>CU SERIAL: <?= $order_kra_details['serial_number'] ?></li>
                                         <li>CU INVOICE: <?= $order_kra_details['invoice_number'] ?></li>
+                                        <li>CU DATE TIME: <?= date("d-m-Y", strtotime($order_kra_details['created_at'])) ?> <?= date("H:i:s", strtotime($order_kra_details['created_at'])) ?></li>
                                     </ul>
                                 </td>
                                 <td class="text-right">
