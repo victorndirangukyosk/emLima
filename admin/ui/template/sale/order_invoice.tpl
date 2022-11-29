@@ -78,10 +78,6 @@
                                 <?php if($order['po_number']) { ?>
                                     <h6 class="bold">P.O. NUMBER <?= $order['po_number'] ?></h6>
                                 <?php } ?>
-                                <?php if(isset($order_kra_details) && count($order_kra_details) > 0) { ?>
-                                <h6 class="bold">CU SERIAL # <?= $order_kra_details['serial_number'] ?></h6>
-                                <h6 class="bold">CU INVOICE # <?= $order_kra_details['invoice_number'] ?></h6>
-                                <?php } ?>
                                 <h6><?= $order['delivery_date'] ?></h6>
 
                                 
@@ -261,6 +257,23 @@
                                         <li>Step 5: Click to pay & confirm</li>
                                         <li>Step 6: Click on confirm payment</li>
                                     </ul>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        
+                        <table class="payment-details-table mt-4">
+                            <tbody>
+                            <tr>
+                                <td>
+                                    <h6 class="bold">Control Unit Info</h6>
+                                    <ul class="list-block">
+                                        <li>CU SERIAL: <?= $order_kra_details['serial_number'] ?></li>
+                                        <li>CU INVOICE: <?= $order_kra_details['invoice_number'] ?></li>
+                                    </ul>
+                                </td>
+                                <td class="text-right">
+                                    <img src="https://chart.apis.google.com/chart?cht=qr&chs=100x100&chl=https%3A%2F%2Fitax.kra.go.ke%2FKRA-Portal%2FinvoiceChk.htm%3FactionCode%3DloadPage%26invoiceNo%3D<?= $order_kra_details['invoice_number'] ?>" alt="alt"/>
                                 </td>
                             </tr>
                             </tbody>
