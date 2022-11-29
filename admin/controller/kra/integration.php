@@ -254,6 +254,7 @@ class ControllerKraIntegration extends Controller {
         $delivery_charges_vat = $this->model_kra_kra->getOrderDeliveryVatTotal($invoice_number);
         $delivery_charges = $this->model_kra_kra->getOrderDeliveryTotal($invoice_number);
 
+        $device_status_code = NULL;
         $order_delivery_charges = NULL;
         if (is_array($delivery_charges) && count($delivery_charges) > 0) {
             $order_delivery_charges = $delivery_charges['value'];
@@ -304,7 +305,7 @@ class ControllerKraIntegration extends Controller {
             $json['device_status_code'] = $device_status_code;
         }
 
-        if (is_array($device_status_code) && $device_status_code[0] == 0) {
+        if ((is_array($device_status_code) && $device_status_code[0] == 0) || $device_status_code == NULL) {
             $new_product_array = NULL;
             foreach ($products as $product) {
                 $new_product_array['NamePLU'] = preg_replace('/[0-9\,\(\)\-\@\.\;\" "]+/', '', $product['name']);
