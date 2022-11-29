@@ -1485,7 +1485,6 @@ class ModelSaleOrder extends Model {
                 'paid' => $order_query->row['paid'],
                 'amount_partialy_paid' => $order_query->row['amount_partialy_paid'],
                 'isadmin_delivery_charge' => $order_query->row['isadmin_delivery_charge'],
-
             ];
         } else {
             return;
@@ -3013,6 +3012,12 @@ class ModelSaleOrder extends Model {
         return $query->rows;
     }
 
+    public function getProductHSCode($vendor_product_id) {
+        $sql = "SELECT p.category_id,c.hs_code FROM " . DB_PREFIX . "category c join " . DB_PREFIX . "product_to_category p on c.category_id =p.category_id join hf7_product_to_store ps on ps.product_id =p.product_id and ps.product_store_id = '" . (int) $vendor_product_id . "'";
+        $query = $this->db->query($sql);
+        return $query->row;
+    }
+
     public function getCreditNoteProducts($order_id, $store_id = 0) {
         $sql = "SELECT * ,'0' as quantity_updated,'0' as unit_updated FROM " . DB_PREFIX . "credit_note_products WHERE order_id = '" . (int) $order_id . "'";
 
@@ -3200,7 +3205,6 @@ class ModelSaleOrder extends Model {
 
         $query = $this->db->query($sql);
     }
-
 
     public function deleteOrderTotal_Shipping($order_id) {
         $sql = 'DELETE FROM ' . DB_PREFIX . "order_total WHERE order_id = '" . (int) $order_id . "' and code !='shipping' and code !='delivery_vat'";
