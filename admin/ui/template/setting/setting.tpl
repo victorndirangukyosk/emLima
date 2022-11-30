@@ -938,7 +938,21 @@
                                     <?php } ?>
                                 </div>
                             </div>
-
+                            
+                            <div class="form-group required">
+                                <label class="col-sm-2 control-label" for="input-kra-url">
+                                    <span data-toggle="tooltip" data-container="#tab-general" title="KRA URL">
+                                        KRA URL
+                                    </span>    
+                                </label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="config_kra_url" value="<?php echo $config_kra_url; ?>" placeholder="Enter KRA URL" id="input-kra-url" class="form-control" />
+                                    <?php if ($error_kra_url) { ?>
+                                    <div class="text-danger"><?php echo $error_kra_url; ?></div>
+                                    <?php } ?>
+                                </div>
+                            </div>
+                            
                             <div class="form-group required">
                                 <label class="col-sm-2 control-label" for="input-kra-tcp">
                                     <span data-toggle="tooltip" data-container="#tab-general" title="KRA TCP">

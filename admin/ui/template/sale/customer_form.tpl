@@ -387,6 +387,15 @@
                         </div>
                         <?php } ?>  
 
+
+                         <div class="form-group">
+                                <label class="col-sm-2 control-label" for="input-paybill-customer-act">Invoice Pay Bill Account</label>
+                                <div class="col-sm-10">
+                                <input type="text" maxlength=30  name="paybill_customer_act" value="<?php echo $paybill_act; ?>" placeholder="Invoice Pay Bill Account"  id="input-paybill-customer-act" class="form-control" readonly="" />     
+                                </div>
+                        </div>
+
+
                       <?php if(count($referee) > 0) { ?>
                           <div class="form-group">
                             <label class="col-sm-2 control-label" for="input-lastname"><?php echo $entry_referred_by; ?></label>

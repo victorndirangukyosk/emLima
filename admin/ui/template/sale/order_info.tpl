@@ -89,7 +89,7 @@
 		  	<!--<li><a href="#tab-driver-location" data-toggle="tab">Driver Location</a></li>-->
 		  <?php } ?>
                   
-                  <?php if(!$this->user->isVendor() && $order_status_id == 5){ ?>
+                  <?php if(count($order_kra_details) <= 0 && !$this->user->isVendor() && $order_status_id == 5){ ?>
 		  	<li><a href="#tab-kra" data-toggle="tab">KRA</a></li>
 		  <?php } ?>
 		  
@@ -144,6 +144,11 @@
                                   <tr>
 					<td>Open Invoice In KRA Device :</td>
 					<td><button data-order-id="<?php echo $order_id; ?>" id="button-open-invoice-in-kra-device" class="btn btn-success"><i class="fa fa-cogs"></i> Open Invoice In KRA Device</button></td>
+				  </tr>
+                                  
+                                  <tr>
+					<td>Cancel Invoice In KRA Device :</td>
+					<td><button data-order-id="<?php echo $order_id; ?>" id="button-cancel-invoice-in-kra-device" class="btn btn-danger"><i class="fa fa-cogs"></i> Cancel Invoice In KRA Device</button></td>
 				  </tr>
                                   
                                   <tr>
@@ -369,7 +374,22 @@
 					</td>
 				  </tr>
 				  <?php } ?>
-				 
+				  <tr>
+					<td>KRA Invoice Number:</td>
+					<td><?php echo is_array($order_kra_details) && isset($order_kra_details['invoice_number']) ? $order_kra_details['invoice_number'] : NULL; ?></td>
+				  </tr>
+                                  <tr>
+					<td>KRA QR Code:</td>
+					<td><?php echo is_array($order_kra_details) && isset($order_kra_details['qr_code']) ? $order_kra_details['qr_code'] : NULL; ?></td>
+				  </tr>
+                                  <tr>
+					<td>KRA Serial Number:</td>
+					<td><?php echo is_array($order_kra_details) && isset($order_kra_details['serial_number']) ? $order_kra_details['serial_number'] : NULL; ?></td>
+				  </tr>
+                                  <tr>
+					<td>KRA PIN Number:</td>
+					<td><?php echo is_array($order_kra_details) && isset($order_kra_details['pin_number']) ? $order_kra_details['pin_number'] : NULL; ?></td>
+				  </tr>
 			</table>
 		  </div>
 		  <?php if(!$this->user->isVendor()){ ?>
@@ -2701,6 +2721,30 @@ $('#button-open-invoice-in-kra-device').on('click', function() {
 		},
 		complete: function() {
 			$('#button-open-invoice-in-kra-device').button('reset');	
+		},
+		success: function(json) {
+                    if(json.device_status_code != 0) {
+                    alert('Unable to connect KRA device!');
+                    }
+		},			
+		error: function(xhr, ajaxOptions, thrownError) {
+			alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+		}
+	});
+});
+
+$('#button-cancel-invoice-in-kra-device').on('click', function() {
+  
+	$.ajax({
+		url: 'index.php?path=kra/integration/cancelreceipt&token=<?php echo $token; ?>',
+		type: 'post',
+		dataType: 'json',
+		data: { 'order_id' : $('#button-cancel-invoice-in-kra-device').attr('data-order-id') },
+		beforeSend: function() {
+			$('#button-cancel-invoice-in-kra-device').button('loading');			
+		},
+		complete: function() {
+			$('#button-cancel-invoice-in-kra-device').button('reset');	
 		},
 		success: function(json) {
                     if(json.device_status_code != 0) {

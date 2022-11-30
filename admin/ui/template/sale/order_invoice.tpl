@@ -37,6 +37,7 @@
                                     <li><?= $order['shipping_name'] ?></li>
                                     <li><?= $order['telephone'] ?></li>
                                     <li class="mb-2"><?= $order['email'] ?></li>
+                                    <li class="mb-2"><b>Pay Bill Account :   </b><?= $order['paybill_act'] ?></li>
                                     <li>
                                         <p class="bold"><?= $order['shipping_name_original'] ?></br> <?= $order['shipping_address'] ?></p>
                                     </li>
@@ -256,6 +257,24 @@
                                         <li>Step 5: Click to pay & confirm</li>
                                         <li>Step 6: Click on confirm payment</li>
                                     </ul>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        
+                        <table class="payment-details-table mt-4">
+                            <tbody>
+                            <tr>
+                                <td>
+                                    <h6 class="bold">Control Unit Info</h6>
+                                    <ul class="list-block">
+                                        <li>CU SERIAL: <?= $order_kra_details['serial_number'] ?></li>
+                                        <li>CU INVOICE: <?= $order_kra_details['invoice_number'] ?></li>
+                                        <li>CU DATE TIME: <?= date("d-m-Y", strtotime($order_kra_details['created_at'])) ?> <?= date("H:i:s", strtotime($order_kra_details['created_at'])) ?></li>
+                                    </ul>
+                                </td>
+                                <td class="text-right">
+                                    <img src="https://chart.apis.google.com/chart?cht=qr&chs=100x100&chl=https%3A%2F%2Fitax.kra.go.ke%2FKRA-Portal%2FinvoiceChk.htm%3FactionCode%3DloadPage%26invoiceNo%3D<?= $order_kra_details['invoice_number'] ?>" alt="alt"/>
                                 </td>
                             </tr>
                             </tbody>

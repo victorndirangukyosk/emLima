@@ -214,8 +214,8 @@ class ControllerCommonLogin extends Controller {
             'common/reset',
             'common/scheduler',
             'common/scheduleraws',
+            'common/schedulerpayment',
             'common/productentry',
-
             'common/loginAPI',
             'amitruck/amitruckstatus',
             'amitruck/amitruckquotes',
@@ -240,6 +240,7 @@ class ControllerCommonLogin extends Controller {
                 'error/permission',
                 'common/scheduler',
                 'common/scheduleraws',
+                'common/schedulerpayment',
                 'common/productentry',
 
                 'common/loginAPI',
