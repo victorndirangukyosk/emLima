@@ -89,7 +89,7 @@
 		  	<!--<li><a href="#tab-driver-location" data-toggle="tab">Driver Location</a></li>-->
 		  <?php } ?>
                   
-                  <?php if(!$this->user->isVendor() && $order_status_id == 5){ ?>
+                  <?php if(count($order_kra_details) <= 0 && !$this->user->isVendor() && $order_status_id == 5){ ?>
 		  	<li><a href="#tab-kra" data-toggle="tab">KRA</a></li>
 		  <?php } ?>
 		  
