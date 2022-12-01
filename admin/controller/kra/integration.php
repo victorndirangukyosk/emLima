@@ -299,7 +299,9 @@ class ControllerKraIntegration extends Controller {
             $json_convert = json_encode($xml_snippet);
 
             $log->write($result);
+            $log->write($this->request->post['order_id']);
             curl_close($curl);
+            $log->write($this->request->post['order_id']);
             $final_result = json_decode($json_convert, true);
             $json['data'] = $final_result;
             $json['device_status_code'] = $device_status_code;
