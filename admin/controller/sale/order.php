@@ -1071,6 +1071,13 @@ class ControllerSaleOrder extends Controller {
                 $filter_paid = null;
             }
 
+
+            if (isset($this->request->get['filter_kra_status'])) {
+                $filter_kra_status = $this->request->get['filter_kra_status'];
+            } else {
+                $filter_kra_status = null;
+            }
+
             if (isset($this->request->get['filter_total'])) {
                 $url .= '&filter_total=' . $this->request->get['filter_total'];
             }
@@ -1205,6 +1212,12 @@ class ControllerSaleOrder extends Controller {
             $filter_paid = null;
         }
 
+        if (isset($this->request->get['filter_kra_status'])) {
+            $filter_kra_status = $this->request->get['filter_kra_status'];
+        } else {
+            $filter_kra_status = null;
+        }
+
         if (isset($this->request->get['filter_total'])) {
             $filter_total = $this->request->get['filter_total'];
         } else {
@@ -1321,6 +1334,11 @@ class ControllerSaleOrder extends Controller {
             $url .= '&filter_paid=' . $this->request->get['filter_paid'];
         }
 
+
+        if (isset($this->request->get['filter_kra_status'])) {
+            $url .= '&filter_kra_status=' . $this->request->get['filter_kra_status'];
+        }
+
         if (isset($this->request->get['filter_total'])) {
             $url .= '&filter_total=' . $this->request->get['filter_total'];
         }
@@ -1389,6 +1407,7 @@ class ControllerSaleOrder extends Controller {
             'filter_order_type' => $filter_order_type,
             'filter_order_placed_from' => $filter_order_placed_from,
             'filter_paid' => $filter_paid,
+            'filter_kra_status' => $filter_kra_status,
             'filter_total' => $filter_total,
             'filter_date_added' => $filter_date_added,
             'filter_date_added_end' => $filter_date_added_end,
@@ -1618,7 +1637,11 @@ class ControllerSaleOrder extends Controller {
         if (isset($this->request->get['filter_paid'])) {
             $url .= '&filter_paid=' . $this->request->get['filter_paid'];
         }
+        
 
+        if (isset($this->request->get['filter_kra_status'])) {
+            $url .= '&filter_kra_status=' . $this->request->get['filter_kra_status'];
+        }
         if (isset($this->request->get['filter_total'])) {
             $url .= '&filter_total=' . $this->request->get['filter_total'];
         }
@@ -1724,6 +1747,11 @@ class ControllerSaleOrder extends Controller {
         if (isset($this->request->get['filter_paid'])) {
             $url .= '&filter_paid=' . $this->request->get['filter_paid'];
         }
+        
+
+        if (isset($this->request->get['filter_kra_status'])) {
+            $url .= '&filter_kra_status=' . $this->request->get['filter_kra_status'];
+        }
 
         if (isset($this->request->get['filter_total'])) {
             $url .= '&filter_total=' . $this->request->get['filter_total'];
@@ -1778,6 +1806,7 @@ class ControllerSaleOrder extends Controller {
         $data['filter_order_type'] = $filter_order_type;
         $data['filter_order_placed_from'] = $filter_order_placed_from;
         $data['filter_paid'] = $filter_paid;
+        $data['filter_kra_status'] = $filter_kra_status;
         $data['filter_total'] = $filter_total;
         $data['filter_date_added'] = $filter_date_added;
         $data['filter_date_added_end'] = $filter_date_added_end;
@@ -2002,7 +2031,11 @@ class ControllerSaleOrder extends Controller {
         if (isset($this->request->get['filter_paid'])) {
             $url .= '&filter_paid=' . $this->request->get['filter_paid'];
         }
+        
 
+        if (isset($this->request->get['filter_kra_status'])) {
+            $url .= '&filter_kra_status=' . $this->request->get['filter_kra_status'];
+        }
         // if (isset($this->request->get['filter_order_type'])) {
         //     $filter_order_type = $this->request->get['filter_order_type'];
         // } else {
@@ -2617,7 +2650,12 @@ class ControllerSaleOrder extends Controller {
                 $url .= '&filter_paid=' . $this->request->get['filter_paid'];
             }
 
+            
 
+            
+            if (isset($this->request->get['filter_kra_status'])) {
+                $url .= '&filter_kra_status=' . $this->request->get['filter_kra_status'];
+            }
             if (isset($this->request->get['filter_total'])) {
                 $url .= '&filter_total=' . $this->request->get['filter_total'];
             }
