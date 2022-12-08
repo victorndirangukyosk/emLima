@@ -262,6 +262,7 @@
                             </tbody>
                         </table>
                         
+                        <?php if(isset($order_kra_details) && count($order_kra_details) > 0) { ?>
                         <table class="payment-details-table mt-4">
                             <tbody>
                             <tr>
@@ -279,6 +280,7 @@
                             </tr>
                             </tbody>
                         </table>
+                        <?php } ?>
                     </div>
                 </div>
             </td>
