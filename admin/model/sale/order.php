@@ -1600,6 +1600,16 @@ class ModelSaleOrder extends Model {
             $sql .= " AND o.paid = '" . $data['filter_paid'] . "'";
         }
 
+
+        if (isset($data['filter_kra_status']) && !is_null($data['filter_kra_status'])) {
+            if ($data['filter_kra_status'] == 'Y') {
+                $sql .=  " And o.order_id in  (select order_id from hf7_kra_orders )";
+            } else {
+                $sql .=  " And o.order_id not in  (select order_id from hf7_kra_orders )";
+            }
+        }
+        
+
         if (!empty($data['filter_vendor'])) {
             $sql .= ' AND vendor_id="' . $data['filter_vendor'] . '"';
         }
@@ -1811,6 +1821,16 @@ class ModelSaleOrder extends Model {
             $sql .= " AND o.paid = '" . $data['filter_paid'] . "'";
         }
 
+
+        // if (isset($data['filter_kra_status']) && !is_null($data['filter_kra_status'])) {
+        //     if ($data['filter_kra_status'] == 'Y') {
+        //         $sql .=  " And o.order_id in  (select order_id from hf7_kra_orders )";
+        //     } else {
+        //         $sql .=  " And o.order_id not in  (select order_id from hf7_kra_orders )";
+        //     }
+        // }
+
+
         if (!empty($data['filter_vendor'])) {
             $sql .= ' AND vendor_id="' . $data['filter_vendor'] . '"';
         }
@@ -1984,6 +2004,14 @@ class ModelSaleOrder extends Model {
         if (!empty($data['filter_paid'])) {
             $sql .= " AND o.paid = '" . $data['filter_paid'] . "'";
         }
+
+        // if (isset($data['filter_kra_status']) && !is_null($data['filter_kra_status'])) {
+        //     if ($data['filter_kra_status'] == 'Y') {
+        //         $sql .=  " And o.order_id in  (select order_id from hf7_kra_orders )";
+        //     } else {
+        //         $sql .=  " And o.order_id not in  (select order_id from hf7_kra_orders )";
+        //     }
+        // }
 
         if (!empty($data['filter_vendor'])) {
             $sql .= ' AND vendor_id="' . $data['filter_vendor'] . '"';
@@ -3622,6 +3650,15 @@ class ModelSaleOrder extends Model {
             $sql .= " AND o.paid = '" . $data['filter_paid'] . "'";
         }
 
+
+        if (isset($data['filter_kra_status']) && !is_null($data['filter_kra_status'])) {
+            if ($data['filter_kra_status'] == 'Y') {
+                $sql .=  " And o.order_id in  (select order_id from hf7_kra_orders )";
+            } else {
+                $sql .=  " And o.order_id not in  (select order_id from hf7_kra_orders )";
+            }
+        }
+
         if (!empty($data['filter_delivery_method'])) {
             $sql .= " AND o.shipping_method LIKE '%" . $data['filter_delivery_method'] . "%'";
         }
@@ -3767,6 +3804,15 @@ class ModelSaleOrder extends Model {
         if (!empty($data['filter_paid'])) {
             $sql .= " AND o.paid = '" . $data['filter_paid'] . "'";
         }
+
+        // if (isset($data['filter_kra_status']) && !is_null($data['filter_kra_status'])) {
+        //     if ($data['filter_kra_status'] == 'Y') {
+        //         $sql .=  " And o.order_id in  (select order_id from hf7_kra_orders )";
+        //     } else {
+        //         $sql .=  " And o.order_id not in  (select order_id from hf7_kra_orders )";
+        //     }
+        // }
+
 
         if (!empty($data['filter_delivery_method'])) {
             $sql .= " AND o.shipping_method LIKE '%" . $data['filter_delivery_method'] . "%'";
@@ -6038,6 +6084,15 @@ class ModelSaleOrder extends Model {
         if (!empty($data['filter_paid'])) {
             $sql .= " AND o.paid = '" . $data['filter_paid'] . "'";
         }
+
+
+        // if (isset($data['filter_kra_status']) && !is_null($data['filter_kra_status'])) {
+        //     if ($data['filter_kra_status'] == 'Y') {
+        //         $sql .=  " And o.order_id in  (select order_id from hf7_kra_orders )";
+        //     } else {
+        //         $sql .=  " And o.order_id not in  (select order_id from hf7_kra_orders )";
+        //     }
+        // }
 
         $sql .= ' ORDER BY o.order_id';
 
