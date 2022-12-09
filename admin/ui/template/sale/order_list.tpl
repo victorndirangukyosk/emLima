@@ -139,6 +139,26 @@
                                     <?php } ?>
                                 </select>    
                             </div>
+
+
+                              <div class="form-group">
+                                <label class="control-label" for="input-kra-status">Pushed to KRA</label>
+                                <select name="filter_kra_status" id="input-kra-status" class="form-control">
+                                    <option value="*">Select KRA Status</option>
+                                    <?php if (isset($filter_kra_status) && $filter_kra_status == 'Y') { ?>
+                                    <option value="Y" selected="selected">Pushed To KRA</option>
+                                    <?php } else { ?>
+                                    <option value="Y">Pushed To KRA</option>
+                                    <?php } ?>
+                                    <?php if(isset($filter_kra_status) && $filter_kra_status == 'N') { ?>
+                                    <option value="N" selected="selected">Not Pushed</option>
+                                    <?php } else { ?>
+                                    <option value="N">Not Pushed</option>
+                                    <?php } ?>
+                                    
+                                </select>    
+                            </div>
+
                               
                             
                         </div>
@@ -790,6 +810,13 @@
 
             if (filter_paid != '*' && filter_paid != '') {
                 url += '&filter_paid=' + encodeURIComponent(filter_paid);
+            }
+
+
+             var filter_kra_status = $('select[name=\'filter_kra_status\']').val();
+
+            if (filter_kra_status != '*' && filter_kra_status != '') {
+                url += '&filter_kra_status=' + encodeURIComponent(filter_kra_status);
             }
 
 
@@ -2507,6 +2534,13 @@ function downloadOrdersonsolidated() {
             if (filter_paid != '*' && filter_paid != '') {
                 url += '&filter_paid=' + encodeURIComponent(filter_paid);
             }
+
+
+             var filter_kra_status = $('select[name=\'filter_kra_status\']').val();
+
+            if (filter_kra_status != '*' && filter_kra_status != '') {
+                url += '&filter_kra_status=' + encodeURIComponent(filter_kra_status);
+            }
             
             var filter_order_from_id = $('input[name=\'filter_order_from_id\']').val();
 
@@ -2668,6 +2702,13 @@ function downloadOrdersCalculationSheet() {
             if (filter_paid != '*' && filter_paid != '') {
                 url += '&filter_paid=' + encodeURIComponent(filter_paid);
             }
+
+
+            var filter_kra_status = $('select[name=\'filter_kra_status\']').val();
+
+            if (filter_kra_status != '*' && filter_kra_status != '') {
+                url += '&filter_kra_status=' + encodeURIComponent(filter_kra_status);
+            }
             
             var filter_order_from_id = $('input[name=\'filter_order_from_id\']').val();
 
@@ -2828,6 +2869,13 @@ function downloadOrders() {
 
             if (filter_paid != '*' && filter_paid != '') {
                 url += '&filter_paid=' + encodeURIComponent(filter_paid);
+            }
+
+
+             var filter_kra_status = $('select[name=\'filter_kra_status\']').val();
+
+            if (filter_kra_status != '*' && filter_kra_status != '') {
+                url += '&filter_kra_status=' + encodeURIComponent(filter_kra_status);
             }
             
             var filter_order_from_id = $('input[name=\'filter_order_from_id\']').val();
@@ -2991,6 +3039,13 @@ function downloadOrderStickers() {
 
             if (filter_paid != '*' && filter_paid != '') {
                 url += '&filter_paid=' + encodeURIComponent(filter_paid);
+            }
+
+
+            var filter_kra_status = $('select[name=\'filter_kra_status\']').val();
+
+            if (filter_kra_status != '*' && filter_kra_status != '') {
+                url += '&filter_kra_status=' + encodeURIComponent(filter_kra_status);
             }
             
             var filter_order_from_id = $('input[name=\'filter_order_from_id\']').val();
