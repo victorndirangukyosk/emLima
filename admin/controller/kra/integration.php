@@ -312,6 +312,13 @@ class ControllerKraIntegration extends Controller {
             foreach ($products as $product) {
                 $hs_code = NULL;
                 $product_hs_code = $this->model_sale_order->getProductHSCode($product['product_id']);
+                $product_discount = $this->model_sale_order->getProductDiscount($product['product_id'],$invoice_number);
+                $product_discount_value =0;
+                
+                if (isset($product_discount)) {
+                    $product_discount_value = $product_discount['discount']??0;
+                }
+
                 if (is_array($product_hs_code) && isset($product_hs_code)) {
                     $hs_code = $product_hs_code['hs_code'];
                 }
@@ -323,7 +330,7 @@ class ControllerKraIntegration extends Controller {
                 $new_product_array['HSName'] = NULL;
                 $new_product_array['VATGrRate'] = $product['tax'] > 0 ? 16 : 0;
                 $new_product_array['Quantity'] = $product['quantity'];
-                $new_product_array['DiscAddP'] = 0;
+                $new_product_array['DiscAddP'] = $product_discount_value;
 
                 //$hs_code = '0024.11.00';
                 //$hs_code = NULL;
