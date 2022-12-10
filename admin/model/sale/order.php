@@ -7724,4 +7724,18 @@ class ModelSaleOrder extends Model {
         return $query->rows;
     }
 
+
+    public function getProductDiscount($vendor_product_id,$invoice_number) {
+       
+       try{ 
+        $sql = "SELECT cd.discount FROM " . DB_PREFIX . "customer_discount cd where product_store_id= '" . (int) $vendor_product_id . "' and price_category = ( select c.customer_discount_category from hf7_customer c join hf7_order o on c.customer_id=o.customer_id and o.order_id='" . (int) $invoice_number . "')";
+        $query = $this->db->query($sql);
+        // echo "<pre>";print_r($sql);die;
+        return $query->row;
+       }
+       catch(exception $ex)
+       {
+        return 0;
+       }
+    }
 }
