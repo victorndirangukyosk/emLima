@@ -442,7 +442,8 @@ class ControllerApiCustomerCart extends Controller {
             $this->load->model('assets/product');
             $product_info = $this->model_assets_product->getProductWithCategoryPricing($product_store_id, true);
 
-            if ($this->customer->getCustomerCategory() == NULL && $this->customer->getCustomerDiscountCategory() != NULL) {
+            // if ($this->customer->getCustomerCategory() == NULL && $this->customer->getCustomerDiscountCategory() != NULL) {
+            if ($this->customer->getCustomerDiscountCategory() != NULL) {
                 $product_info = $this->model_assets_product->getProductWithCategoryDiscountPricing($product_store_id, true);
             }
 

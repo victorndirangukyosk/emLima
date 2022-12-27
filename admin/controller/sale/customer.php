@@ -4109,8 +4109,9 @@ class ControllerSaleCustomer extends Controller {
         $this->model_user_user_activity->addActivity('customer_configuration_edit', $activity_data);
 
         $log->write('customer configuration');
-
-        $this->model_sale_customer->editCustomerConfiguration($this->request->post['customer_id'], $data);
+ 
+        // $this->model_sale_customer->editCustomerConfiguration($this->request->post['customer_id'], $data);
+        $this->model_sale_customer->editCustomerConfiguration_new($this->request->post['customer_id'], $data);
         $this->model_sale_customer->addCustomerCategories($this->request->post['customer_id'], $this->request->post['customer_categories']);
         $json['success'] = true;
         $json['message'] = 'Customer Configuration Saved!';
