@@ -2420,6 +2420,52 @@ class ModelSaleCustomer extends Model {
         }
     }
 
+    public function editCustomerConfiguration_new($customer_id, $data) {
+        $apply_discount_oncategoryprice = $this->config->get('config_apply_discount_on_categoryprice')??0;
+
+        if($apply_discount_oncategoryprice==1)
+        {
+            if (isset($data['customer_category']) && $data['customer_category'] != NULL && $data['customer_category'] != 'undefined') {
+                $this->db->query('UPDATE ' . DB_PREFIX . "customer SET customer_category = '" . $data['customer_category'] . "', modified_by = '" . $this->user->getId() . "', modifier_role = '" . $this->user->getGroupName() . "', date_modified = NOW() WHERE customer_id = '" . (int) $customer_id . "'");
+                $this->db->query('UPDATE ' . DB_PREFIX . "customer SET customer_category = '" . $data['customer_category'] . "', modified_by = '" . $this->user->getId() . "', modifier_role = '" . $this->user->getGroupName() . "', date_modified = NOW() WHERE parent = '" . (int) $customer_id . "'");
+            }
+            if (isset($data['customer_discount_category']) && $data['customer_discount_category'] != NULL && $data['customer_discount_category'] != 'undefined') {
+                $this->db->query('UPDATE ' . DB_PREFIX . "customer SET  customer_discount_category = '" . $data['customer_discount_category'] . "', modified_by = '" . $this->user->getId() . "', modifier_role = '" . $this->user->getGroupName() . "', date_modified = NOW() WHERE customer_id = '" . (int) $customer_id . "'");
+                $this->db->query('UPDATE ' . DB_PREFIX . "customer SET  customer_discount_category = '" . $data['customer_discount_category'] . "', modified_by = '" . $this->user->getId() . "', modifier_role = '" . $this->user->getGroupName() . "', date_modified = NOW() WHERE parent = '" . (int) $customer_id . "'");
+            }
+        }
+
+        else
+        {
+
+            if (isset($data['customer_category']) && $data['customer_category'] != NULL && $data['customer_category'] != 'undefined') {
+                $this->db->query('UPDATE ' . DB_PREFIX . "customer SET customer_discount_category = NULL, customer_category = '" . $data['customer_category'] . "', modified_by = '" . $this->user->getId() . "', modifier_role = '" . $this->user->getGroupName() . "', date_modified = NOW() WHERE customer_id = '" . (int) $customer_id . "'");
+                $this->db->query('UPDATE ' . DB_PREFIX . "customer SET customer_discount_category = NULL, customer_category = '" . $data['customer_category'] . "', modified_by = '" . $this->user->getId() . "', modifier_role = '" . $this->user->getGroupName() . "', date_modified = NOW() WHERE parent = '" . (int) $customer_id . "'");
+            }
+            if (isset($data['customer_discount_category']) && $data['customer_discount_category'] != NULL && $data['customer_discount_category'] != 'undefined') {
+                $this->db->query('UPDATE ' . DB_PREFIX . "customer SET customer_category = NULL, customer_discount_category = '" . $data['customer_discount_category'] . "', modified_by = '" . $this->user->getId() . "', modifier_role = '" . $this->user->getGroupName() . "', date_modified = NOW() WHERE customer_id = '" . (int) $customer_id . "'");
+                $this->db->query('UPDATE ' . DB_PREFIX . "customer SET customer_category = NULL, customer_discount_category = '" . $data['customer_discount_category'] . "', modified_by = '" . $this->user->getId() . "', modifier_role = '" . $this->user->getGroupName() . "', date_modified = NOW() WHERE parent = '" . (int) $customer_id . "'");
+            }
+
+        }
+        if (isset($data['account_manager']) && $data['account_manager'] != NULL && $data['customer_category'] != 'undefined') {
+            $this->db->query('UPDATE ' . DB_PREFIX . "customer SET account_manager_id = '" . $data['account_manager'] . "', modified_by = '" . $this->user->getId() . "', modifier_role = '" . $this->user->getGroupName() . "', date_modified = NOW() WHERE customer_id = '" . (int) $customer_id . "'");
+            $this->db->query('UPDATE ' . DB_PREFIX . "customer SET account_manager_id = '" . $data['account_manager'] . "', modified_by = '" . $this->user->getId() . "', modifier_role = '" . $this->user->getGroupName() . "', date_modified = NOW() WHERE parent = '" . (int) $customer_id . "'");
+        }
+        if (isset($data['customer_experience']) && $data['customer_experience'] != NULL && $data['customer_category'] != 'undefined') {
+            $this->db->query('UPDATE ' . DB_PREFIX . "customer SET customer_experience_id = '" . $data['customer_experience'] . "',  modified_by = '" . $this->user->getId() . "', modifier_role = '" . $this->user->getGroupName() . "', date_modified = NOW() WHERE customer_id = '" . (int) $customer_id . "'");
+            $this->db->query('UPDATE ' . DB_PREFIX . "customer SET customer_experience_id = '" . $data['customer_experience'] . "',  modified_by = '" . $this->user->getId() . "', modifier_role = '" . $this->user->getGroupName() . "', date_modified = NOW() WHERE parent = '" . (int) $customer_id . "'");
+        }
+        if (isset($data['payment_terms']) && $data['payment_terms'] != NULL && $data['customer_category'] != 'undefined') {
+            $this->db->query('UPDATE ' . DB_PREFIX . "customer SET modified_by = '" . $this->user->getId() . "', modifier_role = '" . $this->user->getGroupName() . "', payment_terms = '" . $data['payment_terms'] . "', date_modified = NOW() WHERE customer_id = '" . (int) $customer_id . "'");
+            $this->db->query('UPDATE ' . DB_PREFIX . "customer SET modified_by = '" . $this->user->getId() . "', modifier_role = '" . $this->user->getGroupName() . "', payment_terms = '" . $data['payment_terms'] . "', date_modified = NOW() WHERE parent = '" . (int) $customer_id . "'");
+        }
+        if (isset($data['statement_duration']) && $data['statement_duration'] != NULL && $data['customer_category'] != 'undefined') {
+            $this->db->query('UPDATE ' . DB_PREFIX . "customer SET modified_by = '" . $this->user->getId() . "', modifier_role = '" . $this->user->getGroupName() . "', statement_duration = '" . $data['statement_duration'] . "', date_modified = NOW() WHERE customer_id = '" . (int) $customer_id . "'");
+            $this->db->query('UPDATE ' . DB_PREFIX . "customer SET modified_by = '" . $this->user->getId() . "', modifier_role = '" . $this->user->getGroupName() . "', statement_duration = '" . $data['statement_duration'] . "', date_modified = NOW() WHERE parent = '" . (int) $customer_id . "'");
+        }
+    }
+
     public function getCutomerFromOrder($order_id) {
         $query = $this->db->query('SELECT customer_id FROM ' . DB_PREFIX . "order WHERE order_id = '" . (int) $order_id . "'");
         // echo '<pre>';print_r($query->row['customer_id']);exit;
