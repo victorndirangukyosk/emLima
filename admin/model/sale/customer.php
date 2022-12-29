@@ -2895,4 +2895,30 @@ class ModelSaleCustomer extends Model {
         return $res;
     }
 
+
+    public function updatePezeshaCustomer($pezesha_customer_id, $status) {
+        if($status==1)
+        {
+        $pezesha_customer_id_new=substr($pezesha_customer_id,0,6);
+        $log = new Log('error.log');
+        $log->write($pezesha_customer_id_new);
+
+        $query = 'UPDATE ' . DB_PREFIX . "pezesha_customers SET pezesha_customer_id = '" .(int) $pezesha_customer_id_new . "' WHERE pezesha_customer_id ='" . (int) $pezesha_customer_id . "'";
+        
+        $log->write($query);
+        $res = $this->db->query($query);
+        return $res;
+        }
+        else
+        {
+            $pezesha_customer_id_new=$pezesha_customer_id.'000';
+            $query = 'UPDATE ' . DB_PREFIX . "pezesha_customers SET pezesha_customer_id = '" .(int) $pezesha_customer_id_new . "' WHERE pezesha_customer_id ='" . (int) $pezesha_customer_id . "'";
+            $log = new Log('error.log');
+            $log->write($query);
+            $res = $this->db->query($query);
+            return $res;
+
+        }
+    }
+
 }
