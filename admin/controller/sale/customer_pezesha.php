@@ -188,4 +188,48 @@ class ControllerSaleCustomerPezesha extends Controller {
         $this->response->setOutput(json_encode($response));
     }
 
+
+
+    public function disable() {
+        try{
+        $pezesha_customer_id = $this->request->post['pezesha_customer_id'];
+        $this->load->model('sale/customer');
+        $log = new Log('error.log');
+        $log->write($pezesha_customer_id);
+        $json = [];
+        $this->model_sale_customer->updatePezeshaCustomer($pezesha_customer_id,0);
+        
+        $json['status'] = 200;
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+        }
+        catch(exception $ex)
+        {
+            $json['status'] = 422;
+            $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+        }
+    }
+    public function enable() {
+        try{
+        $pezesha_customer_id = $this->request->post['pezesha_customer_id'];
+        $this->load->model('sale/customer');
+        $log = new Log('error.log');
+        $log->write($pezesha_customer_id);
+        $json = [];
+        $this->model_sale_customer->updatePezeshaCustomer($pezesha_customer_id,1);
+        
+        $json['status'] = 200;
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+        }
+        catch(exception $ex)
+        {
+            $json['status'] = 422;
+            $this->response->addHeader('Content-Type: application/json');
+        $this->response->setOutput(json_encode($json));
+        }
+    }
+
+
 }

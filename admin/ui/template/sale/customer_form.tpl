@@ -711,9 +711,22 @@
             <div class="tab-pane" id="tab-pezesha">
                 <div class="form-group">
                     <label class="col-sm-2 control-label" for="input-pezesha-registration">Registration</label>
-                    <div class="col-sm-10">
-                        <div class="col-sm-10"><button id="button-pezesha" class="btn btn-success"><i class="fa fa-cloud-upload"></i> Apply For Pezesha</button></div>   
+                    <div class="col-sm-3">
+                        <div class="col-sm-3"><button id="button-pezesha" class="btn btn-success"><i class="fa fa-cloud-upload"></i> Apply For Pezesha</button></div>   
                     </div>
+                    <?php if ($customer_pezesha_data['customer_uuid'] !=NULL && $customer_pezesha_data['customer_uuid'] !="" && $customer_pezesha_data['pezesha_customer_id'] !=NULL && $customer_pezesha_data['pezesha_customer_id'] !="") { ?>
+                     <label class="col-sm-2 control-label" for="input-pezesha-enabled">Pezesha Option </label>
+                    <div class="col-sm-5">
+                    <?php if (strpos($customer_pezesha_data['pezesha_customer_id'], '000')) { ?>
+
+                        <div class="col-sm-5"><button id="button-pezesha-status-connected" class="btn btn-success">Connect/Enable</button></div>   
+                  <?php  } else { ?>
+                       
+                        <div class="col-sm-5"><button id="button-pezesha-status-disconnected" class="btn btn-success"> Disconnect/Disable</button></div>   
+                  <?php  } ?>
+                   
+                    </div>
+                  <?php  } ?>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-2 control-label" for="input-pezesha-terms-condtions">Terms & Conditions</label>
@@ -2368,6 +2381,58 @@ $.ajax({
     }
   });
 });
+
+
+$('#button-pezesha-status-connected').on('click', function(e) {
+e.preventDefault();
+console.log('button-pezesha-status-connected');
+$.ajax({
+    url: 'index.php?path=sale/customer_pezesha/enable&token=<?php echo $token; ?>',
+    type: 'post',
+    dataType: 'json',
+    data: 'pezesha_customer_id=<?php echo $customer_pezesha_data['pezesha_customer_id']; ?>',
+    success: function(json) {
+         
+     if(json.status == 422) {    
+    alert("Failed");
+    }
+    
+    if(json.status == 200 ) {    
+    alert("Pezesha Option Enabled");
+                            location = location;
+
+    }
+    
+    }
+  });
+});
+
+
+$('#button-pezesha-status-disconnected').on('click', function(e) {
+e.preventDefault();
+console.log('button-pezesha-status-connected');
+$.ajax({
+    url: 'index.php?path=sale/customer_pezesha/disable&token=<?php echo $token; ?>',
+    type: 'post',
+    dataType: 'json',
+    data: 'pezesha_customer_id=<?php echo $customer_pezesha_data['pezesha_customer_id']; ?>',
+    success: function(json) {
+        
+    if(json.status == 422) {    
+    alert("Failed");
+    }
+    
+    if(json.status == 200 ) {    
+    alert("Pezesha Option Disabled");
+                            location = location;
+
+    }
+    
+    }
+  });
+});
+
+
 
 $(document).ready(function(){
 	<?php if(isset($category_for_store)){ ?>
