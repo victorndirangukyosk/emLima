@@ -253,7 +253,7 @@ class ControllerKraIntegration extends Controller {
 
         $delivery_charges_vat = $this->model_kra_kra->getOrderDeliveryVatTotal($invoice_number);
         $delivery_charges = $this->model_kra_kra->getOrderDeliveryTotal($invoice_number);
-
+ 
         $device_status_code = NULL;
         $order_delivery_charges = NULL;
         if (is_array($delivery_charges) && count($delivery_charges) > 0) {
@@ -263,6 +263,10 @@ class ControllerKraIntegration extends Controller {
         $order_delivery_vat_charges = NULL;
         if (is_array($delivery_charges_vat) && count($delivery_charges_vat) > 0) {
             $order_delivery_vat_charges = $delivery_charges_vat['value'];
+        }
+        if($order_delivery_vat_charges>0 && $order_delivery_charges>0)
+        {
+            $order_delivery_charges=$order_delivery_charges+$order_delivery_vat_charges;
         }
 
         if ($order_delivery_charges > 0) {
