@@ -194,7 +194,8 @@ class ModelAssetsProduct extends Model {
                     $category_discount_response = NULL;
                     $res['discount_price'] = 0;
                     $res['discount_percentage'] = 0;
-                    if ($this->customer->getCustomerCategory() == NULL && $this->customer->getCustomerDiscountCategory() != NULL) {
+                    // if ($this->customer->getCustomerCategory() == NULL && $this->customer->getCustomerDiscountCategory() != NULL) {
+                    if ($this->customer->getCustomerDiscountCategory() != NULL) {
                         $category_discount_response = $this->model_discount_discount->getCategoryDiscount($res);
                         if (isset($category_discount_response) && is_array($category_discount_response)) {
                             $res['discount_price'] = $category_discount_response['discount_price'];
@@ -248,7 +249,8 @@ class ModelAssetsProduct extends Model {
                     $category_discount_response = NULL;
                     $res['discount_price'] = 0;
                     $res['discount_percentage'] = 0;
-                    if ($this->customer->getCustomerCategory() == NULL && $this->customer->getCustomerDiscountCategory() != NULL) {
+                    // if ($this->customer->getCustomerCategory() == NULL && $this->customer->getCustomerDiscountCategory() != NULL) {
+                    if ($this->customer->getCustomerDiscountCategory() != NULL) {
                         $category_discount_response = $this->model_discount_discount->getCategoryDiscount($res);
                         if (isset($category_discount_response) && is_array($category_discount_response)) {
                             $res['discount_price'] = $category_discount_response['discount_price'];
@@ -372,7 +374,8 @@ class ModelAssetsProduct extends Model {
                     $category_discount_response = NULL;
                     $res['discount_price'] = 0;
                     $res['discount_percentage'] = 0;
-                    if ($this->customer->getCustomerCategory() == NULL && $this->customer->getCustomerDiscountCategory() != NULL) {
+                    // if ($this->customer->getCustomerCategory() == NULL && $this->customer->getCustomerDiscountCategory() != NULL) {
+                    if ($this->customer->getCustomerDiscountCategory() != NULL) {
                         $category_discount_response = $this->model_discount_discount->getCategoryDiscount($res);
                         if (isset($category_discount_response) && is_array($category_discount_response)) {
                             $res['discount_price'] = $category_discount_response['discount_price'];
@@ -427,7 +430,8 @@ class ModelAssetsProduct extends Model {
                     $category_discount_response = NULL;
                     $res['discount_price'] = 0;
                     $res['discount_percentage'] = 0;
-                    if ($this->customer->getCustomerCategory() == NULL && $this->customer->getCustomerDiscountCategory() != NULL) {
+                    // if ($this->customer->getCustomerCategory() == NULL && $this->customer->getCustomerDiscountCategory() != NULL) {
+                    if ($this->customer->getCustomerDiscountCategory() != NULL) {
                         $category_discount_response = $this->model_discount_discount->getCategoryDiscount($res);
                         if (isset($category_discount_response) && is_array($category_discount_response)) {
                             $res['discount_price'] = $category_discount_response['discount_price'];
@@ -535,7 +539,8 @@ class ModelAssetsProduct extends Model {
                     $category_discount_response = NULL;
                     $r['discount_price'] = 0;
                     $r['discount_percentage'] = 0;
-                    if ($this->customer->getCustomerCategory() == NULL && $this->customer->getCustomerDiscountCategory() != NULL) {
+                    // if ($this->customer->getCustomerCategory() == NULL && $this->customer->getCustomerDiscountCategory() != NULL) {
+                    if ($this->customer->getCustomerDiscountCategory() != NULL) {
                         $category_discount_response = $this->model_discount_discount->getCategoryDiscount($r);
                         if (isset($category_discount_response) && is_array($category_discount_response)) {
                             $r['discount_price'] = $category_discount_response['discount_price'];
@@ -589,7 +594,8 @@ class ModelAssetsProduct extends Model {
                     $category_discount_response = NULL;
                     $r['discount_price'] = 0;
                     $r['discount_percentage'] = 0;
-                    if ($this->customer->getCustomerCategory() == NULL && $this->customer->getCustomerDiscountCategory() != NULL) {
+                    // if ($this->customer->getCustomerCategory() == NULL && $this->customer->getCustomerDiscountCategory() != NULL) {
+                    if ($this->customer->getCustomerDiscountCategory() != NULL) {
                         $category_discount_response = $this->model_discount_discount->getCategoryDiscount($r);
                         if (isset($category_discount_response) && is_array($category_discount_response)) {
                             $r['discount_price'] = $category_discount_response['discount_price'];
@@ -768,7 +774,8 @@ class ModelAssetsProduct extends Model {
         $category_discount_response = NULL;
         $ret['discount_price'] = 0;
         $ret['discount_percentage'] = 0;
-        if ($this->customer->getCustomerCategory() == NULL && $this->customer->getCustomerDiscountCategory() != NULL) {
+        // if ($this->customer->getCustomerCategory() == NULL && $this->customer->getCustomerDiscountCategory() != NULL) {
+        if ($this->customer->getCustomerDiscountCategory() != NULL) {
             $category_discount_response = $this->model_discount_discount->getCategoryDiscount($ret);
             if (isset($category_discount_response) && is_array($category_discount_response)) {
                 $ret['discount_price'] = $category_discount_response['discount_price'];
@@ -1024,7 +1031,8 @@ class ModelAssetsProduct extends Model {
                         $category_discount_response = NULL;
                         $r['discount_price'] = 0;
                         $r['discount_percentage'] = 0;
-                        if ($this->customer->getCustomerCategory() == NULL && $this->customer->getCustomerDiscountCategory() != NULL) {
+                        // if ($this->customer->getCustomerCategory() == NULL && $this->customer->getCustomerDiscountCategory() != NULL) {
+                        if ($this->customer->getCustomerDiscountCategory() != NULL) {
                             $category_discount_response = $this->model_discount_discount->getCategoryDiscount($r);
                             if (isset($category_discount_response) && is_array($category_discount_response)) {
                                 $r['discount_price'] = $category_discount_response['discount_price'];
@@ -1080,7 +1088,8 @@ class ModelAssetsProduct extends Model {
                         $category_discount_response = NULL;
                         $r['discount_price'] = 0;
                         $r['discount_percentage'] = 0;
-                        if ($this->customer->getCustomerCategory() == NULL && $this->customer->getCustomerDiscountCategory() != NULL) {
+                        // if ($this->customer->getCustomerCategory() == NULL && $this->customer->getCustomerDiscountCategory() != NULL) {
+                        if ($this->customer->getCustomerDiscountCategory() != NULL) {
                             $category_discount_response = $this->model_discount_discount->getCategoryDiscount($r);
                             if (isset($category_discount_response) && is_array($category_discount_response)) {
                                 $r['discount_price'] = $category_discount_response['discount_price'];

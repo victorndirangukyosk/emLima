@@ -862,7 +862,8 @@ class ControllerProductProduct extends Controller {
                 $category_discount_response = NULL;
                 $product_info['discount_price'] = 0;
                 $product_info['discount_percentage'] = 0;
-                if ($this->customer->getCustomerCategory() == NULL && $this->customer->getCustomerDiscountCategory() != NULL) {
+                // if ($this->customer->getCustomerCategory() == NULL && $this->customer->getCustomerDiscountCategory() != NULL) {
+                    if ($this->customer->getCustomerDiscountCategory() != NULL) {
                     $category_discount_response = $this->load->controller('common/customercategorydiscount', $product_info);
                     if (isset($category_discount_response) && is_array($category_discount_response)) {
 
@@ -914,7 +915,8 @@ class ControllerProductProduct extends Controller {
                 $category_discount_response = NULL;
                 $product_info['discount_price'] = 0;
                 $product_info['discount_percentage'] = 0;
-                if ($this->customer->getCustomerCategory() == NULL && $this->customer->getCustomerDiscountCategory() != NULL) {
+                // if ($this->customer->getCustomerCategory() == NULL && $this->customer->getCustomerDiscountCategory() != NULL) {
+                    if ($this->customer->getCustomerDiscountCategory() != NULL) {
                     
                     $category_discount_response = $this->load->controller('common/customercategorydiscount', $product_info);
                     if (isset($category_discount_response) && is_array($category_discount_response)) {

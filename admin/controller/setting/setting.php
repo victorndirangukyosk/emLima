@@ -694,6 +694,12 @@ class ControllerSettingSetting extends Controller {
             $data['config_kibandas_customer_group_id'] = $this->config->get('config_kibandas_customer_group_id');
         }
 
+        if (isset($this->request->post['config_apply_discount_on_categoryprice'])) {
+            $data['config_apply_discount_on_categoryprice'] = $this->request->post['config_apply_discount_on_categoryprice'];
+        } else {
+            $data['config_apply_discount_on_categoryprice'] = $this->config->get('config_apply_discount_on_categoryprice');
+        }
+
 
         if (isset($this->request->post['config_supplier_group_id'])) {
             $data['config_supplier_group_id'] = $this->request->post['config_supplier_group_id'];
@@ -2422,6 +2428,11 @@ class ControllerSettingSetting extends Controller {
         if (!$this->request->post['config_kibandas_customer_group_id']) {
             $this->error['kibandas_customer_group_id'] = $this->language->get('error_kibandas_customer_group_id');
         }
+
+
+        // if (!$this->request->post['config_apply_discount_on_categoryprice']) {
+        //     $this->error[''] = $this->language->get('error_config_apply_discount_on_categoryprice');
+        // }
 
         if (!$this->request->post['config_supplier_group_id']) {
             $this->error['supplier_group_id'] = $this->language->get('error_supplier_group_id');
