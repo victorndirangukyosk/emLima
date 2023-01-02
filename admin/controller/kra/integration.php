@@ -318,9 +318,19 @@ class ControllerKraIntegration extends Controller {
                 $product_hs_code = $this->model_sale_order->getProductHSCode($product['product_id']);
                 $product_discount = $this->model_sale_order->getProductDiscount($product['product_id'],$invoice_number);
                 $product_discount_value =0;
-                
+
+                $product_price =$product['price'];                
                 if (isset($product_discount)) {
                     $product_discount_value = $product_discount['discount']??0;
+                    if($product_discount_value>0){
+                        try{
+                        $product_price=($product['price'] -($product['price']*($product_discount_value/100) ));  
+                        }
+                        catch(exception $e)
+                        {
+                            $product_price =$product['price'];               
+                        }       
+                    }
                 }
 
                 if (is_array($product_hs_code) && isset($product_hs_code)) {
@@ -328,7 +338,8 @@ class ControllerKraIntegration extends Controller {
                 }
                 $new_product_array['NamePLU'] = preg_replace('/[0-9\,\(\)\-\@\.\;\" "]+/', '', $product['name']);
                 $new_product_array['OptionVATClass'] = $product['tax'] > 0 ? 'A' : 'C';
-                $new_product_array['Price'] = number_format((float) $product['price'], 2, '.', '');
+                // $new_product_array['Price'] = number_format((float) $product['price'], 2, '.', '');
+                $new_product_array['Price'] = number_format((float) $product_price, 2, '.', '');
                 $new_product_array['MeasureUnit'] = preg_replace('/[0-9\,\(\)\-\@\.\;\" "]+/', '', $product['unit']);
                 $new_product_array['HSCode'] = $hs_code;
                 $new_product_array['HSName'] = NULL;
