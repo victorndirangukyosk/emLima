@@ -167,8 +167,27 @@ class ControllerCheckoutPaymentMethod extends Controller {
                 if ($payment_method['code'] == 'wallet') {
                     $data['payment_wallet_methods'] = $payment_method;
                 }
-                if (/* $payment_method['code'] != 'wallet' && */ $payment_method['code'] != 'mod' && $payment_method['code'] != 'pesapal' && $payment_method['code'] != 'interswitch' && $payment_method['code'] != 'mpesa') {
+                if (/* $payment_method['code'] != 'wallet' && */$payment_method['code'] != 'cod' && $payment_method['code'] != 'mod' && $payment_method['code'] != 'pesapal' && $payment_method['code'] != 'interswitch' && $payment_method['code'] != 'mpesa') {
                     unset($data['payment_methods'][$payment_method['code']]);
+                }
+
+                if ($payment_method['code'] == 'cod')
+                {
+                    if ($this->customer->getCustomerPezeshaId() != NULL )
+                    {
+                        if(strpos($this->customer->getCustomerPezeshaId(),'000'))
+                        {
+                            //if pezesha disconnected, dont remove cod for POD customers
+                        }
+                        else{
+                            unset($data['payment_methods'][$payment_method['code']]);
+                        }
+                    }
+                    else
+                    {
+                    unset($data['payment_methods'][$payment_method['code']]);
+
+                    }
                 }
             }
         } if ((($this->customer->getPaymentTerms() == '7 Days Credit' || $this->customer->getPaymentTerms() == '15 Days Credit' || $this->customer->getPaymentTerms() == '30 Days Credit') && ($this->customer->getCustomerPezeshaId() == NULL && $this->customer->getCustomerPezeshauuId() == NULL)) /* || (($this->customer->getPaymentTerms() == '7 Days Credit' || $this->customer->getPaymentTerms() == '15 Days Credit' || $this->customer->getPaymentTerms() == '30 Days Credit') && ($this->customer->getCustomerPezeshaId() != NULL && $this->customer->getCustomerPezeshauuId() != NULL && $this->session->data['pezesha_customer_amount_limit'] == 0)) */) {
@@ -194,8 +213,26 @@ class ControllerCheckoutPaymentMethod extends Controller {
                 if ($payment_method['code'] == 'wallet') {
                     $data['payment_wallet_methods'] = $payment_method;
                 }
-                if ($payment_method['code'] != 'pezesha' && $payment_method['code'] != 'mpesa' && $payment_method['code'] != 'pesapal') {
+                if ($payment_method['code'] != 'cod' && $payment_method['code'] != 'pezesha' && $payment_method['code'] != 'mpesa' && $payment_method['code'] != 'pesapal') {
                     unset($data['payment_methods'][$payment_method['code']]);
+                }
+                if ($payment_method['code'] == 'cod')
+                {
+                    if (($this->customer->getPaymentTerms() == 'Payment On Delivery') )
+                    {
+                        if(strpos($this->customer->getCustomerPezeshaId(),'000'))
+                        {
+                            //if pezesha disconnected, dont remove cod for POD customers
+                        }
+                        else{
+                            unset($data['payment_methods'][$payment_method['code']]);
+                        }
+                    }
+                    else
+                    {
+                    unset($data['payment_methods'][$payment_method['code']]);
+
+                    }
                 }
             }
         }        
