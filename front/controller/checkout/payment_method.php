@@ -218,21 +218,21 @@ class ControllerCheckoutPaymentMethod extends Controller {
                 }
                 if ($payment_method['code'] == 'cod')
                 {
-                    if (($this->customer->getPaymentTerms() == 'Payment On Delivery') )
-                    {
+                    // if (($this->customer->getPaymentTerms() == 'Payment On Delivery') )
+                    // {
                         if(strpos($this->customer->getCustomerPezeshaId(),'000'))
                         {
-                            //if pezesha disconnected, dont remove cod for POD customers
+                            //if pezesha disconnected, dont remove cod
                         }
                         else{
                             unset($data['payment_methods'][$payment_method['code']]);
                         }
-                    }
-                    else
-                    {
-                    unset($data['payment_methods'][$payment_method['code']]);
+                    // }
+                    // else
+                    // {
+                    // unset($data['payment_methods'][$payment_method['code']]);
 
-                    }
+                    // }
                 }
             }
         }        
